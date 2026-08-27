@@ -1,0 +1,58 @@
+name: Release Senmu BuildOS
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Verify release identity
+        run: python3 scripts/bump_version.py --check --tag "$GITHUB_REF_NAME"
+
+      - name: Validate package
+        run: python3 scripts/validate_package.py
+
+      - name: Validate public source boundary
+        run: python3 scripts/validate_public_surface.py
+
+      - name: Run Python tests
+        run: python3 -m unittest discover -s tests -p 'test_*.py'
+
+      - name: Run Hook tests
+        run: node --test tests/hooks/*.test.js
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            echo "Release already exists; source snapshots are provided by GitHub for the verified tag."
+          else
+            gh release create "$GITHUB_REF_NAME" \
+              --verify-tag \
+              --title "Senmu BuildOS ${GITHUB_REF_NAME}" \
+              --generate-notes
+          fi

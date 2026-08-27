@@ -1,0 +1,4 @@
+interface:
+  display_name: "Senmu Build Software Engineering"
+  short_description: "工程规范发现、技术选型、架构、代码、测试与重构治理"
+  default_prompt: "Use $senmu-build-engineering to discover or apply evidence-based engineering standards and make technical or implementation decisions using the project's real architecture, code, tests, configuration, and ecosystem."

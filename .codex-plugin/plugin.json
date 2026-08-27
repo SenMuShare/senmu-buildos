@@ -1,0 +1,43 @@
+{
+  "name": "senmu-buildos",
+  "version": "1.13.1",
+  "description": "Project lifecycle governance for Codex: project management, product, workflows, engineering, delivery, assurance, and organizational learning.",
+  "author": {
+    "name": "Senmu",
+    "url": "https://github.com/SenMuShare"
+  },
+  "homepage": "https://github.com/SenMuShare/senmu-buildos#readme",
+  "repository": "https://github.com/SenMuShare/senmu-buildos",
+  "license": "Apache-2.0",
+  "keywords": [
+    "codex",
+    "openai-codex",
+    "codex-plugin",
+    "codex-skills",
+    "ai-agents",
+    "agentic-workflows",
+    "project-management",
+    "project-governance",
+    "requirements-management",
+    "workflow-governance",
+    "software-engineering",
+    "developer-tools",
+    "knowledge-management",
+    "organizational-learning"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Senmu BuildOS",
+    "shortDescription": "AI project lifecycle governance",
+    "longDescription": "Keep project authority, requirements, workflows, implementation, delivery, evidence, and reusable learning aligned across people and AI agents.",
+    "developerName": "Senmu",
+    "category": "Productivity",
+    "capabilities": ["Instructions", "Lifecycle hooks"],
+    "websiteURL": "https://github.com/SenMuShare/senmu-buildos",
+    "defaultPrompt": [
+      "Initialize governance for this project.",
+      "Govern this multi-stage task with durable state and evidence.",
+      "Capture validated lessons from this project and assess whether any belong in Senmu BuildOS."
+    ]
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0.0",
+  "experiment_id": "EXP-NNNN",
+  "status": "planned",
+  "source_task": "TASK-NNNN",
+  "source_requirement": null,
+  "external_workspace": null,
+  "runs": [],
+  "decision": null
+}

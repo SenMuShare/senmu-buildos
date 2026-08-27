@@ -1,0 +1,42 @@
+name: Validate Senmu BuildOS
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Validate package and migration
+        run: python3 scripts/validate_package.py
+
+      - name: Validate public source boundary
+        run: python3 scripts/validate_public_surface.py
+
+      - name: Validate release metadata
+        run: python3 scripts/bump_version.py --check
+
+      - name: Run Python tests
+        run: python3 -m unittest discover -s tests -p 'test_*.py'
+
+      - name: Run Hook tests
+        run: node --test tests/hooks/*.test.js

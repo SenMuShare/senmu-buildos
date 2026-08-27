@@ -1,0 +1,2 @@
+# Local Git worktrees are temporary checkouts, not project content.
+.worktrees/

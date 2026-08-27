@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "governance_id": "GOV-0001",
+  "status": "active",
+  "authoritative_task_owner": {
+    "kind": "project_existing_owner",
+    "locator": "issue-or-task-locator",
+    "task_id": "TASK-ID"
+  },
+  "baseline": {
+    "status": "pending",
+    "captured_at": null,
+    "target_identity": null,
+    "release_units": [],
+    "evidence_refs": []
+  },
+  "implementation_authorization": {
+    "status": "pending",
+    "approved_by": null,
+    "approved_at": null,
+    "scope": []
+  },
+  "coverage": {
+    "status": "pending",
+    "evidence_refs": [],
+    "unassessed": []
+  },
+  "stages": [
+    {
+      "id": "baseline",
+      "status": "active",
+      "evidence_refs": []
+    },
+    {
+      "id": "audit",
+      "status": "planned",
+      "evidence_refs": []
+    },
+    {
+      "id": "decision",
+      "status": "planned",
+      "evidence_refs": []
+    },
+    {
+      "id": "remediation",
+      "status": "planned",
+      "evidence_refs": []
+    },
+    {
+      "id": "final_review",
+      "status": "planned",
+      "evidence_refs": []
+    }
+  ],
+  "findings": [],
+  "remediation_waves": [],
+  "final_review": {
+    "status": "pending",
+    "review_identity": null,
+    "reviewed_at": null,
+    "frozen_target": null,
+    "evidence_refs": []
+  },
+  "recovery": {
+    "status": "pending",
+    "evidence_refs": []
+  },
+  "cleanup": {
+    "status": "pending_user_decision",
+    "location": null,
+    "approved_by": null,
+    "approved_at": null,
+    "evidence_refs": []
+  }
+}

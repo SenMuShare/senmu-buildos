@@ -1,0 +1,51 @@
+{
+  "schema_version": "1.0.0",
+  "workflow": {
+    "id": "<workflow-id>",
+    "version": "<workflow-version>",
+    "entrypoint": "<public-entrypoint>"
+  },
+  "run": {
+    "id": "<run-id>",
+    "task_id": null,
+    "status": "created",
+    "created_at": "<ISO-8601>",
+    "updated_at": "<ISO-8601>",
+    "started_by": "<actor-or-agent-id>"
+  },
+  "input_snapshot": {
+    "items": [],
+    "configuration_ref": "<config-version-or-hash>",
+    "code_ref": "<commit-build-or-version>",
+    "environment_ref": "<runtime-environment-version>"
+  },
+  "steps": [
+    {
+      "id": "<step-id>",
+      "status": "pending",
+      "attempt": 0,
+      "idempotency_key": null,
+      "input_refs": [],
+      "output_refs": [],
+      "validation_refs": [],
+      "error_ref": null,
+      "started_at": null,
+      "finished_at": null
+    }
+  ],
+  "recovery": {
+    "checkpoint": null,
+    "earliest_invalid_step": null,
+    "mode": null,
+    "next_action": null
+  },
+  "side_effects": [],
+  "outputs": [],
+  "evidence_refs": [],
+  "delivery": {
+    "status": "not_evaluated",
+    "delivery_id": null,
+    "receipt_ref": null,
+    "publication_status_ref": null
+  }
+}

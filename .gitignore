@@ -1,0 +1,6 @@
+__pycache__/
+*.py[cod]
+.DS_Store
+
+# Temporary source checkouts used by integration research
+temporary/research/

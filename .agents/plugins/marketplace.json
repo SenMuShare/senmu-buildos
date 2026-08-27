@@ -1,0 +1,21 @@
+{
+  "name": "senmu-buildos",
+  "interface": {
+    "displayName": "Senmu BuildOS"
+  },
+  "plugins": [
+    {
+      "name": "senmu-buildos",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/SenMuShare/senmu-buildos.git",
+        "ref": "v1.13.1"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

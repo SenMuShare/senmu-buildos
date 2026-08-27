@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "review_id": "CR-0001",
+  "status": "draft",
+  "change": {
+    "repository": null,
+    "integration_target": null,
+    "source_branch": null,
+    "base_commit": null,
+    "head_commit": null,
+    "change_kind": "pending",
+    "governance_level": "G0"
+  },
+  "inventory": {
+    "method": {
+      "kind": "pending",
+      "tools": [],
+      "limitations": []
+    },
+    "files": []
+  },
+  "findings": [],
+  "quality_checks": [],
+  "approval": {
+    "author": null,
+    "reviewer": null,
+    "review_identity": "not_assessed",
+    "reviewed_head": null,
+    "outcome": "not_assessed",
+    "reviewed_at": null,
+    "exception": null
+  }
+}

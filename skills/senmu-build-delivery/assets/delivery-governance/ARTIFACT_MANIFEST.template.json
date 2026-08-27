@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0.0",
+  "release_unit": "<release-unit>",
+  "candidate_version": "<version>",
+  "source": {
+    "repository": "<repository>",
+    "revision": "<commit-or-revision>",
+    "tag": null,
+    "dirty": false
+  },
+  "build": {
+    "id": "<build-id>",
+    "entrypoint": "<build-command-or-ci-job>",
+    "environment_ref": "<builder-and-toolchain-version>",
+    "created_at": "<ISO-8601>"
+  },
+  "artifacts": [
+    {
+      "id": "<artifact-id>",
+      "kind": "<image-package-static-or-binary>",
+      "location": "<immutable-location>",
+      "sha256": "<sha256>",
+      "size_bytes": 0,
+      "target_platform": "<os-arch-or-runtime>",
+      "configuration_schema_ref": null
+    }
+  ],
+  "quality_evidence_refs": [],
+  "known_risks": [],
+  "status": "candidate"
+}

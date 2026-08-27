@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "senmu-buildos",
+  "description": "Senmu BuildOS plugins for AI project lifecycle governance.",
+  "owner": {
+    "name": "Senmu"
+  },
+  "plugins": [
+    {
+      "name": "senmu-buildos",
+      "source": "./",
+      "description": "Project lifecycle governance for AI agents.",
+      "version": "1.13.1",
+      "author": {
+        "name": "Senmu"
+      },
+      "homepage": "https://github.com/SenMuShare/senmu-buildos#readme",
+      "repository": "https://github.com/SenMuShare/senmu-buildos",
+      "license": "Apache-2.0",
+      "category": "Productivity",
+      "tags": [
+        "project-management",
+        "project-governance",
+        "agent-skills"
+      ]
+    }
+  ]
+}

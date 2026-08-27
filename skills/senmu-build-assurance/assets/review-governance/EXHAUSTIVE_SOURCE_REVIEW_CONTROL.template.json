@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "review_id": "REV-SOURCE-0001",
+  "status": "inventory",
+  "conclusion": "not_assessed",
+  "review_identity": "evidence_based_self_review",
+  "target": {
+    "baseline_identity": null,
+    "current_identity": null,
+    "captured_at": null
+  },
+  "scope": {
+    "release_units": [],
+    "systems": [],
+    "included_roots": [],
+    "exclusions": []
+  },
+  "inventory": {
+    "method": {
+      "kind": "pending",
+      "tools": [],
+      "limitations": []
+    },
+    "files": []
+  },
+  "findings": [],
+  "verification": {
+    "status": "pending",
+    "frozen_target": null,
+    "evidence_refs": []
+  }
+}

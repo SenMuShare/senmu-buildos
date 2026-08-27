@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "senmu-buildos",
+  "displayName": "Senmu BuildOS",
+  "version": "1.13.1",
+  "description": "Project lifecycle governance for AI agents: project management, product, workflows, engineering, delivery, assurance, and organizational learning.",
+  "author": {
+    "name": "Senmu"
+  },
+  "homepage": "https://github.com/SenMuShare/senmu-buildos#readme",
+  "repository": "https://github.com/SenMuShare/senmu-buildos",
+  "license": "Apache-2.0",
+  "keywords": [
+    "claude-code",
+    "agent-skills",
+    "ai-agents",
+    "project-management",
+    "project-governance",
+    "software-engineering"
+  ],
+  "hooks": "./adapters/claude-code/hooks/hooks.json"
+}

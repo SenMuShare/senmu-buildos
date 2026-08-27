@@ -1,0 +1,4 @@
+interface:
+  display_name: "Senmu Build Governance Assurance"
+  short_description: "POC、独立审查、证据分级与因果核验"
+  default_prompt: "Use $senmu-build-assurance to produce a read-only evidence-backed experiment, audit, causal finding, or remediation verdict."

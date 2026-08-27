@@ -1,0 +1,4 @@
+interface:
+  display_name: "Senmu Build Workflow Governance"
+  short_description: "工作流、Agent、数据、物料与交付物治理"
+  default_prompt: "Use $senmu-build-workflow to define the executable workflow, input and output contracts, state, recovery, material roles, evidence, and delivery boundaries."
