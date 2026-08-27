@@ -425,6 +425,12 @@ def validate_project_instruction_layer() -> None:
     for legacy_heading in ("## 稳定规则", "## 完成输出"):
         if legacy_heading in text:
             fail(f"project AGENTS template still carries copied governance section: {legacy_heading}")
+    peer_skill_catalog = EXPECTED_SKILLS - {"senmu-build-project"}
+    copied_skill_names = sorted(skill for skill in peer_skill_catalog if skill in text)
+    if copied_skill_names:
+        fail(f"project AGENTS template copies the peer Skill catalog: {copied_skill_names}")
+    if "固定前置链" not in text or "全部 BuildOS Skill 职责" not in text:
+        fail("project AGENTS template must reject unconditional document preloads and copied Skill catalogs")
     legacy_template = ROOT / "skills/senmu-build-engineering/assets/code-quality/AGENTS.template.md"
     if legacy_template.exists():
         fail("Engineering must not own a second project AGENTS template")

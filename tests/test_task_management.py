@@ -503,6 +503,15 @@ class ProjectGovernanceScaffoldTests(unittest.TestCase):
             self.assertEqual(layering["entrypoints"], ["AGENTS.md", "projects/current/AGENTS.md"])
             self.assertFalse(layering["write_default_agents_template"])
             self.assertIn("remove_buildos_duplicate", layering["required_actions"])
+            self.assertIn(
+                "replace_unconditional_cross_domain_preload_with_signal_routing",
+                layering["required_actions"],
+            )
+            self.assertIn("remove_generic_skill_catalog_from_project_delta", layering["required_actions"])
+            runtime_validation = layering["runtime_validation"]
+            self.assertEqual(runtime_validation["status"], "required_before_routing_claim")
+            self.assertEqual(runtime_validation["maximum_unverified_claim"], "structural_routing_prepared")
+            self.assertEqual(len(runtime_validation["scenarios"]), 3)
 
     def test_initializer_can_resume_its_own_draft(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_root:
