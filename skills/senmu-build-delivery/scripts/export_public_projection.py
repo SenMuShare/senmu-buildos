@@ -84,7 +84,19 @@ def manifest_digest(manifest_path: Path) -> str:
     return hashlib.sha256(manifest_path.read_bytes()).hexdigest()
 
 
-def apply_projection(source: Path, target: Path, files: list[Path], digest: str) -> None:
+def projection_digest(source: Path, files: list[Path]) -> str:
+    digest = hashlib.sha256()
+    for relative in files:
+        encoded = relative.as_posix().encode("utf-8")
+        content = (source / relative).read_bytes()
+        digest.update(len(encoded).to_bytes(8, "big"))
+        digest.update(encoded)
+        digest.update(len(content).to_bytes(8, "big"))
+        digest.update(content)
+    return digest.hexdigest()
+
+
+def apply_projection(source: Path, target: Path, files: list[Path], manifest_sha256: str, projection_sha256: str) -> None:
     target.mkdir(parents=True, exist_ok=True)
     existing = {path.name for path in target.iterdir()}
     if existing - {".git", MARKER} and not (target / MARKER).is_file():
@@ -99,7 +111,8 @@ def apply_projection(source: Path, target: Path, files: list[Path], digest: str)
         marker = {
             "schema_version": "1.0",
             "projection_mode": "generated_only",
-            "manifest_sha256": digest,
+            "manifest_sha256": manifest_sha256,
+            "projection_sha256": projection_sha256,
         }
         (staging / MARKER).write_text(json.dumps(marker, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
@@ -143,8 +156,9 @@ def main() -> None:
         if errors:
             raise ValueError("公开投影隐私门禁失败：\n" + "\n".join(errors))
         digest = manifest_digest(manifest_path)
+        surface_digest = projection_digest(source, files)
         if args.apply:
-            apply_projection(source, target, files, digest)
+            apply_projection(source, target, files, digest, surface_digest)
     except (OSError, ValueError, json.JSONDecodeError) as exc:
         raise SystemExit(f"[ERROR] {exc}") from exc
 
@@ -152,6 +166,7 @@ def main() -> None:
         "mode": "apply" if args.apply else "plan",
         "file_count": len(files),
         "manifest_sha256": digest,
+        "projection_sha256": surface_digest,
         "files": [path.as_posix() for path in files],
     }, ensure_ascii=False, indent=2))
 

@@ -51,7 +51,8 @@ class PublicProjectionTests(unittest.TestCase):
             self.assertEqual(applied.returncode, 0, applied.stderr or applied.stdout)
             self.assertTrue((target / "src/main.py").is_file())
             self.assertFalse((target / "internal").exists())
-            self.assertTrue((target / ".senmu-public-projection.json").is_file())
+            marker = json.loads((target / ".senmu-public-projection.json").read_text(encoding="utf-8"))
+            self.assertRegex(marker["projection_sha256"], r"^[0-9a-f]{64}$")
 
     def test_private_identity_and_absolute_home_path_block_projection(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_root:
