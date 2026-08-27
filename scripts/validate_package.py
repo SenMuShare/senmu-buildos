@@ -267,6 +267,7 @@ def validate_skills() -> None:
         )
 
     required_resources = (
+        ROOT / "AGENTS.md",
         ROOT / ".github/workflows/release.yml",
         ROOT / "scripts/bump_version.py",
         ROOT / "scripts/validate_distillation_batch.py",
