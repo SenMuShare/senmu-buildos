@@ -96,7 +96,7 @@ Senmu BuildOS 既可以作为插件直接使用，也可以作为完整源码项
 
 ## 当前状态
 
-Senmu BuildOS 当前正式版本为 `v1.14.0`，支持 **Codex 与 Claude Code** 共用七个平级 Skill，并分别提供插件清单、Marketplace 和生命周期 Hook 适配。两个适配层都不会改写用户全局配置或项目文件，也不联网；反馈收集只会把高信号候选写入本机 `~/.senmu-buildos/feedback/`，不在正常答复显示内部标记或 ID。安装、启用和卸载仍由用户显式控制。
+Senmu BuildOS 当前正式版本为 `v1.14.1`，支持 **Codex 与 Claude Code** 共用七个平级 Skill，并分别提供插件清单、Marketplace 和生命周期 Hook 适配。两个适配层都不会改写用户全局配置或项目文件，也不联网；反馈收集只会把高信号候选写入本机 `~/.senmu-buildos/feedback/`，不在正常答复显示内部标记或 ID。安装、启用和卸载仍由用户显式控制。
 
 ## 安装、更新与卸载
 

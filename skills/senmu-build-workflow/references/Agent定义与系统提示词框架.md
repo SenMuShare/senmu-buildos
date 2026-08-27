@@ -138,7 +138,7 @@ project-root/
 
 三类容易混淆的文件必须分开：
 
-- 根 `AGENTS.md` 只负责 Codex 在该目录作用域内的读取顺序、硬边界和质量入口，不描述某个业务 Agent 的完整角色或 Prompt。
+- 根 `AGENTS.md` 只负责 Codex 在该目录作用域内的项目差异、权威路由、真实命令和明确覆盖，不复制 BuildOS 通用规则，也不描述某个业务 Agent 的完整角色或 Prompt。
 - `agents/<agent-key>/AGENT.md` 才是项目自有 Agent 的角色、Prompt、输入输出、工具、流程、约束、门禁和版本契约；`agents/AGENT_REGISTER.md` 只索引，不复制正文。
 - BuildOS 源码中各 Skill 的 `agents/openai.yaml` 是 Codex 的 Skill 展示与默认调用元数据，不属于应用项目的业务 Agent，也不得登记进 Agent Register。
 
@@ -163,7 +163,7 @@ python3 .senmu-buildos/validate_agents.py --root . --strict
 4. 在共享规则或项目入口中链接项目标准。
 5. 对 G2-G4 或长期多 Agent 项目，建议由 validator 检查 Agent Key、版本和核心章节；不要求机器理解全部自然语言含义。
 6. 业务细节只保存在项目层，不反向写进本通用框架。
-7. 在项目根 `AGENTS.md` 或等价入口中只写按需发现规则，不复制 Agent 定义正文。
+7. 在项目根 `AGENTS.md` 或等价入口中只写项目差异与按需发现规则，不复制 BuildOS 或 Agent 定义正文。
 
 默认文件模板见 [Agent Definition Template](../assets/agent-governance/AGENT.template.md) 与 [Agent Register Template](../assets/agent-governance/AGENT_REGISTER.template.md)。
 

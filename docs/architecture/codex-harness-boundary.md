@@ -26,7 +26,7 @@ Senmu BuildOS 使用 Codex 已有的发现、上下文和生命周期能力，�
 - 需要跨阶段或跨会话恢复的项目必须声明 Durable Task State Owner；`TASK_REGISTER.md` 与 `TASK-<NNNN>-<slug>.md` 编号计划只是 standard/release 新项目默认实现，core 可沿用 README、Issue 或外部任务系统。
 - `WORKLOG.md` 是由 Project 管理的追加时间线；`LESSONS_LEARNED.md` 是由 Learning 管理的经验证长期经验。
 - SessionStart Hook 在 `startup`、`resume`、`clear`、`compact` 注入固定短 kernel；SubagentStart 注入更短的委派边界。
-- UserPromptSubmit 只匹配明确纠正或投递动作；仅询问反馈机制不入箱。Agent 自己发现高信号缺口时可调用本地 CLI 静默提交，不把内部标记或 ID 暴露在正常答复中。两条路径都仅写入 `~/.senmu-buildos/feedback/`（或显式数据目录），不写项目文件、不联网、不自动晋级规则。
+- UserPromptSubmit 只匹配明确纠正或投递动作；仅询问反馈机制不入箱。命中后只落本机候选并返回空 Hook 输出，不向模型上下文注入候选 ID、收集说明或处置指令。Agent 自己发现高信号缺口时可调用本地 CLI 静默提交。两条路径都仅写入 `~/.senmu-buildos/feedback/`（或显式数据目录），不写项目文件、不联网、不自动晋级规则。
 - Hook 不自动读取任务记录。安装或更新插件后仍需通过 Codex 的 Hook trust review；源码存在和单元测试通过不等于本机运行时已经启用。
 
 ## 引入新治理文件前的检查

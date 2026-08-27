@@ -78,7 +78,7 @@
 
 | 文件 | 只负责 | 不负责 |
 | --- | --- | --- |
-| `AGENTS.md` | Codex 自动加载的短读取顺序、作用域、硬边界和质量入口 | 项目百科、当前任务正文、专业手册复制件 |
+| `AGENTS.md` | Codex 自动加载的项目差异层：身份、作用域、权威路由、真实命令、特有约束和明确覆盖 | BuildOS 通用规则副本、项目百科、当前任务正文或专业手册复制件 |
 | `agents/AGENT_REGISTER.md` | 项目业务 Agent 的 Key、版本、状态、定义和运行入口索引 | Prompt 正文、运行状态或 Skill 展示元数据 |
 | `agents/<agent-key>/AGENT.md` | 单个项目业务 Agent 的稳定角色、Prompt 与执行契约 | 单次任务参数、当前 step／attempt／checkpoint 或根目录读取入口 |
 | `.senmu-buildos/templates/agent/AGENT.md` | 创建新 Agent Definition 的结构模板 | 已生效 Agent、当前版本事实或运行配置 |

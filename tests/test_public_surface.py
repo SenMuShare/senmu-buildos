@@ -48,6 +48,32 @@ class PublicSurfaceTests(unittest.TestCase):
             self.assertIn("敏感文件类型", output)
             self.assertIn("高置信度凭据形态", output)
 
+    def test_git_worktree_ignores_index_entries_deleted_by_projection(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_root:
+            root = Path(temporary_root)
+            subprocess.run(["git", "init", "-q", str(root)], check=True)
+            obsolete = root / "obsolete.md"
+            obsolete.write_text("old private surface\n", encoding="utf-8")
+            subprocess.run(["git", "-C", str(root), "add", "obsolete.md"], check=True)
+            obsolete.unlink()
+            (root / "README.md").write_text("# Public\n", encoding="utf-8")
+
+            result = self.validate(root)
+
+            self.assertEqual(result.returncode, 0, result.stderr or result.stdout)
+            self.assertIn("1 tracked files", result.stdout)
+
+    def test_git_worktree_scans_new_projection_files_before_commit(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_root:
+            root = Path(temporary_root)
+            subprocess.run(["git", "init", "-q", str(root)], check=True)
+            (root / "README.md").write_text("private-customer\n", encoding="utf-8")
+
+            result = self.validate(root, "--deny-term", "private-customer")
+
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("私有实例标识", result.stderr or result.stdout)
+
 
 if __name__ == "__main__":
     unittest.main()

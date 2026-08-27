@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+## [1.14.1] - 2026-08-28
+
+### Changed
+
+- 七个 Skill 改为更短的发现描述、决策入口和按结果加载 reference；上下文预算只防止无意膨胀，不作为删减有效信息的 KPI。
+- 普通任务默认只加载一个能直接产出结果的主 Skill；契约保持型局部变更由 Engineering 单独处理，只有真实职责转换才交接 Product、Workflow 或 Delivery。
+- 项目根 `AGENTS.md` 收口为 BuildOS 之上的差异层：只保存项目事实、权威路径、真实命令、特有约束和明确覆盖，不复制通用 Skill 正文。
+- 脚本改为按必要性、灵活性和用户工作流分类：高频通用入口直达，专项 validator 由命中 reference 路由，生命周期底层实现与 helper 由上层命令间接拥有。
+- Codex 与 Claude Code 仍在本机收集明确纠正候选，但 `UserPromptSubmit` 不再向当前模型追加候选 ID 或处置提示。
+
 ## [1.14.0] - 2026-08-28
 
 ### Changed

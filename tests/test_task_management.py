@@ -121,6 +121,12 @@ class ProjectGovernanceScaffoldTests(unittest.TestCase):
                         governance_text = governance.read_text(encoding="utf-8")
                         self.assertIn("项目治理章程", governance_text)
                         self.assertIn("治理版本：`1.0.0`", governance_text)
+                        agents_text = (project_root / "AGENTS.md").read_text(encoding="utf-8")
+                        self.assertLessEqual(len(agents_text), 2_300)
+                        self.assertIn("## 项目差异与覆盖", agents_text)
+                        self.assertIn("## 冲突处理", agents_text)
+                        self.assertNotIn("## 稳定规则", agents_text)
+                        self.assertNotIn("## 完成输出", agents_text)
                         if profile in {"standard", "release"}:
                             self.assertTrue((project_root / "governance/tasks/TASK_REGISTER.md").is_file())
                             self.assertTrue((project_root / ".senmu-buildos/templates/TASK.md").is_file())
@@ -435,7 +441,9 @@ class ProjectGovernanceScaffoldTests(unittest.TestCase):
             target.joinpath("81_数据临时区/00_迁移核验凭证/01_恢复包").mkdir(parents=True)
             target.joinpath(".remotion/chrome-headless-shell").mkdir(parents=True)
             (target / "README.md").write_text("# Established\n", encoding="utf-8")
+            (target / "AGENTS.md").write_text("# Root project facts\n", encoding="utf-8")
             (unit / "README.md").write_text("# Current\n", encoding="utf-8")
+            (unit / "AGENTS.md").write_text("# Unit override\n", encoding="utf-8")
             (unit / "db/current.sqlite").write_text("", encoding="utf-8")
             (unit / "jobs/episode-01/production-job.json").write_text("{}\n", encoding="utf-8")
             (unit / "jobs/episode-01/task-timing.json").write_text("{}\n", encoding="utf-8")
@@ -490,6 +498,11 @@ class ProjectGovernanceScaffoldTests(unittest.TestCase):
             self.assertIn("81_数据临时区/", excluded_paths)
             self.assertIn(".runtime/identity-backups/", excluded_paths)
             self.assertIn(".playwright-profile/", excluded_paths)
+            layering = report["instruction_layering_review"]
+            self.assertEqual(layering["status"], "semantic_review_required")
+            self.assertEqual(layering["entrypoints"], ["AGENTS.md", "projects/current/AGENTS.md"])
+            self.assertFalse(layering["write_default_agents_template"])
+            self.assertIn("remove_buildos_duplicate", layering["required_actions"])
 
     def test_initializer_can_resume_its_own_draft(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_root:

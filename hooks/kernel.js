@@ -2,10 +2,10 @@ const { MAX_SESSION_CONTEXT_CHARS, MAX_SUBAGENT_CONTEXT_CHARS } = require('./con
 
 const SESSION_CONTEXT = `SENMU BUILDOS KERNEL
 
-- User request and real project authority/runtime/release evidence define facts.
+- User request and real project authority/runtime evidence define facts.
 - Confirm scope, unit, authorization, reversibility and G0-G4 risk.
-- Search owners/code/platform/dependencies; load only needed Skill/references.
-- Recover from declared durable task owner and applicable active lessons; chat, Hook and plans are not owners.
+- Start with active project owners; if they answer, stop; otherwise load only needed Skill/reference.
+- Recover from declared durable task owner and applicable active lessons; chat and Hooks are not owners.
 - Prevent defects in requirements, ownership, architecture, interfaces, defaults and flow; gates only cover material residual risk.
 - Preserve user changes; separate sources, runtime, deliveries, evidence and archives.
 - Keep fail-closed gates for security/privacy/permissions/payment/production data/destructive actions/release integrity.

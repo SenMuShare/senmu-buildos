@@ -461,6 +461,13 @@ def assess(root: Path, max_depth: int, verbose: bool) -> dict[str, Any]:
     if len(candidates.get("run_state", [])) > 1:
         migration_risks.append("存在多个数据库或运行清单候选；需确认当前库、投影、备份库和各发布单元 owner。")
 
+    agent_entrypoints = sorted({path for path in authority_entrypoints if path.endswith("AGENTS.md")})
+    if agent_entrypoints:
+        migration_risks.append(
+            "现有 AGENTS.md 必须先做语义去重：保留项目事实、真实命令、权威路径和明确覆盖；"
+            "把已有专业正文压缩为路由；删除与 BuildOS 相同的通用方法；冲突或时效不明项交用户裁决。"
+        )
+
     result: dict[str, Any] = {
         "mode": "assess-existing",
         "assessment_status": "inventory_complete_semantic_confirmation_required",
@@ -480,6 +487,18 @@ def assess(root: Path, max_depth: int, verbose: bool) -> dict[str, Any]:
         },
         "candidate_mappings": {role: compact(items) for role, items in sorted(candidates.items())},
         "capability_assessment": assess_capability_signals(scanned_files, root),
+        "instruction_layering_review": {
+            "status": "semantic_review_required" if agent_entrypoints else "no_agents_entrypoint_found",
+            "entrypoints": agent_entrypoints,
+            "baseline": "senmu-buildos_if_adopted",
+            "required_actions": [
+                "retain_project_fact_command_path_or_explicit_override",
+                "compress_project_specific_body_to_canonical_owner_route",
+                "remove_buildos_duplicate",
+                "escalate_conflict_or_staleness_for_user_decision",
+            ],
+            "write_default_agents_template": False,
+        },
         "excluded_evidence": {reason: compact(items) for reason, items in sorted(excluded.items())},
         "conflicts": conflicts,
         "gaps": gaps,

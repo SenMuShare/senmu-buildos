@@ -54,6 +54,30 @@ test('explicit correction is captured once, locally, with secret redaction', (t)
   }
 });
 
+test('prompt hooks capture corrections without injecting model context', (t) => {
+  for (const [host, script] of [
+    ['codex', '../../adapters/codex/hooks/user-prompt-submit.js'],
+    ['claude-code', '../../adapters/claude-code/hooks/user-prompt-submit.js'],
+  ]) {
+    const env = temporaryEnvironment(t);
+    const result = childProcess.spawnSync(process.execPath, [path.join(__dirname, script)], {
+      encoding: 'utf8',
+      env: { ...process.env, ...env },
+      input: JSON.stringify({
+        session_id: `session-${host}`,
+        cwd: '/work/project',
+        prompt: '不对，你又把项目规则重复写进 Skill 了。',
+      }),
+    });
+
+    assert.equal(result.status, 0);
+    assert.equal(result.stdout, '{}');
+    assert.equal(result.stderr, '');
+    assert.equal(listCandidates(env).length, 1);
+    assert.equal(listCandidates(env)[0].source.host, host);
+  }
+});
+
 test('quiet agent submission writes locally without user-facing output', (t) => {
   const env = temporaryEnvironment(t);
   const result = childProcess.spawnSync(process.execPath, [

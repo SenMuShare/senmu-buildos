@@ -31,12 +31,18 @@ def sensitive_path(path: Path) -> bool:
 
 def tracked_files(root: Path) -> list[Path]:
     result = subprocess.run(
-        ["git", "-C", str(root), "ls-files", "-z"],
+        ["git", "-C", str(root), "ls-files", "-z", "--cached", "--others", "--exclude-standard"],
         check=False,
         capture_output=True,
     )
     if result.returncode == 0:
-        return [Path(item.decode("utf-8")) for item in result.stdout.split(b"\0") if item]
+        return sorted(
+            relative
+            for item in result.stdout.split(b"\0")
+            if item
+            for relative in (Path(item.decode("utf-8")),)
+            if (root / relative).is_file()
+        )
     return sorted(path.relative_to(root) for path in root.rglob("*") if path.is_file() and ".git" not in path.parts)
 
 

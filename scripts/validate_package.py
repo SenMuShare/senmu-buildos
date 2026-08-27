@@ -72,10 +72,17 @@ FORBIDDEN_ORIGIN_TERMS = (
     "b" + "mad",
     "super" + "powers",
 )
-MAX_SKILL_ENTRY_CHARS = 3_200
+MAX_SKILL_ENTRY_CHARS = 2_200
 MAX_SKILL_DESCRIPTION_CHARS = 400
 MAX_DESCRIPTION_CATALOG_CHARS = 2_400
-MAX_REFERENCE_CHARS = 15_000
+MAX_REFERENCE_CHARS = 10_000
+MAX_PROJECT_AGENTS_TEMPLATE_CHARS = 2_300
+MAX_SKILL_ENTRY_CONTEXT_UNITS = 1_200
+MAX_SKILL_DESCRIPTION_CONTEXT_UNITS = 90
+MAX_DESCRIPTION_CATALOG_CONTEXT_UNITS = 500
+MAX_REFERENCE_CONTEXT_UNITS = 5_500
+MAX_SINGLE_REFERENCE_ROUTE_CONTEXT_UNITS = 6_500
+MAX_TWO_REFERENCE_ROUTE_CONTEXT_UNITS = 12_000
 
 
 def fail(message: str) -> None:
@@ -84,6 +91,18 @@ def fail(message: str) -> None:
 
 def sha256(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
+
+
+def estimate_context_units(text: str) -> int:
+    """Conservative dependency-free proxy for mixed CJK and Latin token cost."""
+    cjk = sum(
+        1
+        for char in text
+        if "\u3400" <= char <= "\u9fff"
+        or "\u3040" <= char <= "\u30ff"
+        or "\uac00" <= char <= "\ud7af"
+    )
+    return cjk + (len(text) - cjk + 3) // 4
 
 
 def parse_skill_name(text: str) -> str:
@@ -226,6 +245,7 @@ def validate_skills() -> None:
         fail(f"skill set mismatch: expected {sorted(EXPECTED_SKILLS)}, got {sorted(actual)}")
     seen_references: dict[str, str] = {}
     description_catalog_chars = 0
+    description_catalog_context_units = 0
     for skill_name in sorted(actual):
         skill_root = skills_root / skill_name
         entry = skill_root / "SKILL.md"
@@ -237,33 +257,68 @@ def validate_skills() -> None:
             fail(f"{skill_name} frontmatter name does not match folder")
         description = parse_skill_description(text)
         description_catalog_chars += len(description)
+        description_units = estimate_context_units(description)
+        description_catalog_context_units += description_units
         if len(description) > MAX_SKILL_DESCRIPTION_CHARS:
             fail(
                 f"{skill_name}/SKILL.md description exceeds "
                 f"{MAX_SKILL_DESCRIPTION_CHARS} characters"
             )
+        if description_units > MAX_SKILL_DESCRIPTION_CONTEXT_UNITS:
+            fail(
+                f"{skill_name}/SKILL.md description exceeds "
+                f"{MAX_SKILL_DESCRIPTION_CONTEXT_UNITS} context units"
+            )
         if len(text) > MAX_SKILL_ENTRY_CHARS:
             fail(f"{skill_name}/SKILL.md exceeds {MAX_SKILL_ENTRY_CHARS} characters")
+        entry_units = estimate_context_units(text)
+        if entry_units > MAX_SKILL_ENTRY_CONTEXT_UNITS:
+            fail(
+                f"{skill_name}/SKILL.md exceeds "
+                f"{MAX_SKILL_ENTRY_CONTEXT_UNITS} context units"
+            )
         if len(text.splitlines()) > 140:
             fail(f"{skill_name}/SKILL.md exceeds 140 lines")
         ui = agents.read_text(encoding="utf-8")
         for field in ("display_name:", "short_description:", "default_prompt:"):
             if field not in ui:
                 fail(f"{skill_name}/agents/openai.yaml missing {field}")
+        reference_units: list[tuple[int, Path]] = []
         for reference in sorted((skill_root / "references").glob("*.md")):
-            if len(reference.read_text(encoding="utf-8")) > MAX_REFERENCE_CHARS:
+            reference_text = reference.read_text(encoding="utf-8")
+            if len(reference_text) > MAX_REFERENCE_CHARS:
                 fail(f"{reference} exceeds {MAX_REFERENCE_CHARS} characters")
+            units = estimate_context_units(reference_text)
+            if units > MAX_REFERENCE_CONTEXT_UNITS:
+                fail(f"{reference} exceeds {MAX_REFERENCE_CONTEXT_UNITS} context units")
             if f"references/{reference.name}" not in text:
                 fail(f"{reference} is not directly routed from its owner SKILL.md")
             if reference.name in seen_references:
                 fail(f"reference has duplicate active owners: {reference.name}")
             seen_references[reference.name] = skill_name
+            reference_units.append((units, reference))
+        largest = sorted(reference_units, reverse=True)
+        if largest and entry_units + largest[0][0] > MAX_SINGLE_REFERENCE_ROUTE_CONTEXT_UNITS:
+            fail(
+                f"{skill_name} entry plus {largest[0][1].name} exceeds "
+                f"{MAX_SINGLE_REFERENCE_ROUTE_CONTEXT_UNITS} context units"
+            )
+        if len(largest) > 1 and entry_units + largest[0][0] + largest[1][0] > MAX_TWO_REFERENCE_ROUTE_CONTEXT_UNITS:
+            fail(
+                f"{skill_name} entry plus two largest references exceeds "
+                f"{MAX_TWO_REFERENCE_ROUTE_CONTEXT_UNITS} context units"
+            )
     if seen_references != REFERENCE_OWNERS:
         fail("active reference owner map does not match the product architecture")
     if description_catalog_chars > MAX_DESCRIPTION_CATALOG_CHARS:
         fail(
             "Skill description catalog exceeds "
             f"{MAX_DESCRIPTION_CATALOG_CHARS} characters"
+        )
+    if description_catalog_context_units > MAX_DESCRIPTION_CATALOG_CONTEXT_UNITS:
+        fail(
+            "Skill description catalog exceeds "
+            f"{MAX_DESCRIPTION_CATALOG_CONTEXT_UNITS} context units"
         )
 
     required_resources = (
@@ -359,6 +414,22 @@ def validate_local_markdown_links() -> None:
                 fail(f"broken local Markdown link in {path.relative_to(ROOT)}: {raw_target}")
 
 
+def validate_project_instruction_layer() -> None:
+    template = ROOT / "skills/senmu-build-project/assets/project-governance-starter/AGENTS.template.md"
+    text = template.read_text(encoding="utf-8")
+    if len(text) > MAX_PROJECT_AGENTS_TEMPLATE_CHARS:
+        fail(
+            "project AGENTS template exceeds delta-layer budget: "
+            f"{len(text)} > {MAX_PROJECT_AGENTS_TEMPLATE_CHARS} characters"
+        )
+    for legacy_heading in ("## 稳定规则", "## 完成输出"):
+        if legacy_heading in text:
+            fail(f"project AGENTS template still carries copied governance section: {legacy_heading}")
+    legacy_template = ROOT / "skills/senmu-build-engineering/assets/code-quality/AGENTS.template.md"
+    if legacy_template.exists():
+        fail("Engineering must not own a second project AGENTS template")
+
+
 def main() -> None:
     validate_product_identity()
     validate_plugins()
@@ -367,12 +438,22 @@ def main() -> None:
     validate_no_exact_duplicate_active_files()
     validate_no_duplicate_instruction_paragraphs()
     validate_local_markdown_links()
+    validate_project_instruction_layer()
     print(
         "[OK] Skill context budgets: "
         f"entry<={MAX_SKILL_ENTRY_CHARS}, "
         f"description<={MAX_SKILL_DESCRIPTION_CHARS}, "
         f"catalog<={MAX_DESCRIPTION_CATALOG_CHARS}, "
         f"reference<={MAX_REFERENCE_CHARS} characters"
+    )
+    print(
+        "[OK] context-unit budgets: "
+        f"entry<={MAX_SKILL_ENTRY_CONTEXT_UNITS}, "
+        f"description<={MAX_SKILL_DESCRIPTION_CONTEXT_UNITS}, "
+        f"catalog<={MAX_DESCRIPTION_CATALOG_CONTEXT_UNITS}, "
+        f"reference<={MAX_REFERENCE_CONTEXT_UNITS}, "
+        f"one-route<={MAX_SINGLE_REFERENCE_ROUTE_CONTEXT_UNITS}, "
+        f"two-route<={MAX_TWO_REFERENCE_ROUTE_CONTEXT_UNITS}"
     )
     print("[OK] Senmu BuildOS product identity is clean")
     print("[OK] Codex and Claude Code plugin structures and seven Skill entrypoints are valid")
@@ -381,6 +462,7 @@ def main() -> None:
     print("[OK] no exact duplicate active Skill resources found")
     print("[OK] no duplicated long instruction paragraphs found across active Skills")
     print("[OK] active local Markdown links resolve")
+    print(f"[OK] project AGENTS delta layer <= {MAX_PROJECT_AGENTS_TEMPLATE_CHARS} characters and has one template owner")
     print("[OK] public package validation is independent from private project-state owners")
 
 

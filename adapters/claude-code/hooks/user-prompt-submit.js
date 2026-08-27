@@ -1,13 +1,11 @@
 #!/usr/bin/env node
 
-const { capturePromptCandidate, feedbackContext, readHookInput } = require('../../../hooks/feedback');
-const { writeHookOutput } = require('./runtime');
+const { capturePromptCandidate, readHookInput } = require('../../../hooks/feedback');
 
 readHookInput()
   .then((input) => {
-    const candidate = capturePromptCandidate(input, 'claude-code');
-    if (candidate) writeHookOutput('UserPromptSubmit', feedbackContext(candidate));
-    else process.stdout.write('{}');
+    capturePromptCandidate(input, 'claude-code');
+    process.stdout.write('{}');
   })
   .catch((error) => {
     process.stderr.write(`Senmu BuildOS feedback capture skipped: ${error.message}\n`);
