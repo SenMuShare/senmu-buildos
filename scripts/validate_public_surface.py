@@ -18,9 +18,15 @@ FORBIDDEN_PREFIXES = (
     Path("evidence/reviews"),
 )
 TEXT_SUFFIXES = {".md", ".json", ".yaml", ".yml", ".py", ".js", ".sh", ".env", ".txt"}
+SENSITIVE_SUFFIXES = {".log", ".sqlite", ".sqlite3", ".db", ".pem", ".key"}
 ABSOLUTE_PRIVATE_PATH = re.compile(
     r"(?:/Users/[A-Za-z0-9._-]+/|/home/[A-Za-z0-9._-]+/|[A-Za-z]:\\Users\\[A-Za-z0-9._-]+\\)"
 )
+HIGH_CONFIDENCE_SECRET = re.compile(r"(?:AKIA[0-9A-Z]{16}|gh[pousr]_[A-Za-z0-9]{20,})")
+
+
+def sensitive_path(path: Path) -> bool:
+    return path.name == ".env" or path.name.startswith(".env.") or path.suffix.lower() in SENSITIVE_SUFFIXES
 
 
 def tracked_files(root: Path) -> list[Path]:
@@ -46,6 +52,9 @@ def main() -> None:
         if any(relative == prefix or prefix in relative.parents for prefix in FORBIDDEN_PREFIXES):
             errors.append(f"禁止公开的内部 owner：{relative.as_posix()}")
             continue
+        if sensitive_path(relative):
+            errors.append(f"禁止公开的敏感文件类型：{relative.as_posix()}")
+            continue
         path = root / relative
         if path.suffix.lower() not in TEXT_SUFFIXES:
             continue
@@ -55,6 +64,8 @@ def main() -> None:
             continue
         if ABSOLUTE_PRIVATE_PATH.search(text):
             errors.append(f"包含本机绝对路径：{relative.as_posix()}")
+        if HIGH_CONFIDENCE_SECRET.search(text):
+            errors.append(f"包含高置信度凭据形态：{relative.as_posix()}")
         for term in args.deny_term:
             if term and term in text:
                 errors.append(f"包含私有实例标识 {term!r}：{relative.as_posix()}")

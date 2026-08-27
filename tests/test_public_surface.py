@@ -36,6 +36,18 @@ class PublicSurfaceTests(unittest.TestCase):
             self.assertIn("禁止公开的内部 owner", output)
             self.assertIn("私有实例标识", output)
 
+    def test_rejects_sensitive_file_types_and_concrete_tokens(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_root:
+            root = Path(temporary_root)
+            (root / "runtime.log").write_text("local execution\n", encoding="utf-8")
+            token = "ghp_" + "12345678901234567890"
+            (root / "README.md").write_text(f"token={token}\n", encoding="utf-8")
+            result = self.validate(root)
+            self.assertNotEqual(result.returncode, 0)
+            output = result.stderr or result.stdout
+            self.assertIn("敏感文件类型", output)
+            self.assertIn("高置信度凭据形态", output)
+
 
 if __name__ == "__main__":
     unittest.main()

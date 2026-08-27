@@ -16,6 +16,8 @@ MARKER = ".senmu-public-projection.json"
 ABSOLUTE_PRIVATE_PATH = re.compile(
     r"(?:/Users/[A-Za-z0-9._-]+/|/home/[A-Za-z0-9._-]+/|[A-Za-z]:\\Users\\[A-Za-z0-9._-]+\\)"
 )
+SENSITIVE_SUFFIXES = {".log", ".sqlite", ".sqlite3", ".db", ".pem", ".key"}
+HIGH_CONFIDENCE_SECRET = re.compile(r"(?:AKIA[0-9A-Z]{16}|gh[pousr]_[A-Za-z0-9]{20,})")
 
 
 def relative_path(raw: str, label: str) -> Path:
@@ -47,6 +49,10 @@ def is_excluded(path: Path, excludes: list[Path]) -> bool:
     return any(path == excluded or excluded in path.parents for excluded in excludes)
 
 
+def sensitive_path(path: Path) -> bool:
+    return path.name == ".env" or path.name.startswith(".env.") or path.suffix.lower() in SENSITIVE_SUFFIXES
+
+
 def collect_files(source: Path, includes: list[Path], excludes: list[Path]) -> list[Path]:
     files: set[Path] = set()
     for included in includes:
@@ -62,6 +68,8 @@ def collect_files(source: Path, includes: list[Path], excludes: list[Path]) -> l
             relative = path.relative_to(source)
             if ".git" in relative.parts or "__pycache__" in relative.parts or is_excluded(relative, excludes):
                 continue
+            if sensitive_path(relative):
+                raise ValueError(f"公开投影拒绝敏感文件类型：{relative.as_posix()}")
             files.add(relative)
     return sorted(files)
 
@@ -74,6 +82,8 @@ def scan_file(path: Path, relative: Path, deny_terms: list[str]) -> list[str]:
     errors = []
     if ABSOLUTE_PRIVATE_PATH.search(text):
         errors.append(f"{relative.as_posix()}: 包含本机绝对路径")
+    if HIGH_CONFIDENCE_SECRET.search(text):
+        errors.append(f"{relative.as_posix()}: 包含高置信度凭据形态")
     for term in deny_terms:
         if term in text:
             errors.append(f"{relative.as_posix()}: 包含私有实例标识 {term!r}")

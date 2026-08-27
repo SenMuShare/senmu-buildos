@@ -73,6 +73,21 @@ class PublicProjectionTests(unittest.TestCase):
             self.assertIn("隐私门禁失败", result.stderr or result.stdout)
             self.assertFalse(target.exists())
 
+    def test_sensitive_runtime_file_is_never_projected(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_root:
+            base = Path(temporary_root)
+            source = base / "private"
+            target = base / "public"
+            source.joinpath("src").mkdir(parents=True)
+            source.joinpath("src/runtime.log").write_text("private runtime\n", encoding="utf-8")
+            source.joinpath("README.md").write_text("# Public\n", encoding="utf-8")
+            manifest = source / "publication.json"
+            self.write_manifest(manifest)
+            result = self.run_export(source, target, manifest, "--apply")
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("敏感文件类型", result.stderr or result.stdout)
+            self.assertFalse(target.exists())
+
     def test_existing_unmarked_target_is_not_overwritten(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_root:
             base = Path(temporary_root)
