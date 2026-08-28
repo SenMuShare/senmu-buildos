@@ -10,6 +10,7 @@
 | S-02 | owner 必须区分专业事实、语义／运行和 Durable Task State；跨产物一致追踪不等于共享 owner，不得把 PRD、技术设计、实现和测试统一归属 | `docs/architecture/skill-boundaries.md`、Product／Engineering `SKILL.md` |
 | S-03 | 任务默认只加载一个能直接产出当前结果的主 Skill；相关性、用户可见、将来可能提交或代码中有步骤不足以触发组合，只在真实专业职责转换时交接 | `docs/architecture/skill-boundaries.md` |
 | S-04 | 上下文预算是防膨胀上限，不是缩减目标；必须保留改变判断、权限、状态、失败处置或完成声明的非显然信息。脚本是可选的执行资源：只在确定性动作能显著提升可靠性或效率时增加，并按用户工作流决定入口直达、reference 专项路由或上层命令间接拥有；不要求 helper 和内部实现全部暴露。脚本结果不冒充语义、授权或真实环境证据 | `docs/architecture/skill-boundaries.md`、各 Skill `scripts/` |
+| S-05 | 每个获准写源码的主会话和子 Agent 都从 Kernel 获得最小写入合同：首次写入前通过项目预检或 Delivery Change Unit 准备，保护现有脏改动、默认隔离任务、不复用 sealed 单元、匹配验证并本地 commit；用户不需要预告并发数量或下 Git 指令 | `hooks/kernel.js`、`manage_change_unit.py` |
 
 ## Project
 
@@ -82,13 +83,14 @@
 | E-15 | 技术设计只记录需求或风险实际需要的质量属性；每项绑定业务影响、范围、可观察目标、验证、owner、约束／依赖和取舍，不以厂商示例数字制造通用门禁 | `架构约束与技术债治理规范.md`、`TECHNICAL_DESIGN.template.md` |
 | E-17 | 日常代码审查以准备合并的完整变更集为单位，逐个核账变更函数和注释；自查不代替需要职责分离的批准 | `源代码工程质量与AI协作规范.md` |
 | E-18 | G1／本地可逆单 owner 的契约保持型局部变更由 Engineering 单独主责，只读相关代码与本地规则、只做一个最小充分检查，不新增 Task／TD／ADR／PRD／Changelog；连续表现层等价反馈按契约批次收口 | `skills/senmu-build-engineering/SKILL.md`、`治理强度分级与门禁规范.md`、`软件测试与质量验证规范.md` |
+| E-19 | 普通 Bug／文案修复即使不加载 Delivery 也遵守 Kernel 写入合同；验证失败、范围未完、项目禁止或会混入他人改动时不伪造 commit，并明确交接未封口原因 | `skills/senmu-build-engineering/SKILL.md`、`源代码工程质量与AI协作规范.md`、`hooks/kernel.js` |
 
 ## Delivery
 
 | ID | 压缩后必须仍能决策的事项 | 主 owner |
 | --- | --- | --- |
 | D-01 | 本地 Git 是完整基础；Remote、PR／MR、CI 和平台 Release 按项目现状与授权启用 | `代码管理与合并规范.md` |
-| D-02 | 分支不自动要求 worktree；默认一个权威目录和一个写入者，真实并行或隔离才评估额外执行面 | `代码管理与合并规范.md` |
+| D-02 | 只读不创建执行面；Codex 写入默认 parallel-capable，每个 Change Unit 使用独立短分支和 worktree，只有覆盖整个修改窗口的独占写入保证才允许省略额外 worktree | `代码管理与合并规范.md` |
 | D-03 | 开发执行者完成范围清楚的本地 commit 与交接；收到发布命令的当前执行者承担本次收口，不绑定固定 Agent | `代码管理与合并规范.md`、`发布授权与生产事实协议.md` |
 | D-04 | 版本、changelog、commit、Tag、制品、部署记录和目标验证必须对应同一发布单元 | `版本制品与发布规范.md` |
 | D-05 | 候选／预检不授权 Tag、上传、部署、切流、通知或清理 | `发布授权与生产事实协议.md` |
@@ -112,6 +114,19 @@
 | D-22 | 正式发布、公开源码、部署与独立制品分别按项目事实启用；`release`、Tag 或平台自动源码包不自动创建制品目录、保留和清理契约 | `版本制品与发布规范.md`、`项目治理实例与演进规范.md` |
 | D-23 | 私有权威到公开投影使用单向白名单晋级；公开仓不是第二个可独立编辑 owner，内部任务、日志、运行数据和绝对路径不得进入公开面 | `仓库边界与发布单元治理规范.md`、`项目目录与文档规范.md` |
 | D-24 | 范围清楚的日常本地 commit 不自动触发 Delivery；G1 契约保持型局部变更和连续表现层等价调整默认不每轮写 Work Log，批次收口时只写一份协作 owner，不双写多层同义日志 | `skills/senmu-build-delivery/SKILL.md`、`协作日志与版本日志规范.md` |
+| D-25 | 用户不需要选择 Git 机制；BuildOS 根据读写、并行、脏工作区和项目规则自动选择当前短分支、隔离 worktree 或串行，并保护来源不明改动 | `skills/senmu-build-delivery/SKILL.md`、`代码管理与合并规范.md` |
+| D-26 | “发布最新版本／把这批修复发布”触发一次发布收口，只纳入可证明属于当前发布单元且已完成、已验证、有稳定 commit 的变化，不机械合并所有分支 | `代码管理与合并规范.md` |
+| D-27 | 实现／修复会话在匹配验证通过且不混入他人改动时主动创建本地 commit；不要求用户再说“提交”，也不在修复会话擅自合并、升版或发布 | `代码管理与合并规范.md` |
+| D-28 | 单一发布单元、默认环境和标准入口明确时，“发布最新版本”授权执行适用的完整标准路线；BuildOS 决定候选、版本、Tag、部署顺序，只对多目标、付费、不可逆或计划外破坏性差异提问 | `版本制品与发布规范.md`、`发布授权与生产事实协议.md` |
+| D-29 | 多 AI 协作不依赖固定 Team Leader；每个实现会话封口 Change Unit，收到发布命令的当前 Agent 从任务 owner、Harness 可见任务和 Git 重建接收矩阵并承担本次审查／集成 | `多Agent变更单元与版本线收口规范.md` |
+| D-30 | 未提交源码只能是 in_progress；默认写入无论大小都独立隔离，直接主线 G1 快速通道必须有覆盖整个修改窗口的独占写入保证 | `多Agent变更单元与版本线收口规范.md` |
+| D-31 | 新会话按目标版本线、发布单元和 Change Unit 动态分组；多个当前维护线修复组可与任意命名的继任线组并行，当前线 Hotfix 逐项按适用性前向传播 | `多Agent变更单元与版本线收口规范.md` |
+| D-32 | 继任版本发布前以截止点汇流所有适用且 sealed 的维护线修复，被新实现替代的保留 superseded 证据；生产验证后才清理临时组并将旧线转为历史／回滚线 | `多Agent变更单元与版本线收口规范.md` |
+| D-33 | 标准发布只读项目权威与紧凑接收索引，复用 sealed commit 的匹配测试，版本候选冻结后只运行一次完整 preflight；常规发布不加载 Assurance、不宽泛扫描 memory、不手工重复标准入口已有测试 | `skills/senmu-build-delivery/SKILL.md`、`代码管理与合并规范.md`、`版本制品与发布规范.md` |
+| D-34 | 当前线与继任线是项目声明的角色，不由 `2.x／3.0` 或任何 SemVer 数字推断；同一规则适用于 `0.x`、任意主版本、CalVer、构建号、渠道名和无数字分支 | `多Agent变更单元与版本线收口规范.md`、`版本制品与发布规范.md` |
+| D-35 | 标准发布入口必须是项目 owner 声明的机器可执行顶层命令或 CI/CD workflow，统一驱动候选、一次 preflight、制品、部署、生产核验和收据；分散脚本或文档清单不得冒充流水线 | `skills/senmu-build-delivery/SKILL.md`、`代码管理与合并规范.md`、`版本制品与发布规范.md` |
+| D-36 | 首次源码写入前必须有项目写入预检或 Delivery Change Unit `prepare/verify` 的机器证据；未登记旧分支、身份不匹配、错误 worktree 和 sealed 分支 fail closed，不能先写共享 main 再事后迁移 | `manage_change_unit.py`、`代码管理与合并规范.md` |
+| D-37 | 内部安装快照用正式 VERSION 加准确 source commit 区分内容，插件安装与新会话激活是不同状态；SessionStart 回显 `version@commit` 才证明当前会话实际加载 | `manage_lifecycle.py`、`hooks/kernel.js`、`版本制品与发布规范.md` |
 
 ## Assurance
 

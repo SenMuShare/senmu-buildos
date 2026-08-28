@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Read-only Git branch/worktree inventory for coaching and cleanup review."""
+"""Read-only Git branch/worktree inventory and execution-surface coaching."""
 
 from __future__ import annotations
 
@@ -8,6 +8,9 @@ import json
 import subprocess
 from pathlib import Path
 from typing import Any
+
+
+INTENTS = ("inventory", "read", "write", "parallel-write", "release-closeout")
 
 
 def git(repo: Path, *args: str, check: bool = True) -> str:
@@ -87,7 +90,83 @@ def classify_worktree(
     return "unmerged_review_required"
 
 
-def inspect(repo_arg: Path, target: str, protected: set[str]) -> dict[str, Any]:
+def recommend_execution_surface(
+    *,
+    intent: str,
+    current_dirty: bool,
+    active_other_worktree_count: int,
+    exclusive_writer: bool,
+) -> dict[str, Any]:
+    """Translate ordinary task intent into a safe Git execution-surface choice."""
+    if intent == "read":
+        return {
+            "mode": "read_only_existing_worktree",
+            "requires_isolation": False,
+            "reason": "Read-only work does not need a branch or extra worktree.",
+        }
+    if intent == "parallel-write":
+        return {
+            "mode": "isolated_short_branch_worktree",
+            "requires_isolation": True,
+            "reason": "Concurrent writers must not share one physical checkout.",
+        }
+    if intent == "release-closeout":
+        return {
+            "mode": "release_intake_then_clean_release_source",
+            "requires_isolation": current_dirty or active_other_worktree_count > 0,
+            "reason": (
+                "Classify completed in-scope changes before integrating into one clean "
+                "release source; never merge every branch mechanically."
+            ),
+        }
+    if intent == "write":
+        if current_dirty:
+            return {
+                "mode": "preserve_dirty_owner_then_isolate_or_handoff",
+                "requires_isolation": True,
+                "reason": (
+                    "Existing uncommitted changes may belong to another task or user; "
+                    "do not mix, stash, reset, or overwrite them."
+                ),
+            }
+        if active_other_worktree_count > 0:
+            return {
+                "mode": "isolated_short_branch_worktree",
+                "requires_isolation": True,
+                "reason": "Other execution surfaces exist, so concurrent writing is plausible.",
+            }
+        if not exclusive_writer:
+            return {
+                "mode": "isolated_short_branch_worktree",
+                "requires_isolation": True,
+                "reason": (
+                    "Codex writing is parallel-capable by default: another session may begin "
+                    "before this edit finishes, so current absence of another writer is not "
+                    "an exclusive-write guarantee."
+                ),
+            }
+        return {
+            "mode": "short_branch_current_worktree",
+            "requires_isolation": False,
+            "reason": (
+                "An explicit exclusive-write guarantee covers the whole edit window, so a "
+                "clean checkout can use one short branch without another directory."
+            ),
+        }
+    return {
+        "mode": "inventory_only",
+        "requires_isolation": False,
+        "reason": "No execution intent was supplied; report facts without choosing a write strategy.",
+    }
+
+
+def inspect(
+    repo_arg: Path,
+    target: str,
+    protected: set[str],
+    intent: str = "inventory",
+    exclusive_writer: bool = False,
+) -> dict[str, Any]:
     repo = Path(git(repo_arg, "rev-parse", "--show-toplevel")).resolve()
     target_head = git(repo, "rev-parse", "--verify", f"{target}^{{commit}}")
     worktrees = parse_worktrees(git(repo, "worktree", "list", "--porcelain"))
@@ -154,6 +233,25 @@ def inspect(repo_arg: Path, target: str, protected: set[str]) -> dict[str, Any]:
         )
 
     remotes = [line for line in git(repo, "remote").splitlines() if line]
+    current_path = repo
+    current_worktree = next(
+        (item for item in inspected_worktrees if Path(str(item["path"])) == current_path),
+        None,
+    )
+    if current_worktree is None and current_path == repo:
+        current_worktree = next(
+            (item for item in inspected_worktrees if item["is_primary"]),
+            None,
+        )
+    current_dirty = bool(current_worktree and current_worktree["dirty"])
+    active_other_worktree_count = sum(
+        1
+        for item in inspected_worktrees
+        if Path(str(item["path"])) != current_path
+        and item["classification"]
+        in {"dirty_review_required", "unmerged_review_required", "detached_review_required"}
+    )
+
     return {
         "schema_version": 1,
         "repository_root": str(repo),
@@ -163,6 +261,12 @@ def inspect(repo_arg: Path, target: str, protected: set[str]) -> dict[str, Any]:
         "remotes": remotes,
         "worktrees": inspected_worktrees,
         "branches": branches,
+        "execution_recommendation": recommend_execution_surface(
+            intent=intent,
+            current_dirty=current_dirty,
+            active_other_worktree_count=active_other_worktree_count,
+            exclusive_writer=exclusive_writer,
+        ),
         "caveats": [
             "Classifications are read-only coaching candidates, not deletion authorization.",
             "Git alone cannot prove that ignored assets, running processes, project owners, or release entrypoints are safe to remove.",
@@ -176,9 +280,29 @@ def main() -> int:
     parser.add_argument("--repo", type=Path, default=Path.cwd())
     parser.add_argument("--target", default="main")
     parser.add_argument("--protected", action="append", default=[])
+    parser.add_argument(
+        "--intent",
+        choices=INTENTS,
+        default="inventory",
+        help="Translate task intent into a read-only execution-surface recommendation.",
+    )
+    parser.add_argument(
+        "--exclusive-writer",
+        action="store_true",
+        help=(
+            "Use only when project authority or the harness guarantees that no other writer "
+            "can appear for the entire edit window."
+        ),
+    )
     parser.add_argument("--compact", action="store_true")
     args = parser.parse_args()
-    report = inspect(args.repo, args.target, set(args.protected))
+    report = inspect(
+        args.repo,
+        args.target,
+        set(args.protected),
+        args.intent,
+        args.exclusive_writer,
+    )
     print(json.dumps(report, ensure_ascii=False, indent=None if args.compact else 2, sort_keys=True))
     return 0
 

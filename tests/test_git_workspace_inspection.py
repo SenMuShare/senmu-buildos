@@ -17,6 +17,129 @@ def run(*args: str, cwd: Path) -> subprocess.CompletedProcess[str]:
 
 
 class GitWorkspaceInspectionTests(unittest.TestCase):
+    def test_clean_write_defaults_to_isolation_unless_exclusive_writer_is_guaranteed(self) -> None:
+        with tempfile.TemporaryDirectory() as raw:
+            repo = Path(raw) / "repo"
+            repo.mkdir()
+            run("git", "init", "-b", "main", cwd=repo)
+            run("git", "config", "user.name", "Test User", cwd=repo)
+            run("git", "config", "user.email", "test@example.com", cwd=repo)
+            (repo / "base.txt").write_text("base\n", encoding="utf-8")
+            run("git", "add", "base.txt", cwd=repo)
+            run("git", "commit", "-m", "base", cwd=repo)
+
+            default_report = json.loads(
+                run(
+                    sys.executable,
+                    str(SCRIPT),
+                    "--repo",
+                    str(repo),
+                    "--intent",
+                    "write",
+                    cwd=ROOT,
+                ).stdout
+            )
+            exclusive_report = json.loads(
+                run(
+                    sys.executable,
+                    str(SCRIPT),
+                    "--repo",
+                    str(repo),
+                    "--intent",
+                    "write",
+                    "--exclusive-writer",
+                    cwd=ROOT,
+                ).stdout
+            )
+
+            self.assertEqual(
+                default_report["execution_recommendation"]["mode"],
+                "isolated_short_branch_worktree",
+            )
+            self.assertTrue(default_report["execution_recommendation"]["requires_isolation"])
+            self.assertEqual(
+                exclusive_report["execution_recommendation"]["mode"],
+                "short_branch_current_worktree",
+            )
+            self.assertFalse(exclusive_report["execution_recommendation"]["requires_isolation"])
+
+    def test_recommends_parallel_isolation_without_mutating_repository(self) -> None:
+        with tempfile.TemporaryDirectory() as raw:
+            repo = Path(raw) / "repo"
+            repo.mkdir()
+            run("git", "init", "-b", "main", cwd=repo)
+            run("git", "config", "user.name", "Test User", cwd=repo)
+            run("git", "config", "user.email", "test@example.com", cwd=repo)
+            (repo / "base.txt").write_text("base\n", encoding="utf-8")
+            run("git", "add", "base.txt", cwd=repo)
+            run("git", "commit", "-m", "base", cwd=repo)
+
+            before = run("git", "status", "--porcelain", cwd=repo).stdout
+            result = run(
+                sys.executable,
+                str(SCRIPT),
+                "--repo",
+                str(repo),
+                "--intent",
+                "parallel-write",
+                cwd=ROOT,
+            )
+            report = json.loads(result.stdout)
+            after = run("git", "status", "--porcelain", cwd=repo).stdout
+
+            self.assertEqual(before, after)
+            self.assertEqual(
+                report["execution_recommendation"]["mode"],
+                "isolated_short_branch_worktree",
+            )
+            self.assertTrue(report["execution_recommendation"]["requires_isolation"])
+
+    def test_dirty_write_is_preserved_and_release_does_not_merge_all(self) -> None:
+        with tempfile.TemporaryDirectory() as raw:
+            repo = Path(raw) / "repo"
+            repo.mkdir()
+            run("git", "init", "-b", "main", cwd=repo)
+            run("git", "config", "user.name", "Test User", cwd=repo)
+            run("git", "config", "user.email", "test@example.com", cwd=repo)
+            (repo / "base.txt").write_text("base\n", encoding="utf-8")
+            run("git", "add", "base.txt", cwd=repo)
+            run("git", "commit", "-m", "base", cwd=repo)
+            (repo / "dirty.txt").write_text("user work\n", encoding="utf-8")
+
+            write_report = json.loads(
+                run(
+                    sys.executable,
+                    str(SCRIPT),
+                    "--repo",
+                    str(repo),
+                    "--intent",
+                    "write",
+                    cwd=ROOT,
+                ).stdout
+            )
+            release_report = json.loads(
+                run(
+                    sys.executable,
+                    str(SCRIPT),
+                    "--repo",
+                    str(repo),
+                    "--intent",
+                    "release-closeout",
+                    cwd=ROOT,
+                ).stdout
+            )
+
+            self.assertEqual(
+                write_report["execution_recommendation"]["mode"],
+                "preserve_dirty_owner_then_isolate_or_handoff",
+            )
+            self.assertEqual(
+                release_report["execution_recommendation"]["mode"],
+                "release_intake_then_clean_release_source",
+            )
+            self.assertIn("never merge every branch mechanically", release_report["execution_recommendation"]["reason"])
+            self.assertTrue((repo / "dirty.txt").is_file())
+
     def test_classifies_without_mutating_repository(self) -> None:
         with tempfile.TemporaryDirectory() as raw:
             root = Path(raw)

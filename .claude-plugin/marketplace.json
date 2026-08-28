@@ -10,7 +10,7 @@
       "name": "senmu-buildos",
       "source": "./",
       "description": "Project lifecycle governance for AI agents.",
-      "version": "1.14.2",
+      "version": "1.14.3",
       "author": {
         "name": "Senmu"
       },

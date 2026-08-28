@@ -52,6 +52,7 @@ REFERENCE_OWNERS = {
     "frontend-html-daisyui-practice.md": "senmu-build-engineering",
     "项目工程规范发现方法.md": "senmu-build-engineering",
     "代码管理与合并规范.md": "senmu-build-delivery",
+    "多Agent变更单元与版本线收口规范.md": "senmu-build-delivery",
     "仓库边界与发布单元治理规范.md": "senmu-build-delivery",
     "协作日志与版本日志规范.md": "senmu-build-delivery",
     "版本制品与发布规范.md": "senmu-build-delivery",

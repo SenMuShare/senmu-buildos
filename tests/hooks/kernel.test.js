@@ -1,4 +1,7 @@
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const os = require('node:os');
+const path = require('node:path');
 const test = require('node:test');
 
 const { MAX_SESSION_CONTEXT_CHARS, MAX_SUBAGENT_CONTEXT_CHARS } = require('../../hooks/config');
@@ -16,11 +19,26 @@ test('SessionStart kernel stays short and preserves core boundaries', () => {
   assert.match(context, /declared durable task owner/);
   assert.match(context, /applicable active lessons/);
   assert.match(context, /gates only cover material residual risk/);
+  assert.match(context, /prepare a Delivery Change Unit/);
+  assert.match(context, /one task per branch\/worktree unless exclusive/);
+  assert.match(context, /never reuse sealed work/);
+  assert.match(context, /verify and commit/);
   assert.match(context, /feedback CLI/);
   assert.match(context, /silently/i);
   assert.match(context, /never expose markers\/IDs/);
   assert.doesNotMatch(context, /BuildOS feedback candidate:/);
   assert.match(context, /unverified\/undeployed\/unpublished is incomplete/);
+});
+
+test('SessionStart identifies the exact installed internal snapshot', () => {
+  const pluginRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'senmu-buildos-kernel-'));
+  fs.writeFileSync(path.join(pluginRoot, '.senmu-buildos-install.json'), JSON.stringify({
+    version: '1.14.2',
+    source_commit: '1234567890abcdef',
+  }));
+  const context = getSessionContext(pluginRoot);
+  assert.match(context, /Active snapshot: 1\.14\.2@1234567890ab/);
+  assert.ok(context.length <= MAX_SESSION_CONTEXT_CHARS);
 });
 
 test('SubagentStart kernel stays shorter than the session kernel', () => {
@@ -29,6 +47,7 @@ test('SubagentStart kernel stays shorter than the session kernel', () => {
   assert.ok(subagent.length <= MAX_SUBAGENT_CONTEXT_CHARS);
   assert.ok(subagent.length < session.length);
   assert.match(subagent, /Do not expand scope/);
+  assert.match(subagent, /return a stable commit/);
 });
 
 test('Codex output uses lifecycle additionalContext', () => {

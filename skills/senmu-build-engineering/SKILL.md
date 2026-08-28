@@ -22,7 +22,7 @@ description: Govern engineering contracts, architecture, technical debt, testing
 
 ## 快速通道
 
-单 owner、本地可逆且保持产品、运行和交付契约的 G1 局部变更，由 Engineering 单独主责，不组合其他 BuildOS Skill，也不新增 PRD、ADR 或 Changelog。是否保持契约按用户动作、可见状态、持久化、接口、数据、权限和发布边界判断，不按代码行数或具体 UI 对象判断。
+单 owner、本地可逆且保持产品、运行和交付契约的 G1 局部变更，由 Engineering 单独主责，不组合其他 BuildOS Skill，也不新增 PRD、ADR 或 Changelog。快速通道仍遵守 Kernel 的隔离、匹配验证与本地 commit 合同。是否保持契约按用户动作、可见状态、持久化、接口、数据、权限和发布边界判断，不按代码行数或具体 UI 对象判断。
 
 安全、隐私、权限、支付、生产数据、外部付费、破坏性操作和正式发布不走快速通道。
 
