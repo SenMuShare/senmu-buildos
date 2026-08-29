@@ -143,6 +143,196 @@ class ChangeUnitManagementTests(unittest.TestCase):
             self.assertNotEqual(blocked.returncode, 0)
             self.assertIn("has no prepared Change Unit record", blocked.stderr)
 
+    def test_task_branch_cannot_silently_become_an_integration_line(self) -> None:
+        with tempfile.TemporaryDirectory() as raw:
+            root = Path(raw)
+            repo = self.make_repo(root)
+            parent_worktree = root / "parent"
+            self.command(
+                "prepare",
+                "--repo", str(repo),
+                "--unit", "TASK-2001",
+                "--slug", "parent-unit",
+                "--worktree", str(parent_worktree),
+                cwd=ROOT,
+            )
+            (parent_worktree / "parent.txt").write_text("parent\n", encoding="utf-8")
+            run("git", "add", "parent.txt", cwd=parent_worktree)
+            run("git", "commit", "-m", "parent", cwd=parent_worktree)
+            self.command("seal", "--repo", str(parent_worktree), "--unit", "TASK-2001", cwd=ROOT)
+
+            blocked = self.command(
+                "prepare",
+                "--repo", str(repo),
+                "--target", "codex/parent-unit",
+                "--unit", "TASK-2002",
+                "--slug", "child-unit",
+                "--worktree", str(root / "child"),
+                cwd=ROOT,
+                check=False,
+            )
+
+            self.assertNotEqual(blocked.returncode, 0)
+            self.assertIn("task-on-task branching requires", blocked.stderr)
+
+    def test_explicit_stack_requires_matching_sealed_parent(self) -> None:
+        with tempfile.TemporaryDirectory() as raw:
+            root = Path(raw)
+            repo = self.make_repo(root)
+            parent_worktree = root / "parent"
+            self.command(
+                "prepare",
+                "--repo", str(repo),
+                "--unit", "TASK-2003",
+                "--slug", "sealed-parent",
+                "--worktree", str(parent_worktree),
+                cwd=ROOT,
+            )
+            (parent_worktree / "parent.txt").write_text("parent\n", encoding="utf-8")
+            run("git", "add", "parent.txt", cwd=parent_worktree)
+            run("git", "commit", "-m", "parent", cwd=parent_worktree)
+            self.command("seal", "--repo", str(parent_worktree), "--unit", "TASK-2003", cwd=ROOT)
+
+            report = json.loads(
+                self.command(
+                    "prepare",
+                    "--repo", str(repo),
+                    "--target", "codex/sealed-parent",
+                    "--target-role", "stacked-unit",
+                    "--parent-unit", "TASK-2003",
+                    "--unit", "TASK-2004",
+                    "--slug", "dependent-child",
+                    "--worktree", str(root / "child"),
+                    cwd=ROOT,
+                ).stdout
+            )
+
+            self.assertEqual(report["target_role"], "stacked-unit")
+            self.assertEqual(report["parent_unit"], "TASK-2003")
+            self.assertEqual(report["baseline"], run("git", "rev-parse", "codex/sealed-parent", cwd=repo).stdout.strip())
+
+    def test_stack_cannot_start_from_an_in_progress_parent(self) -> None:
+        with tempfile.TemporaryDirectory() as raw:
+            root = Path(raw)
+            repo = self.make_repo(root)
+            self.command(
+                "prepare",
+                "--repo", str(repo),
+                "--unit", "TASK-2005",
+                "--slug", "open-parent",
+                "--worktree", str(root / "parent"),
+                cwd=ROOT,
+            )
+            blocked = self.command(
+                "prepare",
+                "--repo", str(repo),
+                "--target", "codex/open-parent",
+                "--target-role", "stacked-unit",
+                "--parent-unit", "TASK-2005",
+                "--unit", "TASK-2006",
+                "--slug", "premature-child",
+                "--worktree", str(root / "child"),
+                cwd=ROOT,
+                check=False,
+            )
+
+            self.assertNotEqual(blocked.returncode, 0)
+            self.assertIn("must be sealed", blocked.stderr)
+
+    def test_list_derives_pending_and_integrated_without_a_second_task_state(self) -> None:
+        with tempfile.TemporaryDirectory() as raw:
+            root = Path(raw)
+            repo = self.make_repo(root)
+            worktree = root / "unit"
+            self.command(
+                "prepare",
+                "--repo", str(repo),
+                "--unit", "TASK-3001",
+                "--slug", "pending-view",
+                "--worktree", str(worktree),
+                cwd=ROOT,
+            )
+            (worktree / "change.txt").write_text("change\n", encoding="utf-8")
+            run("git", "add", "change.txt", cwd=worktree)
+            run("git", "commit", "-m", "change", cwd=worktree)
+            sealed = json.loads(
+                self.command("seal", "--repo", str(worktree), "--unit", "TASK-3001", cwd=ROOT).stdout
+            )
+
+            pending = json.loads(
+                self.command("list", "--repo", str(repo), cwd=ROOT).stdout
+            )["units"][0]
+            self.assertEqual(pending["state"], "sealed")
+            self.assertEqual(pending["derived_disposition"], "pending_integration")
+
+            run("git", "merge", "--ff-only", sealed["head"], cwd=repo)
+            integrated = json.loads(
+                self.command("list", "--repo", str(repo), cwd=ROOT).stdout
+            )["units"][0]
+            self.assertEqual(integrated["state"], "sealed")
+            self.assertEqual(integrated["derived_disposition"], "integrated")
+
+    def test_close_records_non_ancestry_integration_with_owner_receipt(self) -> None:
+        with tempfile.TemporaryDirectory() as raw:
+            root = Path(raw)
+            repo = self.make_repo(root)
+            worktree = root / "unit"
+            self.command(
+                "prepare", "--repo", str(repo), "--unit", "TASK-3002",
+                "--slug", "squashed-view", "--worktree", str(worktree), cwd=ROOT,
+            )
+            (worktree / "change.txt").write_text("change\n", encoding="utf-8")
+            run("git", "add", "change.txt", cwd=worktree)
+            run("git", "commit", "-m", "change", cwd=worktree)
+            self.command("seal", "--repo", str(worktree), "--unit", "TASK-3002", cwd=ROOT)
+            run("git", "merge", "--squash", "codex/squashed-view", cwd=repo)
+            run("git", "commit", "-m", "squashed", cwd=repo)
+            integration_commit = run("git", "rev-parse", "HEAD", cwd=repo).stdout.strip()
+
+            closed = json.loads(
+                self.command(
+                    "close", "--repo", str(repo), "--unit", "TASK-3002",
+                    "--disposition", "integrated", "--integration-commit", integration_commit,
+                    "--owner-ref", "governance/tasks/TASK-3002.md#integration", cwd=ROOT,
+                ).stdout
+            )
+            listed = json.loads(self.command("list", "--repo", str(repo), cwd=ROOT).stdout)["units"][0]
+
+            self.assertEqual(closed["state"], "integrated")
+            self.assertEqual(closed["integration_commit"], integration_commit)
+            self.assertEqual(listed["derived_disposition"], "integrated")
+            self.assertEqual(listed["owner_ref"], "governance/tasks/TASK-3002.md#integration")
+
+    def test_close_requires_owner_and_integration_commit(self) -> None:
+        with tempfile.TemporaryDirectory() as raw:
+            root = Path(raw)
+            repo = self.make_repo(root)
+            worktree = root / "unit"
+            self.command(
+                "prepare", "--repo", str(repo), "--unit", "TASK-3003",
+                "--slug", "missing-receipt", "--worktree", str(worktree), cwd=ROOT,
+            )
+            (worktree / "change.txt").write_text("change\n", encoding="utf-8")
+            run("git", "add", "change.txt", cwd=worktree)
+            run("git", "commit", "-m", "change", cwd=worktree)
+            self.command("seal", "--repo", str(worktree), "--unit", "TASK-3003", cwd=ROOT)
+            blocked = self.command(
+                "close", "--repo", str(repo), "--unit", "TASK-3003",
+                "--disposition", "integrated", "--owner-ref", "TASK-3003#integration",
+                cwd=ROOT, check=False,
+            )
+            self.assertNotEqual(blocked.returncode, 0)
+            self.assertIn("requires --integration-commit", blocked.stderr)
+
+            unrelated = run("git", "rev-parse", "codex/missing-receipt", cwd=repo).stdout.strip()
+            unreachable = self.command(
+                "close", "--repo", str(repo), "--unit", "TASK-3003",
+                "--disposition", "integrated", "--integration-commit", unrelated,
+                "--owner-ref", "TASK-3003#integration", cwd=ROOT, check=False,
+            )
+            self.assertNotEqual(unreachable.returncode, 0)
+            self.assertIn("not reachable from the registered target line", unreachable.stderr)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -255,7 +255,7 @@ def is_resumable_draft(root: Path) -> bool:
         policy = json.loads(policy_path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
         return False
-    return policy.get("initialization_status") == "draft" and str(policy.get("schema_version", "")).split(".", 1)[0] in {"1", "2"}
+    return policy.get("initialization_status") == "draft" and policy.get("schema_version") == "3.0.0"
 
 
 def create_baseline_commit(root: Path, managed_paths: list[str]) -> dict[str, str | None]:
@@ -579,7 +579,7 @@ def main() -> None:
     else:
         policy_target.parent.mkdir(parents=True, exist_ok=True)
         policy = {
-            "schema_version": "2.3.0",
+            "schema_version": "3.0.0",
             "project_name": args.project_name,
             "project_type": args.project_type,
             "layout": layout,
@@ -594,6 +594,19 @@ def main() -> None:
             "artifact_kinds": artifact_kinds,
             "profile": args.profile,
             "selected_modules": selected_modules,
+            "git_management": {
+                "main_mode": "release_ready",
+                "direct_main_writes": False,
+                "worktree_root": ".worktrees",
+                "change_unit_states": [
+                    "in_progress", "sealed", "integrated", "excluded", "superseded",
+                ],
+            } if "git" in selected_module_set else None,
+            "release_policy": {
+                "official_tag_semantics": "verified_release",
+                "candidate_identity": "commit_and_artifact",
+                "authorization_mode": "bounded_release_session",
+            } if "delivery" in selected_module_set else None,
             "initialization_status": "draft",
             "root_locator": {
                 "kind": "git_toplevel" if (root / ".git").exists() else "governance_policy_root",

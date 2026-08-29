@@ -85,7 +85,7 @@
 | `.senmu-buildos/validate_agents.py` | Agent 登记、命名、版本、状态、路径和核心章节的确定性结构检查 | 自然语言质量裁决、运行验证或业务验收 |
 | `README.md` | 人和 AI 都可读的项目定位、启动方式与关键入口 | 当前任务状态副本 |
 | `governance/GOVERNANCE.md` | 项目核心原则、权威顺序、治理版本、修订与例外 | 需求、设计、任务、运行或发布事实正文 |
-| `.senmu-buildos/config.json` | validator 使用的静态结构化治理配置 | 当前目标、进度、下一步或聊天状态 |
+| `.senmu-buildos/config.json` | validator 使用的静态结构化治理配置，包括主线语义、直接主线写入禁止、worktree 根、Change Unit 状态、正式 Tag 语义和授权模式 | 当前目标、进度、待接收列表、下一步或聊天状态 |
 | `governance/PROJECT_MAP.md` | 模块、目录、状态源、公开入口、交付单元、legacy 和任务相关规范入口的导航 | 活跃任务、专业正文或规范全文副本 |
 | standard/release 默认 `governance/tasks/TASK_REGISTER.md` 或项目映射 owner | 当前与历史受管理任务索引 | 单个任务正文 |
 | standard/release 默认 `governance/tasks/TASK-<NNNN>-<slug>.md` 或项目映射对象 | 单个任务计划、当前边界、进度、关键决定摘要、证据和恢复入口 | 专业事实正文、完整聊天或时间流水 |

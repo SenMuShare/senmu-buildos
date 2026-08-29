@@ -29,6 +29,12 @@ Senmu BuildOS 不替代具体项目的事实源，也不把“已有”误判为
 
 需要多个依赖步骤、阶段、Agent 或会话的工作统一登记到项目声明的 Durable Task State Owner。standard/release 新项目默认使用 `governance/tasks/`；core 可沿用 README、Issue 或外部任务系统，成熟项目可以映射任务包、数据库或外部系统。七个专业 Skill 仍分别维护自己的领域事实。当前 Hooks 不自动读取或总结任务状态。
 
+## 从产品意图到 Git 行为
+
+BuildOS 不要求用户设计分支机制。用户可以用产品语言说“继续当前版本”“开一条长期继任线”“把这批收进主线”“先不要发布”或“发布”。Delivery 结合项目事实，把它们翻译成版本线、Change Unit、任务分支、worktree、接收矩阵、候选和有限发布会话。
+
+静态机制由项目 policy 持有：当前主线是 `release_ready` 还是 `integration`、是否禁止直接写主线、worktree 根、Change Unit 状态集、正式 Tag 语义和授权模式。动态事实仍回到原 owner：任务边界与产品决定在 Durable Task State Owner，分支与 commit 在 Git，部署与发布在运行端和 Release Record。待接收状态从已封口 Change Unit 与 Git 可达性派生，不建第二本全局分支账。
+
 ## 组织学习飞轮
 
 反馈飞轮分为两个阶段：生命周期 Hook 只把明确的纠正、返工、回退和 Agent 主动报告保存为本机候选；用户再按需触发 Learning 集中审议，合并重复项、核对证据并决定丢弃、留在项目治理或晋级为 BuildOS 候选。单条反馈不是规则，候选箱不是事实 owner，任何跨项目反哺仍需人工授权、整仓影响分析、测试和正常发布流程。

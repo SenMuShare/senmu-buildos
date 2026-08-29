@@ -44,6 +44,8 @@ VALID_ARTIFACT_KINDS = {
 }
 VALID_ROOT_LOCATOR_KINDS = {"git_toplevel", "governance_policy_root"}
 VALID_LAYOUTS = {"software-repository", "project-system", "publication-workspace"}
+VALID_MAIN_MODES = {"integration", "release_ready"}
+CHANGE_UNIT_STATES = {"in_progress", "sealed", "integrated", "excluded", "superseded"}
 TASK_FILE = re.compile(r"^TASK-\d{4}-[a-z0-9]+(?:-[a-z0-9]+)*\.md$")
 # Angle-bracket format tokens such as TASK-<NNNN>, v<version>, or
 # agents/{agent-key} are executable documentation, not uncalibrated instance
@@ -96,77 +98,76 @@ def validate(root: Path, strict: bool) -> list[str]:
         errors.append(f"治理 policy 缺少字段：{', '.join(missing_keys)}")
 
     schema_version = str(policy.get("schema_version", "0"))
-    schema_parts = tuple(int(part) for part in schema_version.split(".") if part.isdigit())
+    if schema_version != "3.0.0":
+        errors.append("BuildOS v2 只接受 schema_version 3.0.0；请重新评估并生成当前治理实例")
 
     classification = policy.get("classification")
-    if schema_parts >= (1, 5, 0):
-        if not isinstance(classification, dict):
-            errors.append("schema 1.5+ 必须包含 classification 对象")
-        else:
-            for key, allowed in (
-                ("lifecycle_intent", VALID_LIFECYCLE_INTENTS),
-                ("delivery_model", VALID_DELIVERY_MODELS),
-                ("composition", VALID_COMPOSITIONS),
-            ):
-                if classification.get(key) not in allowed:
-                    errors.append(f"classification.{key} 无效：{classification.get(key)}")
+    if not isinstance(classification, dict):
+        errors.append("schema 3.0.0 必须包含 classification 对象")
+    else:
+        for key, allowed in (
+            ("lifecycle_intent", VALID_LIFECYCLE_INTENTS),
+            ("delivery_model", VALID_DELIVERY_MODELS),
+            ("composition", VALID_COMPOSITIONS),
+        ):
+            if classification.get(key) not in allowed:
+                errors.append(f"classification.{key} 无效：{classification.get(key)}")
 
     project_type = policy.get("project_type")
     if project_type not in VALID_PROJECT_TYPES:
         errors.append(f"project_type 无效：{project_type}")
 
     layout = policy.get("layout")
-    if schema_parts >= (2, 0, 0) and layout not in VALID_LAYOUTS:
+    if layout not in VALID_LAYOUTS:
         errors.append(f"layout 无效：{layout}")
 
-    if schema_parts >= (2, 3, 0):
-        publication = policy.get("publication")
-        if not isinstance(publication, dict):
-            errors.append("schema 2.3+ 必须包含 publication 对象")
-        else:
-            publication_model = publication.get("model")
-            if publication_model not in VALID_PUBLICATION_MODELS:
-                errors.append(f"publication.model 无效：{publication_model}")
-            if publication_model == "private_authority_public_projection":
-                if layout != "publication-workspace":
-                    errors.append("私有权威到公开投影模型必须使用 publication-workspace")
-                for key in ("public_projection_root", "release_staging_root"):
-                    if not publication.get(key):
-                        errors.append(f"publication.{key} 不能为空")
-                if publication.get("projection_mode") != "generated_only":
-                    errors.append("公开投影必须声明 projection_mode=generated_only")
-            elif any(publication.get(key) is not None for key in ("public_projection_root", "release_staging_root", "projection_mode")):
-                errors.append("非投影公开模型不得声明公开投影路径或生成模式")
+    publication = policy.get("publication")
+    if not isinstance(publication, dict):
+        errors.append("schema 3.0.0 必须包含 publication 对象")
+    else:
+        publication_model = publication.get("model")
+        if publication_model not in VALID_PUBLICATION_MODELS:
+            errors.append(f"publication.model 无效：{publication_model}")
+        if publication_model == "private_authority_public_projection":
+            if layout != "publication-workspace":
+                errors.append("私有权威到公开投影模型必须使用 publication-workspace")
+            for key in ("public_projection_root", "release_staging_root"):
+                if not publication.get(key):
+                    errors.append(f"publication.{key} 不能为空")
+            if publication.get("projection_mode") != "generated_only":
+                errors.append("公开投影必须声明 projection_mode=generated_only")
+        elif any(publication.get(key) is not None for key in ("public_projection_root", "release_staging_root", "projection_mode")):
+            errors.append("非投影公开模型不得声明公开投影路径或生成模式")
 
-        release_channels = policy.get("release_channels")
-        if not isinstance(release_channels, list):
-            errors.append("release_channels 必须是数组")
-            release_channels = []
-        unknown_channels = sorted(set(release_channels) - VALID_RELEASE_CHANNELS)
-        if unknown_channels:
-            errors.append(f"release_channels 包含未知值：{', '.join(unknown_channels)}")
+    release_channels = policy.get("release_channels")
+    if not isinstance(release_channels, list):
+        errors.append("release_channels 必须是数组")
+        release_channels = []
+    unknown_channels = sorted(set(release_channels) - VALID_RELEASE_CHANNELS)
+    if unknown_channels:
+        errors.append(f"release_channels 包含未知值：{', '.join(unknown_channels)}")
 
-        artifact_kinds = policy.get("artifact_kinds")
-        if not isinstance(artifact_kinds, list):
-            errors.append("artifact_kinds 必须是数组")
-            artifact_kinds = []
-        unknown_artifacts = sorted(set(artifact_kinds) - VALID_ARTIFACT_KINDS)
-        if unknown_artifacts:
-            errors.append(f"artifact_kinds 包含未知值：{', '.join(unknown_artifacts)}")
+    artifact_kinds = policy.get("artifact_kinds")
+    if not isinstance(artifact_kinds, list):
+        errors.append("artifact_kinds 必须是数组")
+        artifact_kinds = []
+    unknown_artifacts = sorted(set(artifact_kinds) - VALID_ARTIFACT_KINDS)
+    if unknown_artifacts:
+        errors.append(f"artifact_kinds 包含未知值：{', '.join(unknown_artifacts)}")
 
-        path_roles = policy.get("path_roles")
-        if not isinstance(path_roles, dict):
-            errors.append("schema 2.3+ 必须包含 path_roles 对象")
-        else:
-            for role, raw in path_roles.items():
-                if raw is None:
-                    continue
-                role_path = Path(str(raw))
-                if role_path.is_absolute() or ".." in role_path.parts:
-                    errors.append(f"path_roles.{role} 必须是工作区内相对路径：{raw}")
+    path_roles = policy.get("path_roles")
+    if not isinstance(path_roles, dict):
+        errors.append("schema 3.0.0 必须包含 path_roles 对象")
+    else:
+        for role, raw in path_roles.items():
+            if raw is None:
+                continue
+            role_path = Path(str(raw))
+            if role_path.is_absolute() or ".." in role_path.parts:
+                errors.append(f"path_roles.{role} 必须是工作区内相对路径：{raw}")
 
-        if policy.get("workspace_root") not in {".", ".."}:
-            errors.append("workspace_root 只能保存相对定位 . 或 ..")
+    if policy.get("workspace_root") not in {".", ".."}:
+        errors.append("workspace_root 只能保存相对定位 . 或 ..")
 
     selected_modules = policy.get("selected_modules", [])
     if not isinstance(selected_modules, list) or not selected_modules:
@@ -176,30 +177,47 @@ def validate(root: Path, strict: bool) -> list[str]:
     if unknown_modules:
         errors.append(f"selected_modules 包含未知模块：{', '.join(unknown_modules)}")
 
-    # Schema 1.4 removes mutable project/task state from the machine policy.
-    # Keep validating older generated projects without forcing an immediate migration.
-    if schema_parts < (1, 4, 0):
-        current_state = policy.get("current_state")
-        if not isinstance(current_state, dict):
-            errors.append("current_state 必须是对象")
-        elif not current_state.get("phase") or not current_state.get("last_updated"):
-            errors.append("current_state 必须包含 phase 和 last_updated")
-
-    if schema_parts >= (1, 6, 0):
-        root_locator = policy.get("root_locator")
-        if not isinstance(root_locator, dict):
-            errors.append("schema 1.6+ 必须包含 root_locator 对象")
+    git_management = policy.get("git_management")
+    if "git" in selected_modules:
+        if not isinstance(git_management, dict):
+            errors.append("启用 git 模块时 git_management 必须是对象")
         else:
-            if root_locator.get("kind") not in VALID_ROOT_LOCATOR_KINDS:
-                errors.append(f"root_locator.kind 无效：{root_locator.get('kind')}")
-            if root_locator.get("relative_path") != ".":
-                errors.append("root_locator.relative_path 必须为项目内相对路径 .")
-            if root_locator.get("kind") == "git_toplevel" and canonical_git_root(root) != root:
-                errors.append("root_locator.kind=git_toplevel 但当前根不是权威 Git 根")
+            if git_management.get("main_mode") not in VALID_MAIN_MODES:
+                errors.append("git_management.main_mode 必须为 integration 或 release_ready")
+            if git_management.get("direct_main_writes") is not False:
+                errors.append("git_management.direct_main_writes 必须为 false")
+            worktree_root = Path(str(git_management.get("worktree_root", "")))
+            if worktree_root.is_absolute() or ".." in worktree_root.parts or not worktree_root.parts:
+                errors.append("git_management.worktree_root 必须是项目受管相对路径")
+            if set(git_management.get("change_unit_states") or []) != CHANGE_UNIT_STATES:
+                errors.append("git_management.change_unit_states 必须使用统一 Change Unit 状态集合")
+    elif git_management is not None:
+        errors.append("未启用 git 模块时 git_management 必须为 null")
+
+    release_policy = policy.get("release_policy")
+    if "delivery" in selected_modules:
+        if not isinstance(release_policy, dict):
+            errors.append("启用 delivery 模块时 release_policy 必须是对象")
+        else:
+            if release_policy.get("official_tag_semantics") != "verified_release":
+                errors.append("release_policy.official_tag_semantics 必须为 verified_release")
+            if release_policy.get("candidate_identity") != "commit_and_artifact":
+                errors.append("release_policy.candidate_identity 必须为 commit_and_artifact")
+            if release_policy.get("authorization_mode") != "bounded_release_session":
+                errors.append("release_policy.authorization_mode 必须为 bounded_release_session")
+    elif release_policy is not None:
+        errors.append("未启用 delivery 模块时 release_policy 必须为 null")
+
+    root_locator = policy.get("root_locator")
+    if not isinstance(root_locator, dict):
+        errors.append("schema 3.0.0 必须包含 root_locator 对象")
     else:
-        declared_root = Path(str(policy.get("canonical_project_root", ""))).expanduser()
-        if not declared_root.is_absolute() or declared_root.resolve() != root:
-            errors.append(f"canonical_project_root 与当前根不一致：{declared_root} != {root}")
+        if root_locator.get("kind") not in VALID_ROOT_LOCATOR_KINDS:
+            errors.append(f"root_locator.kind 无效：{root_locator.get('kind')}")
+        if root_locator.get("relative_path") != ".":
+            errors.append("root_locator.relative_path 必须为项目内相对路径 .")
+        if root_locator.get("kind") == "git_toplevel" and canonical_git_root(root) != root:
+            errors.append("root_locator.kind=git_toplevel 但当前根不是权威 Git 根")
 
     canonical = canonical_git_root(root)
     if canonical != root:
@@ -274,11 +292,11 @@ def validate(root: Path, strict: bool) -> list[str]:
                                 print(f"[LESSONS] {line}")
 
     task_management = policy.get("task_management")
-    requires_task_management = schema_parts >= (1, 3, 0) and policy.get("profile") in {"standard", "release"}
+    requires_task_management = policy.get("profile") in {"standard", "release"}
     if requires_task_management and not isinstance(task_management, dict):
         errors.append("task_management 必须是对象")
     elif isinstance(task_management, dict):
-        if schema_parts >= (1, 6, 0) and task_management.get("owner_kind") != "senmu_markdown":
+        if task_management.get("owner_kind") != "senmu_markdown":
             errors.append("默认生成实例的 task_management.owner_kind 必须为 senmu_markdown")
         task_paths: dict[str, Path | None] = {}
         for key in ("task_directory", "register_path", "template_path"):
@@ -302,21 +320,20 @@ def validate(root: Path, strict: bool) -> list[str]:
             errors.append("task_management.template_path 不存在")
         if set(statuses or []) != VALID_TASK_STATUSES:
             errors.append("task_management.statuses 必须使用统一任务状态集合")
-        if schema_parts >= (2, 0, 0):
-            if task_management.get("task_file_format") != "TASK-NNNN-slug.md":
-                errors.append("task_management.task_file_format 必须为 TASK-NNNN-slug.md")
-            if task_directory is not None and task_directory.is_dir():
-                for candidate in task_directory.iterdir():
-                    if candidate.name == "TASK_REGISTER.md":
-                        continue
-                    if candidate.name.startswith("."):
-                        continue
-                    if candidate.is_dir():
-                        errors.append(f"任务计划不得使用独立目录：{candidate.relative_to(root)}")
-                    elif not TASK_FILE.fullmatch(candidate.name):
-                        errors.append(f"任务目录包含非标准文件：{candidate.relative_to(root)}")
+        if task_management.get("task_file_format") != "TASK-NNNN-slug.md":
+            errors.append("task_management.task_file_format 必须为 TASK-NNNN-slug.md")
+        if task_directory is not None and task_directory.is_dir():
+            for candidate in task_directory.iterdir():
+                if candidate.name == "TASK_REGISTER.md":
+                    continue
+                if candidate.name.startswith("."):
+                    continue
+                if candidate.is_dir():
+                    errors.append(f"任务计划不得使用独立目录：{candidate.relative_to(root)}")
+                elif not TASK_FILE.fullmatch(candidate.name):
+                    errors.append(f"任务目录包含非标准文件：{candidate.relative_to(root)}")
 
-    if schema_parts >= (2, 0, 0) and layout == "project-system":
+    if layout == "project-system":
         external_directories = policy.get("external_directories")
         if not isinstance(external_directories, dict):
             errors.append("project-system 布局必须声明 external_directories")
@@ -327,8 +344,7 @@ def validate(root: Path, strict: bool) -> list[str]:
                     errors.append(f"external_directories.{role} 不存在：{raw}")
 
     project_map_path = policy.get("project_map_path")
-    requires_project_map = schema_parts >= (1, 2, 0)
-    if requires_project_map and policy.get("profile") in {"standard", "release"}:
+    if policy.get("profile") in {"standard", "release"}:
         if not project_map_path or not (root / str(project_map_path)).is_file():
             errors.append("standard/release 档位必须提供有效 project_map_path")
         else:
@@ -336,10 +352,8 @@ def validate(root: Path, strict: bool) -> list[str]:
             for heading in PROJECT_MAP_REQUIRED_HEADINGS:
                 if heading not in project_map_text:
                     errors.append(f"Project Map 缺少必要索引区：{heading}")
-    elif requires_project_map and project_map_path is not None:
+    elif project_map_path is not None:
         errors.append("core 档位的 project_map_path 必须为 null")
-    elif project_map_path and not (root / str(project_map_path)).is_file():
-        errors.append(f"project_map_path 不存在：{project_map_path}")
 
     product_management = policy.get("product_management")
     if "product" in selected_modules and policy.get("profile") in {"standard", "release"}:
@@ -360,8 +374,8 @@ def validate(root: Path, strict: bool) -> list[str]:
         errors.append("未启用 workflow 模块时 workflow_management 必须为 null")
 
     agent_management = policy.get("agent_management")
-    if schema_parts >= (2, 1, 0) and "agent_management" not in policy:
-        errors.append("schema 2.1+ 必须声明 agent_management；未启用时设为 null")
+    if "agent_management" not in policy:
+        errors.append("schema 3.0.0 必须声明 agent_management；未启用时设为 null")
     if "agents" in selected_modules:
         if not isinstance(agent_management, dict):
             errors.append("启用 agents 模块时 agent_management 必须是对象")
@@ -400,12 +414,12 @@ def validate(root: Path, strict: bool) -> list[str]:
                 if result.returncode != 0:
                     detail = (result.stdout or result.stderr).strip().replace("\n", "; ")
                     errors.append(f"Agent 定义校验失败：{detail}")
-    elif schema_parts >= (2, 1, 0) and agent_management is not None:
+    elif agent_management is not None:
         errors.append("未启用 agents 模块时 agent_management 必须为 null")
 
     release_retention = policy.get("release_retention")
-    artifact_kinds = policy.get("artifact_kinds", []) if schema_parts >= (2, 3, 0) else []
-    requires_release_retention = bool(artifact_kinds) if schema_parts >= (2, 3, 0) else policy.get("profile") == "release"
+    artifact_kinds = policy.get("artifact_kinds", [])
+    requires_release_retention = bool(artifact_kinds)
     if requires_release_retention:
         if not isinstance(release_retention, dict):
             errors.append("已确认独立制品时必须声明 release_retention")

@@ -20,7 +20,9 @@ test('SessionStart kernel stays short and preserves core boundaries', () => {
   assert.match(context, /applicable active lessons/);
   assert.match(context, /gates only cover material residual risk/);
   assert.match(context, /prepare a Delivery Change Unit/);
-  assert.match(context, /one task per branch\/worktree unless exclusive/);
+  assert.match(context, /use a task branch/);
+  assert.match(context, /add a worktree unless exclusive/);
+  assert.match(context, /never edit an integration line/);
   assert.match(context, /never reuse sealed work/);
   assert.match(context, /verify and commit/);
   assert.match(context, /feedback CLI/);
@@ -48,6 +50,7 @@ test('SubagentStart kernel stays shorter than the session kernel', () => {
   assert.ok(subagent.length < session.length);
   assert.match(subagent, /Do not expand scope/);
   assert.match(subagent, /return a stable commit/);
+  assert.match(subagent, /never edit an integration line/);
 });
 
 test('Codex output uses lifecycle additionalContext', () => {

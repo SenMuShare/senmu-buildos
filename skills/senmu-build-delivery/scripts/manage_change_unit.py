@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Prepare, verify, and seal one task-specific Git Change Unit."""
+"""Prepare, verify, seal, and close one task-specific Git Change Unit."""
 
 from __future__ import annotations
 
@@ -45,6 +45,25 @@ def record_path(repo: Path, branch: str) -> Path:
     return common_git_dir(repo) / "senmu-buildos" / "change-units" / f"{digest}.json"
 
 
+def records_dir(repo: Path) -> Path:
+    return common_git_dir(repo) / "senmu-buildos" / "change-units"
+
+
+def record_for_unit(repo: Path, unit: str) -> tuple[Path, dict[str, Any]]:
+    matches: list[tuple[Path, dict[str, Any]]] = []
+    directory = records_dir(repo)
+    for path in sorted(directory.glob("*.json")) if directory.is_dir() else []:
+        try:
+            value = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise SystemExit(f"[BLOCKED] Change Unit record is invalid: {path}: {exc}") from exc
+        if isinstance(value, dict) and value.get("unit") == unit:
+            matches.append((path, value))
+    if len(matches) != 1:
+        raise SystemExit(f"[BLOCKED] expected one Change Unit record for {unit}, found {len(matches)}")
+    return matches[0]
+
+
 def load_record(repo: Path, branch: str) -> dict[str, Any] | None:
     path = record_path(repo, branch)
     if not path.is_file():
@@ -74,6 +93,19 @@ def now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+def is_ancestor(repo: Path, ancestor: str, descendant: str) -> bool:
+    result = subprocess.run(
+        ["git", "-C", str(repo), "merge-base", "--is-ancestor", ancestor, descendant],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode not in {0, 1}:
+        detail = (result.stderr or result.stdout).strip()
+        raise SystemExit(f"[BLOCKED] cannot compare Change Unit ancestry: {detail}")
+    return result.returncode == 0
+
+
 def validate_identity(unit: str, slug: str | None = None) -> None:
     if not UNIT_PATTERN.fullmatch(unit):
         raise SystemExit("[BLOCKED] --unit must be a stable 3-128 character task/change-unit key")
@@ -87,6 +119,56 @@ def branch_exists(repo: Path, branch: str) -> bool:
         check=False,
     )
     return result.returncode == 0
+
+
+def local_branch_for_ref(repo: Path, ref: str) -> str | None:
+    symbolic = git(repo, "rev-parse", "--symbolic-full-name", ref)
+    prefix = "refs/heads/"
+    return symbolic.removeprefix(prefix) if symbolic.startswith(prefix) else None
+
+
+def validate_target_topology(
+    repo: Path,
+    *,
+    target: str,
+    target_head: str,
+    target_role: str,
+    parent_unit: str | None,
+) -> dict[str, str | None]:
+    target_branch = local_branch_for_ref(repo, target)
+    target_record = load_record(repo, target_branch) if target_branch else None
+
+    if target_role == "integration-line":
+        if parent_unit:
+            raise SystemExit("[BLOCKED] --parent-unit is valid only with --target-role stacked-unit")
+        if target_branch is None:
+            raise SystemExit(
+                "[BLOCKED] integration-line targets must be named local branches; "
+                "use --target-role frozen-commit for an exact commit"
+            )
+        if target_record is not None:
+            raise SystemExit(
+                f"[BLOCKED] target {target_branch} belongs to Change Unit "
+                f"{target_record.get('unit')!r}; task-on-task branching requires "
+                "--target-role stacked-unit --parent-unit <unit>"
+            )
+    elif target_role == "stacked-unit":
+        if not parent_unit:
+            raise SystemExit("[BLOCKED] stacked-unit targets require --parent-unit")
+        if target_branch is None or target_record is None:
+            raise SystemExit("[BLOCKED] stacked-unit target must be a registered Change Unit branch")
+        if target_record.get("unit") != parent_unit:
+            raise SystemExit(
+                f"[BLOCKED] stacked parent is {target_record.get('unit')!r}, not {parent_unit!r}"
+            )
+        if target_record.get("state") != "sealed":
+            raise SystemExit("[BLOCKED] stacked-unit target must be sealed before a dependent unit starts")
+        if target_record.get("head") != target_head:
+            raise SystemExit("[BLOCKED] stacked-unit target has moved after its recorded sealed head")
+    elif parent_unit:
+        raise SystemExit("[BLOCKED] --parent-unit is valid only with --target-role stacked-unit")
+
+    return {"target_branch": target_branch, "parent_unit": parent_unit}
 
 
 def worktree_for_branch(repo: Path, branch: str) -> Path | None:
@@ -149,14 +231,23 @@ def prepare(args: argparse.Namespace) -> dict[str, Any]:
         raise SystemExit(f"[BLOCKED] stale Change Unit record exists for missing branch {branch}; review it manually")
     if worktree.exists():
         raise SystemExit(f"[BLOCKED] requested worktree path already exists: {worktree}")
+    topology = validate_target_topology(
+        repo,
+        target=args.target,
+        target_head=target_head,
+        target_role=args.target_role,
+        parent_unit=args.parent_unit,
+    )
     git(repo, "worktree", "add", str(worktree), "-b", branch, target_head)
     payload = {
-        "schema_version": 1,
+        "schema_version": 2,
         "unit": args.unit,
         "state": "in_progress",
         "branch": branch,
         "worktree": str(worktree),
         "target": args.target,
+        "target_role": args.target_role,
+        **topology,
         "baseline": target_head,
         "prepared_at": now(),
     }
@@ -202,6 +293,86 @@ def seal(args: argparse.Namespace) -> dict[str, Any]:
     return {**sealed, "record": str(path)}
 
 
+def close(args: argparse.Namespace) -> dict[str, Any]:
+    validate_identity(args.unit)
+    if not args.owner_ref.strip():
+        raise SystemExit("[BLOCKED] --owner-ref must identify the project task owner decision")
+    repo = git_root(args.repo)
+    path, record = record_for_unit(repo, args.unit)
+    if record.get("state") != "sealed":
+        raise SystemExit("[BLOCKED] only a sealed Change Unit can receive a final disposition")
+    disposition = args.disposition
+    if disposition == "integrated":
+        if not args.integration_commit:
+            raise SystemExit("[BLOCKED] integrated disposition requires --integration-commit")
+        integration_commit = git(repo, "rev-parse", "--verify", f"{args.integration_commit}^{{commit}}")
+        target_head = git(repo, "rev-parse", "--verify", f"{record['target']}^{{commit}}")
+        if not is_ancestor(repo, integration_commit, target_head):
+            raise SystemExit("[BLOCKED] integration commit is not reachable from the registered target line")
+    elif args.integration_commit:
+        raise SystemExit("[BLOCKED] --integration-commit is valid only for integrated disposition")
+    else:
+        integration_commit = None
+    closed = {
+        **record,
+        "state": disposition,
+        "owner_ref": args.owner_ref.strip(),
+        "integration_commit": integration_commit,
+        "closed_at": now(),
+    }
+    write_record(repo, str(record["branch"]), closed)
+    return {**closed, "record": str(path)}
+
+
+def list_units(args: argparse.Namespace) -> dict[str, Any]:
+    repo = git_root(args.repo)
+    items: list[dict[str, Any]] = []
+    directory = records_dir(repo)
+    for path in sorted(directory.glob("*.json")) if directory.is_dir() else []:
+        try:
+            record = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise SystemExit(f"[BLOCKED] Change Unit record is invalid: {path}: {exc}") from exc
+        if not isinstance(record, dict):
+            raise SystemExit(f"[BLOCKED] Change Unit record is not an object: {path}")
+        state = str(record.get("state", "unknown"))
+        disposition = state
+        target = str(record.get("target", ""))
+        head = record.get("head")
+        target_probe = subprocess.run(
+            ["git", "-C", str(repo), "rev-parse", "--verify", f"{target}^{{commit}}"],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        target_head = target_probe.stdout.strip() if target_probe.returncode == 0 else None
+        if state == "sealed":
+            disposition = (
+                "integrated"
+                if head and target_head and is_ancestor(repo, str(head), target_head)
+                else "pending_integration"
+            )
+        items.append(
+            {
+                "unit": record.get("unit"),
+                "branch": record.get("branch"),
+                "target": target or None,
+                "target_head": target_head,
+                "head": head,
+                "state": state,
+                "derived_disposition": disposition,
+                "owner_ref": record.get("owner_ref"),
+                "integration_commit": record.get("integration_commit"),
+                "worktree": record.get("worktree"),
+            }
+        )
+    return {
+        "schema_version": 1,
+        "repository_root": str(repo),
+        "units": sorted(items, key=lambda item: (str(item["derived_disposition"]), str(item["unit"]))),
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -209,6 +380,12 @@ def main() -> int:
     prepare_parser = subparsers.add_parser("prepare")
     prepare_parser.add_argument("--repo", type=Path, required=True)
     prepare_parser.add_argument("--target", default="main")
+    prepare_parser.add_argument(
+        "--target-role",
+        choices=("integration-line", "stacked-unit", "frozen-commit"),
+        default="integration-line",
+    )
+    prepare_parser.add_argument("--parent-unit")
     prepare_parser.add_argument("--unit", required=True)
     prepare_parser.add_argument("--slug", required=True)
     prepare_parser.add_argument("--branch")
@@ -219,13 +396,27 @@ def main() -> int:
         subparser.add_argument("--repo", type=Path, required=True)
         subparser.add_argument("--unit", required=True)
 
+    list_parser = subparsers.add_parser("list")
+    list_parser.add_argument("--repo", type=Path, required=True)
+
+    close_parser = subparsers.add_parser("close")
+    close_parser.add_argument("--repo", type=Path, required=True)
+    close_parser.add_argument("--unit", required=True)
+    close_parser.add_argument("--disposition", choices=("integrated", "excluded", "superseded"), required=True)
+    close_parser.add_argument("--owner-ref", required=True)
+    close_parser.add_argument("--integration-commit")
+
     args = parser.parse_args()
     if args.command == "prepare":
         report = prepare(args)
     elif args.command == "verify":
         report = verify(args)
-    else:
+    elif args.command == "seal":
         report = seal(args)
+    elif args.command == "list":
+        report = list_units(args)
+    else:
+        report = close(args)
     print(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))
     return 0
 

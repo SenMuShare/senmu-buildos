@@ -59,7 +59,7 @@ python3 -m unittest discover -s tests -p 'test_*.py'
 node --test tests/hooks/*.test.js
 ```
 
-版本准备、提交、Tag、GitHub Release 是不同状态。只有取得明确发布授权后，才提交版本变化并创建、推送对应的 `v<version>` Tag。Tag 工作流会核对 Tag 与仓库版本，重新运行全部测试和公开面门禁，再创建 GitHub Release；当前安装链直接消费 Git 源码，所以 GitHub 自动源码快照足够，不另造无消费者的定制制品。
+版本准备、候选 commit、公开主线验证、正式 Tag 和 GitHub Release 是不同状态。取得明确发布授权后，先提交并冻结版本候选，生成脱敏公开投影，将候选提交到公开主线并等待验证。只有该精确公开 commit 已有成功的 `main` push 验证回执后，才能使用 `python3 governance/publication/manage_lifecycle.py promote-public-release --commit <sha> --apply` 创建并推送正式 Tag；Tag 工作流复核后创建 GitHub Release。当前安装链直接消费 Git 源码，所以 GitHub 自动源码快照足够，不另造无消费者的定制制品。
 
 ## 高风险边界
 

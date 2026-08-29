@@ -119,7 +119,7 @@
 | D-27 | 实现／修复会话在匹配验证通过且不混入他人改动时主动创建本地 commit；不要求用户再说“提交”，也不在修复会话擅自合并、升版或发布 | `代码管理与合并规范.md` |
 | D-28 | 单一发布单元、默认环境和标准入口明确时，“发布最新版本”授权执行适用的完整标准路线；BuildOS 决定候选、版本、Tag、部署顺序，只对多目标、付费、不可逆或计划外破坏性差异提问 | `版本制品与发布规范.md`、`发布授权与生产事实协议.md` |
 | D-29 | 多 AI 协作不依赖固定 Team Leader；每个实现会话封口 Change Unit，收到发布命令的当前 Agent 从任务 owner、Harness 可见任务和 Git 重建接收矩阵并承担本次审查／集成 | `多Agent变更单元与版本线收口规范.md` |
-| D-30 | 未提交源码只能是 in_progress；默认写入无论大小都独立隔离，直接主线 G1 快速通道必须有覆盖整个修改窗口的独占写入保证 | `多Agent变更单元与版本线收口规范.md` |
+| D-30 | 未提交源码只能是 in_progress；所有源码修改都使用任务分支，未知或真实并行时另加独立 worktree，独占写入只允许省略额外 worktree | `多Agent变更单元与版本线收口规范.md` |
 | D-31 | 新会话按目标版本线、发布单元和 Change Unit 动态分组；多个当前维护线修复组可与任意命名的继任线组并行，当前线 Hotfix 逐项按适用性前向传播 | `多Agent变更单元与版本线收口规范.md` |
 | D-32 | 继任版本发布前以截止点汇流所有适用且 sealed 的维护线修复，被新实现替代的保留 superseded 证据；生产验证后才清理临时组并将旧线转为历史／回滚线 | `多Agent变更单元与版本线收口规范.md` |
 | D-33 | 标准发布只读项目权威与紧凑接收索引，复用 sealed commit 的匹配测试，版本候选冻结后只运行一次完整 preflight；常规发布不加载 Assurance、不宽泛扫描 memory、不手工重复标准入口已有测试 | `skills/senmu-build-delivery/SKILL.md`、`代码管理与合并规范.md`、`版本制品与发布规范.md` |
@@ -127,6 +127,9 @@
 | D-35 | 标准发布入口必须是项目 owner 声明的机器可执行顶层命令或 CI/CD workflow，统一驱动候选、一次 preflight、制品、部署、生产核验和收据；分散脚本或文档清单不得冒充流水线 | `skills/senmu-build-delivery/SKILL.md`、`代码管理与合并规范.md`、`版本制品与发布规范.md` |
 | D-36 | 首次源码写入前必须有项目写入预检或 Delivery Change Unit `prepare/verify` 的机器证据；未登记旧分支、身份不匹配、错误 worktree 和 sealed 分支 fail closed，不能先写共享 main 再事后迁移 | `manage_change_unit.py`、`代码管理与合并规范.md` |
 | D-37 | 内部安装快照用正式 VERSION 加准确 source commit 区分内容，插件安装与新会话激活是不同状态；SessionStart 回显 `version@commit` 才证明当前会话实际加载 | `manage_lifecycle.py`、`hooks/kernel.js`、`版本制品与发布规范.md` |
+| D-38 | 任务分支默认从登记集成线建立；不得隐式从另一 Change Unit 串联生长，真实依赖只能显式关联已 sealed 父单元 | `manage_change_unit.py`、`代码管理与合并规范.md` |
+| D-39 | 同一发布窗口只有一个可变 release source；截止后无关分支不改写候选，preflight 通过后才冻结最终 head | `代码管理与合并规范.md`、`版本制品与发布规范.md` |
+| D-40 | 审查、测试、发布源、Tag 和制品来源已存在时必须解析为同一 commit；任一身份漂移都 fail closed | `verify_release_identity.py`、`版本制品与发布规范.md` |
 
 ## Assurance
 

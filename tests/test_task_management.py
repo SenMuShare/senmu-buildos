@@ -60,13 +60,19 @@ class ProjectGovernanceScaffoldTests(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stderr or result.stdout)
             policy = json.loads((target / ".senmu-buildos/config.json").read_text(encoding="utf-8"))
             self.assertEqual(policy["selected_modules"], ["code", "git"])
+            self.assertEqual(policy["schema_version"], "3.0.0")
+            self.assertEqual(policy["git_management"]["main_mode"], "release_ready")
+            self.assertFalse(policy["git_management"]["direct_main_writes"])
+            self.assertEqual(policy["git_management"]["worktree_root"], ".worktrees")
+            self.assertIsNone(policy["release_policy"])
             self.assertTrue((target / "engineering/CODE_QUALITY.md").is_file())
             self.assertTrue((target / "delivery/BRANCHING.md").is_file())
             branching = (target / "delivery/BRANCHING.md").read_text(encoding="utf-8")
             self.assertIn("默认一个权威事实源", branching)
             self.assertIn("未来可新增会话", branching)
             self.assertIn("没有 Remote 不构成缺陷", branching)
-            self.assertIn("每个任务自动使用独立短分支和 worktree", branching)
+            self.assertIn("所有源码修改自动使用任务短分支", branching)
+            self.assertIn("未来可新增会话或已知并行再增加独立 worktree", branching)
             self.assertIn("不得机械全合并", branching)
             self.assertIn("Change Unit", branching)
             self.assertIn("接收矩阵", branching)
@@ -115,11 +121,27 @@ class ProjectGovernanceScaffoldTests(unittest.TestCase):
                         expected_layout = "software-repository" if project_type in {"software", "script"} else "project-system"
                         project_root = workspace if expected_layout == "software-repository" else workspace / "00-project-system"
                         policy = json.loads((project_root / ".senmu-buildos/config.json").read_text(encoding="utf-8"))
-                        self.assertEqual(policy["schema_version"], "2.3.0")
+                        self.assertEqual(policy["schema_version"], "3.0.0")
                         self.assertEqual(policy["layout"], expected_layout)
                         self.assertEqual(policy["publication"]["model"], "private_only")
                         self.assertEqual(policy["release_channels"], [])
                         self.assertEqual(policy["artifact_kinds"], [])
+                        if "git" in policy["selected_modules"]:
+                            self.assertEqual(policy["git_management"]["main_mode"], "release_ready")
+                            self.assertFalse(policy["git_management"]["direct_main_writes"])
+                        else:
+                            self.assertIsNone(policy["git_management"])
+                        if "delivery" in policy["selected_modules"]:
+                            self.assertEqual(
+                                policy["release_policy"],
+                                {
+                                    "official_tag_semantics": "verified_release",
+                                    "candidate_identity": "commit_and_artifact",
+                                    "authorization_mode": "bounded_release_session",
+                                },
+                            )
+                        else:
+                            self.assertIsNone(policy["release_policy"])
                         self.assertTrue((project_root / ".git").exists())
                         self.assertIn(".worktrees/", (project_root / ".gitignore").read_text(encoding="utf-8"))
                         governance = project_root / "governance/GOVERNANCE.md"

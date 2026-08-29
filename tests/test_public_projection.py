@@ -7,8 +7,6 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 EXPORT = ROOT / "skills/senmu-build-delivery/scripts/export_public_projection.py"
-
-
 class PublicProjectionTests(unittest.TestCase):
     def run_export(self, source: Path, target: Path, manifest: Path, *extra: str):
         return subprocess.run(

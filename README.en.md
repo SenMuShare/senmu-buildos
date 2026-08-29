@@ -24,6 +24,16 @@ It is not a traditional project-management app, and it does not force mature rep
 | “The command passed” becomes “it is finished” or “it is live” | Separate implementation, acceptance, artifacts, release, and production truth with matching evidence |
 | Skills and prompts grow while tokens are spent rereading irrelevant rules | Load seven professional Skills by task, reducing irrelevant context, repeated reminders, and re-explanation |
 
+## Translate product intent into Git behavior
+
+People should not need to learn branches, worktrees, rebases, or cherry-picks before they can build with an AI Agent. State the product intent instead:
+
+> Keep maintaining the current version; start a long-running successor; treat these notes as one batch; integrate them but do not publish yet; release after verification.
+
+BuildOS translates that intent into engineering actions. Every source change uses a task branch; concurrent writers receive isolated worktrees; continuous feedback stays in one open result; long-running replacements use a successor line; and any Agent can close out completed work without a permanent team lead.
+
+A project keeps one current main line and declares whether it is always release-ready or is a continuous integration line. Production is never guessed from the newest `main`; it is established by a frozen commit, artifacts, and a real release record. A formal Tag is created only after the target release has been verified. Before that point, the candidate is frozen by commit, candidate identity, and artifact identity. “Do not publish yet” remains an authorization constraint across sessions and commits.
+
 ## Start in 30 seconds
 
 ```bash
@@ -54,6 +64,7 @@ Refresh the tool and start a new conversation after installation. See [Install, 
 8. **Acts as an engineering coach, not a directory police.** Agents inspect the real situation and authorization first, classify the current scenario, then recommend a preferred path, rationale, acceptable alternatives, and closure conditions instead of substituting one fixed directory, branch model, or long checklist for professional judgment.
 9. **Respects user intent without echoing unverified conclusions.** The user decides goals, preferences, and authorization; the agent separates desired state, fact, inference, and recommendation, then forms an independent judgment from project evidence and applicable authoritative external knowledge, stating uncertainty when evidence is insufficient.
 10. **Closes release resources and execution surfaces together.** By default, keep the verified current version and one verified rollback version, while honoring an explicit project policy. Check the build host, runtime host, remote artifact store, and included Git branches/worktrees separately instead of substituting a global prune for project-level closure.
+11. **Acts as the translator between people and Git.** Users describe versions, batches, integration, and release intent; BuildOS chooses branches, worktrees, intake, candidates, and Tags while keeping the technical safety burden inside the system.
 
 ## How it works
 
@@ -97,7 +108,7 @@ If you have watched an agent duplicate files, lose context, disrupt an existing 
 
 ## Current status
 
-The current formal release is Senmu BuildOS `v1.14.3`. **Codex and Claude Code** share the same seven peer Skills and have separate plugin manifests, marketplaces, and lifecycle Hook adapters. Neither adapter changes user-wide configuration or project files, and neither accesses the network. Feedback capture writes only high-signal candidates to local `~/.senmu-buildos/feedback/` and exposes no internal marker or ID in normal answers. Installation, enablement, and removal remain explicit user actions.
+The current formal release is Senmu BuildOS `v2.0.0`. **Codex and Claude Code** share the same seven peer Skills and have separate plugin manifests, marketplaces, and lifecycle Hook adapters. Neither adapter changes user-wide configuration or project files, and neither accesses the network. Feedback capture writes only high-signal candidates to local `~/.senmu-buildos/feedback/` and exposes no internal marker or ID in normal answers. Installation, enablement, and removal remain explicit user actions.
 
 ## Install, update, and remove
 
