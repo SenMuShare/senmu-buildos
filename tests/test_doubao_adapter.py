@@ -38,6 +38,12 @@ class DoubaoAdapterTest(unittest.TestCase):
         for name in DOUBAO_SKILL_NAMES:
             self.assertIn(name, text, f"kernel routing table missing {name}")
 
+    def test_kernel_keeps_context_effectiveness_boundary(self):
+        text = (ADAPTER / "kernel" / "SKILL.md").read_text(encoding="utf-8")
+        self.assertIn("项目／框架／平台现有能力", text)
+        self.assertIn("复用仍有效证据", text)
+        self.assertIn("不拼接可能截断的长输出", text)
+
     def test_all_shared_skills_have_doubao_loadable_frontmatter(self):
         for name in DOUBAO_SKILL_NAMES:
             skill_md = SKILLS / name / "SKILL.md"

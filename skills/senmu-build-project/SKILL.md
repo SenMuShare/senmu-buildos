@@ -20,7 +20,7 @@ description: Create, assess, or change project governance, authority mapping, pr
 
 只读取当前结果所需 reference。Git 执行由 Delivery 负责。
 
-新项目规划／初始化使用 [init_project_governance.py](scripts/init_project_governance.py)；成熟项目零写入盘点使用 [assess_project_governance.py](scripts/assess_project_governance.py)。这两个用户工作流入口的输出是事实候选，不替代语义确认、授权或真实运行验证。
+新项目规划／初始化使用 [init_project_governance.py](scripts/init_project_governance.py)；正式成熟项目接管的零写入盘点使用 [assess_project_governance.py](scripts/assess_project_governance.py)，默认保留有界摘要。只有当前交付物确实需要完整候选与排除登记时才使用 `--verbose`；普通 Bug、分支收口或单域文档校准不为“全面”展开治理清单。这两个用户工作流入口的输出是事实候选，不替代语义确认、授权或真实运行验证。
 
 ## 核心契约
 

@@ -15,10 +15,11 @@ test('SessionStart kernel stays short and preserves core boundaries', () => {
   const context = getSessionContext();
   assert.ok(context.length <= MAX_SESSION_CONTEXT_CHARS);
   assert.match(context, /real project authority/);
-  assert.match(context, /reuse valid evidence/);
-  assert.match(context, /load only missing\/changed Skill/);
-  assert.match(context, /durable task owner/);
-  assert.match(context, /applicable active lessons/);
+  assert.match(context, /project\/framework\/platform capabilities/);
+  assert.match(context, /reuse evidence/);
+  assert.match(context, /bounded missing\/changed guidance, source or output ranges/);
+  assert.match(context, /durable task/);
+  assert.match(context, /active lessons/);
   assert.match(context, /gates only cover material residual risk/);
   assert.match(context, /prepare a Delivery Change Unit/);
   assert.match(context, /use a task branch/);
@@ -27,7 +28,7 @@ test('SessionStart kernel stays short and preserves core boundaries', () => {
   assert.match(context, /verify and commit/);
   assert.match(context, /feedback CLI/);
   assert.match(context, /silently/i);
-  assert.match(context, /never expose markers\/IDs/);
+  assert.match(context, /never expose IDs/);
   assert.doesNotMatch(context, /BuildOS feedback candidate:/);
   assert.match(context, /unverified\/undeployed\/unpublished is incomplete/);
 });
@@ -49,10 +50,11 @@ test('SubagentStart kernel stays shorter than the session kernel', () => {
   assert.ok(subagent.length <= MAX_SUBAGENT_CONTEXT_CHARS);
   assert.ok(subagent.length < session.length);
   assert.match(subagent, /Stay within delegated scope/);
-  assert.match(subagent, /Reuse owners and valid evidence/);
-  assert.match(subagent, /missing\/changed guidance or source ranges/);
+  assert.match(subagent, /project\/framework\/platform capabilities and evidence/);
+  assert.match(subagent, /bounded missing\/changed guidance or outputs/);
   assert.match(subagent, /verified stable commit/);
   assert.match(subagent, /never edit integration lines or reuse sealed work/);
+  assert.match(subagent, /incomplete work, blockers and risk/);
 });
 
 test('Codex output uses lifecycle additionalContext', () => {

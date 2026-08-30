@@ -115,7 +115,7 @@ If you have watched an agent duplicate files, lose context, disrupt an existing 
 
 ## Current status
 
-The current formal release is Senmu BuildOS `v2.0.1`. **Codex and Claude Code** share the same seven peer Skills and have separate plugin manifests, marketplaces, and lifecycle Hook adapters; **Doubao** uses the same Skills with a separate bootstrap adapter (`adapters/doubao/`) installed as hook-less user Skills. None of the adapters changes user-wide configuration or project files, and none accesses the network. Feedback capture writes only high-signal candidates to local `~/.senmu-buildos/feedback/` and exposes no internal marker or ID in normal answers. Installation, enablement, and removal remain explicit user actions.
+The current formal release is Senmu BuildOS `v2.0.2`. **Codex and Claude Code** share the same seven peer Skills and have separate plugin manifests, marketplaces, and lifecycle Hook adapters; **Doubao** uses the same Skills with a separate bootstrap adapter (`adapters/doubao/`) installed as hook-less user Skills. None of the adapters changes user-wide configuration or project files, and none accesses the network. Feedback capture writes only high-signal candidates to local `~/.senmu-buildos/feedback/` and exposes no internal marker or ID in normal answers. Installation, enablement, and removal remain explicit user actions.
 
 ## Install, update, and remove
 
