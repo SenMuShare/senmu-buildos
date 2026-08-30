@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+## [2.0.4] - 2026-08-30
+
+### Changed
+
+- 重构中／英／日三语 GitHub README：首屏明确“规范执行、少犯错”和“复用项目／框架能力、减少无效代码与上下文浪费”两项核心价值，并前置安装、典型问题和从需求到发布的完整工程链。
+- Codex 与 Claude Code 插件发现元数据同步工程教练、代码质量、框架／组件复用和上下文效率语义；行为矩阵新增未批准功能不实现、框架公开能力优先和部分复用保留业务差异等约束。
+- GitHub About 简介与 Topics 校准到 AI coding governance、code quality、requirements、framework reuse、Codex、Claude Code、testing、Git 和 release management；Logo、图标与社交预览保持原状。
+
+## [2.0.3] - 2026-08-30
+
+### Changed
+
+- 意见箱审议新增有界摘要与分页读取：先取得数量、信号类型、来源宿主和时间范围，再按页展开候选；原有 `pending --json` 完整数组保持兼容。
+- 公开投影和生命周期同步默认只返回文件数量、身份摘要、Git 状态计数与有限预览；只有显式 `--verbose` 才展开完整文件与状态清单。
+
 ## [2.0.2] - 2026-08-30
 
 ### Changed

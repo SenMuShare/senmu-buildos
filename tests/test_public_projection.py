@@ -43,7 +43,12 @@ class PublicProjectionTests(unittest.TestCase):
             self.assertEqual(plan.returncode, 0, plan.stderr or plan.stdout)
             self.assertFalse(target.exists())
             report = json.loads(plan.stdout)
-            self.assertEqual(report["files"], ["README.md", "src/main.py"])
+            self.assertEqual(report["file_count"], 2)
+            self.assertNotIn("files", report)
+
+            verbose = self.run_export(source, target, manifest, "--verbose")
+            self.assertEqual(verbose.returncode, 0, verbose.stderr or verbose.stdout)
+            self.assertEqual(json.loads(verbose.stdout)["files"], ["README.md", "src/main.py"])
 
             applied = self.run_export(source, target, manifest, "--apply")
             self.assertEqual(applied.returncode, 0, applied.stderr or applied.stdout)

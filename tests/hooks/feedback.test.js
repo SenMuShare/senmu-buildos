@@ -161,6 +161,44 @@ test('quiet agent submission writes locally without user-facing output', (t) => 
   assert.equal(listCandidates(env)[0].signal.kind, 'agent_observed_governance_gap');
 });
 
+test('feedback review starts with a bounded summary and paginates full candidates', (t) => {
+  const env = temporaryEnvironment(t);
+  for (let index = 0; index < 12; index += 1) {
+    capturePromptCandidate({
+      session_id: `session-summary-${index}`,
+      cwd: 'workspace/example-project',
+      prompt: `记录反馈：第 ${index} 条规则造成了重复返工。`,
+    }, 'codex', env);
+  }
+  const cli = path.join(__dirname, '../../hooks/feedback-cli.js');
+  const summary = childProcess.spawnSync(process.execPath, [cli, 'pending', '--summary'], {
+    encoding: 'utf8', env: { ...process.env, ...env },
+  });
+  assert.equal(summary.status, 0);
+  const summaryPayload = JSON.parse(summary.stdout);
+  assert.equal(summaryPayload.count, 12);
+  assert.equal(summaryPayload.by_source_host.codex, 12);
+  assert.equal(summaryPayload.next, 'pending --json --limit 10 --offset 0');
+  assert.ok(summary.stdout.length < 1000);
+
+  const legacy = childProcess.spawnSync(process.execPath, [cli, 'pending', '--json'], {
+    encoding: 'utf8', env: { ...process.env, ...env },
+  });
+  assert.equal(legacy.status, 0);
+  assert.equal(JSON.parse(legacy.stdout).length, 12);
+
+  const page = childProcess.spawnSync(process.execPath, [
+    cli, 'pending', '--json', '--limit', '5', '--offset', '5',
+  ], { encoding: 'utf8', env: { ...process.env, ...env } });
+  assert.equal(page.status, 0);
+  const pagePayload = JSON.parse(page.stdout);
+  assert.equal(pagePayload.total, 12);
+  assert.equal(pagePayload.returned, 5);
+  assert.equal(pagePayload.offset, 5);
+  assert.equal(pagePayload.has_more, true);
+  assert.equal(pagePayload.candidates.length, 5);
+});
+
 test('review decisions remove candidates from the pending inbox without deleting evidence', (t) => {
   const env = temporaryEnvironment(t);
   const candidate = capturePromptCandidate({

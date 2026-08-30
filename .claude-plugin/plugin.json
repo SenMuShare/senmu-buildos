@@ -2,8 +2,8 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "senmu-buildos",
   "displayName": "Senmu BuildOS",
-  "version": "2.0.2",
-  "description": "Project lifecycle governance for AI agents: project management, product, workflows, engineering, delivery, assurance, and organizational learning.",
+  "version": "2.0.4",
+  "description": "Engineering coaching and project governance for AI coding agents: align requirements, reuse frameworks and components, improve code quality, and deliver with evidence.",
   "author": {
     "name": "Senmu"
   },
@@ -16,6 +16,10 @@
     "ai-agents",
     "project-management",
     "project-governance",
+    "requirements-management",
+    "spec-driven-development",
+    "code-quality",
+    "framework-reuse",
     "software-engineering"
   ],
   "hooks": "./adapters/claude-code/hooks/hooks.json"

@@ -1,7 +1,7 @@
 {
   "name": "senmu-buildos",
-  "version": "2.0.2",
-  "description": "Project lifecycle governance for Codex: project management, product, workflows, engineering, delivery, assurance, and organizational learning.",
+  "version": "2.0.4",
+  "description": "Engineering coaching and project governance for AI coding agents: align requirements, reuse frameworks and components, improve code quality, and deliver with evidence.",
   "author": {
     "name": "Senmu",
     "url": "https://github.com/SenMuShare"
@@ -19,8 +19,12 @@
     "project-management",
     "project-governance",
     "requirements-management",
+    "spec-driven-development",
     "workflow-governance",
     "software-engineering",
+    "code-quality",
+    "framework-reuse",
+    "context-efficiency",
     "developer-tools",
     "knowledge-management",
     "organizational-learning"
@@ -28,16 +32,16 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Senmu BuildOS",
-    "shortDescription": "AI project lifecycle governance",
-    "longDescription": "Keep project authority, requirements, workflows, implementation, delivery, evidence, and reusable learning aligned across people and AI agents.",
+    "shortDescription": "Better AI code with less waste",
+    "longDescription": "Guide AI coding agents from approved requirements through architecture, framework and component reuse, minimal correct implementation, testing, Git, and evidence-backed delivery.",
     "developerName": "Senmu",
     "category": "Productivity",
     "capabilities": ["Instructions", "Lifecycle hooks"],
     "websiteURL": "https://github.com/SenMuShare/senmu-buildos",
     "defaultPrompt": [
-      "Initialize governance for this project.",
-      "Govern this multi-stage task with durable state and evidence.",
-      "Capture validated lessons from this project and assess whether any belong in Senmu BuildOS."
+      "Start this project with the smallest useful governance and engineering baseline.",
+      "Review this change from approved requirement through framework reuse, code quality, and testing.",
+      "Prepare this completed change for evidence-backed delivery without publishing yet."
     ]
   }
 }

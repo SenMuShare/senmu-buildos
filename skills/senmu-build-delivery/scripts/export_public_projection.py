@@ -147,6 +147,7 @@ def main() -> None:
     parser.add_argument("--target", type=Path, required=True)
     parser.add_argument("--manifest", type=Path, required=True)
     parser.add_argument("--apply", action="store_true", help="通过检查后同步目标；默认只输出计划")
+    parser.add_argument("--verbose", action="store_true", help="展开全部投影文件；默认只输出数量与摘要")
     args = parser.parse_args()
 
     source = args.source.expanduser().resolve()
@@ -172,13 +173,15 @@ def main() -> None:
     except (OSError, ValueError, json.JSONDecodeError) as exc:
         raise SystemExit(f"[ERROR] {exc}") from exc
 
-    print(json.dumps({
+    report = {
         "mode": "apply" if args.apply else "plan",
         "file_count": len(files),
         "manifest_sha256": digest,
         "projection_sha256": surface_digest,
-        "files": [path.as_posix() for path in files],
-    }, ensure_ascii=False, indent=2))
+    }
+    if args.verbose:
+        report["files"] = [path.as_posix() for path in files]
+    print(json.dumps(report, ensure_ascii=False, indent=2))
 
 
 if __name__ == "__main__":

@@ -1,168 +1,157 @@
-# Senmu BuildOS（森木 BuildOS）— AI コーディング Agent のプロジェクトガバナンス
+# Senmu BuildOS（森木 BuildOS）— AI コーディングプロジェクトの工程コーチと運用規範
 
-🌐 **表示言語：** [简体中文](./README.md) | [English](./README.en.md) | **日本語**
+<p align="center">
+  Codex、Claude Code、豆包が正しいものを作り、無駄を減らして品質を高めるために。
+</p>
 
-> Codex、Claude Code、豆包（Doubao）のミスと手戻りを減らし、文脈を保ち、証拠に基づくデリバリーを支援します。
+<p align="center">
+  <a href="README.md">简体中文</a> · <a href="README.en.md">English</a> · <a href="README.ja.md">日本語</a>
+</p>
 
-[![Validate Senmu BuildOS](https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml/badge.svg)](https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml)
-[![License](https://img.shields.io/github/license/SenMuShare/senmu-buildos)](./LICENSE)
-[![GitHub stars](https://img.shields.io/github/stars/SenMuShare/senmu-buildos?style=social)](https://github.com/SenMuShare/senmu-buildos/stargazers)
-[![Release](https://img.shields.io/github/v/release/SenMuShare/senmu-buildos)](https://github.com/SenMuShare/senmu-buildos/releases/latest)
+<p align="center">
+  <a href="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml"><img src="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml/badge.svg" alt="Validate Senmu BuildOS"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/SenMuShare/senmu-buildos" alt="License"></a>
+  <a href="https://github.com/SenMuShare/senmu-buildos/stargazers"><img src="https://img.shields.io/github/stars/SenMuShare/senmu-buildos?style=social" alt="GitHub stars"></a>
+  <a href="https://github.com/SenMuShare/senmu-buildos/releases/latest"><img src="https://img.shields.io/github/v/release/SenMuShare/senmu-buildos" alt="Release"></a>
+</p>
 
-Senmu BuildOS は、**AI コーディング Agent 向けのオープンソース・プロジェクトガバナンス・プラグイン**です。プロジェクト管理、プロダクト要件、ソフトウェアエンジニアリング、Git 協業、品質保証、リリース、フィードバックを、必要なときだけ読み込む 7 つの Skill にまとめています。Agent は増え続ける Prompt に頼るのではなく、実際のプロジェクトを理解してから変更します。
+Senmu BuildOS は、**AI coding agent** のためのオープンソース運用規範兼ソフトウェア工程コーチです。要件、技術設計、フレームワーク／コンポーネント選定、フロントエンド／バックエンド実装、テスト、Git、リリース、再利用可能な学習までを扱い、長くなる一方の Prompt に頼らず、実プロジェクトで継続的に成果を出せるようにします。
 
-従来型のプロジェクト管理アプリではなく、成熟したリポジトリに固定ディレクトリを強制しません。現在は **OpenAI Codex**、**Claude Code**、**豆包（Doubao）** をサポートしています。
+重視する成果は 2 つです。
 
-## よくある混乱から持続可能なデリバリーへ
+1. **プロジェクトを規律正しく進め、ミスを減らす。** 実際の要件、プロジェクト事実、権限を先に確認し、設計、コード、テスト、ブランチ、バージョン、リリース証拠を対応させます。
+2. **コード品質を高め、無駄なコードと文脈消費を減らす。** 実装が本当に必要かを確認し、プロジェクト、フレームワーク／コンポーネント API、プラットフォーム、標準ライブラリ、成熟した依存関係を順に再利用します。実際の不足が残った時だけ、境界の明確な最小限の独自コードを書きます。
 
-| よくある問題 | BuildOS による改善 |
+> BuildOS が目指すのは「少なくても正しいコード」です。最少行数や最低 Token を機械的に追うものではありません。セキュリティ、アクセシビリティ、業務セマンティクス、テスト、保守性を Token 節約のために削りません。
+
+## 何が変わるのか
+
+| AI コーディングで起きがちな問題 | BuildOS の動作 |
 | --- | --- |
-| Agent がコードを読まずに新しいフォルダや重複機能を作る | プロジェクトルート、既存実装、事実の owner を先に確認し、再利用・補完・新規作成を判断する |
-| セッションや Agent が変わるたびに説明をやり直す | 進捗、判断、証拠、復旧点をプロジェクト所有の永続状態に残す |
-| 要件、コード、テスト、文書がずれ、廃止した機能が復活する | 現行要件の権威を追跡し、置換・削除・回帰証拠を一つの変更として閉じる |
-| POC、Hotfix、長期ブランチ、正式リリースが互いを止める | 実際の範囲に基づき、Git ブランチ、worktree、候補版、明示的な除外を管理する |
-| 「コマンド成功」が「完了」や「本番公開」に置き換わる | 実装、受け入れ、成果物、リリース、本番事実を分け、対応する証拠で確認する |
-| Skill と Prompt が増え、関係ない規則の再読に Token を使う | 7 つの専門 Skill をタスク別に読み込み、無関係な文脈、再説明、繰り返し注意を減らす |
-
-## プロダクトの意図を Git の動作へ翻訳する
-
-AI Agent と開発するために、利用者が branch、worktree、rebase、cherry-pick を先に学ぶ必要はありません。プロダクトの意図だけを伝えます。
-
-> 現行版を保守する。長期の後継版を始める。このフィードバックは同じ一まとまりとして扱う。現行版へ取り込むが、まだ公開しない。検証後にリリースする。
-
-BuildOS はその意図を工程へ翻訳します。すべてのソース変更はタスク用ブランチで行い、並行書き込みには独立 worktree を使います。同じ結果への連続した調整は未封印の単位で継続し、長期の置き換えは後継ラインで管理します。固定 Team Leader がいなくても、任意の Agent が完了済み変更を自然な区切りで収束できます。
-
-プロジェクトは現行の主線を 1 本だけ持ち、それが常にリリース可能な線か、継続的な統合線かを宣言します。本番版を最新 `main` から推測せず、凍結 commit、成果物、実際のリリース記録で確定します。正式 Tag は対象リリースの検証成功後にだけ作成し、それ以前の候補は commit、候補 ID、成果物 ID で固定します。「まだ公開しない」は会話や commit をまたいで残る承認制約です。
+| スコープが曖昧なまま実装し、要求されていない機能まで増やす | 承認済み範囲、非目標、観測可能な受入条件で実装を制約し、未承認案は候補に留める |
+| 既存コードを読まず、新しいディレクトリ、サービス、第二の状態 owner を作る | 実際のルート、owner、呼び出し経路、類似実装を確認し、既存能力を拡張する |
+| フレームワークの 1 設定で済むのに、コンポーネントを自作し内部 DOM を監視する | 現在のバージョンの公開 API を先に確認し、実際の不足が証明された時だけ最小アダプターを追加する |
+| 動くが、読めない、テストしにくい、変更しにくいコードになる | 単一 owner、モジュール境界、明示的副作用、変更局所性、回帰テスト、削除可能性を守る |
+| 想像上の将来のために抽象、プラグイン基盤、汎用プラットフォームを先に作る | 現在の最小価値スライスを閉じ、第二の実例または承認済み Roadmap ができてから拡張する |
+| 会話や Agent が変わるたびに説明し直し、長い規則を再読する | 判断、進捗、証拠をプロジェクト owner に残し、Skill／reference を必要時だけ読み、有効な証拠を再利用する |
+| テスト成功、Tag、コマンド成功を「本番完了」と報告する | 実装、受入、成果物、デプロイ、本番事実を分離し、それぞれ対応する証拠を使う |
 
 ## 30 秒で開始
 
+### Codex
+
 ```bash
 codex plugin marketplace add SenMuShare/senmu-buildos
 codex plugin add senmu-buildos@senmu-buildos
 ```
 
-Claude Code の場合：
+Codex を更新して新しい会話を開始し、通常の言葉で目的を伝えます。
+
+> この既存プロジェクトを引き継いでください。機能を実装する前に、現行要件、アーキテクチャ、フレームワーク能力、品質コマンドを確認してください。プロジェクトやフレームワークの既存能力を優先し、承認済み要件にない機能は追加しないでください。
+
+### Claude Code
 
 ```bash
 claude plugin marketplace add SenMuShare/senmu-buildos
 claude plugin install senmu-buildos@senmu-buildos
 ```
 
-豆包（Doubao）の場合はリポジトリを clone してアダプターのインストーラーを実行します：
+必要に応じてインストール後に `/reload-plugins` を実行します。
 
-```bash
-git clone https://github.com/SenMuShare/senmu-buildos.git
-cd senmu-buildos && python3 adapters/doubao/install_doubao.py
-```
-
-インストール後にツールを更新し、新しい会話を開始してください。更新、削除、Hook の信頼確認は[インストール、更新、削除](#インストール更新削除)を参照してください。
-
-**クイックナビ：** [何を解決するか](#よくある混乱から持続可能なデリバリーへ) · [特徴](#buildos-の特徴) · [インストールと更新](#インストール更新削除) · [仕組み](#仕組み) · [7 つの Skill](#1-プラグイン対等な-7-つの-skill) · [現在の境界](#現在の境界)
-
-## BuildOS の特徴
-
-1. **Agent の働き方のために設計。** BuildOS の直接の利用者は AI Agent／Agent Harness です。人は目標、判断、権限を保持し、Agent は実行可能・復旧可能・検証可能なプロジェクト作業契約を得ます。
-2. **コード生成だけでなく、プロジェクトの全ライフサイクルを統治。** 初期化と要件から、実装、ワークフロー、テスト、デリバリー、本番の事実、組織学習まで、長期的な事実には明確な所在があります。
-3. **成熟プロジェクトを尊重し、ディレクトリ構成を強制しない。** まず既存の入口、リポジトリ、状態ソース、デリバリー境界を読み取り専用で確認します。既定構成は新規プロジェクト用であり、既存プロジェクトは元の owner を進化させます。
-4. **1 つのプラグイン、対等な 7 つの専門 Skill。** Project、Product、Workflow、Engineering、Delivery、Assurance、Learning を目的に応じて選択し、毎回すべてを読み込む必須の「総監督」は置きません。
-5. **記憶をチャットからプロジェクトへ戻す。** 長期タスクは永続状態、安定した識別子、証拠リンク、復旧入口を使用します。チャットは終わっても、プロジェクトは忘れてはなりません。
-6. **完了を検証可能な事実に変える。** テスト通過、成果物生成、デプロイ完了、本番の正常稼働は異なる状態であり、それぞれに適切な証拠が必要です。
-7. **リスクに応じて強度を変え、問題の発生源を改善する。** 小さなタスクは軽量に保ち、高リスクのリリースやデータ操作は fail-closed を維持します。ゲートは発生源から除去できない重要な残余リスクだけを扱います。
-8. **ディレクトリ警察ではなく、エンジニアリングコーチとして働く。** Agent はまず実際の状況と権限を確認し、現在のシナリオを判定した上で、推奨案、理由、許容可能な代替案、収束条件を示します。固定のディレクトリ、ブランチモデル、長いチェックリストで専門的判断を代替しません。
-9. **ユーザーの意図を尊重しつつ、未検証の結論には迎合しない。** ユーザーは目標、選好、権限を決め、Agent は望ましい状態、事実、推論、提案を分離します。プロジェクト証拠と適用可能な外部の権威ある知識に基づいて独立判断し、証拠が不足する場合は不確実性を明示します。
-10. **リリース後の資源と実行面を一緒に収束させる。** 既定では検証済みの現行版と検証済みのロールバック版を 1 つ保持し、明示されたプロジェクト方針を優先します。ビルド端末、本番実行端末、リモート成果物ストア、対象 Git ブランチ／worktree を別々に確認し、グローバル prune でプロジェクト単位の収束を代替しません。
-11. **人と Git の間の翻訳器になる。** 利用者は版、まとまり、統合、公開の意図を伝え、BuildOS が branch、worktree、受け入れ、候補、Tag を選びます。技術的な安全コストは利用者へ転嫁しません。
-
-## 仕組み
-
-```text
-実際のプロジェクトを理解 → 事実と owner を対応付け → 主 Skill を選択
-      → 実行して状態を永続化 → 証拠で検証 → デリバリー／リリース
-      → 学びを次の改善へ反映
-```
-
-これは、すべてのタスクに固定フローを強制する仕組みではありません。BuildOS はプロジェクト形態、目的、リスクに応じて必要な手順だけを選びます。小さな変更は実装と検証へ直接進み、大きな要件は仕様、計画、タスク状態、受入を分離します。成熟プロジェクトは進化の前に評価し、より強いゲートは高リスクのデリバリーにだけ適用します。
-
-## オープン・イテレーション・フライホイール
-
-Senmu BuildOS はプラグインとして直接利用できるだけでなく、完全なソースプロジェクトとして `clone`／`fork` できます。自分のブランチで Web ページ、PDF、書籍、公開リポジトリ、第三者 Skill の有効な知見を継続的に吸収し、非公開版として維持することも、Pull Request で上流へ還元することもできます。
-
-```text
-正式版をインストール、またはソースを fork
-      → 短期ブランチで不足を特定し、蒸留バッチを作成
-      → 読取 → 候補化 → 重複／競合裁定 → 唯一 owner へ反映 → 検証
-      → ローカルで継続利用、または Pull Request
-      → メンテナーが審議・再蒸留・マージし、新版を公開
-```
-
-覚えるべき「合言葉」はありません。材料と目的を Agent へ直接渡します。例えば：
-
-> この Web ページ、PDF、リポジトリ、または Skill を読み、再利用可能なエンジニアリング規則を私の BuildOS に吸収してください。同義項目を統合し、適用できない内容を除外し、原資料ライブラリを残さず、既存の検証入口で改善を証明してください。
-
-> 私の fork に短期ブランチを作成し、BuildOS の知識蒸留フローで改善と検証を行い、Pull Request を準備してください。私の許可なしに push や公開を行わないでください。
-
-`clone` はローカルで研究・修正するための取得、`fork` は GitHub 上で長期維持する自分のコピー、`branch` は各改善の隔離、Pull Request は成熟した候補を公式リポジトリへ還元する仕組みです。外部資料とコミュニティ貢献は、出所・ライセンス確認、重複排除、競合裁定、owner 対応、振る舞いテスト、コンテキスト予算、リポジトリ全体の検証を通過するまで信頼されていない候補として扱います。実行手順は[コントリビューションガイド](CONTRIBUTING.md#开放迭代飞轮贡献流程)を参照してください。
-
-## どのような人・プロジェクト向けか
-
-- Codex または Claude Code を一度きりのコード生成ではなく、実際のプロジェクトへ継続的に参加させる個人やチーム。
-- セッション、Agent、ツールをまたいで複雑な作業を継続する必要があるプロジェクト。
-- 大量の履歴、スクリプト、ディレクトリ、既存事実を持ち、第 2 の体系を作ると混乱する成熟したコードベース。
-- ソフトウェア、オートメーション、データ、コンテンツ、メディア、POC、複数のデリバリー形態を含む複合プロジェクト。
-- 「着手した」「テストした」「納品した」「リリースした」「本番で正常」を明確に区別する必要があるデリバリー環境。
-
-Agent がファイルを重複作成したり、コンテキストを失ったり、既存プロジェクトを混乱させたり、コマンド成功を「完了」と報告した経験があるなら、このリポジトリを **Star** または **Watch** して、BuildOS の今後のリリースと進化を追ってください。
-
-## 現在の状態
-
-Senmu BuildOS の現行正式リリースは `v2.0.2` です。**Codex と Claude Code** は同じ 7 つの Skill を共有し、それぞれ独立したプラグイン manifest、Marketplace、ライフサイクル Hook アダプターを持ちます。**豆包（Doubao）** は同じ Skill を使い、独立したブートストラップ・アダプター（`adapters/doubao/`）を Hook なしのユーザー Skill として導入します。どのアダプターもユーザー全体の設定やプロジェクトファイルを書き換えず、ネットワークへ接続しません。フィードバック収集は高シグナル候補だけをローカルの `~/.senmu-buildos/feedback/` に保存し、通常の回答に内部マーカーや ID を表示しません。インストール、有効化、削除はユーザーが明示的に操作します。
-
-## インストール、更新、削除
-
-### Codex へのインストール
-
-`codex plugin` コマンドを提供する Codex と、GitHub に接続できる Git 環境が必要です。Senmu BuildOS は 1 つのプラグインとして導入されるため、7 つの Skill を個別にダウンロードする必要はありません。
-
-```bash
-codex plugin marketplace add SenMuShare/senmu-buildos
-codex plugin add senmu-buildos@senmu-buildos
-codex plugin list
-```
-
-インストール後は Codex を再起動または更新し、新しい会話を開始してください。初回有効化時、または Hook の内容が変更された場合は、Codex 上で Hook を確認して信頼してください。ファイルがダウンロード済みであることだけでは、Hook が有効とは限りません。
-
-### Claude Code へのインストール
-
-`claude plugin` を提供する新しい Claude Code が必要です。
-
-```bash
-claude plugin marketplace add SenMuShare/senmu-buildos
-claude plugin install senmu-buildos@senmu-buildos
-claude plugin list
-```
-
-プラグイン Skill は `senmu-buildos:` 名前空間を使用するため、既存のユーザー Skill を上書きしません。必要に応じてインストール後に `/reload-plugins` を実行してください。アダプターは `SessionStart`、`SubagentStart`、`UserPromptSubmit` を登録します。追加のツール権限を要求せず、`~/.claude` やプロジェクトファイルを変更しません。`UserPromptSubmit` は明示的な訂正または投稿アクションだけをローカルの審議待ち受信箱に書き込みます。
-
-### 豆包（Doubao）へのインストール
-
-豆包にはプラグイン manifest もライフサイクル Hook もありません。Skill は `workspace/.user_skills/` 直下のフォルダとして導入します。2 つの方法があります。
-
-**方法 A — リポジトリを豆包に渡してインストール（コマンドラインに不慣れな方におすすめ）。** 豆包の会話にリポジトリ URL を貼り付け、`adapters/doubao/README.md` を読んだ上で、`skills/` の 7 つの `senmu-build-*` Skill と `adapters/doubao/kernel/` の `senmu-build-kernel` ブートストラップを豆包の `.user_skills` にコピーし（Codex 専用の `agents/` メタデータは除外）、インストール ID を書き込むよう依頼します。詳細は[豆包アダプター](adapters/doubao/README.md)を参照してください。
-
-**方法 B — clone してインストーラーを実行。**
+### 豆包（Doubao）
 
 ```bash
 git clone https://github.com/SenMuShare/senmu-buildos.git
 cd senmu-buildos
-python3 adapters/doubao/install_doubao.py --dry-run   # プレビュー（書き込みなし）
-python3 adapters/doubao/install_doubao.py             # 豆包 .user_skills にインストール
+python3 adapters/doubao/install_doubao.py --dry-run
+python3 adapters/doubao/install_doubao.py
 ```
 
-インストーラーは 7 つの Skill と `senmu-build-kernel` ブートストラップを `.user_skills/` にコピーし（Codex 専用の `agents/` メタデータを除外）、`.senmu-buildos-install.json` を書き込みます。豆包には Hook がないため、ガバナンスカーネルを毎セッション強制注入することはできません。`senmu-build-kernel` が要求時に提供します。再実行すると更新されます。
+豆包アダプターの詳細は [adapters/doubao/README.md](adapters/doubao/README.md) を参照してください。
 
-### Codex での更新
+## 要件からデリバリーまでの工程チェーン
 
-Codex はローカルのソースディレクトリや GitHub のコミットを自動監視しません。更新単位は **Senmu BuildOS プラグイン全体** であり、7 つの Skill を別々に追跡するわけではありません。正式リリースでは `VERSION`、プラグイン manifest、Git Tag、Release、Marketplace の参照先を一致させます。Marketplace を更新してから、プラグインを再インストールします。
+BuildOS は、フォーマットやコードレビューの段階まで待たず、誤った判断がコードになる前から作用します。
+
+```text
+実際の問題と承認済みスコープ
+        ↓
+プロジェクト事実、アーキテクチャ境界、既存能力
+        ↓
+技術方針、フレームワーク、コンポーネント、公開拡張点
+        ↓
+最小限で正しいフロントエンド／バックエンド実装
+        ↓
+リスクに合うテストとプロダクト受入
+        ↓
+Git、バージョン、成果物、デプロイ、本番証拠
+        ↓
+検証済み知識を正しい owner に戻す
+```
+
+このチェーンは作業規模に合わせて裁剪されます。契約を変えないボタンのスタイル調整に PRD、ADR、リリース報告は不要です。モジュール横断、権限、データ、決済、正式リリースでは、必要な設計、検証、ロールバック証拠を保ちます。
+
+### 「再利用してからコードを書く」を実行可能にする
+
+Agent は新しい実装の前に次の順序で判断します。
+
+1. 要件はすでに満たされているか、その能力はそもそも承認されているか。不要なら実装しません。
+2. プロジェクトに既存の唯一 owner、公開入口、安全に拡張できる実装があるか。
+3. 現行フレームワーク、コンポーネント、プラットフォーム、標準ライブラリ、既存依存関係が必要な意味を完全に満たすか。
+4. 維持されている成熟案が、開発と長期保守の総コストを下げながら不足を補えるか。
+5. それでも不足する時だけ、境界と検証が明確で、保守面の小さい独自コードを書きます。
+
+再利用にも意味とリスクの確認が必要です。フレームワーク能力が業務規則、セキュリティ、権限、アクセシビリティ、互換性、エラー意味を満たさない場合、BuildOS は要件を歪めず、必要な最小アダプターを残します。
+
+## 適した場面
+
+- **新規プロジェクト：** 最小限で有用な要件、アーキテクチャ、品質、デリバリー基準を作り、文書の城を作りません。
+- **成熟プロジェクト：** 既存の文書、設定、コード、テスト、CI、リリース事実を読み、第二のガバナンス構造を作らず不足だけを補います。
+- **機能と Bug：** プロジェクト規則を優先し、フレームワークと既存実装を再利用し、最小変更と対応する検証を行います。
+- **長期作業：** 段階、判断、証拠、再開入口を残し、会話や Agent をまたいで引き継げるようにします。
+- **正式リリース：** スコープ、レビュー、テスト、バージョン、成果物、デプロイ、本番確認、ロールバック identity を一致させます。
+- **ガバナンスと学習：** 技術的負債、重複実装、フィードバックを確認し、プロジェクト共通の知識だけを唯一 owner に昇格させます。
+
+## 1 プラグイン、必要時だけ使う 7 Skill
+
+| Skill | 担当 | 担当しないもの |
+| --- | --- | --- |
+| `senmu-build-project` | プロジェクト形態、構造、権威対応、永続タスク状態、成熟プロジェクト接管 | Product、Engineering、Release の専門判断 |
+| `senmu-build-product` | 要件、範囲、非目標、優先度、Roadmap、Iteration、受入 | 技術実装と本番リリース |
+| `senmu-build-workflow` | Workflow、Agent、データ／物料、Run 状態、復旧、成果物 | 既存フローの実行やリリース方針 |
+| `senmu-build-engineering` | 技術設計、アーキテクチャ、選定、コード品質、テスト、リファクタリング、技術的負債 | Product 優先度とリリース承認 |
+| `senmu-build-delivery` | 非日常 Git 境界、バージョン、成果物、デプロイ、ロールバック、本番事実 | 通常コーディングと Product 受入 |
+| `senmu-build-assurance` | POC、独立監査、再現、証拠評価、因果確認 | 改善実装や通常の自己レビュー |
+| `senmu-build-learning` | フィードバック審議、振り返り、外部知識蒸留、プロジェクト横断の昇格 | 一度の観察を自動で規則化すること |
+
+通常のコード変更がプロジェクト `AGENTS.md`、現行フレームワーク、テストで十分に規定されているなら、BuildOS の専門 Skill は読み込みません。必要な時も、最も近い Skill と関連 reference だけを使います。
+
+## 人と AI のためのクイック説明
+
+| 質問 | 回答 |
+| --- | --- |
+| これは何か？ | AI coding agent のプロジェクト運用規範、工程判断方法、インストール可能な Skill プラグイン |
+| いつ使うか？ | 要件／アーキテクチャ／実装規則が不足・衝突する時、長期作業に復旧が必要な時、成熟プロジェクトを接管する時、Git／リリース／監査リスクを管理する時 |
+| どう使うか？ | Product の目的を伝える。Agent はプロジェクト事実を先に読み、必要な場合だけ 1 つの主 Skill を選ぶ |
+| プロジェクトを書き換えるか？ | 読み取り専用依頼では書き込まない。変更はユーザー権限と既存 owner に従い、成熟プロジェクトを固定ディレクトリへ強制しない |
+| Token をどれだけ節約するか？ | 固定割合は約束しない。不要コード、オンデマンド読込、証拠再利用、永続状態で回避可能なコストを減らし、実タスクで効果を検証する |
+
+## 巨大 Prompt にしない理由
+
+- **プロジェクト事実を優先：** 現行 README、コード、設定、テスト、CI、実行証拠は一般論より現在のプロジェクトに近い。
+- **段階的開示：** 短い Kernel が共通境界を保持し、7 Skill がルーティングし、詳細 reference は必要時だけ読む。
+- **事実ごとに 1 owner：** 要件、設計、コード、タスク、Run、Release を分け、Chat を長期データベースにしない。
+- **リスク比例：** 小変更は軽く、データ、権限、決済、本番、破壊的操作は fail closed にする。
+- **名称より証拠：** テスト成功は Product 受入ではなく、Tag はデプロイではなく、デプロイコマンド成功は本番証明ではない。
+- **Token はコストであって目的ではない：** 判断を変え、手戻りを防ぎ、重大リスクを制御する情報は残す。
+
+詳細は [System overview](docs/architecture/system-overview.md)、[Skill boundaries](docs/architecture/skill-boundaries.md)、[Project artifact map](docs/architecture/project-artifact-map.md)、[Codex harness boundary](docs/architecture/codex-harness-boundary.md) を参照してください。
+
+## インストール、更新、削除
+
+Senmu BuildOS の現行正式リリースは `v2.0.4` です。Codex、Claude Code、豆包アダプターをサポートします。7 Skill は個別ではなく、1 つのプラグインとしてインストールします。
+
+### Codex の更新
 
 ```bash
 codex plugin marketplace upgrade senmu-buildos
@@ -170,17 +159,13 @@ codex plugin add senmu-buildos@senmu-buildos
 codex plugin list
 ```
 
-続いて Codex を再起動または更新し、新しい会話を開始して Skill 一覧と Hook を再読み込みさせます。一般ユーザーは正式リリースだけを導入してください。ローカルでソースを直接変更する場合は、リポジトリ全体への影響を検証し、候補インストールには正式版と異なるローカルのプレリリース版またはビルド識別子を付け、Codex が同一バージョンのキャッシュを再利用しないようにします。
-
-### Claude Code での更新
+### Claude Code の更新
 
 ```bash
 claude plugin marketplace update senmu-buildos
 claude plugin update senmu-buildos@senmu-buildos
 claude plugin list
 ```
-
-統一バージョンの準備、Tag 検証、Release 成果物に関するメンテナー向け手順は、[コントリビューションガイド](CONTRIBUTING.md#正式版本准备)を参照してください。リリーススクリプトが行うのはメタデータの準備だけであり、Tag の作成やリリース権限の省略は行いません。
 
 ### 削除
 
@@ -192,173 +177,45 @@ claude plugin uninstall senmu-buildos@senmu-buildos
 claude plugin marketplace remove senmu-buildos
 ```
 
-### リポジトリを Codex に直接渡す
+プラグインには限定されたローカル Lifecycle Hook が含まれます。初回利用時または Hook 変更時に内容を確認して信頼してください。Feedback はローカル審議箱にだけ保存され、自動でネットワークへ接続、公開、またはプロジェクト規則を書き換えることはありません。[Hook lifecycle](docs/architecture/hook-lifecycle.md) と [Security](SECURITY.md) を参照してください。
 
-次の依頼文とリポジトリ URL を Codex に渡すこともできます。外部リポジトリをそのまま信頼せず、先に確認するよう明示しています。
+リポジトリ URL を Agent に渡し、manifest、Skills、Hooks を確認してから README に従ってインストールさせることもできます。外部リポジトリは信頼されない入力であり、インストール許可は実行、公開、本番書き込みの許可ではありません。
 
-> `https://github.com/SenMuShare/senmu-buildos` を Codex プラグインとしてインストールしてください。最初に `.codex-plugin/plugin.json`、`.agents/plugins/marketplace.json`、`skills/`、`hooks/` を確認し、その後 README に従って Marketplace の追加とプラグインのインストールを行ってください。Hook の信頼確認が必要であることを知らせ、最後に実際にインストールされたバージョンと有効状態だけを報告してください。
+## 成熟プロジェクトへの導入
 
-Claude Code に渡す場合は「Codex プラグイン」を「Claude Code プラグイン」に置き換え、`.claude-plugin/`、`adapters/claude-code/`、`skills/` と、限定されたローカル・フィードバック書き込み、ネットワーク非使用、ユーザー設定を変更しない境界を先に確認させてください。
+成熟プロジェクトは「もう一度初期化」せず、接管します。
 
-### リポジトリを豆包（Doubao）に直接渡す
+1. 実際のプロジェクト root、Repository、Entry point、Framework、Test、CI、Deploy、既存文書を読み取り専用で確認します。
+2. 要件、Architecture、State、Task、Release facts の owner を特定します。
+3. BuildOS と比較し、不足、衝突、重複、古い規則を見つけます。
+4. 妥当な現状を保ち、実際の不足だけを元の owner に補います。
+5. 段階的に検証・移行し、BuildOS 全規則をプロジェクトへ複製しません。
 
-豆包ユーザーは、リポジトリ URL（または本 README）を豆包の会話に貼り付けて、豆包にインストールさせることができます。プラグイン manifest や Hook はなく、`adapters/doubao/README.md` を読んで `.user_skills` に Skill をコピーするのが導入経路です。
+そのため同じ BuildOS が React、Vue、Python、Go、Java、コンテンツ制作、複合 Workflow に対応でき、特定プロジェクトの絶対パス、Framework 嗜好、ディレクトリ構造を全プロジェクトの答えにしません。
 
-> `https://github.com/SenMuShare/senmu-buildos` を豆包のユーザー Skill としてインストールしてください。最初に `adapters/doubao/README.md` と `adapters/doubao/install_doubao.py` を読んでアダプターとインストールの仕組みを理解し、その後 `skills/` の 7 つの `senmu-build-*` Skill と `adapters/doubao/kernel/` の `senmu-build-kernel` ブートストラップを豆包の `.user_skills` にコピーしてください（`agents/` と `__pycache__` は除外）。最後に `.senmu-buildos-install.json` を書き込み、実際にインストールされた Skill 一覧とバージョンだけを報告してください。
+## オープンな改善
 
-## コア設計思想
+正式版をインストールすることも、自分の fork を維持することもできます。Web、書籍、公開 Repository、第三者 Skill、プロジェクト経験は、重複排除、衝突裁定、owner 対応、Context cost、Behavior validation が終わるまで候補です。
 
-- **新規プロジェクトには最小ガバナンス・インスタンスを能動的に構築する：** ユーザーがプロジェクトの新規作成や開始を明示した場合、Agent はプロジェクト分類、権威ある入口、最小ディレクトリ、復旧方法を通常の開始作業として扱います。ユーザーが文書を 1 つずつ指定する必要はありません。ここでの「能動的」とは、タスクが起動された後に実行することであり、SessionStart Hook が任意のディレクトリを黙って変更することではありません。
-- **成熟プロジェクトは識別してから進化させる：** まず読み取り専用で、実際の入口、owner、状態ソース、デリバリー境界を確認します。その後、権限を得てから、不足、競合、重複、古い構造を修正します。テンプレートに合わせるためだけに、成熟プロジェクトの隣へ第 2 のディレクトリや事実体系を作りません。
-- **網羅的なソースガバナンスを照合可能にする：** ユーザーが明示的に求めた場合のみ網羅モードを使い、すべての自社ソースファイル、関数／メソッド、既存コメントを登録します。未レビューの単位が 1 つでもあれば完了を防止し、レビュー範囲の完全性と是正後の適合性を別々に検証します。
-- **日常のコード品質はマージ前に収束させる：** 開発途中の各 commit に個別レビューを要求しませんが、統合基線へ入る完全なコード変更セットは、変更ファイル、関数／メソッド、コメントまでマージ前にレビューします。承認は正確な `base..head` に結び付き、新しい commit で失効し、リリースではそのレビュー証拠と成果物の同一性だけを確認します。
-- **実際の証拠からプロジェクト規約を発見し、必要時だけ読み込む：** 成熟プロジェクトでは、入口、実装、設定、テスト、実行証拠から安定した規約を識別します。完全な内容は元の専門 owner に書き戻し、短い索引だけで現在のタスクに必要な規約を選択できるようにします。第 2 の規約ライブラリを作ったり、すべてをコンテキストへ注入したりしません。
-- **プロジェクト Agent にも唯一の契約を持たせる：** カスタム Agent またはシステムプロンプトを実際に保守するプロジェクトだけが Agent Definition System を有効にします。Agent Register、安定した Key とバージョン、Agent ごとの唯一の定義、決定論的検証によって、実際の Workflow／Harness と接続します。ルートの `AGENTS.md` は Codex のプロジェクト入口であり、Skill の `agents/openai.yaml` は表示用メタデータのままです。
-- **実装前に再利用ラダーをたどる：** まず実装が本当に必要かを判断します。次に、プロジェクトの既存機能、標準ライブラリ、プラットフォーム標準機能、現在の依存関係、成熟したオープンソース案を順に確認します。実際の不足が残る場合に限り、境界の明確な最小限の独自実装を作ります。
-- **インフラの磨き込みより先に価値ループを閉じる：** まず実行可能、検証可能、デリバリー可能な最小価値ループを成立させ、実際のフィードバックに基づいて段階的に強化します。足場、抽象層、汎用基盤、チェックリスト、ゲートがコア経路より長期間先行してはなりません。
-- **問題の発生源を改善する：** 問題を生む要件、責任、アーキテクチャ、インターフェース、データ owner、既定値、実装、本番プロセスを優先して修正します。ゲートは、発生源から除去できず、かつ十分に重要な残余リスクだけを扱います。安全、プライバシー、権限、決済、本番データ、破壊的操作、正式リリースの完全性には、引き続き fail-closed の保護が必要です。
-- **リリースにリソース収束を含める：** 正式デプロイでは、既定として検証済みの現行版と検証済みのロールバック版を 1 つ保持し、明示されたプロジェクト方針を優先します。`release` プロファイルはプロジェクト単位の保持設定、対象限定の成果物／イメージ削除スクリプト、契約テストを初期化します。本番検証後、唯一のリリース入口が実行端末、ビルド端末、任意のリモート成果物ストア、対象 Git 実行面を別々に収束させ、Agent の記憶やグローバル prune に依存しません。
-- **コンテキスト効率をアーキテクチャとして扱う：** 単一の事実ソース、短い入口、明確な owner、必要時だけ読み込む Skill、タスク分割、永続状態によって、再読、繰り返し指示、Token 消費、複数 Agent 間の引き継ぎ曖昧さを減らします。
-- **検証済みの学びをフライホイールへ戻す：** Hook は明確な訂正、手戻り、回帰を捕捉します。Agent がシグナルの強い欠陥を発見した場合は、ローカル CLI からサイレントに送信でき、通常の回答に内部マーカーや候補 ID は表示しません。どちらも作るのは審議待ち候補だけです。ユーザーが Learning を起動し、まとめて重複排除、証拠確認、処置を行います。各プロジェクトはまず自分の問題を解決し、承認された複数プロジェクト向け候補だけが BuildOS ソースへ入り、1 件の報告で Skill を自動変更しません。
+- Code／Rule を貢献する場合：[CONTRIBUTING.md](CONTRIBUTING.md)
+- 今後の方向：[ROADMAP.md](ROADMAP.md)
+- Security report：[SECURITY.md](SECURITY.md)
 
-## BuildOS と Project Governance Instance
+## 検証と現在の境界
 
-Senmu BuildOS は、プロジェクトアーキテクトと AI Agent に、一般的な方法論、判断基準、既定実装、専門的な手引きを提供します。特定プロジェクトの PRD、技術設計、実行台帳ではありません。各プロジェクトは独自の **Project Governance Instance（プロジェクト・ガバナンス・インスタンス）** を形成し、適用する原則を、そのプロジェクトの入口、ディレクトリ、owner、状態ソース、品質コマンド、デリバリー証跡へ落とし込みます。
-
-```text
-Senmu BuildOS：一般原則、専門的方法、既定構造、判断基準
-                              ↓ 調整
-Project Governance Instance：プロジェクト固有の選択、対応付け、進化
-                              ↓ 運用
-ローカル要件、コード、タスク／実行状態、検証、デリバリー、リリース事実
-                              ↓ 検証後にフィードバック
-Senmu BuildOS の次の一般化された進化
-```
-
-ガバナンス・インスタンスが統一するのは責任と意味であり、物理的な形ではありません。大規模ソフトウェアでは PRD、アーキテクチャ契約、リリース体系を使えます。小さなスクリプトでは README、テスト、バージョン履歴へ責任を統合できます。成熟したワークフローでは、タスクパッケージ、データベース、manifest、Makefile、受領記録を owner として維持できます。Python、TypeScript、Go、Java、フロントエンドフレームワーク、一般的なコード品質などの安定知識は BuildOS に残して必要時に参照し、各プロジェクトは自身の選択、制約、入口、例外、検証コマンドだけを記録します。
-
-### 2 種類の権威
-
-- **事実の権威：** プロジェクト内のコード、文書、データベース、実行状態、リリース受領記録が、プロジェクトの現在の姿を示します。既定テンプレートが実際の事実を上書きしてはなりません。
-- **ガバナンス標準：** BuildOS は、現在の事実チェーンが完全、明確、復旧可能、検証可能、進化可能かを判断します。既存規約は、存在するだけで自動的に正しいとは限りません。不足、競合、重複、古い状態、移植不能があれば、権限取得後に元の owner を改善します。
-
-成熟プロジェクトを尊重することは、凍結することではありません。現状を識別し、目標インスタンスと移行境界を定め、その後で元の owner を更新、統合、補完します。長期の並行体系は作りません。
-
-## ソースプロジェクトとインストール実行形態
-
-GitHub／Git 上では、Senmu BuildOS は 1 つの完全で独立した製品プロジェクトです。プラグイン manifest、すべての Skills、Hooks、文書、スクリプト、テストが、1 つのソースリポジトリと 1 つのリリース単位を構成します。Codex と Claude Code はどちらもプラグイン全体をインストールし、7 つの Skill を必要時に呼び出せる入口として公開します。これらは個別にバージョン管理される 7 つの製品ではありません。
-
-したがって BuildOS の改善では、まずリポジトリ全体への影響を確認します。最終的な変更が 1 つの Skill、1 つの Markdown、1 つのスクリプトだけでも、隣接 owner、ルーティング、テンプレート、Hook、テスト、リリース情報の整合性を確認します。アプリケーションプロジェクトでの学び、BuildOS ソース変更、候補インストール、公開リリースはそれぞれ独立した状態と権限を持ち、どれか 1 つを他の完了として扱いません。
-
-### 5 つのプロジェクト機能
-
-| 機能 | 対象 | 動作 |
-| --- | --- | --- |
-| Recommend Placement | 1 つの文書、ディレクトリ、責務 | 既存 owner を踏まえて第一候補、理由、代替案を提示し、相談だけでは作成しない |
-| Plan / Initialize New Project | 空、または明示的に新規のプロジェクト | 明示した分類、プロファイル、モジュールで書き込みゼロの計画を先に作り、許可後にレビュー済み構成だけを生成 |
-| Assess Existing Project | 既存プロジェクト | 書き込みゼロで権威ある入口、リリース単位、候補、除外証拠を棚卸しし、その後 owner、不足、競合、移行リスクを意味的に確認 |
-| Evolve Existing Project | レビュー済みで明示的に許可されたプロジェクト | 元の権威構造の中で不足 owner を補い、競合を修正し、重複を統合し、移植不能なパスを移行して復旧性を検証 |
-| Govern a Mature Project | 複数段階で引き継ぐ必要がある複雑化した既存プロジェクト | 1 つの永続タスク owner で読み取り専用基準、Finding の判定、ユーザー許可、段階的改善、再レビュー、復旧、一時成果物の処置を連結 |
-
-`senmu-build-project` は書き込みゼロの `--mode plan-new`、明示的に実行する `--mode initialize-new`、読み取り専用の `assess_project_governance.py`、およびファイル型の成熟プロジェクト引き継ぎ記録用オプション検証器を提供します。project type と profile は必須で、`--modules` は推奨モジュールを上書きできます。成熟プロジェクトの作業は、提案したマップ、プロジェクト証拠、ユーザー権限に基づきます。
-
-`core` は本当に軽量なプロファイルです。README、AGENTS、ガバナンス憲章、機械可読ポリシー、1 つの検証入口だけを作り、タスク、ログ、学び、専門文書を事前生成しません。継続的な協業、永続タスク、専門 owner が必要なら `standard`、正式デプロイ、リリース、成果物収束が必要なら `release` を使います。`plan-new`（互換の `--dry-run` を含む）は候補を `planned` に列挙し、書き込みゼロを維持します。
-
-`Initialize New Project` は「プロジェクトを作成／開始する」というタスクの意味によって起動される Agent 動作です。Agent は `senmu-build-project` を能動的に選び、目的と証拠からプロジェクトを分類し、本格実装前に最小インスタンスを生成します。すべての新規ディレクトリを監視するバックグラウンドプロセスではなく、Hook が空でないディレクトリへ自動書き込みすることもありません。
-
-プロジェクトがカスタム Agent またはシステムプロンプトを実際に保守する場合、空の新規プロジェクト初期化で `--with-agents` を明示的に追加できます。追加されるのは `agents/AGENT_REGISTER.md`、Agent Definition テンプレート、検証器だけです。すべてのプロジェクトに架空の Agent を作ったり、ルート `AGENTS.md` や Skill メタデータをビジネス Prompt へ変えたりしません。
-
-## 1 プラグイン、対等な 7 つの Skill
-
-| Skill | Professional Name | 責任 | 読み込む場面 |
-| --- | --- | --- | --- |
-| `senmu-build-project` | Project Management | プロジェクト管理 | プロジェクト初期化、ディレクトリ／権威の競合、ガバナンスプロファイル、永続タスク状態、ライフサイクル横断調整 |
-| `senmu-build-product` | Product Management | プロダクト・要件管理 | 要件受付、PRD、優先順位、ロードマップ、イテレーション確約、受入、スコープ変更 |
-| `senmu-build-workflow` | Workflow Governance | ワークフロー・素材ガバナンス | Harness、Agent 契約、データ／素材フロー、実行状態、復旧、成果物、受領記録 |
-| `senmu-build-engineering` | Software Engineering | ソフトウェアエンジニアリング・ガバナンス | 技術選定、アーキテクチャ、実装効率、コーディング、テスト、リファクタリング、依存関係、技術的負債 |
-| `senmu-build-delivery` | Delivery Management | 協業、バージョン、デリバリー管理 | Git、リポジトリとリリース単位、バージョン、成果物、デプロイ、リリース、本番検証、ロールバック |
-| `senmu-build-assurance` | Governance Assurance | ガバナンスレビューと証拠保証 | POC、読み取り専用レビュー、負債棚卸し、証拠レベル、争点となる因果関係の検証 |
-| `senmu-build-learning` | Organizational Learning & Continual Improvement | 組織学習と継続的改善 | 振り返り、学びの記録、知識保守、発生源改善、BuildOS リポジトリ全体へのフィードバック |
-
-7 つの Skill は技術上も責任上も対等です。`senmu-build-project` は常に最初に読み込む親 Skill ではありません。安定した既存プロジェクトの単一領域タスクでは、該当 Skill を直接選択します。作業が本当に責任境界をまたぐ場合だけ 2 つ目の補助 Skill を組み合わせ、全体を一度に読み込みません。
-
-Codex は各 Skill の `description` とユーザーが求める結果から主 Skill を選択し、ユーザーが明示的に指定することもできます。責任が本当に切り替わる場合、現在の Skill は識別子、範囲、権威ある入口、事実と証拠、未解決事項、次の成果、権限境界だけを引き継ぎます。手引き全体はコピーしません。Senmu BuildOS は 8 番目の「総監督」Skill を設けず、7 つの Skill を固定パイプラインにも編成しません。
-
-## 3 層の運用モデル
-
-```text
-Codex／AI Agent
-├── ライフサイクル Hook：極めて短く、領域横断で省略できないガバナンス境界を復元
-├── 専門 Skill：主領域を 1 つ、必要時のみ補助領域を 1 つ読み込む
-└── プロジェクト内の事実：README、AGENTS、policy、schema、コード、タスク、台帳、リリース証拠
-```
-
-現在状態の権威はプロジェクト内の事実にあり、Senmu BuildOS はそれらを評価・進化させるガバナンス標準です。BuildOS は owner の作成、発見、検証、改善を支援しますが、特定プロジェクトの要件、進捗、リリース状態をプラグイン内部には保存しません。
-
-### ライフサイクル Hook
-
-`SessionStart` は、起動、再開、クリア、コンテキスト圧縮後に、950 文字以下の固定ガバナンス・カーネルを注入します。`SubagentStart` は 500 文字以下の委任境界を注入します。`UserPromptSubmit` は明示的な訂正または投稿アクションだけを照合し、フィードバック機構への質問は収集しません。Agent がシグナルの強いガバナンス上の欠陥を発見した場合は、ローカル CLI からサイレントに送信できます。候補は脱機密化・重複排除され、ローカルの受信箱へ保存されますが、通常のユーザー向け回答に内部マーカーや候補 ID は表示しません。Hook はプロジェクト全体を読まず、現在の役割を推測せず、Skill 全文を読み込まず、タスク状態や規則を自動変更しません。
-
-これにより、「実際のプロジェクト事実を優先する」「権限を超えない」「必要時だけ読み込む」「証拠を保持する」「未検証は未完了」といった境界を、製品、エンジニアリング、リリース規約を毎ターン繰り返し注入せずに復元できます。プラグイン Hook をインストールまたは変更した後も、ユーザーが Codex 上でレビューし信頼する必要があります。ソースが存在するだけでは、実行時に有効とは限りません。
-
-### 永続タスク状態
-
-複数の依存ステップ、段階、Agent、セッションにまたがる作業には、プロジェクトが宣言した **Durable Task State Owner** が必要です。`governance/tasks/` は BuildOS が `standard`／`release` の新規プロジェクトに提供する既定実装です。`core` は README、Issue、外部タスクシステムを継続利用でき、成熟プロジェクトは既存のタスクパッケージ、データベース、外部システムを対応付けて維持できます。
-
-既定の Markdown 実装は次のとおりです。
-
-- `TASK_REGISTER.md` はタスクと現在状態だけを記録します。
-- `TASK-<NNNN>-<slug>.md` は番号付きの永続タスク計画で、境界、段階、進捗、重要判断の要約、証拠リンク、復旧入口を保持します。既定ではタスクごとの独立ディレクトリを作りません。
-- PRD、技術設計、Run Manifest、テスト証拠、Release Record などの専門事実は、引き続き各自の唯一の owner に保存します。タスク記録は本文を複製せずリンクします。
-
-Codex の一時計画は現在セッションのスケジューリングに適しています。複数ステップ、段階、Agent、セッションにまたがる場合、または監査・復旧が必要な場合にだけ、番号付きのプロジェクトタスク計画を作ります。両者を機械的に二重記録しません。
-
-## リポジトリ構成
-
-```text
-.agents/         Git Marketplace からインストールするための公開カタログ
-.github/         ローカル検証入口を再利用するリポジトリ CI
-.codex-plugin/   Codex プラグインの識別情報と表示メタデータ
-.claude-plugin/  Claude Code プラグインの識別情報と Marketplace
-adapters/        Codex、Claude Code、豆包（Doubao）の Harness アダプター
-hooks/           Codex Hook の入口と共有ガバナンス・カーネル
-bin/             ローカル候補の照会、登録、集中審議の入口
-skills/          必要時に読み込む 7 つの専門 Skill
-docs/            システムアーキテクチャ、責任境界、成果物マップ
-scripts/         プラグイン構造、製品アイデンティティ、リンクの検証
-tests/           Hook、初期化、パッケージ構造、振る舞いテスト
-```
-
-これはプロジェクの非公開正本リポジトリから allowlist で生成される公開ソース面です。内部タスク、作業ログ、生のフィードバック、マシンパス、非公開レビューは含みません。[ソース公開境界](docs/architecture/publication-boundary.md) を参照してください。
-
-詳細な責任は [Skill の境界と連携](docs/architecture/skill-boundaries.md)、プロジェクト内の配置は [プロジェクト成果物とディレクトリ責任マップ](docs/architecture/project-artifact-map.md)、Codex と BuildOS の責任分担は [Codex Harness の境界](docs/architecture/codex-harness-boundary.md) を参照してください。
-
-## 各 Harness の公式メカニズムとの整合
-
-- 関連する複数の Skill を 1 つのプラグインで提供し、7 つの孤立した Skill を個別インストールさせません。
-- 各 Skill の短い `description` を発見と起動に使用します。完全な入口はルーティングに集中させ、詳細知識は必要時だけ `references/` から読み込みます。
-- Codex は `hooks/hooks.json` と `${PLUGIN_ROOT}` を使用し、Claude Code は `.claude-plugin/plugin.json`、`${CLAUDE_PLUGIN_ROOT}`、独立した Hook 設定を使用します。
-- Claude Code のプラグイン Skill は名前空間で分離され、既存のユーザー Skill を上書きしません。両プラットフォームは短いガバナンス・コンテキストと限定的なローカル候補プロトコルを共有します。
-- プロジェクト入口、権限、サンドボックス、セッション計画、コンテキスト圧縮は Harness に委ねます。BuildOS はホストが確実に保有する状態を複製しません。
-
-## 検証
+Repository はプロジェクト所有の検証入口を提供します。
 
 ```bash
-python3 scripts/validate_package.py
+python3 scripts/validate_package.py --strict
+python3 scripts/validate_public_surface.py
 python3 -m unittest discover -s tests -p 'test_*.py'
 node --test tests/hooks/*.test.js
 ```
 
-GitHub Actions は上記 3 つのプロジェクト所有入口だけを再利用します。各 Skill は Skill Creator の `quick_validate.py`、プラグイン manifest は Plugin Creator の `validate_plugin.py` にも合格する必要があります。書式と静的アサーションの通過だけでは、実際の Agent ルーティング、Hook の信頼、タスク動作は証明されません。これらは隔離した候補環境で振る舞いテストを行う必要があります。
+これらは Package structure、Metadata、Rule invariants、Script contract を検証します。任意の Model／Project が固定割合の Token を節約する証明ではなく、実タスクの Code quality、Routing accuracy、Hook trust、Deploy、本番確認の代わりにもなりません。
 
-## 現在の境界
-
-- `v1.0.0` は Codex 向けの最初の正式ソースリリースです。Tag、GitHub Release、`VERSION`、プラグインバージョン、Changelog は同一の基準を示します。
-- Git Marketplace 経由のインストール、更新、削除はコマンドレベルで検証済みです。Hook の信頼と有効化、および実タスクでの Skill ルーティングは、現在の Codex 環境で別途確認する必要があります。
-- `v1.1.0` は Codex と Claude Code を正式にサポートします。Claude Code アダプターは、公式 manifest 検証、隔離されたインストール／削除スモーク、Hook プロトコル、副作用境界の検証を通過しています。
-- 現在のシステムは、低ノイズの候補収集、集中審議、振り返り、組織学習を扱いますが、フィードバックのダッシュボード、統計、自動ルール生成は提供しません。成長や指標の運用は現在の範囲外です。
-- このリポジトリは [Apache License 2.0](LICENSE) を採用しています。ライセンスはソースの利用、変更、配布を許可しますが、上記のプラットフォームまたは互換性の保証範囲を広げるものではありません。
+BuildOS は Project owner、専門 Security audit、Cloud permission、CI/CD、Runtime monitoring を置き換えません。必要な許可なしに Commit、Merge、Tag、Push、Deploy、Publish を行いません。
 
 ## ライセンス
 
-Senmu BuildOS は [Apache License 2.0](LICENSE) の下でオープンソースとして公開されています。
+[Apache License 2.0](LICENSE)
