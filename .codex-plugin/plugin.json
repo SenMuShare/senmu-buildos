@@ -1,6 +1,6 @@
 {
   "name": "senmu-buildos",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Project lifecycle governance for Codex: project management, product, workflows, engineering, delivery, assurance, and organizational learning.",
   "author": {
     "name": "Senmu",

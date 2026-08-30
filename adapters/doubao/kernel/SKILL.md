@@ -1,0 +1,39 @@
+---
+name: senmu-build-kernel
+description: "Senmu BuildOS 治理内核引导入口（豆包适配）。当用户开始或继续一个需要项目治理的多阶段、跨会话开发或项目管理任务，需要先明确权威项目根、owner、授权、门禁与交付证据时加载本 Skill。它提供通用治理底线和七个专业 Skill（project/product/workflow/engineering/delivery/assurance/learning）的路由表。豆包没有 Codex／Claude Code 的生命周期 Hook，本 Skill 以引导入口形式替代 SessionStart 内核注入。"
+---
+
+# Senmu BuildOS 治理内核（豆包引导入口）
+
+本 Skill 是豆包环境的 BuildOS 引导内核。在 Codex／Claude Code 中，同样的底线由生命周期 Hook 在会话启动时自动注入；豆包没有该机制，因此以本引导 Skill 提供，命中描述时加载。
+
+## 治理底线
+
+- 事实由用户请求和真实项目权威／运行状态定义；先确认范围、单元、权威、可逆性和风险。
+- 从活跃 owner 开始，只加载当前结果需要的 Skill／reference，不一次加载整套内容。
+- 从项目声明的持久任务 owner 和适用经验恢复；聊天记录和 Hook 不是 owner。
+- 在需求、所有权、架构、接口和流程上预防缺陷；门禁只覆盖重大剩余风险。
+- 写入前通过项目预检或准备 Delivery Change Unit：保护现有脏改动、使用任务分支、必要时 worktree、绝不改集成线、不复用已封口工作、匹配验证并本地 commit。
+- 安全、隐私、权限、支付、生产数据、破坏性操作和发布完整性 fail closed。
+- 可复用的治理缺口静默记入反馈箱，不暴露内部标记或 ID、不自动晋级。
+- 离开时留下验证、风险和交接；未验证／未部署／未发布即未完成。
+
+## 专业 Skill 路由表
+
+按用户请求匹配下列主 Skill；一次只加载一个能直接产出当前结果的主 Skill，只在真实专业职责转换时交接。
+
+| Skill | 职责 | 典型触发结果 |
+| --- | --- | --- |
+| `senmu-build-project` | 项目治理实例、权威结构与跨领域 owner | 创建／审视／演进治理；结构清理、权威冲突、治理迁移 |
+| `senmu-build-product` | 产品范围、需求、优先级、路线图、验收 | 需求进入／澄清／取舍／迭代／关闭的单一事实链 |
+| `senmu-build-workflow` | 工作流契约、项目 Agent、物料流、运行状态 | 设计／修复流程契约与可恢复运行状态 |
+| `senmu-build-engineering` | 工程契约、架构、技术债、测试 | 建立／修复工程规范、选型、重构 |
+| `senmu-build-delivery` | Git／仓库边界、版本、制品、部署、发布 | 非例行 Git／发布决策与生产事实 |
+| `senmu-build-assurance` | 独立证据分级审查 | POC／审计／复现／争议结论 |
+| `senmu-build-learning` | 复盘、经验晋级、知识蒸馏 | 正式复盘与规则晋级 |
+
+## 豆包适配说明
+
+- 七个专业 Skill 的 `SKILL.md` 保持与 Codex／Claude Code 共用的权威版本，本 Skill 不复制其正文；只补充豆包缺失的 hook 注入层和路由表。
+- 豆包按 description 路由，无法像 Codex 那样在每会话强制注入内核；需要完整治理基线时，先让本 Skill 命中（例如"开始这个多阶段项目"“先建立项目治理基线”等请求）。
+- 各 Skill 内的 `agents/openai.yaml` 是 Codex 展示元数据，豆包安装时不复制；Git 执行、验证与发布仍由对应专业 Skill 负责。

@@ -23,6 +23,9 @@ const CORRECTION_PATTERNS = [
   /\b(?:that's wrong|that is wrong|not what i meant|you misunderstood|don't do (?:that|this)|regression|rework)\b/i,
 ];
 
+const AUTOMATED_OVERVIEW_PATTERN = /^\s*# Overview[\s\S]{0,400}\bGenerate 0 to 3 hyperpersonalized suggestions\b/i;
+const MY_REQUEST_MARKER = '## My request:';
+
 function normalizeText(value) {
   return String(value || '').replace(/\s+/g, ' ').trim();
 }
@@ -37,14 +40,47 @@ function redactSensitive(value) {
     .slice(0, MAX_EXCERPT_CHARS);
 }
 
+function latestUserRequest(value) {
+  const markerIndex = value.lastIndexOf(MY_REQUEST_MARKER);
+  return markerIndex === -1 ? '' : value.slice(markerIndex + MY_REQUEST_MARKER.length).trim();
+}
+
+function responseAnnotationComments(value) {
+  const match = value.match(/<response-annotations>\s*([\s\S]*?)\s*<\/response-annotations>/i);
+  if (!match) return null;
+  try {
+    const annotations = JSON.parse(match[1]);
+    if (!Array.isArray(annotations)) return [];
+    return annotations
+      .map((item) => normalizeText(item && (item.annotation || item.comment || item.user_comment)))
+      .filter(Boolean);
+  } catch {
+    return [];
+  }
+}
+
+function extractUserAuthoredSignalText(prompt) {
+  const raw = String(prompt || '');
+  if (!raw.trim() || AUTOMATED_OVERVIEW_PATTERN.test(raw)) return '';
+
+  const annotationComments = responseAnnotationComments(raw);
+  const request = latestUserRequest(raw);
+  if (annotationComments !== null) {
+    return [...annotationComments, request].filter(Boolean).join('\n');
+  }
+  if (request) return request;
+  return raw;
+}
+
 function detectPromptSignal(prompt) {
-  const normalized = normalizeText(prompt);
+  const excerpt = extractUserAuthoredSignalText(prompt);
+  const normalized = normalizeText(excerpt);
   if (!normalized) return null;
   if (EXPLICIT_PATTERNS.some((pattern) => pattern.test(normalized))) {
-    return { kind: 'explicit_feedback', reason: 'explicit feedback or remember signal' };
+    return { kind: 'explicit_feedback', reason: 'explicit feedback or remember signal', excerpt };
   }
   if (CORRECTION_PATTERNS.some((pattern) => pattern.test(normalized))) {
-    return { kind: 'user_correction', reason: 'possible correction, regression, or repeated rework' };
+    return { kind: 'user_correction', reason: 'possible correction, regression, or repeated rework', excerpt };
   }
   return null;
 }
@@ -130,7 +166,7 @@ function capturePromptCandidate(input, host, env = process.env) {
     sourceKind: 'user_prompt',
     signalKind: signal.kind,
     reason: signal.reason,
-    excerpt: input.prompt,
+    excerpt: signal.excerpt,
   }, env);
 }
 
@@ -186,6 +222,7 @@ module.exports = {
   capturePromptCandidate,
   decideCandidate,
   detectPromptSignal,
+  extractUserAuthoredSignalText,
   feedbackPaths,
   listCandidates,
   persistCandidate,

@@ -2,7 +2,7 @@
 
 🌐 **Documentation languages:** [简体中文](./README.md) | **English** | [日本語](./README.ja.md)
 
-> Help Codex and Claude Code make fewer mistakes, avoid rework, preserve context, and deliver with evidence.
+> Help Codex, Claude Code, and Doubao make fewer mistakes, avoid rework, preserve context, and deliver with evidence.
 
 [![Validate Senmu BuildOS](https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml/badge.svg)](https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml)
 [![License](https://img.shields.io/github/license/SenMuShare/senmu-buildos)](./LICENSE)
@@ -11,7 +11,7 @@
 
 Senmu BuildOS is an open-source **project governance plugin for AI coding agents**. It packages project management, product requirements, software engineering, Git collaboration, assurance, releases, and feedback into seven Skills that load only when relevant. Agents inspect the real project before changing it instead of relying on an ever-growing prompt.
 
-It is not a traditional project-management app, and it does not force mature repositories into one directory template. It currently supports **OpenAI Codex** and **Claude Code**.
+It is not a traditional project-management app, and it does not force mature repositories into one directory template. It currently supports **OpenAI Codex**, **Claude Code**, and **Doubao**.
 
 ## From agent chaos to sustainable delivery
 
@@ -46,6 +46,13 @@ For Claude Code:
 ```bash
 claude plugin marketplace add SenMuShare/senmu-buildos
 claude plugin install senmu-buildos@senmu-buildos
+```
+
+For Doubao, clone the repository and run the adapter installer:
+
+```bash
+git clone https://github.com/SenMuShare/senmu-buildos.git
+cd senmu-buildos && python3 adapters/doubao/install_doubao.py
 ```
 
 Refresh the tool and start a new conversation after installation. See [Install, update, and remove](#install-update-and-remove) for updates, removal, and Hook trust guidance.
@@ -108,7 +115,7 @@ If you have watched an agent duplicate files, lose context, disrupt an existing 
 
 ## Current status
 
-The current formal release is Senmu BuildOS `v2.0.0`. **Codex and Claude Code** share the same seven peer Skills and have separate plugin manifests, marketplaces, and lifecycle Hook adapters. Neither adapter changes user-wide configuration or project files, and neither accesses the network. Feedback capture writes only high-signal candidates to local `~/.senmu-buildos/feedback/` and exposes no internal marker or ID in normal answers. Installation, enablement, and removal remain explicit user actions.
+The current formal release is Senmu BuildOS `v2.0.1`. **Codex and Claude Code** share the same seven peer Skills and have separate plugin manifests, marketplaces, and lifecycle Hook adapters; **Doubao** uses the same Skills with a separate bootstrap adapter (`adapters/doubao/`) installed as hook-less user Skills. None of the adapters changes user-wide configuration or project files, and none accesses the network. Feedback capture writes only high-signal candidates to local `~/.senmu-buildos/feedback/` and exposes no internal marker or ID in normal answers. Installation, enablement, and removal remain explicit user actions.
 
 ## Install, update, and remove
 
@@ -135,6 +142,23 @@ claude plugin list
 ```
 
 Plugin Skills use the `senmu-buildos:` namespace, so they do not replace existing user Skills. Run `/reload-plugins` after installation if needed. The adapter registers `SessionStart`, `SubagentStart`, and `UserPromptSubmit`; it requests no additional tool permissions and does not modify `~/.claude` or project files. `UserPromptSubmit` writes only explicit corrections or submission actions to the local review inbox.
+
+### Install on Doubao
+
+Doubao has no plugin manifest or lifecycle Hook: Skills are plain folders under `workspace/.user_skills/`. Two options:
+
+**Option A — hand the repository to Doubao (recommended if you are not comfortable with the command line).** Paste the repository URL into a Doubao conversation and ask it to read `adapters/doubao/README.md`, then copy the seven `senmu-build-*` Skills and the `senmu-build-kernel` bootstrap from `skills/` and `adapters/doubao/kernel/` into Doubao `.user_skills` (excluding Codex-only `agents/` metadata), and write an install identity. See [the Doubao adapter](adapters/doubao/README.md).
+
+**Option B — clone and run the installer.**
+
+```bash
+git clone https://github.com/SenMuShare/senmu-buildos.git
+cd senmu-buildos
+python3 adapters/doubao/install_doubao.py --dry-run   # preview, zero writes
+python3 adapters/doubao/install_doubao.py             # install into Doubao .user_skills
+```
+
+The installer copies the seven Skills and the `senmu-build-kernel` bootstrap into `.user_skills/` (stripping Codex-only `agents/` metadata) and writes `.senmu-buildos-install.json`. Because Doubao has no Hook, the governance kernel cannot be force-injected every session; `senmu-build-kernel` provides it on demand. Re-running the installer updates the install.
 
 ### Update on Codex
 
@@ -175,6 +199,12 @@ You can also give Codex the repository URL with this prompt. It explicitly asks 
 > Install `https://github.com/SenMuShare/senmu-buildos` as a Codex plugin. First review `.codex-plugin/plugin.json`, `.agents/plugins/marketplace.json`, `skills/`, and `hooks/`; then follow the README to add the Marketplace and install the plugin. Remind me to review Hook trust, and report only the version actually installed and its enabled state.
 
 For Claude Code, replace “Codex plugin” with “Claude Code plugin” and ask it to review `.claude-plugin/`, `adapters/claude-code/`, `skills/`, and the bounded local feedback write, no-network, and no-user-configuration-change boundaries.
+
+### Give the repository directly to Doubao
+
+Doubao users can paste the repository URL (or this README) into a Doubao conversation and let Doubao install. There is no plugin manifest or Hook; the install path is to read `adapters/doubao/README.md` and copy the Skills into `.user_skills`:
+
+> Install `https://github.com/SenMuShare/senmu-buildos` as Doubao user Skills. First read `adapters/doubao/README.md` and `adapters/doubao/install_doubao.py` to understand the adapter and install logic; then copy the seven `senmu-build-*` Skills from `skills/` and the `senmu-build-kernel` bootstrap from `adapters/doubao/kernel/` into Doubao `.user_skills` (excluding `agents/` and `__pycache__`), and write `.senmu-buildos-install.json`. Report only the Skill list and version actually installed.
 
 ## Core design philosophy
 
@@ -290,7 +320,7 @@ Codex's temporary plan is appropriate for scheduling the current session. Create
 .github/         Repository CI that reuses local validation entrypoints
 .codex-plugin/   Codex plugin identity and presentation metadata
 .claude-plugin/  Claude Code plugin identity and marketplace
-adapters/        Harness adapters for Codex and Claude Code
+adapters/        Harness adapters for Codex, Claude Code, and Doubao
 hooks/           Codex Hook entrypoint and shared short governance kernel
 bin/             Local feedback query, submission, and batch-review entrypoint
 skills/          Seven professional Skills loaded on demand

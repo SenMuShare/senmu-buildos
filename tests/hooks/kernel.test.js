@@ -15,15 +15,15 @@ test('SessionStart kernel stays short and preserves core boundaries', () => {
   const context = getSessionContext();
   assert.ok(context.length <= MAX_SESSION_CONTEXT_CHARS);
   assert.match(context, /real project authority/);
-  assert.match(context, /load only needed Skill/);
-  assert.match(context, /declared durable task owner/);
+  assert.match(context, /reuse valid evidence/);
+  assert.match(context, /load only missing\/changed Skill/);
+  assert.match(context, /durable task owner/);
   assert.match(context, /applicable active lessons/);
   assert.match(context, /gates only cover material residual risk/);
   assert.match(context, /prepare a Delivery Change Unit/);
   assert.match(context, /use a task branch/);
-  assert.match(context, /add a worktree unless exclusive/);
-  assert.match(context, /never edit an integration line/);
-  assert.match(context, /never reuse sealed work/);
+  assert.match(context, /worktree unless exclusive/);
+  assert.match(context, /never edit integration lines or reuse sealed work/);
   assert.match(context, /verify and commit/);
   assert.match(context, /feedback CLI/);
   assert.match(context, /silently/i);
@@ -48,9 +48,11 @@ test('SubagentStart kernel stays shorter than the session kernel', () => {
   const subagent = getSubagentContext();
   assert.ok(subagent.length <= MAX_SUBAGENT_CONTEXT_CHARS);
   assert.ok(subagent.length < session.length);
-  assert.match(subagent, /Do not expand scope/);
-  assert.match(subagent, /return a stable commit/);
-  assert.match(subagent, /never edit an integration line/);
+  assert.match(subagent, /Stay within delegated scope/);
+  assert.match(subagent, /Reuse owners and valid evidence/);
+  assert.match(subagent, /missing\/changed guidance or source ranges/);
+  assert.match(subagent, /verified stable commit/);
+  assert.match(subagent, /never edit integration lines or reuse sealed work/);
 });
 
 test('Codex output uses lifecycle additionalContext', () => {

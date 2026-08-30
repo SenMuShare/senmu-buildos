@@ -9,6 +9,7 @@ const {
   capturePromptCandidate,
   decideCandidate,
   detectPromptSignal,
+  extractUserAuthoredSignalText,
   feedbackPaths,
   listCandidates,
 } = require('../../hooks/feedback');
@@ -32,12 +33,76 @@ test('explicit feedback actions still create a capture signal', () => {
   assert.equal(detectPromptSignal('记录反馈：这个边界需要收紧。').kind, 'explicit_feedback');
 });
 
+test('host-generated suggestions and quoted conversation text are not feedback signals', () => {
+  const generated = `# Overview
+
+Generate 0 to 3 hyperpersonalized suggestions based on this context.
+
+The quoted text says: 不对，你又理解错了。`;
+  assert.equal(detectPromptSignal(generated), null);
+
+  const referencedConversation = `## Referenced conversation
+
+Assistant: 不对，你又把旧规则读了一遍。
+
+## My request:
+请总结这段讨论。`;
+  assert.equal(detectPromptSignal(referencedConversation), null);
+});
+
+test('only current requests and annotation comments are inspected in structured prompts', () => {
+  const correctedRequest = `## Referenced conversation
+
+Assistant: ordinary quoted material
+
+## My request:
+不对，你又把一个项目的约定写成通用规则了。`;
+  assert.equal(detectPromptSignal(correctedRequest).kind, 'user_correction');
+
+  const neutralAnnotation = `<response-annotations>
+[{"text":"不对，你又理解错了。","annotation":"请解释这个结论。"}]
+</response-annotations>
+
+## My request:
+继续审视。`;
+  assert.equal(detectPromptSignal(neutralAnnotation), null);
+
+  const correctiveAnnotation = `<response-annotations>
+[{"text":"ordinary selected response","comment":"不能这样，这条规则必须适用于不同项目。"}]
+</response-annotations>
+
+## My request:
+继续处理。`;
+  assert.equal(detectPromptSignal(correctiveAnnotation).kind, 'user_correction');
+  assert.equal(
+    extractUserAuthoredSignalText(correctiveAnnotation),
+    '不能这样，这条规则必须适用于不同项目。\n继续处理。',
+  );
+});
+
+test('captured excerpts exclude wrappers and quoted material', (t) => {
+  const env = temporaryEnvironment(t);
+  const candidate = capturePromptCandidate({
+    session_id: 'session-wrapper',
+    cwd: 'workspace/example-project',
+    prompt: `## Referenced conversation
+
+Assistant: quoted material that should not be stored
+
+## My request:
+记录反馈：只保存本轮用户真正写下的内容。`,
+  }, 'codex', env);
+
+  assert.equal(candidate.signal.excerpt, '记录反馈：只保存本轮用户真正写下的内容。');
+  assert.doesNotMatch(candidate.signal.excerpt, /quoted material|Referenced conversation/);
+});
+
 test('explicit correction is captured once, locally, with secret redaction', (t) => {
   const env = temporaryEnvironment(t);
   const input = {
     session_id: 'session-1',
-    cwd: '/work/private-project',
-    transcript_path: '/transcripts/session-1.jsonl',
+    cwd: 'workspace/example-project',
+    transcript_path: 'transcripts/session-1.jsonl',
     prompt: '不对，你又让 POC 阻塞发布了，api_key=sk-secretvalue123456789',
   };
   const first = capturePromptCandidate(input, 'codex', env);
@@ -65,7 +130,7 @@ test('prompt hooks capture corrections without injecting model context', (t) => 
       env: { ...process.env, ...env },
       input: JSON.stringify({
         session_id: `session-${host}`,
-        cwd: '/work/project',
+        cwd: 'workspace/example-project',
         prompt: '不对，你又把项目规则重复写进 Skill 了。',
       }),
     });
@@ -84,7 +149,7 @@ test('quiet agent submission writes locally without user-facing output', (t) => 
     path.join(__dirname, '../../hooks/feedback-cli.js'),
     'submit',
     '--summary', 'Release scope was coupled to an unrelated POC branch.',
-    '--project-root', '/work/project',
+    '--project-root', 'workspace/example-project',
     '--session-id', 'session-2',
     '--quiet',
   ], { encoding: 'utf8', env: { ...process.env, ...env } });
@@ -100,7 +165,7 @@ test('review decisions remove candidates from the pending inbox without deleting
   const env = temporaryEnvironment(t);
   const candidate = capturePromptCandidate({
     session_id: 'session-3',
-    cwd: '/work/project',
+    cwd: 'workspace/example-project',
     prompt: '记录反馈：这个规则在两个项目里都造成了返工。',
   }, 'claude-code', env);
 

@@ -1,17 +1,17 @@
-# Senmu BuildOS（森木 BuildOS）— Codex / Claude Code 项目治理插件
+# Senmu BuildOS（森木 BuildOS）— Codex / Claude Code / 豆包项目治理插件
 
 🌐 **文档语言：** **简体中文** | [English](./README.en.md) | [日本語](./README.ja.md)
 
-> 让 Codex 和 Claude Code 在真实项目里少犯错、少返工、不断档，并用证据完成交付。
+> 让 Codex、Claude Code 和豆包（Doubao）在真实项目里少犯错、少返工、不断档，并用证据完成交付。
 
 [![Validate Senmu BuildOS](https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml/badge.svg)](https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml)
 [![License](https://img.shields.io/github/license/SenMuShare/senmu-buildos)](./LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/SenMuShare/senmu-buildos?style=social)](https://github.com/SenMuShare/senmu-buildos/stargazers)
 [![Release](https://img.shields.io/github/v/release/SenMuShare/senmu-buildos)](https://github.com/SenMuShare/senmu-buildos/releases/latest)
 
-Senmu BuildOS 是一个面向 **Codex 与 Claude Code** 的开源 AI 编程项目治理插件。它把项目管理、产品需求、软件工程、Git 分支、测试验收、版本发布和经验反馈组织成七个按需加载的 Skill，帮助 AI 编程助手（Agent）先看懂真实项目再动手，而不是每次依靠一段越来越长的提示词临场发挥。
+Senmu BuildOS 是一个面向 **Codex、Claude Code 与豆包（Doubao）** 的开源 AI 编程项目治理插件。它把项目管理、产品需求、软件工程、Git 分支、测试验收、版本发布和经验反馈组织成七个按需加载的 Skill，帮助 AI 编程助手（Agent）先看懂真实项目再动手，而不是每次依靠一段越来越长的提示词临场发挥。
 
-它不是传统的项目管理软件，也不会强迫成熟项目改成固定目录。当前支持 **OpenAI Codex** 和 **Claude Code**。
+它不是传统的项目管理软件，也不会强迫成熟项目改成固定目录。当前支持 **OpenAI Codex**、**Claude Code** 和 **豆包（Doubao）**。
 
 ## 从常见失控到可持续交付
 
@@ -46,6 +46,13 @@ Claude Code 用户可使用：
 ```bash
 claude plugin marketplace add SenMuShare/senmu-buildos
 claude plugin install senmu-buildos@senmu-buildos
+```
+
+豆包（Doubao）用户可先 clone 仓库后运行适配器安装脚本：
+
+```bash
+git clone https://github.com/SenMuShare/senmu-buildos.git
+cd senmu-buildos && python3 adapters/doubao/install_doubao.py
 ```
 
 安装后刷新工具并开启新对话。完整的更新、卸载和 Hook 信任说明见[安装、更新与卸载](#安装更新与卸载)。
@@ -107,7 +114,7 @@ Senmu BuildOS 既可以作为插件直接使用，也可以作为完整源码项
 
 ## 当前状态
 
-Senmu BuildOS 当前正式版本为 `v2.0.0`，支持 **Codex 与 Claude Code** 共用七个平级 Skill，并分别提供插件清单、Marketplace 和生命周期 Hook 适配。两个适配层都不会改写用户全局配置或项目文件，也不联网；反馈收集只会把高信号候选写入本机 `~/.senmu-buildos/feedback/`，不在正常答复显示内部标记或 ID。安装、启用和卸载仍由用户显式控制。
+Senmu BuildOS 当前正式版本为 `v2.0.1`，支持 **Codex 与 Claude Code** 共用七个平级 Skill，并分别提供插件清单、Marketplace 和生命周期 Hook 适配；**豆包（Doubao）** 使用同一组 Skill 和独立的引导适配（`adapters/doubao/`），以无 Hook 的用户 Skill 形式安装。所有适配层都不会改写用户全局配置或项目文件，也不联网；反馈收集只会把高信号候选写入本机 `~/.senmu-buildos/feedback/`，不在正常答复显示内部标记或 ID。安装、启用和卸载仍由用户显式控制。
 
 ## 安装、更新与卸载
 
@@ -134,6 +141,23 @@ claude plugin list
 ```
 
 插件 Skill 使用 `senmu-buildos:` 命名空间，避免覆盖用户已有 Skill。安装后可用 `/reload-plugins` 重新加载。Claude Code 适配注册 `SessionStart`、`SubagentStart` 和 `UserPromptSubmit`；不申请额外工具权限，不修改 `~/.claude` 或项目文件。`UserPromptSubmit` 只把明确纠正或投递动作写入本机待审反馈箱。
+
+### Doubao（豆包）安装
+
+豆包没有插件清单或生命周期 Hook，Skill 以文件夹形式放入 `workspace/.user_skills/`。有两种方式：
+
+**方式 A：把仓库交给豆包，让豆包安装（推荐给不熟悉命令行的用户）。** 在豆包对话中粘贴仓库地址，让豆包读取 `adapters/doubao/README.md` 并按其说明把 `skills/` 下七个 `senmu-build-*` Skill 与 `senmu-build-kernel` 引导内核复制到豆包 `.user_skills`（剔除 Codex 专属的 `agents/` 元数据），详见[豆包适配器](adapters/doubao/README.md)。
+
+**方式 B：clone 仓库后运行安装脚本。**
+
+```bash
+git clone https://github.com/SenMuShare/senmu-buildos.git
+cd senmu-buildos
+python3 adapters/doubao/install_doubao.py --dry-run   # 预览，零写入
+python3 adapters/doubao/install_doubao.py             # 安装到豆包 .user_skills
+```
+
+脚本会把七个 Skill 与 `senmu-build-kernel` 引导内核复制到 `.user_skills/`（剔除 Codex 专属的 `agents/` 元数据），并写入安装身份文件 `.senmu-buildos-install.json`。豆包无 Hook，治理内核不能像 Codex 那样每会话强制注入，`senmu-build-kernel` 以命中式引导提供；重复运行脚本即更新。
 
 ### Codex 更新
 
@@ -174,6 +198,12 @@ claude plugin marketplace remove senmu-buildos
 > 请把 `https://github.com/SenMuShare/senmu-buildos` 作为 Codex 插件安装。先审查 `.codex-plugin/plugin.json`、`.agents/plugins/marketplace.json`、`skills/` 和 `hooks/`，再按 README 添加 Marketplace、安装插件，并提醒我审查 Hook 信任。完成后只报告实际安装版本和启用状态。
 
 交给 Claude Code 时，可以把“Codex 插件”改成“Claude Code 插件”，并要求它先审查 `.claude-plugin/`、`adapters/claude-code/`、`skills/`，以及 Hook 的有限本机反馈写入、无网络和不修改用户配置边界。
+
+### 把仓库直接交给豆包
+
+豆包用户可以直接把仓库地址或本 README 交给豆包，让豆包安装。豆包没有 Codex／Claude 的插件清单与 Hook，安装路径是读取 `adapters/doubao/README.md` 后把 Skill 复制进 `.user_skills`：
+
+> 请把 `https://github.com/SenMuShare/senmu-buildos` 安装为豆包的用户 Skill。先读取 `adapters/doubao/README.md` 和 `adapters/doubao/install_doubao.py` 了解适配与安装逻辑，再把 `skills/` 下七个 `senmu-build-*` Skill 以及 `adapters/doubao/kernel/` 的 `senmu-build-kernel` 引导内核复制到豆包 `.user_skills`（剔除 `agents/` 与 `__pycache__`），并写入 `.senmu-buildos-install.json`。完成后只报告实际安装的 Skill 列表和版本。
 
 ## 核心设计哲学
 
@@ -289,7 +319,7 @@ Codex 的临时计划适合当前会话调度；项目任务需要分步骤、�
 .github/         复用本地验证入口的仓库级 CI
 .codex-plugin/   Codex 插件身份和展示元数据
 .claude-plugin/  Claude Code 插件身份和 Marketplace
-adapters/        Codex 与 Claude Code 各自的 Harness 适配
+adapters/        Codex、Claude Code 与豆包（Doubao）的 Harness 适配
 hooks/           Codex Hook 入口与共用短治理内核
 bin/             本机反馈候选查询、提交与审议入口
 skills/          七个按需加载的专业 Skill
