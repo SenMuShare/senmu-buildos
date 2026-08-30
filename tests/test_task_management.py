@@ -263,11 +263,32 @@ class ProjectGovernanceScaffoldTests(unittest.TestCase):
             product = base / "product"
             experiment = base / "experiment"
             self.assertEqual(self.initialize(product, "software").returncode, 0)
-            self.assertTrue((product / ".senmu-buildos/templates/REQUIREMENT.md").is_file())
-            self.assertTrue((product / ".senmu-buildos/templates/REQUIREMENT_REVIEW.md").is_file())
+            self.assertTrue((product / "product/USER_REQUIREMENTS.md").is_file())
+            self.assertTrue((product / "product/PRODUCT_SPECIFICATION.md").is_file())
+            self.assertTrue((product / ".senmu-buildos/templates/PRD.md").is_file())
             self.assertTrue((product / ".senmu-buildos/templates/TECHNICAL_DESIGN.md").is_file())
+            self.assertTrue((product / ".senmu-buildos/templates/TEST_CASES.md").is_file())
             self.assertTrue((product / ".senmu-buildos/templates/TECHNICAL_REVIEW.md").is_file())
             self.assertTrue((product / ".senmu-buildos/templates/ADR.md").is_file())
+            self.assertTrue((product / "engineering/SYSTEM_TECHNICAL_SPECIFICATION.md").is_file())
+            prd_template = (product / ".senmu-buildos/templates/PRD.md").read_text(encoding="utf-8")
+            self.assertIn("必要内容", prd_template)
+            self.assertIn("按需内容", prd_template)
+            technical_template = (product / ".senmu-buildos/templates/TECHNICAL_DESIGN.md").read_text(
+                encoding="utf-8"
+            )
+            self.assertIn("只在已经决定创建本设计时", technical_template)
+            test_template = (product / ".senmu-buildos/templates/TEST_CASES.md").read_text(
+                encoding="utf-8"
+            )
+            self.assertIn("操作／事件：<必要，填写>", test_template)
+            self.assertFalse((product / "versions").exists())
+            self.assertFalse((product / "product/requirements/REQUIREMENT_BACKLOG.md").exists())
+            self.assertFalse((product / "product/requirements/ROADMAP.md").exists())
+            self.assertFalse((product / "product/ITERATION_PLAN.md").exists())
+            policy = json.loads((product / ".senmu-buildos/config.json").read_text(encoding="utf-8"))
+            self.assertTrue(policy["product_management"]["adaptive_outline"])
+            self.assertEqual(policy["product_management"]["prd_path_pattern"], "versions/{version}/PRD.md")
             self.assertEqual(self.initialize(experiment, "poc").returncode, 0)
             project_root = experiment / "00-project-system"
             self.assertTrue((project_root / "experiments/EXPERIMENT_REGISTER.md").is_file())
@@ -463,6 +484,8 @@ class ProjectGovernanceScaffoldTests(unittest.TestCase):
             (target / ".git").mkdir(parents=True)
             unit.joinpath(".git").mkdir(parents=True)
             unit.joinpath("db").mkdir(parents=True)
+            unit.joinpath("product").mkdir(parents=True)
+            unit.joinpath("engineering").mkdir(parents=True)
             unit.joinpath("jobs/episode-01").mkdir(parents=True)
             target.joinpath("80_POC实验区/demo").mkdir(parents=True)
             target.joinpath(".runtime/identity-backups").mkdir(parents=True)
@@ -474,6 +497,8 @@ class ProjectGovernanceScaffoldTests(unittest.TestCase):
             (unit / "README.md").write_text("# Current\n", encoding="utf-8")
             (unit / "AGENTS.md").write_text("# Unit override\n", encoding="utf-8")
             (unit / "db/current.sqlite").write_text("", encoding="utf-8")
+            (unit / "product/PRODUCT_SPECIFICATION.md").write_text("# Current product\n", encoding="utf-8")
+            (unit / "engineering/SYSTEM_TECHNICAL_SPECIFICATION.md").write_text("# Current system\n", encoding="utf-8")
             (unit / "jobs/episode-01/production-job.json").write_text("{}\n", encoding="utf-8")
             (unit / "jobs/episode-01/task-timing.json").write_text("{}\n", encoding="utf-8")
             (target / "80_POC实验区/demo/package.json").write_text("{}\n", encoding="utf-8")
@@ -512,6 +537,8 @@ class ProjectGovernanceScaffoldTests(unittest.TestCase):
             run_state_paths = {item["path"] for item in report["full_candidate_inventory"].get("run_state", [])}
             self.assertNotIn("projects/current/db/current.sqlite", run_state_paths)
             self.assertEqual(report["candidate_mappings"]["experiment_evidence"]["count"], 1)
+            self.assertEqual(report["candidate_mappings"]["product_governance"]["count"], 1)
+            self.assertEqual(report["candidate_mappings"]["engineering_governance"]["count"], 1)
             production_paths = {item["path"] for item in report["full_candidate_inventory"]["production_truth"]}
             self.assertEqual(production_paths, {"VERSION"})
             capability = report["capability_assessment"]

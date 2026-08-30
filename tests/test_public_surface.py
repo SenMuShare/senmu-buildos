@@ -24,6 +24,17 @@ class PublicSurfaceTests(unittest.TestCase):
             result = self.validate(root)
             self.assertEqual(result.returncode, 0, result.stderr or result.stdout)
 
+    def test_rejects_internal_authority_with_actionable_message(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_root:
+            root = Path(temporary_root)
+            (root / ".senmu-buildos").mkdir()
+            (root / ".senmu-buildos/config.json").write_text("{}\n", encoding="utf-8")
+            result = self.validate(root)
+            self.assertNotEqual(result.returncode, 0)
+            output = result.stderr or result.stdout
+            self.assertIn("当前目录是内部权威库", output)
+            self.assertNotIn("禁止公开的内部 owner", output)
+
     def test_rejects_internal_owner_and_private_term(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_root:
             root = Path(temporary_root)

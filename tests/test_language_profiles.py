@@ -1,3 +1,4 @@
+import re
 import unittest
 from pathlib import Path
 
@@ -16,6 +17,15 @@ PROFILES = {
 
 
 class LanguageProfileContractTests(unittest.TestCase):
+    def test_behavior_invariant_identifiers_are_unique(self) -> None:
+        behavior = (ROOT / "tests/behavior/skill-entry-invariants.md").read_text(encoding="utf-8")
+        identifiers = [
+            match.group(1)
+            for line in behavior.splitlines()
+            if (match := re.match(r"^\|\s*([A-Z]+-\d+)\s*\|", line))
+        ]
+        self.assertEqual(len(identifiers), len(set(identifiers)))
+
     def test_each_profile_has_one_direct_entry_route_and_unique_owner(self) -> None:
         entry = ENTRY.read_text(encoding="utf-8")
         validator = (ROOT / "scripts/validate_package.py").read_text(encoding="utf-8")

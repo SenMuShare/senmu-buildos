@@ -37,7 +37,7 @@ BuildOS 不要求用户设计分支机制。用户可以用产品语言说“继
 
 ## 组织学习飞轮
 
-反馈飞轮分为两个阶段：生命周期 Hook 只把明确的纠正、返工、回退和 Agent 主动报告保存为本机候选；用户再按需触发 Learning 集中审议，合并重复项、核对证据并决定丢弃、留在项目治理或晋级为 BuildOS 候选。单条反馈不是规则，候选箱不是事实 owner，任何跨项目反哺仍需人工授权、整仓影响分析、测试和正常发布流程。
+反馈飞轮分为两个阶段：Agent 在真实项目中使用 BuildOS，发现 BuildOS 组件造成误导、难以执行、空泛、额外工作、低效率或差产物时，通过 Learning 和本机 CLI 主动提交；用户再按需触发 Learning 集中审议。用户消息不会被 Hook 自动抓取，业务需求和项目 Bug 不进入 BuildOS 收纳箱。单条反馈不是规则，收纳箱不是事实 owner，任何反哺仍需人工授权和正常工程流程。
 
 默认反馈箱位于 `~/.senmu-buildos/feedback/`，也可通过 `SENMU_BUILDOS_DATA_DIR` 显式改址。它不写入业务项目、不联网、不保存完整会话，不承担看板或统计职能。
 
@@ -57,9 +57,8 @@ BuildOS 先确认用户目标和项目事实，再选择能形成端到端价值
 Codex 插件 senmu-buildos
 ├── 生命周期 Hooks
 │   ├── SessionStart：恢复短通用底线
-│   ├── SubagentStart：恢复子 Agent 最小边界
-│   └── UserPromptSubmit：捕获明确的用户纠正信号
-├── 本机反馈 CLI：供 Agent 静默提交高信号改进候选
+│   └── SubagentStart：恢复子 Agent 最小边界
+├── 本机反馈 CLI：供 Agent 提交 BuildOS 真实使用问题
 └── 平级 Skills
     ├── senmu-build-project
     ├── senmu-build-product
@@ -70,7 +69,7 @@ Codex 插件 senmu-buildos
     └── senmu-build-learning
 ```
 
-Hooks 不加载全部 Skill，不替代项目 validator，也不作为高风险操作的唯一门禁。Hook 和本地 CLI 的反馈写入仅形成待审候选，不自动改变项目事实或 BuildOS 规则，也不向正常用户答复泄露内部标记或候选 ID。
+Hooks 不加载全部 Skill，不替代项目 validator，也不作为高风险操作的唯一门禁。本地 CLI 的反馈写入仅形成待审候选，不自动改变项目事实或 BuildOS 规则，也不向正常用户答复泄露内部标记或候选 ID。
 
 Senmu BuildOS 与 Codex 原生能力的分工见 [Codex Harness 责任边界](codex-harness-boundary.md)。
 

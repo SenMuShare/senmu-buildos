@@ -29,6 +29,8 @@ Pull Request 至少应说明：本批解决的决策缺口、实际读取范围�
 
 ## 验证
 
+公开 clone／fork 使用公开包入口：
+
 ```bash
 python3 scripts/validate_package.py
 python3 scripts/validate_public_surface.py
@@ -36,7 +38,16 @@ python3 -m unittest discover -s tests -p 'test_*.py'
 node --test tests/hooks/*.test.js
 ```
 
-仓库 CI 复用这三组项目自有入口。修改 Skill 后还应运行 Skill Creator 的 `quick_validate.py`，并用 `tests/behavior/` 中的真实提示词做独立触发检查。格式通过不代表实际 Agent 路由、Hook 信任或任务行为已经验证。
+维护者在内部权威库开发时不直接运行公开面校验；内部任务分支运行包、Python、publication 和 Hook 检查，集成后再从权威根运行严格项目治理。公开面校验只对生成后的公开投影执行：
+
+```bash
+python3 scripts/validate_package.py
+python3 -m unittest discover -s tests -p 'test_*.py'
+python3 -m unittest discover -s governance/publication -p 'test_*.py'
+node --test tests/hooks/*.test.js
+```
+
+仓库 CI 复用公开包入口。修改 Skill 后还应运行 Skill Creator 的 `quick_validate.py`，并用 `tests/behavior/` 中的真实提示词做独立触发检查。格式通过不代表实际 Agent 路由、Hook 信任或任务行为已经验证。
 
 ## 正式版本准备
 
@@ -54,10 +65,11 @@ python3 scripts/bump_version.py 1.0.1 --date 2026-08-26
 ```bash
 python3 scripts/bump_version.py --check
 python3 scripts/validate_package.py
-python3 scripts/validate_public_surface.py
 python3 -m unittest discover -s tests -p 'test_*.py'
 node --test tests/hooks/*.test.js
 ```
+
+内部候选还需运行 publication 测试；生成公开投影后，再在公开根运行 `python3 scripts/validate_public_surface.py`。
 
 版本准备、候选 commit、公开主线验证、正式 Tag 和 GitHub Release 是不同状态。取得明确发布授权后，先提交并冻结版本候选，生成脱敏公开投影，将候选提交到公开主线并等待验证。只有该精确公开 commit 已有成功的 `main` push 验证回执后，才能使用 `python3 governance/publication/manage_lifecycle.py promote-public-release --commit <sha> --apply` 创建并推送正式 Tag；Tag 工作流复核后创建 GitHub Release。当前安装链直接消费 Git 源码，所以 GitHub 自动源码快照足够，不另造无消费者的定制制品。
 

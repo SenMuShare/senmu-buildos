@@ -359,8 +359,22 @@ def validate(root: Path, strict: bool) -> list[str]:
     if "product" in selected_modules and policy.get("profile") in {"standard", "release"}:
         if not isinstance(product_management, dict):
             errors.append("启用 product 模块时 product_management 必须是对象")
-        elif not (root / str(product_management.get("backlog_path", ""))).is_file():
-            errors.append("product_management.backlog_path 不存在")
+        else:
+            for key in ("user_requirements_path", "product_specification_path"):
+                raw = product_management.get(key)
+                if not raw or not (root / str(raw)).is_file():
+                    errors.append(f"product_management.{key} 不存在")
+            expected_patterns = {
+                "version_directory_pattern": "versions/{version}",
+                "prd_path_pattern": "versions/{version}/PRD.md",
+                "technical_design_path_pattern": "versions/{version}/TECHNICAL_DESIGN.md",
+                "test_cases_path_pattern": "versions/{version}/TEST_CASES.md",
+            }
+            for key, expected in expected_patterns.items():
+                if product_management.get(key) != expected:
+                    errors.append(f"product_management.{key} 必须为 {expected}")
+            if product_management.get("adaptive_outline") is not True:
+                errors.append("product_management.adaptive_outline 必须为 true")
     elif product_management is not None:
         errors.append("未启用 product 模块时 product_management 必须为 null")
 

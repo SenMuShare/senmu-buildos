@@ -18,10 +18,10 @@ description: Review the BuildOS feedback inbox, run a formal retrospective, prom
 
 ## 核心契约
 
-1. **捕获**：Hook 或 Agent 只写本机候选，不改变项目规则、BuildOS 或发布状态。
+1. **捕获**：只有 Agent 在真实项目中使用 BuildOS 时，发现某个 Skill、reference、模板、脚本、Hook 或规则造成错误、误导、难以执行、内容空泛、额外工作或效率下降，才通过本机 CLI 写入 BuildOS 收纳箱。用户业务需求和一般纠正不自动收集。
 2. **审议**：按根因查重并分类为 `discard`、`project`、`buildos_candidate` 或 `needs_evidence`。
 3. **晋级**：项目私有规则回到项目 owner；跨项目规则只有在证据、适用范围、处置方式和权威 owner 明确后才进入 BuildOS。
 
-出现次数不是机械门槛。先修正制造问题的源头；不为单次失误默认新增提示词、validator 或审批，也不在多个 Skill 追加同义规则。意见箱、Work Log、Lessons Learned 和专业规则不得保存四份同义正文。
+提交候选时写清 BuildOS 组件、具体影响和可用证据或绕行；“不满意”可以成为候选，但不能只保存空泛评价。出现次数不是机械门槛。先修正制造问题的源头；不为单次失误默认新增提示词、validator 或审批，也不在多个 Skill 追加同义规则。意见箱、Work Log、Lessons Learned 和专业规则不得保存四份同义正文。
 
 事实或根因存在争议时交 Assurance；客户需求先进入 Product。Learning 只裁决知识生命周期，不接管专业事实或 Git／发布授权。

@@ -157,7 +157,7 @@ BuildOS 不承诺固定比例。它通过减少不必要的功能、重复代码
 
 ## 安装、更新与卸载
 
-Senmu BuildOS 当前正式版本为 `v2.0.5`，支持 Codex、Claude Code 和豆包适配。安装的是整个插件，不需要逐个下载七个 Skill。
+Senmu BuildOS 当前正式版本为 `v2.0.6`，支持 Codex、Claude Code 和豆包适配。安装的是整个插件，不需要逐个下载七个 Skill。
 
 ### 更新 Codex
 

@@ -35,7 +35,7 @@
 
 ## 4. 架构、变更预算与技术债
 
-- 架构契约：`<engineering/ARCHITECTURE.md 或等价位置>`。
+- 当前系统技术规格：`<engineering/SYSTEM_TECHNICAL_SPECIFICATION.md 或等价位置>`。
 - 禁止依赖／跨层规则：`<规则或引用>`。
 - 架构检查：`<命令或可重复语义评审入口>`。
 - 架构变更触发条件：`<新模块、公共 API、schema、依赖、跨模块状态等>`。

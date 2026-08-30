@@ -3,7 +3,7 @@
 ## 产品基础
 
 - [x] 建立一个 Codex 插件、七个平级专业 Skill 和插件级生命周期 Hooks。
-- [x] 为 32 份活动 reference、专业资产和脚本建立唯一 owner。
+- [x] 为活动 reference、专业资产和脚本建立唯一 owner，并由包校验核对当前清单。
 - [x] 建立项目初始化、成熟项目只读审视和授权后演进三种能力。
 - [x] 建立持久任务状态、Workflow Run、审查 Finding、Release Record 和 Lessons Learned 的职责边界。
 - [x] 建立知识蒸馏后的 Skill 完整性复审、整改复核和发布表面摘要门禁。

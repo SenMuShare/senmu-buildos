@@ -173,7 +173,7 @@ def validate_plugins() -> None:
     if not isinstance(prompts, list) or not 1 <= len(prompts) <= 3:
         fail("plugin defaultPrompt must contain one to three prompts")
     registered = set(hooks.get("hooks", {}))
-    expected_hooks = {"SessionStart", "SubagentStart", "UserPromptSubmit"}
+    expected_hooks = {"SessionStart", "SubagentStart"}
     if registered != expected_hooks:
         fail(f"unexpected lifecycle hooks: {sorted(registered)}")
     if claude_manifest.get("name") != "senmu-buildos":
@@ -395,6 +395,23 @@ def validate_no_duplicate_instruction_paragraphs() -> None:
             seen[digest] = path
 
 
+def validate_behavior_invariant_ids() -> None:
+    path = ROOT / "tests/behavior/skill-entry-invariants.md"
+    seen: dict[str, int] = {}
+    for line_number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
+        match = re.match(r"^\|\s*([A-Z]+-\d+)\s*\|", line)
+        if match is None:
+            continue
+        invariant_id = match.group(1)
+        previous = seen.get(invariant_id)
+        if previous is not None:
+            fail(
+                "duplicate behavior invariant id "
+                f"{invariant_id} in {path.relative_to(ROOT)}:{previous} and :{line_number}"
+            )
+        seen[invariant_id] = line_number
+
+
 def validate_local_markdown_links() -> None:
     candidates = list((ROOT / "skills").rglob("*.md"))
     candidates.extend((ROOT / "docs/architecture").rglob("*.md"))
@@ -444,6 +461,7 @@ def main() -> None:
     validate_skills()
     validate_no_exact_duplicate_active_files()
     validate_no_duplicate_instruction_paragraphs()
+    validate_behavior_invariant_ids()
     validate_local_markdown_links()
     validate_project_instruction_layer()
     print(
@@ -468,6 +486,7 @@ def main() -> None:
     print(f"[OK] active references: {len(REFERENCE_OWNERS)}/{len(REFERENCE_OWNERS)} files have one owner")
     print("[OK] no exact duplicate active Skill resources found")
     print("[OK] no duplicated long instruction paragraphs found across active Skills")
+    print("[OK] behavior invariant identifiers are unique")
     print("[OK] active local Markdown links resolve")
     print(f"[OK] project AGENTS delta layer <= {MAX_PROJECT_AGENTS_TEMPLATE_CHARS} characters and has one template owner")
     print("[OK] public package validation is independent from private project-state owners")

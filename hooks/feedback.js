@@ -12,20 +12,6 @@ const DISPOSITIONS = new Set([
   'needs_evidence',
 ]);
 
-const EXPLICIT_PATTERNS = [
-  /\b(?:record|save|submit|add|put|log|remember)\s+(?:this\s+)?(?:as\s+(?:a\s+)?)?(?:buildos\s+)?(?:feedback|feedback candidate|learning candidate|lesson)\b/i,
-  /(?:记录|保存|提交|收集|放入|加入|记到|记入).{0,8}(?:BuildOS\s*)?(?:意见箱|反馈候选|反馈|问题|经验)/iu,
-];
-
-const CORRECTION_PATTERNS = [
-  /(?:不对|不是这个意思|理解错|怎么又|不能这样|不要这样|我再(?:说|强调|提醒)|头痛医头|脚痛医脚)/u,
-  /(?:(?:你)?又.{0,18}(?:漏|错|回退|返工|冲突|浪费|弄乱|误解)|(?:导致|造成).{0,18}(?:回退|返工|冲突|浪费))/u,
-  /\b(?:that's wrong|that is wrong|not what i meant|you misunderstood|don't do (?:that|this)|regression|rework)\b/i,
-];
-
-const AUTOMATED_OVERVIEW_PATTERN = /^\s*# Overview[\s\S]{0,400}\bGenerate 0 to 3 hyperpersonalized suggestions\b/i;
-const MY_REQUEST_MARKER = '## My request:';
-
 function normalizeText(value) {
   return String(value || '').replace(/\s+/g, ' ').trim();
 }
@@ -38,51 +24,6 @@ function redactSensitive(value) {
     .replace(/\b(?:sk|ghp|github_pat|xox[baprs])-[-A-Za-z0-9_]{12,}\b/gi, '[redacted:token]')
     .replace(/\b(api[_-]?key|access[_-]?token|auth[_-]?token|password|passwd|secret)\b\s*[:=]\s*[^\s,;]+/gi, '$1=[redacted]')
     .slice(0, MAX_EXCERPT_CHARS);
-}
-
-function latestUserRequest(value) {
-  const markerIndex = value.lastIndexOf(MY_REQUEST_MARKER);
-  return markerIndex === -1 ? '' : value.slice(markerIndex + MY_REQUEST_MARKER.length).trim();
-}
-
-function responseAnnotationComments(value) {
-  const match = value.match(/<response-annotations>\s*([\s\S]*?)\s*<\/response-annotations>/i);
-  if (!match) return null;
-  try {
-    const annotations = JSON.parse(match[1]);
-    if (!Array.isArray(annotations)) return [];
-    return annotations
-      .map((item) => normalizeText(item && (item.annotation || item.comment || item.user_comment)))
-      .filter(Boolean);
-  } catch {
-    return [];
-  }
-}
-
-function extractUserAuthoredSignalText(prompt) {
-  const raw = String(prompt || '');
-  if (!raw.trim() || AUTOMATED_OVERVIEW_PATTERN.test(raw)) return '';
-
-  const annotationComments = responseAnnotationComments(raw);
-  const request = latestUserRequest(raw);
-  if (annotationComments !== null) {
-    return [...annotationComments, request].filter(Boolean).join('\n');
-  }
-  if (request) return request;
-  return raw;
-}
-
-function detectPromptSignal(prompt) {
-  const excerpt = extractUserAuthoredSignalText(prompt);
-  const normalized = normalizeText(excerpt);
-  if (!normalized) return null;
-  if (EXPLICIT_PATTERNS.some((pattern) => pattern.test(normalized))) {
-    return { kind: 'explicit_feedback', reason: 'explicit feedback or remember signal', excerpt };
-  }
-  if (CORRECTION_PATTERNS.some((pattern) => pattern.test(normalized))) {
-    return { kind: 'user_correction', reason: 'possible correction, regression, or repeated rework', excerpt };
-  }
-  return null;
 }
 
 function resolveDataRoot(env = process.env) {
@@ -127,13 +68,33 @@ function writeJsonOnce(filePath, payload) {
   }
 }
 
-function persistCandidate({ input, host, sourceKind, signalKind, reason, excerpt }, env = process.env) {
+function persistCandidate({
+  input,
+  host,
+  sourceKind,
+  signalKind,
+  reason,
+  excerpt,
+  component = '',
+  impact = '',
+  workaround = '',
+}, env = process.env) {
   const paths = feedbackPaths(env);
   ensurePrivateDirectory(paths.inbox);
   const sessionId = normalizeText(input.session_id || input.sessionId || 'unknown');
   const projectRoot = normalizeText(input.cwd || input.project_root || 'unknown');
   const safeExcerpt = redactSensitive(excerpt);
-  const id = stableId([host, sessionId, sourceKind, projectRoot, normalizeText(safeExcerpt).toLowerCase()]);
+  const safeComponent = redactSensitive(component);
+  const safeImpact = redactSensitive(impact);
+  const safeWorkaround = redactSensitive(workaround);
+  const id = stableId([
+    host,
+    sessionId,
+    sourceKind,
+    projectRoot,
+    safeComponent.toLowerCase(),
+    normalizeText(safeExcerpt).toLowerCase(),
+  ]);
   const payload = {
     schema_version: SCHEMA_VERSION,
     id,
@@ -149,25 +110,15 @@ function persistCandidate({ input, host, sourceKind, signalKind, reason, excerpt
     signal: {
       kind: signalKind,
       reason,
+      component: safeComponent,
       excerpt: safeExcerpt,
+      impact: safeImpact,
+      workaround: safeWorkaround,
     },
   };
   const filePath = path.join(paths.inbox, `${id}.json`);
   const created = writeJsonOnce(filePath, payload);
   return { ...payload, created, filePath };
-}
-
-function capturePromptCandidate(input, host, env = process.env) {
-  const signal = detectPromptSignal(input.prompt);
-  if (!signal) return null;
-  return persistCandidate({
-    input,
-    host,
-    sourceKind: 'user_prompt',
-    signalKind: signal.kind,
-    reason: signal.reason,
-    excerpt: signal.excerpt,
-  }, env);
 }
 
 function readJsonFiles(directory) {
@@ -209,24 +160,12 @@ function decideCandidate(candidateId, disposition, note, env = process.env) {
   return { ...payload, filePath: decisionPath };
 }
 
-async function readHookInput(stream = process.stdin) {
-  let raw = '';
-  for await (const chunk of stream) raw += chunk;
-  if (!raw.trim()) return {};
-  const parsed = JSON.parse(raw);
-  return parsed && typeof parsed === 'object' ? parsed : {};
-}
-
 module.exports = {
   DISPOSITIONS,
-  capturePromptCandidate,
   decideCandidate,
-  detectPromptSignal,
-  extractUserAuthoredSignalText,
   feedbackPaths,
   listCandidates,
   persistCandidate,
-  readHookInput,
   redactSensitive,
   resolveDataRoot,
 };

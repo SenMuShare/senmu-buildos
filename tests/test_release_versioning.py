@@ -1,3 +1,4 @@
+import re
 import stat
 import tempfile
 import unittest
@@ -68,6 +69,19 @@ READMES = {
 
 
 class ReleaseVersioningTests(unittest.TestCase):
+    def test_workflows_pin_actions_and_limit_release_write_scope(self) -> None:
+        root = Path(__file__).resolve().parent.parent
+        validate_workflow = (root / ".github/workflows/validate.yml").read_text(encoding="utf-8")
+        release_workflow = (root / ".github/workflows/release.yml").read_text(encoding="utf-8")
+        for workflow in (validate_workflow, release_workflow):
+            references = re.findall(r"uses:\s*actions/[^@]+@([^\s]+)", workflow)
+            self.assertTrue(references)
+            self.assertTrue(all(re.fullmatch(r"[0-9a-f]{40}", reference) for reference in references))
+        self.assertIn('branches:\n      - "**"', validate_workflow)
+        self.assertIn("permissions:\n  contents: read", release_workflow)
+        self.assertIn("publish:\n    needs: validate", release_workflow)
+        self.assertIn("permissions:\n      contents: write", release_workflow)
+
     def make_repo(self) -> tuple[tempfile.TemporaryDirectory[str], Path]:
         temporary = tempfile.TemporaryDirectory()
         root = Path(temporary.name)

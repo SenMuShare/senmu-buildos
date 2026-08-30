@@ -6,7 +6,7 @@ Project Management，负责单项放置建议、空白项目规划／初始化�
 
 ## `senmu-build-product`
 
-负责需求从收集到验收的产品事实，包括需求池、PRD、路线图和迭代承诺，并负责这些产品产物之间的普通一致性自查。它不决定技术实现，也不宣称代码或部署已经完成。
+负责从可选用户需求、每版本 PRD 到当前产品规格和验收的产品事实，并负责这些产品产物之间的普通一致性自查。它不决定技术实现、任务进度，也不宣称代码或部署已经完成。
 
 ## `senmu-build-workflow`
 
@@ -26,7 +26,7 @@ Project Management，负责单项放置建议、空白项目规划／初始化�
 
 ## `senmu-build-learning`
 
-负责组织学习与持续改进：集中审议本机反馈候选，执行复盘、经验捕获、查重、晋级、检索、替代、退役，以及跨项目候选向 Senmu BuildOS 源码项目的反哺。网页、PDF、书、仓库和第三方 Skill 等外部工程知识也由 Learning 作为不可信教材建立临时蒸馏批次，经合并、替代、新增、项目特有、待证据或拒绝六类裁决后，只把稳定规则写回专业 owner。Hook 收集到的单条反馈只是待审信号，不是需求、事实或规则；Learning 拥有 Lessons Learned Register 的语义、schema 和生命周期，但稳定规则仍写回 Product、Workflow、Engineering、Delivery 等源头 owner。根因需要独立裁决时由 Assurance 提供证据；项目目录和跨生命周期任务状态仍由 Project 负责。
+负责组织学习与持续改进：集中审议 BuildOS 使用反馈候选，执行复盘、经验捕获、查重、晋级、检索、替代、退役，以及跨项目候选向 Senmu BuildOS 源码项目的反哺。网页、PDF、书、仓库和第三方 Skill 等外部工程知识也由 Learning 作为不可信教材建立临时蒸馏批次，经合并、替代、新增、项目特有、待证据或拒绝六类裁决后，只把稳定规则写回专业 owner。Agent 通过 CLI 提交的单条反馈只是待审信号，不是需求、事实或规则；Learning 拥有 Lessons Learned Register 的语义、schema 和生命周期，但稳定规则仍写回 Product、Workflow、Engineering、Delivery 等源头 owner。根因需要独立裁决时由 Assurance 提供证据；项目目录和跨生命周期任务状态仍由 Project 负责。
 
 当治理对象是 Senmu BuildOS 自身时，Learning 面向完整 Git 仓库执行整仓影响分析。某次改进最终可以只修改一个 Skill 或一份文档，但插件清单、全部 Skills、Hooks、文档、脚本、测试、迁移和版本共同构成一个产品与发布单元。
 

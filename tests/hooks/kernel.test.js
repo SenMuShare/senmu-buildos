@@ -15,20 +15,22 @@ test('SessionStart kernel stays short and preserves core boundaries', () => {
   const context = getSessionContext();
   assert.ok(context.length <= MAX_SESSION_CONTEXT_CHARS);
   assert.match(context, /real project authority/);
-  assert.match(context, /project\/framework\/platform capabilities/);
+  assert.match(context, /requested path/);
+  assert.match(context, /tools\/sessions grant no authority/);
+  assert.match(context, /project\/framework\/platform/);
   assert.match(context, /reuse evidence/);
-  assert.match(context, /bounded missing\/changed guidance, source or output ranges/);
+  assert.match(context, /bound missing\/changed reads and outputs/);
   assert.match(context, /durable task/);
   assert.match(context, /active lessons/);
-  assert.match(context, /gates only cover material residual risk/);
+  assert.match(context, /gates cover only material residual risk/);
   assert.match(context, /prepare a Delivery Change Unit/);
   assert.match(context, /use a task branch/);
   assert.match(context, /worktree unless exclusive/);
   assert.match(context, /never edit integration lines or reuse sealed work/);
   assert.match(context, /verify and commit/);
   assert.match(context, /feedback CLI/);
-  assert.match(context, /silently/i);
-  assert.match(context, /never expose IDs/);
+  assert.match(context, /not user requests/i);
+  assert.match(context, /expose no IDs/);
   assert.doesNotMatch(context, /BuildOS feedback candidate:/);
   assert.match(context, /unverified\/undeployed\/unpublished is incomplete/);
 });
@@ -50,11 +52,12 @@ test('SubagentStart kernel stays shorter than the session kernel', () => {
   assert.ok(subagent.length <= MAX_SUBAGENT_CONTEXT_CHARS);
   assert.ok(subagent.length < session.length);
   assert.match(subagent, /Stay within delegated scope/);
+  assert.match(subagent, /requested path/);
   assert.match(subagent, /project\/framework\/platform capabilities and evidence/);
   assert.match(subagent, /bounded missing\/changed guidance or outputs/);
   assert.match(subagent, /verified stable commit/);
   assert.match(subagent, /never edit integration lines or reuse sealed work/);
-  assert.match(subagent, /incomplete work, blockers and risk/);
+  assert.match(subagent, /gaps, blockers and risk/);
 });
 
 test('Codex output uses lifecycle additionalContext', () => {
@@ -87,26 +90,18 @@ test('plugin hooks use Codex-native plugin paths and bounded context', () => {
   assert.ok(subagent.additionalContextLimit < session.additionalContextLimit);
   assert.ok(sessionContext.length <= session.additionalContextLimit);
   assert.ok(subagentContext.length <= subagent.additionalContextLimit);
-  assert.deepEqual(Object.keys(codexHooksConfig.hooks).sort(), [
-    'SessionStart',
-    'SubagentStart',
-    'UserPromptSubmit',
-  ]);
-  assert.match(codexHooksConfig.hooks.UserPromptSubmit[0].hooks[0].command, /user-prompt-submit/);
+  assert.deepEqual(Object.keys(codexHooksConfig.hooks).sort(), ['SessionStart', 'SubagentStart']);
+  assert.doesNotMatch(JSON.stringify(codexHooksConfig), /UserPromptSubmit|user-prompt-submit/);
 });
 
-test('Claude Code adapter is isolated and only writes the local feedback inbox', () => {
+test('Claude Code adapter is isolated and does not inspect user prompts', () => {
   const session = claudeHooksConfig.hooks.SessionStart[0].hooks[0];
   const subagent = claudeHooksConfig.hooks.SubagentStart[0].hooks[0];
   assert.match(session.command, /\$\{CLAUDE_PLUGIN_ROOT\}/);
   assert.match(subagent.command, /\$\{CLAUDE_PLUGIN_ROOT\}/);
   assert.match(session.command, /adapters\/claude-code/);
   assert.match(subagent.command, /adapters\/claude-code/);
-  assert.deepEqual(Object.keys(claudeHooksConfig.hooks).sort(), [
-    'SessionStart',
-    'SubagentStart',
-    'UserPromptSubmit',
-  ]);
-  assert.match(claudeHooksConfig.hooks.UserPromptSubmit[0].hooks[0].command, /user-prompt-submit/);
+  assert.deepEqual(Object.keys(claudeHooksConfig.hooks).sort(), ['SessionStart', 'SubagentStart']);
+  assert.doesNotMatch(JSON.stringify(claudeHooksConfig), /UserPromptSubmit|user-prompt-submit/);
   assert.doesNotMatch(JSON.stringify(claudeHooksConfig), /curl|wget|git\s|rm\s|\.claude\//i);
 });

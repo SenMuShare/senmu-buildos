@@ -31,24 +31,22 @@ BASE_STANDARD = {
     "PROJECT_MAP.template.md": "governance/PROJECT_MAP.md",
 }
 PRODUCT_CORE = {
-    "../product-governance/REQUIREMENT_BACKLOG.template.md": "product/requirements/REQUIREMENT_BACKLOG.md",
-    "../product-governance/REQUIREMENT.template.md": ".senmu-buildos/templates/REQUIREMENT.md",
-    "../product-governance/REQUIREMENT_REVIEW.template.md": ".senmu-buildos/templates/REQUIREMENT_REVIEW.md",
+    "../product-governance/USER_REQUIREMENTS.template.md": "product/USER_REQUIREMENTS.md",
+    "../product-governance/PRODUCT_SPECIFICATION.template.md": "product/PRODUCT_SPECIFICATION.md",
 }
 PRODUCT_STANDARD = {
-    "../product-governance/PRD.template.md": "product/requirements/PRD.md",
-    "../product-governance/ROADMAP.template.md": "product/requirements/ROADMAP.md",
-    "../product-governance/ITERATION_PLAN.template.md": "product/ITERATION_PLAN.md",
+    "../product-governance/PRD.template.md": ".senmu-buildos/templates/PRD.md",
 }
 CODE_CORE = {
     "../code-quality/CODE_QUALITY.template.md": "engineering/CODE_QUALITY.md",
     "../engineering-governance/TESTING_STRATEGY.template.md": "engineering/TESTING_STRATEGY.md",
+    "../engineering-governance/TEST_CASES.template.md": ".senmu-buildos/templates/TEST_CASES.md",
     "../engineering-governance/TECHNICAL_REVIEW.template.md": ".senmu-buildos/templates/TECHNICAL_REVIEW.md",
 }
 ARCHITECTURE_STANDARD = {
     "../engineering-governance/TECHNICAL_DESIGN.template.md": ".senmu-buildos/templates/TECHNICAL_DESIGN.md",
     "../architecture-governance/ADR.template.md": ".senmu-buildos/templates/ADR.md",
-    "../architecture-governance/ARCHITECTURE_CONTRACT.template.md": "engineering/ARCHITECTURE.md",
+    "../architecture-governance/SYSTEM_TECHNICAL_SPECIFICATION.template.md": "engineering/SYSTEM_TECHNICAL_SPECIFICATION.md",
 }
 GIT_STANDARD = {
     "../delivery-governance/BRANCHING.template.md": "delivery/BRANCHING.md",
@@ -643,10 +641,13 @@ def main() -> None:
             "release_units": [],
             "quality_commands": {},
             "product_management": {
-                "backlog_path": "product/requirements/REQUIREMENT_BACKLOG.md",
-                "roadmap_path": "product/requirements/ROADMAP.md" if args.profile in {"standard", "release"} else None,
-                "iteration_plan_path": "product/ITERATION_PLAN.md" if args.profile in {"standard", "release"} else None,
-                "requirement_id_format": "REQ-xxxx",
+                "user_requirements_path": "product/USER_REQUIREMENTS.md",
+                "product_specification_path": "product/PRODUCT_SPECIFICATION.md",
+                "version_directory_pattern": "versions/{version}",
+                "prd_path_pattern": "versions/{version}/PRD.md",
+                "technical_design_path_pattern": "versions/{version}/TECHNICAL_DESIGN.md",
+                "test_cases_path_pattern": "versions/{version}/TEST_CASES.md",
+                "adaptive_outline": True,
             } if "product" in selected_modules and has_standard_owners else None,
             "workflow_management": {
                 "contract_path": "workflows/WORKFLOW.md",

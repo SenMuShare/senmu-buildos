@@ -12,7 +12,7 @@ Senmu BuildOS 使用 Codex 已有的发现、上下文和生命周期能力，�
 | 会话历史与压缩 | 保存会话历史并执行上下文压缩 | 用项目声明的 Durable Task State Owner 保存跨会话仍需可信的边界、进度和恢复入口 | 把聊天 transcript、memory 或压缩摘要当项目权威台账 |
 | 会话内证据使用 | 保存当前会话可见的消息和工具结果，并决定何时压缩 | 要求 Agent 复用仍有效的证据，先取目录、命中、差异、失败项或有界状态，只补读会改变决定的缺失、变化或范围扩大部分 | 建立已读文件数据库、全文缓存或 Hook 动态上下文台账；拼接多份长输出导致截断后重读 |
 | 会话内计划 | 宿主可维护当前任务的临时 plan／进度显示 | 仅在工作必须跨阶段、Agent、会话或需要审计时更新项目声明的持久任务 owner | 把每次临时 plan 逐字复制进项目状态，或反向依赖宿主 plan 作长期事实源 |
-| 生命周期事件 | 提供 SessionStart、SubagentStart、UserPromptSubmit、compact 等 Hook 事件和上下文接口 | 插件注入有严格长度上限的固定治理底线，并把明确纠正保存为本机待审候选 | Hook 读取全部项目、保存完整会话、猜专业 Skill 或自动制造永久规则 |
+| 生命周期事件 | 提供 SessionStart、SubagentStart、UserPromptSubmit、compact 等 Hook 事件和上下文接口 | 插件只在 SessionStart／SubagentStart 注入有严格长度上限的固定治理底线 | Hook 读取用户消息猜反馈、读取全部项目、保存完整会话、猜专业 Skill 或自动制造永久规则 |
 | 工具事件与会话内执行 | 提供工具调用结果、会话内计划和过程上下文 | 项目在确需跨会话恢复时保存 Run Manifest、回执和外部副作用事实 | 把工具日志逐字复制为运行台账，或用 Hook 自动推进项目状态 |
 | 工具权限和沙箱 | 宿主执行权限模式、沙箱和审批流程 | 项目规则补充业务授权、写入边界和高风险门禁 | 用文档或 Hook 假装替代宿主权限；另造第二套通用审批系统 |
 | Git/worktree 与工具执行 | 宿主提供 shell、补丁、Git/worktree 等执行能力 | 规定项目自己的权威根、发布单元、分支和交付事实 | 复制 Git 元数据或维护与仓库不一致的影子状态 |
@@ -28,7 +28,7 @@ Senmu BuildOS 使用 Codex 已有的发现、上下文和生命周期能力，�
 - `WORKLOG.md` 是由 Project 管理的追加时间线；`LESSONS_LEARNED.md` 是由 Learning 管理的经验证长期经验。
 - SessionStart Hook 在 `startup`、`resume`、`clear`、`compact` 注入固定短 kernel；SubagentStart 注入更短的委派边界。
 - Kernel 提醒 Agent 从项目／框架／平台现有能力开始，复用仍有效证据，并只取得缺失或变化的规则、源码和工具输出范围；它不跟踪文件哈希、不判断上下文是否仍完整，也不向项目写入已读状态。发生压缩、恢复或交接后，由 Agent 按当前任务重新取得最小充分证据。
-- UserPromptSubmit 只匹配明确纠正或投递动作；仅询问反馈机制不入箱。命中后只落本机候选并返回空 Hook 输出，不向模型上下文注入候选 ID、收集说明或处置指令。Agent 自己发现高信号缺口时可调用本地 CLI 静默提交。两条路径都仅写入 `~/.senmu-buildos/feedback/`（或显式数据目录），不写项目文件、不联网、不自动晋级规则。
+- BuildOS 不注册 UserPromptSubmit 反馈 Hook。只有 Agent 在真实项目中使用 BuildOS，能指出具体 BuildOS 组件及其误导、阻塞、空泛、额外工作、效率或产物影响时，才通过 Learning 和本地 CLI 写入 `~/.senmu-buildos/feedback/`（或显式数据目录）；业务需求和一般用户纠正不收集。
 - Hook 不自动读取任务记录。安装或更新插件后仍需通过 Codex 的 Hook trust review；源码存在和单元测试通过不等于本机运行时已经启用。
 
 ## 引入新治理文件前的检查

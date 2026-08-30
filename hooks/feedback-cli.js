@@ -17,7 +17,7 @@ function usage() {
   senmu-feedback path
   senmu-feedback pending [--summary | --json [--limit <n>] [--offset <n>]]
   senmu-feedback all [--summary | --json [--limit <n>] [--offset <n>]]
-  senmu-feedback submit --summary <text> [--project-root <path>] [--evidence <text>] [--quiet]
+  senmu-feedback submit --component <BuildOS component> --summary <problem> --impact <effect> [--project-root <path>] [--evidence <text>] [--workaround <text>] [--quiet]
   senmu-feedback decide --id <FB-id> --disposition <discard|project|buildos_candidate|needs_evidence> [--note <text>]`;
 }
 
@@ -40,6 +40,8 @@ function summarizeCandidates(candidates, view) {
     count: candidates.length,
     by_signal_kind: counts((candidate) => candidate.signal && candidate.signal.kind),
     by_source_host: counts((candidate) => candidate.source && candidate.source.host),
+    by_source_project: counts((candidate) => candidate.source && candidate.source.project_root),
+    by_buildos_component: counts((candidate) => candidate.signal && candidate.signal.component),
     captured_range: captured.length ? { oldest: captured[0], newest: captured[captured.length - 1] } : null,
     next: candidates.length
       ? `${view} --json --limit 10 --offset 0`
@@ -76,7 +78,13 @@ function printCandidates(candidates, { json, summary, limit, offset, view }) {
   }
   for (const candidate of selected) {
     const decision = candidate.decision ? ` -> ${candidate.decision.disposition}` : '';
-    process.stdout.write(`${candidate.id}${decision}\n  ${candidate.signal.excerpt}\n  ${candidate.source.project_root}\n`);
+    process.stdout.write(
+      `${candidate.id}${decision}\n`
+      + `  component: ${candidate.signal.component || 'unknown'}\n`
+      + `  problem: ${candidate.signal.excerpt}\n`
+      + `  impact: ${candidate.signal.impact || 'unknown'}\n`
+      + `  source project: ${candidate.source.project_root}\n`,
+    );
   }
 }
 
@@ -99,8 +107,12 @@ function main(args = process.argv.slice(2)) {
     return;
   }
   if (command === 'submit') {
+    const component = option(args, '--component');
     const summary = option(args, '--summary');
-    if (!summary) throw new Error('--summary is required');
+    const impact = option(args, '--impact');
+    if (!component || !summary || !impact) {
+      throw new Error('--component, --summary and --impact are required');
+    }
     const evidence = option(args, '--evidence');
     const result = persistCandidate({
       input: {
@@ -108,11 +120,14 @@ function main(args = process.argv.slice(2)) {
         session_id: option(args, '--session-id', 'manual-agent-report'),
         transcript_path: evidence,
       },
-      host: option(args, '--host', 'agent'),
+      host: 'agent',
       sourceKind: 'agent_report',
       signalKind: 'agent_observed_governance_gap',
-      reason: 'agent explicitly submitted a feedback candidate',
+      reason: 'Agent reported a concrete BuildOS usage problem',
       excerpt: summary,
+      component,
+      impact,
+      workaround: option(args, '--workaround'),
     });
     if (!args.includes('--quiet')) {
       process.stdout.write(`${result.id}${result.created ? ' created' : ' already exists'}\n`);

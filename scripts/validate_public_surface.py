@@ -52,6 +52,12 @@ def main() -> None:
     parser.add_argument("--deny-term", action="append", default=[])
     args = parser.parse_args()
     root = args.root.expanduser().resolve()
+    if (root / ".senmu-buildos/config.json").is_file():
+        raise SystemExit(
+            "[ERROR] 公开源码面校验只能针对生成后的公开投影；"
+            "当前目录是内部权威库。内部开发请运行包、项目治理、Python、"
+            "publication 和 Hook 检查，公开面检查留到投影生成后执行。"
+        )
     errors = []
     files = tracked_files(root)
     for relative in files:

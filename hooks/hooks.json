@@ -26,18 +26,6 @@
           }
         ]
       }
-    ],
-    "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"${PLUGIN_ROOT}/adapters/codex/hooks/user-prompt-submit.js\"",
-            "timeout": 5,
-            "additionalContextLimit": 420
-          }
-        ]
-      }
     ]
   }
 }

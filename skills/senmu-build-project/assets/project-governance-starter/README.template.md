@@ -27,8 +27,8 @@
 - 任务登记与编号计划（standard/release）：`governance/tasks/TASK_REGISTER.md`
 - 工作日志（standard/release）：`governance/logs/WORKLOG.md`
 - 经验与防回退（standard/release）：`governance/lessons/LESSONS_LEARNED.md`
-- 需求与路线图（standard/release 且启用 product）：`product/requirements/`
-- 当前迭代（如启用）：`product/ITERATION_PLAN.md`
+- 用户需求与当前产品规格（standard/release 且启用 product）：`product/`
+- 各版本 PRD、按需技术设计与测试用例：`versions/<version>/`
 - 技术、质量与架构（standard/release 且启用）：`engineering/`
 - 工作流（standard/release 且启用）：`workflows/WORKFLOW.md`
 - 项目 Agent 与系统提示词（如启用）：`agents/AGENT_REGISTER.md`

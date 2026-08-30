@@ -24,7 +24,7 @@ description: Govern non-routine Git or repository boundaries and formal version,
 - 先确认权威目录、用户改动、发布单元、目标环境、授权和恢复点。
 - 用户只表达当前线、后继线、这一批、是否集成和是否发布；Delivery 自动翻译 Git 机制。只读不创建执行面；每次源码写入进入任务分支，未知并行时再用独立 worktree，禁止直接写项目登记的集成线。
 - 发布单元、环境和标准入口明确时，“发布最新版本”开启绑定精确候选的有限发布会话，自动完成适用的收口、制品、部署、验证和正式 Tag。
-- 职责绑定动作而非会话身份：实现者封口可验证 commit；收到合并／发布命令的当前 Agent 从持久任务与 Git 重建接收矩阵、完成审查和收口，不依赖固定 Team Leader。
+- 职责绑定动作而非会话身份：普通发布由当前 Agent 收口；仅跨多 Agent、仓库或生产单元的正式发布临时集中候选、授权和回执，不设固定 Team Leader。
 - 项目必须声明 `main` 是 `integration` 还是 `release_ready`；未声明时停止自动集成。写入任务按版本线和 Change Unit 隔离，任务分支从登记集成线建立，只有已 sealed 的真实依赖可显式 stacked。
 - 发布窗口只有一个可变源；截止后无关分支不改候选，Tag／制品前运行 [身份校验](scripts/verify_release_identity.py)。
 - 候选、已构建、已部署、生产已验证和正式版本分别登记；正式 Tag 只在目标发布事实验证后创建，Tag 本身仍不能替代 Release Record 或生产事实。
@@ -32,4 +32,4 @@ description: Govern non-routine Git or repository boundaries and formal version,
 - 改变用户行为的候选必须回指产品决定；新 commit 使旧批准失效。
 - 正式发布保留可执行回滚点；未获得明确发布授权时，最多做到本地候选和预检。
 
-需要修改实现时把失败证据和复核条件交 Engineering；需求范围不明交 Product；流程状态错误交 Workflow。Delivery 保留发布事实和授权边界，不复制其他 owner 正文。
+需要修改实现或专项证据未闭合时交 Engineering；需求范围不明交 Product；流程状态错误交 Workflow。Delivery 保留发布事实和授权边界，不复制其他 owner 正文。

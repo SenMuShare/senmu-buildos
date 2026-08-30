@@ -1,4 +1,4 @@
 interface:
   display_name: "Senmu Build Product Management"
-  short_description: "需求、产品规划、迭代与验收治理"
-  default_prompt: "Use $senmu-build-product to establish the requirement source, scope, roadmap or iteration state, acceptance criteria, and handoff boundaries."
+  short_description: "用户需求、版本PRD、产品规格与验收治理"
+  default_prompt: "Use $senmu-build-product to turn the current product decision into an appropriately sized version PRD, acceptance contract, or current product specification."

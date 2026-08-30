@@ -31,17 +31,16 @@
 | Agent 定义 | Agent Definition | `agents/<agent-key>/AGENT.md`；一个 Agent 一个唯一现行契约 |
 | Agent 定义模板 | Agent Definition Template | `.senmu-buildos/templates/agent/AGENT.md`；模板不是生效定义 |
 | Agent 定义校验器 | Agent Definition Validator | `.senmu-buildos/validate_agents.py`；校验登记、Key、版本、状态、路径与核心章节 |
-| 需求池 | Requirement Backlog | `product/requirements/REQUIREMENT_BACKLOG.md` |
-| 单项正式需求 | Requirement Record | `product/requirements/REQ-<NNNN>-<slug>.md` |
-| 产品需求文档 | Product Requirements Document | `product/requirements/PRD.md` |
-| 产品路线图 | Product Roadmap | `product/requirements/ROADMAP.md` |
-| 迭代计划 | Iteration Plan | `product/ITERATION_PLAN.md` |
+| 用户需求 | User Requirements | `product/USER_REQUIREMENTS.md`；可选需求池，状态和处理版本写在条目旁 |
+| 版本产品需求文档 | Product Requirements Document | `versions/<version>/PRD.md` |
+| 产品规格书 | Product Specification | `product/PRODUCT_SPECIFICATION.md`；当前完整产品事实 |
 | 工作流契约 | Workflow Contract | `workflows/<workflow-id>/WORKFLOW.md` 或项目既有定义入口 |
 | 运行清单 | Run Manifest | `state/runs/<run-id>.json`、运行数据库或编排系统 |
 | 运行回执 | Run Receipt | `evidence/runs/<run-id>/` 或项目既有证据系统 |
-| 技术设计 | Technical Design | `engineering/designs/TD-<NNNN>-<slug>.md` |
+| 版本技术设计 | Technical Design | `versions/<version>/TECHNICAL_DESIGN.md`；按需 |
+| 版本测试用例 | Test Cases | `versions/<version>/TEST_CASES.md`；依据 PRD，深度按风险 |
 | 架构决策 | Architecture Decision Record | `engineering/decisions/ADR-<NNNN>-<slug>.md` |
-| 架构契约 | Architecture Contract | `engineering/ARCHITECTURE.md` |
+| 系统技术规格书 | System Technical Specification | `engineering/SYSTEM_TECHNICAL_SPECIFICATION.md`；当前完整技术事实 |
 | 技术债登记 | Technical Debt Register | `engineering/TECH_DEBT.md` |
 | 测试策略 | Testing Strategy | `engineering/TESTING_STRATEGY.md` |
 | 版本与发布计划 | Version and Release Plan | `delivery/RELEASE_PLAN.md` |
@@ -63,9 +62,9 @@
 | Skill | 项目内权威产物 | 默认位置 | 不应写入 |
 | --- | --- | --- | --- |
 | `senmu-build-project` | 项目治理章程、项目地图、任务登记与编号计划、治理 policy 和工作日志 | 新项目默认 `governance/`；成熟项目映射并演进已有 owner | 产品正文、技术实现、运行状态、经验规则或发布结果的复制件 |
-| `senmu-build-product` | 需求池、PRD、路线图、产品设计、迭代承诺与验收事实 | `product/requirements/`、`product/design/`、`product/ITERATION_PLAN.md` | 技术实现决定、部署事实、任务执行状态副本 |
+| `senmu-build-product` | 可选用户需求、每版本 PRD、当前产品规格和产品验收事实 | `product/` 与 `versions/<version>/PRD.md` | 技术实现决定、部署事实、任务执行状态副本 |
 | `senmu-build-workflow` | 流程契约、项目 Agent 定义、schema/config、输入、工作区、运行状态、交付物、证据和归档 | 项目系统内 `workflows/`；启用时使用 `agents/`；物料型项目外部角色目录由 Project Map 映射 | 软件架构正文、版本发布计划、第二份任务登记表或根 `AGENTS.md` 的复制件 |
-| `senmu-build-engineering` | 技术设计、架构、选型、代码质量、技术债、ADR、语言／框架规则、测试策略 | 治理文档位于 `engineering/`；测试代码与 fixtures 位于项目既有 `tests/` 或语言生态目录 | 产品优先级、发布批准、独立审查结论 |
+| `senmu-build-engineering` | 当前系统技术规格、按需版本技术设计、测试用例、选型、代码质量、技术债、ADR、语言／框架规则和测试策略 | `engineering/`、`versions/<version>/`；测试代码与 fixtures 位于项目既有 `tests/` 或语言生态目录 | 产品优先级、发布批准、独立审查结论 |
 | `senmu-build-delivery` | 分支与合并、发布单元、版本、changelog、制品、部署、回滚、线上验证 | `delivery/`、`operations/`、各发布单元及适用的发布证据 owner | 需求正文、工程设计副本、未发生的发布状态 |
 | `senmu-build-assurance` | POC 账本、实验 manifest、独立审查报告和可复查证据 | `experiments/`、`engineering/audits/`、适用的 `evidence/reviews/` | 未获授权的修复、第二份工程规范、经验台账或任务状态 |
 | `senmu-build-learning` | 复盘、经验与防回退条目、经验索引、状态和替代关系 | standard/release 默认 `governance/lessons/LESSONS_LEARNED.md`；core 按需晋级，成熟项目映射既有知识 owner | 工作日志副本、专业规则正文、未验证猜测或应用项目之外的自动修改 |
@@ -106,10 +105,13 @@
 
 ```text
 Durable Task State Owner             当前边界、阶段、进度、证据链接、恢复入口
-├── product/requirements/REQ-...     产品范围与验收事实
+├── versions/<version>/PRD.md        本版本产品范围、行为与验收事实
+├── product/PRODUCT_SPECIFICATION.md 当前完整产品事实
 ├── workflows/...                    流程、运行和物料事实
 ├── agents/<agent-key>/AGENT.md       项目 Agent／Prompt 的稳定契约（如启用）
-├── engineering/designs/TD-...       技术设计、代码和测试事实
+├── versions/<version>/TECHNICAL_DESIGN.md  按需版本技术设计
+├── versions/<version>/TEST_CASES.md 依据 PRD 的版本测试用例
+├── engineering/SYSTEM_TECHNICAL_SPECIFICATION.md 当前完整技术事实
 ├── engineering/decisions/ADR-...    长期架构取舍
 ├── experiments/EXP-...              POC 证据与决定
 ├── delivery/RELEASE_PLAN.md         版本与发布计划
