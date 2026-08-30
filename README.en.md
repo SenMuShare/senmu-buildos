@@ -24,16 +24,16 @@ It focuses on two outcomes:
 
 > BuildOS optimizes for less but correct code—not the fewest lines or the lowest token count. Security, accessibility, business semantics, testing, and maintainability are not removed to save tokens.
 
-## What it changes
+## Why BuildOS
 
 | Common AI coding failure | BuildOS behavior |
 | --- | --- |
 | Coding starts before scope is clear, and unrequested features appear | Approved scope, non-goals, and observable acceptance constrain implementation; unapproved ideas remain candidates |
-| An agent creates new folders, services, or a second state owner without reading the project | Inspect the real root, owners, call paths, and similar implementations before extending the existing capability |
+| An agent creates new folders, services, or a second source of state without reading the project | Inspect the real root, existing code, call paths, and source of truth before extending what is already there |
 | One framework option would solve the problem, but the agent hand-rolls a component or watches internal DOM | Check public APIs for the installed version first; add a minimal adapter only when evidence shows a real gap |
 | Code runs but becomes difficult to read, test, or change | Protect single ownership, module boundaries, explicit side effects, change locality, regression tests, and deletability |
 | Abstractions, plugin systems, and generic platforms are built for imagined future needs | Close the current minimum value slice first; expand when a second real use case or an approved roadmap requires it |
-| Every new chat repeats explanations and reloads long rules | Keep decisions, progress, and evidence in project owners; load Skills and references on demand and reuse valid evidence |
+| Every new chat repeats explanations and reloads long rules | Record decisions, progress, and evidence in project documents and tasks; load only relevant guidance and reuse information that is still valid |
 | A passing test, tag, or command is reported as production success | Separate implementation, acceptance, artifacts, deployment, and production truth, each with matching evidence |
 
 ## Start in 30 seconds
@@ -69,7 +69,7 @@ python3 adapters/doubao/install_doubao.py
 
 See [adapters/doubao/README.md](adapters/doubao/README.md) for the Doubao adapter.
 
-## The full engineering chain
+## How it works
 
 BuildOS does not wait until formatting or code review to catch mistakes. It starts before bad decisions become code:
 
@@ -86,7 +86,7 @@ Risk-matched testing and product acceptance
         ↓
 Git, version, artifact, deployment, and production evidence
         ↓
-Validated learning returned to the correct owner
+Validated lessons become reusable guidance
 ```
 
 The chain is tailored to the task. A contract-preserving button style change does not need a PRD, ADR, and release report. A cross-module, permission, data, payment, or formal release change keeps the design, verification, and rollback evidence its risk requires.
@@ -96,12 +96,23 @@ The chain is tailored to the task. A contract-preserving button style change doe
 Before adding an implementation, an agent asks in this order:
 
 1. Is the requirement already satisfied, or was the capability never approved? If it is not needed, do not implement it.
-2. Does the project already have a canonical owner, public entrypoint, or safely extensible implementation?
+2. Does the project already have a clear source of truth, public entrypoint, or safely extensible implementation?
 3. Do the current framework, component system, platform, standard library, or installed dependencies fully match the required semantics?
 4. Can a maintained solution fill the real gap at a lower total development and maintenance cost?
 5. Only then write custom code with a clear boundary, verification, and the smallest useful maintenance surface.
 
 Reuse still passes semantic and risk checks. If a framework capability fails business rules, security, authorization, accessibility, compatibility, or error semantics, BuildOS keeps the necessary adapter instead of distorting the requirement to achieve “zero custom code.”
+
+## Design principles
+
+- **Understand the project before changing it.** The current README, code, configuration, tests, CI, and runtime state are closer to the truth than generic advice.
+- **Confirm the requirement before writing code.** Features outside the approved scope do not enter the current implementation simply because they seem useful later.
+- **Reuse before custom code.** Prefer public capabilities already provided by the project, framework, component system, platform, and standard library; add the smallest adapter only when a real gap remains.
+- **Keep small work lightweight.** Routine changes need only the checks they justify; data, permissions, payments, production releases, and other high-risk work retain design, verification, and rollback evidence.
+- **Use evidence to define done.** Passing tests, product acceptance, artifact creation, deployment, and production availability are different facts and cannot substitute for one another.
+- **Let the project remember.** Important decisions, progress, and recovery entrypoints belong in the project, not in one conversation that may disappear.
+
+For the full system design, see [System overview](docs/architecture/system-overview.md), [Skill boundaries](docs/architecture/skill-boundaries.md), and [Project artifact map](docs/architecture/project-artifact-map.md).
 
 ## Where it helps
 
@@ -110,46 +121,43 @@ Reuse still passes semantic and risk checks. If a framework capability fails bus
 - **Features and bugs:** follow project-local rules, reuse framework and existing implementation, make the smallest change, and run matching verification.
 - **Long-running work:** preserve stages, decisions, evidence, and recovery entrypoints for cross-session and multi-agent handoffs.
 - **Formal releases:** align scope, review, tests, versions, artifacts, deployment, production verification, and rollback identity.
-- **Governance and learning:** review technical debt, duplicate implementations, and feedback; promote cross-project lessons to one canonical owner.
+- **Governance and learning:** review technical debt and duplicate implementations; turn verified lessons that apply across projects into reusable guidance.
 
-## One plugin, seven on-demand Skills
+## One plugin, seven focused Skills
 
-| Skill | Owns | Does not own |
-| --- | --- | --- |
-| `senmu-build-project` | Project shape, structure, authority mapping, durable task state, mature-project adoption | Product, engineering, or release decisions |
-| `senmu-build-product` | Requirements, scope, non-goals, priority, roadmap, iteration, and acceptance | Technical implementation or production release |
-| `senmu-build-workflow` | Workflows, agents, data/materials, run state, recovery, and deliverables | Running an existing workflow or setting release policy |
-| `senmu-build-engineering` | Technical design, architecture, selection, code quality, testing, refactoring, and debt | Product priority or release approval |
-| `senmu-build-delivery` | Non-routine Git boundaries, versions, artifacts, deployment, rollback, and production truth | Ordinary coding or product acceptance |
-| `senmu-build-assurance` | POCs, independent audits, reproduction, evidence grading, and causal findings | Remediation implementation or routine self-review |
-| `senmu-build-learning` | Feedback review, retrospectives, external knowledge distillation, and cross-project promotion | Automatically turning one observation into a rule |
+| Skill | Use it when |
+| --- | --- |
+| `senmu-build-project` | A new project needs a basic operating structure, or a mature project needs its existing structure, rules, and durable task state identified |
+| `senmu-build-product` | Requirements, scope, priority, roadmap, or acceptance criteria need to be defined or changed |
+| `senmu-build-workflow` | A multi-step workflow, agent responsibility, material flow, recovery path, or delivery state needs to be designed |
+| `senmu-build-engineering` | Technical design, architecture, technology selection, code quality, testing, refactoring, or technical debt needs governance |
+| `senmu-build-delivery` | Complex Git collaboration, versions, artifacts, releases, rollback, or production verification needs governance |
+| `senmu-build-assurance` | Independent reproduction, a POC, an audit, or an evidence-strength judgment is the requested result |
+| `senmu-build-learning` | A problem needs a retrospective, feedback needs review, or external knowledge should become reusable guidance |
 
 If project `AGENTS.md`, the active framework, and tests already govern an ordinary code change, BuildOS can stay out. When it is needed, load the closest Skill and only the relevant reference—not all seven manuals.
 
-## Quick explanation for humans and AI
+## Frequently asked questions
 
-| Question | Answer |
-| --- | --- |
-| What is it? | Project operating rules, engineering decision methods, and installable Skills for AI coding agents |
-| When should it be used? | When requirement or architecture rules are missing or conflicting, long work needs recovery, a mature project needs adoption, or Git/release/audit risk needs governance |
-| How do I use it? | State the product outcome; the agent reads project-local facts and selects one primary Skill only when needed |
-| Does it rewrite my project? | Read-only requests do not write; changes follow user authorization and existing owners; mature projects are not forced into a fixed directory layout |
-| How many tokens will it save? | No fixed percentage is promised. It reduces avoidable cost through less unnecessary code, on-demand loading, evidence reuse, and durable state, then validates effects in real tasks |
+### Does every change load all of BuildOS?
 
-## Why this is not one giant prompt
+No. If project rules, the framework, and tests already govern an ordinary code change, no specialist Skill is needed. When guidance is needed, only the relevant Skill and references are loaded.
 
-- **Project facts first:** current README, code, configuration, tests, CI, and runtime evidence outrank generic advice.
-- **Progressive disclosure:** a short Kernel keeps universal boundaries; seven Skills route work; detailed references load only when relevant.
-- **One owner per fact:** requirements, design, code, task state, runtime state, and release facts remain separate; chat is not the database.
-- **Risk-proportional effort:** small changes stay light; data, permission, payment, production, and destructive actions fail closed.
-- **Evidence over labels:** passing tests are not product acceptance, a tag is not deployment, and a deployment command is not production proof.
-- **Tokens are a cost, not the objective:** information that changes decisions, prevents rework, or controls material risk is worth keeping.
+### Will it force my project into a new structure?
 
-For system details, see [System overview](docs/architecture/system-overview.md), [Skill boundaries](docs/architecture/skill-boundaries.md), [Project artifact map](docs/architecture/project-artifact-map.md), and [Codex harness boundary](docs/architecture/codex-harness-boundary.md).
+No. Read-only requests do not write to the project. When changes are authorized, BuildOS prefers the existing directories, documents, code entrypoints, and release process, then fills only real gaps or conflicts.
+
+### Will it commit, push, or release automatically?
+
+No. Code changes, merges, pushes, and formal releases each follow user authorization and project rules. Installing the plugin does not grant production write access.
+
+### How many tokens will it save?
+
+BuildOS does not promise a fixed percentage. It reduces avoidable cost by preventing unnecessary features, duplicate code, repeated reading, and rework, while keeping correctness, safety, and maintainability ahead of token savings.
 
 ## Install, update, and remove
 
-The current formal release is Senmu BuildOS `v2.0.4`. It supports Codex, Claude Code, and a Doubao adapter. Install the plugin as one unit; the seven Skills do not need separate downloads.
+The current formal release is Senmu BuildOS `v2.0.5`. It supports Codex, Claude Code, and a Doubao adapter. Install the plugin as one unit; the seven Skills do not need separate downloads.
 
 ### Update Codex
 
@@ -186,35 +194,29 @@ You can also give the repository URL to an agent and ask it to inspect the manif
 A mature project is not “initialized again.” It is adopted:
 
 1. Read-only inventory the real project root, repository, entrypoints, frameworks, tests, CI, deployment, and existing documentation.
-2. Identify who owns requirements, architecture, state, tasks, and release facts.
+2. Find where requirements, architecture, runtime state, tasks, and release information are actually recorded.
 3. Compare those facts with BuildOS to find missing, conflicting, duplicated, or stale rules.
-4. Preserve sound existing practice and fill real gaps in the original owners.
+4. Preserve sound existing practice and fill real gaps in the original documents or code locations.
 5. Verify and migrate in stages; do not copy the entire BuildOS rulebook into the project.
 
 The same BuildOS can therefore support React, Vue, Python, Go, Java, content production, and mixed workflows without hard-coding one project's absolute paths, framework preference, or directory layout as the answer for every project.
 
-## Open iteration
+## Contributing
 
-Install a formal release or maintain your own fork. Web pages, books, public repositories, third-party Skills, and project experience remain candidates until deduplication, conflict resolution, owner mapping, context-cost review, and behavioral validation support promotion.
+Install a formal release or maintain your own fork. New methods, external sources, and project experience do not become rules merely because they look useful; they are compared, validated, and given an explicit scope first.
 
 - To contribute code or rules, read [CONTRIBUTING.md](CONTRIBUTING.md).
 - For planned work, see [ROADMAP.md](ROADMAP.md).
 - For security reports, follow [SECURITY.md](SECURITY.md).
 
-## Validation and current boundaries
+## Usage boundaries
 
-The repository provides project-owned validation entrypoints:
+- BuildOS provides project governance and engineering guidance; it does not replace the people responsible for final product decisions.
+- It does not replace specialist security review, cloud permissions, CI/CD, or runtime monitoring.
+- Static checks can prove that the repository meets its current rules, but not that every model and project will produce identical results.
+- Without the relevant authorization, it will not commit, merge, push, deploy, or formally release anything.
 
-```bash
-python3 scripts/validate_package.py --strict
-python3 scripts/validate_public_surface.py
-python3 -m unittest discover -s tests -p 'test_*.py'
-node --test tests/hooks/*.test.js
-```
-
-These checks validate package structure, metadata, rule invariants, and script contracts. They do not prove that every model and project will save a fixed token percentage, and they do not replace real-task code quality, routing accuracy, Hook trust, deployment, or production verification.
-
-BuildOS does not replace project owners, specialist security review, cloud permissions, CI/CD, or runtime monitoring. It will not commit, merge, tag, push, deploy, or publish without the relevant authorization.
+Contributor test commands and release checks are documented in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
