@@ -37,6 +37,9 @@ jobs:
       - name: Validate release metadata
         run: python3 scripts/bump_version.py --check
 
+      - name: Validate GitHub product surface
+        run: python3 scripts/manage_github_product_surface.py
+
       - name: Run Python tests
         run: python3 -m unittest discover -s tests -p 'test_*.py'
 

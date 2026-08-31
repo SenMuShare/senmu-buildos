@@ -71,6 +71,15 @@ node --test tests/hooks/*.test.js
 
 每个正式版本还必须在 `RELEASE_NOTES.md` 中维护简短的用户更新说明，只保留“主要更新”和“修复问题”两个栏目。内容描述用户最终得到的变化，不写任务编号、参考来源、内部讨论、验证过程或未公开计划。Tag 发布流程会读取对应版本段落作为 GitHub Release 正文；缺少任一栏目时停止创建 Release。
 
+每个正式版本同时必须复审 GitHub 产品表面，而不是只机械修改版本号：
+
+- 中文、英文、日文 README 同步审阅定位、核心问题、工作方式、设计理念、能力边界和安装入口；本次能力改变相关叙事时更新正文，没有叙事变化也要记录已经复核的栏目。
+- `GITHUB_PRODUCT_SURFACE.json` 的 `reviewed_for_version` 必须与 `VERSION` 一致，并记录本次 README 复核栏目、三语摘要、仓库简介和不超过 20 个 Topics。
+- README 中的 `product-surface-review` 标记必须与当前版本一致；它只是复核收据，不能代替真实内容更新。
+- 仓库简介和 Topics 描述当前产品价值与发现关键词，不记录内部任务、参考 Skill、实现过程或夸大的效果承诺。
+
+`validate_package.py` 会阻断缺少 Release 正文、README 三语复核或 GitHub Product Surface 漂移的候选。公开 `main` 精确校验成功后，`promote-public-release` 在创建 Tag 前同步并回读 GitHub 仓库简介与 Topics；同步失败时不创建正式 Tag。Tag workflow 必须最终创建非 draft、非 prerelease 的 GitHub Release，发布回执再核对其正文与 `RELEASE_NOTES.md` 一致。
+
 内部候选还需运行 publication 测试；生成公开投影后，再在公开根运行 `python3 scripts/validate_public_surface.py`。
 
 版本准备、候选 commit、公开主线验证、正式 Tag 和 GitHub Release 是不同状态。取得明确发布授权后，先提交并冻结版本候选，生成脱敏公开投影，将候选提交到公开主线并等待验证。只有该精确公开 commit 已有成功的 `main` push 验证回执后，才能使用 `python3 governance/publication/manage_lifecycle.py promote-public-release --commit <sha> --apply` 创建并推送正式 Tag；Tag 工作流复核后创建 GitHub Release。当前安装链直接消费 Git 源码，所以 GitHub 自动源码快照足够，不另造无消费者的定制制品。

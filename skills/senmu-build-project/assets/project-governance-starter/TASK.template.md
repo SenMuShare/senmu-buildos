@@ -49,9 +49,9 @@
 
 ## 关键讨论与决定
 
-只记录会影响后续执行的结论、理由、未决问题和重新评估条件，不复制完整聊天。长期产品或架构决定必须晋级到 REQ、TD 或 ADR。
+只记录会影响后续执行的 `Decision Rationale`、`Rejected Alternatives`、`Preserved Constraints`、未决问题和 `Revisit Trigger`，让后续 Agent 能区分缺陷与有意约束；不复制完整聊天。长期产品或架构决定必须晋级到 REQ、TD 或 ADR。
 
-| 日期 | 问题／决定 | 候选与理由 | 当前结论 | 晋级 owner／重评条件 |
+| 日期 | 问题／决定 | 采纳／拒绝方案与依据 | 必须保持的边界 | 晋级 owner／Revisit Trigger |
 | --- | --- | --- | --- | --- |
 
 ## 研究与验证摘要

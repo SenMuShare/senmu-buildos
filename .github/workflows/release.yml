@@ -35,6 +35,9 @@ jobs:
       - name: Validate user release notes
         run: python3 scripts/extract_release_notes.py --version "${GITHUB_REF_NAME#v}" >/dev/null
 
+      - name: Validate GitHub product surface
+        run: python3 scripts/manage_github_product_surface.py
+
       - name: Validate package
         run: python3 scripts/validate_package.py
 

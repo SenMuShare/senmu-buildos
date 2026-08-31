@@ -8,6 +8,8 @@
   <a href="README.md">简体中文</a> · <a href="README.en.md">English</a> · <a href="README.ja.md">日本語</a>
 </p>
 
+<!-- product-surface-review: 2.1.1 -->
+
 <p align="center">
   <a href="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml"><img src="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml/badge.svg" alt="Validate Senmu BuildOS"></a>
   <a href="LICENSE"><img src="https://img.shields.io/github/license/SenMuShare/senmu-buildos" alt="License"></a>
@@ -15,7 +17,7 @@
   <a href="https://github.com/SenMuShare/senmu-buildos/releases/latest"><img src="https://img.shields.io/github/v/release/SenMuShare/senmu-buildos" alt="Release"></a>
 </p>
 
-Senmu BuildOS 是一个面向 **AI coding agent** 的开源项目运行规范和软件工程教练。它覆盖需求、界面设计、技术设计、框架与组件选型、前后端实现、测试、Git、版本发布和经验反馈，帮助 Agent 在真实项目里持续交付，而不是每次依靠一段越来越长的 Prompt 临场发挥。
+Senmu BuildOS 是一个面向 **AI coding agent** 的开源项目运行规范和软件工程教练。它覆盖需求、界面与体验设计、技术设计、框架与组件选型、前后端实现、测试、Git、版本发布和经验反馈，帮助 Agent 在真实项目里持续交付，而不是每次依靠一段越来越长的 Prompt 临场发挥。它让验收权威、用户文档和关键决策理由成为项目事实，使后续 Agent 知道什么应当改变、什么是有意保留的约束。
 
 它重点解决两件事：
 
@@ -33,7 +35,8 @@ Senmu BuildOS 是一个面向 **AI coding agent** 的开源项目运行规范和
 | 框架一个参数能解决，Agent 却手搓组件、监听 DOM、复制状态 | 先检查当前版本的公开 API 和组件能力；只有证据证明不满足时才做最小适配 |
 | 代码能跑，但职责混乱、难读、难测、越改越像“屎山” | 用唯一事实、模块边界、显式副作用、变化局部性、回归测试和可删除性约束实现 |
 | 为未来假设预建抽象、插件系统和通用平台 | 先闭合当前最小价值切片；第二个真实用例或明确路线图再触发扩展 |
-| 换会话或换 Agent 后重新解释，重复读取大段规则 | 把决定、进度和证据写回项目文档与任务；只在需要时读取相关规则，并复用仍然有效的信息 |
+| 界面看起来像通用 AI 模板，信息层级、排版、交互和品牌意图彼此脱节 | 从真实任务、内容层级和设计系统出发，统一布局、字体、色彩、动效、响应式与可访问性，并在真实渲染中复核 |
+| 换会话后把有意约束当成 Bug，又恢复了早已拒绝的方案 | 保存关键决定的理由、拒绝方案、必须保持的边界和重评条件；条件变化时追加新裁决，不改写历史 |
 | 测试通过、Tag 创建或命令成功就被说成“已经上线” | 区分实现、验收、制品、部署和生产事实，每个结论使用对应证据 |
 
 ## 30 秒开始使用
@@ -84,7 +87,7 @@ BuildOS 不只在“写代码”这一步检查格式，而是在更早的位置
         ↓
 最小正确的前端／后端实现
         ↓
-匹配风险的测试与产品验收
+匹配风险的测试、用户文档走查与产品验收
         ↓
 Git、版本、制品、部署与生产证据
         ↓
@@ -110,9 +113,10 @@ Agent 在新增实现前按以下顺序判断：
 - **先理解项目，再修改项目。** README、代码、配置、测试、CI 和真实运行状态比通用建议更接近事实。
 - **先确认需求，再编写代码。** 没有进入批准范围的功能，不因为“顺手”或“以后可能需要”而进入本次实现。
 - **先复用，再自研。** 优先使用项目、框架、组件、平台和标准库的公开能力；确有缺口时再做最小适配。
-- **让界面服务真实任务。** 视觉、交互、动效和可访问性共同帮助用户理解与操作，不用风格堆砌替代产品事实。
+- **让设计有意图、可实现、可复核。** 从真实任务、内容层级和既有设计系统出发，协调布局、排版、色彩、交互、动效、响应式与可访问性；在真实渲染中验证，而不是用装饰堆砌或通用模板替代产品判断。
 - **任务越小，流程越轻。** 普通修改只做必要检查；数据、权限、支付、生产发布等高风险工作保留设计、验证和回滚依据。
 - **用证据说明完成。** 测试通过、产品验收、制品生成、部署成功和生产可用是不同的事实，不能互相替代。
+- **先理解为什么，再改变结果。** 重要决定保存理由、拒绝方案、必须保持的边界和重评条件；后续条件改变时追加新裁决，而不是把旧约束误删或永久化。
 - **让项目自己记住。** 重要决定、进度和恢复入口写回项目，而不是依赖某一次聊天一直存在。
 
 更完整的系统设计见[系统概览](docs/architecture/system-overview.md)、[Skill 边界](docs/architecture/skill-boundaries.md)和[项目产物映射](docs/architecture/project-artifact-map.md)。
@@ -162,7 +166,7 @@ BuildOS 不承诺固定比例。它通过减少不必要的功能、重复代码
 
 ## 安装、更新与卸载
 
-Senmu BuildOS 当前正式版本为 `v2.1.0`，支持 Codex、Claude Code 和豆包适配。安装的是整个插件，不需要逐个下载八个 Skill。
+Senmu BuildOS 当前正式版本为 `v2.1.1`，支持 Codex、Claude Code 和豆包适配。安装的是整个插件，不需要逐个下载八个 Skill。
 
 ### 更新 Codex
 

@@ -42,6 +42,7 @@
 | P-20 | 先区分新项目初始化、新项目正常开发、已有项目继续开发和已有项目整体治理；两类正常开发优先项目入口且不重复初始化，整体治理先只读盘点再按授权演进原 owner | `skills/senmu-build-project/SKILL.md`、`项目落地移交与场景路由规范.md` |
 | P-21 | Project 路由依次回答当前项目处境、是否需要 BuildOS、需要哪个唯一主责 Skill；普通实现、Bug、单条文案、局部样式和既有流程执行不因出现在场景说明中被升级为 BuildOS 治理流程 | `项目落地移交与场景路由规范.md` |
 | P-22 | 只有真实委派时才形成最小自足任务包，包含 Current Task、Global Constraints、Interfaces 和 Output Contract；不复制完整聊天、全部专业规范或无关 Agent 历史，也不扩大原授权 | `任务执行与状态管理规范.md` |
+| P-23 | 影响后续执行的关键决定保存 Decision Rationale、Rejected Alternatives、Preserved Constraints 和 Revisit Trigger；Task 只保存任务级摘要，长期决定晋级原专业 owner，不复制完整聊天或改写历史结论 | `任务执行与状态管理规范.md`、`TASK.template.md` |
 
 ## Product
 
@@ -67,6 +68,8 @@
 | PR-18 | 生成式界面内容只按可观察问题治理：模型自述或工作汇报、照搬需求／验收／内部讨论、把未知或计划写成已完成／保证成功／始终可用，以及用长篇解释掩盖具体动作或错误；不得以不可复核的整体风格评价代替规则 | `界面文案与内容设计规范.md` |
 | PR-19 | 需求讨论按不确定性和影响选择探索式、边界式或架构式深度；现有 owner 已无实质歧义时不重复提问或强制单独审批，跨权限／数据／状态／发布单元变化时必须先闭合流程、不变量、异常和验收 | `需求与产品迭代管理规范.md` |
 | PR-20 | 明确“不要了／删除／取消／永久下线”默认表示永久退役，不等于临时隐藏或关闭开关；临时停用、兼容、回滚和历史数据销毁分别需要明确范围、退出条件或单独授权 | `需求与产品迭代管理规范.md`、`PRD.template.md` |
+| PR-21 | PRD／等价产品 owner 声明 Acceptance Authority、可委托证据和绑定候选；测试绿灯、实现者自述或发布状态不得自行授予 accepted。使用契约变化时，受影响现行用户文档是产品表面并须从代表性起点 walkthrough；无长期入口时不制造文档站 | `需求与产品迭代管理规范.md`、`PRD.template.md` |
+| PR-22 | 公开产品正式版本按实际变化复审 README／官网／代码托管简介的定位、能力、设计理念、边界和入口；受影响正文同步现有语种，版本号替换、内部任务或未经证明的宣传不能冒充产品叙事更新 | `需求与产品迭代管理规范.md` |
 
 ## Design
 
@@ -134,6 +137,9 @@
 | E-32 | 测试名称和失败信息指出会破坏的生产行为，预期值来自独立依据，断言公开结果／状态／副作用；mock 调用和私有实现细节不能单独证明业务完成 | `软件测试与质量验证规范.md`、`TEST_CASES.template.md` |
 | E-33 | 调试按证据与根因、正常路径对比、单一假设最小验证、原路径回归推进；连续尝试没有新证据或只移动症状时停止叠补丁并重新检查 owner、契约和架构边界 | `源代码工程质量与AI协作规范.md` |
 | E-34 | 职责分离评审使用 Implementer Brief／Report、Task Review、Scoped Re-review 和覆盖完整 base..head 的 Final Review；Finding 按证据关闭而非固定轮次，普通低风险变更不强制额外 Agent，新 commit 使旧结论失效 | `源代码工程质量与AI协作规范.md`、`CODE_QUALITY.template.md` |
+| E-35 | 看似反常或像 Bug 的行为已有相关 Task／TD／ADR 决策时，先核对原依据、拒绝方案、保持边界和 Revisit Trigger；条件未变不得静默恢复旧方案，条件变化则以新证据在原 owner 建立 supersession 链 | `源代码工程质量与AI协作规范.md`、`任务执行与状态管理规范.md` |
+| E-36 | 安装、配置、公开操作、API、CLI、SDK 或恢复路径变化时，测试受影响的现行用户文档命令／示例和代表性 walkthrough；链接或文档构建通过不能替代真实产品结果，无使用契约变化时不增加文档测试 | `软件测试与质量验证规范.md`、`TEST_CASES.template.md` |
+| E-37 | Task Review 以轻量 Challenger Review 主动证伪方向、关键假设、遗漏边界和更简单方案；它是审查方法而非固定岗位，同一实现者仍是 self-review，需要独立结论时服从 Assurance 身份 | `源代码工程质量与AI协作规范.md` |
 
 ## Delivery
 
@@ -182,6 +188,7 @@
 | D-41 | 普通发布由当前 Agent 直接收口；只有正式发布真实跨多 Agent、仓库或生产单元时才临时集中一个候选、一次有限授权和一份回执，边界不变不重复确认，结束后不保留常驻角色 | `skills/senmu-build-delivery/SKILL.md`、`多Agent变更单元与版本线收口规范.md` |
 | D-42 | 正式版本包含 Skill、Hook、路由或行为契约变化时，发布前复审记录必须与当前冻结表面一致且没有未关闭阻断 Finding；结构测试绿灯不能替代 Skill 完整性复审 | `版本制品与发布规范.md`、`工程知识蒸馏与标准晋级规范.md` |
 | D-43 | 用户未表达发布意图时默认不发布，无需反复要求其说“不发布”；“提测／批次收口／准备发布”只授权冻结、集成、完整门禁和候选准备，正式 Tag、上传、部署和切流需要明确发布授权 | `skills/senmu-build-delivery/SKILL.md`、`发布授权与生产事实协议.md` |
+| D-44 | 公开源码产品发布必须具备用户可读 Release notes 和 Product owner 的 README／仓库发现表面复审；已配置的简介／Topics 由唯一发布入口在正式 Tag 前同步并回读，任一缺失或漂移均阻断 Tag | `版本制品与发布规范.md`、`manage_lifecycle.py` |
 
 ## Assurance
 

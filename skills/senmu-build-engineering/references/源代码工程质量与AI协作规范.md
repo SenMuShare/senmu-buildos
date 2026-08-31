@@ -46,7 +46,7 @@
 
 ## 5. AI 实现、调试与评审闭环
 
-1. 读取真实入口、需求／验收、调用链、配置、测试和同类实现，区分 `confirmed`、`likely_unreproduced`、`expected_behavior`、`duplicate` 和 `out_of_scope`；写入前按 Kernel 自动保护脏改动并获得本任务隔离面。
+1. 读取真实入口、需求／验收、调用链、配置、测试、同类实现和命中的 Task／TD／ADR 决策记录，区分 `confirmed`、`likely_unreproduced`、`expected_behavior`、`duplicate` 和 `out_of_scope`；写入前按 Kernel 自动保护脏改动并获得本任务隔离面。看似反常、多余或像 Bug 的行为如果已有 Decision Rationale、Rejected Alternatives、Preserved Constraints 或 Revisit Trigger，先核对原条件是否仍成立：条件未变时不得静默恢复已拒绝方案，条件已变时以新证据回到原 owner 重新裁决并保留 supersession 链。明显安全缺陷不因历史决定免检。
 2. 说明行为变化、范围、风险、测试和需要同步的 owner；先找产生问题的需求、职责、接口、默认值或代码路径。
 3. 扩展原 owner，以最小端到端切片闭合权威输入、真实路径、可观察结果和匹配验证；不以提示词、清单或 validator 代替根因修复。
 4. 开放批次内只运行保持当前实现可信所需的目标检查并处理失败；不因单项完成启动完整质量门禁。复杂工作只在有意义阶段更新项目现有任务状态。
@@ -65,7 +65,7 @@
 
 1. **实现任务包（Implementer Brief）**：引用当前需求／Task，给出 `Global Constraints`、`Interfaces`、允许写入范围、验收和输出契约；不附完整聊天或无关规范。
 2. **实现报告（Implementer Report）**：实现者报告实际行为变化、文件／接口、测试、与任务包的偏差、已知缺口和准确 head，不用“已完成”代替证据。
-3. **任务审查（Task Review）**：审查者从需求、真实 diff 和运行证据独立检查正确性、安全、数据、兼容、完整退役、测试与维护成本；Finding 写明位置、触发、影响、严重度和复核条件。
+3. **任务审查（Task Review）**：审查者先采用轻量 `Challenger Review` 立场，独立尝试证伪实现方向、关键假设、遗漏边界和更简单方案，再从需求、真实 diff 和运行证据检查正确性、安全、数据、兼容、完整退役、测试与维护成本；Finding 写明位置、触发、影响、严重度和复核条件。Challenger 是审查方法，不是固定岗位或额外 Agent；同一实现者执行时仍标记 evidence-based self-review，需要独立结论时按 Assurance 身份与职责分离规则执行。
 4. **定向复审（Scoped Re-review）**：返修优先回到当前 Change Unit；复审原 Finding、修复差异及受影响链，不机械重跑无关清单。新问题单独登记，未关闭阻断项不能批准。
 5. **冻结结论（Final Review）**：最终结论覆盖完整 `base..head`、已关闭 Finding、匹配测试和未验证盲区；新 commit 使旧结论失效。冻结 head 未变化时，Delivery 可复用该结论，不再重复首次语义审查。
 

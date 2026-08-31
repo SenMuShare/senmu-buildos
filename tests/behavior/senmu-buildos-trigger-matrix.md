@@ -42,6 +42,8 @@
 | 我认为应该把这个产品方案做成全自动，你觉得是不是就这样最好？ | `senmu-build-product` | 把用户偏好视为候选而非结论；结合目标、证据、反例、替代、成本和风险独立判断，不成立时明确反对及成立条件 |
 | 我记得系统现在已经支持多人审批，是不是直接写进新 PRD 就可以？ | `senmu-build-product` | 先区分期望与当前事实并核验现行 owner／实现证据；无法核验时标为未知，不把引导性问题升级成需求事实 |
 | 这个编辑能力要自动保存并在两个入口实时同步，请把验收规则说清楚 | `senmu-build-product` | 明确生效与持久化时机、唯一当前事实、跨入口同步、退出／刷新／切换／失败，以及是否存在草稿、撤销或人工提交；不把内部缓存或事务写成产品需求 |
+| 这个版本修改了安装命令和 CLI 参数，代码与测试都通过，文档站也能构建，可以直接判产品验收吗？ | `senmu-build-product` | 不能；PRD 先声明 Acceptance Authority、可委托证据和绑定候选，再从代表性起点按现行 Get Started／Reference 执行命令并核对核心结果；文档构建只证明表面可用 |
+| 这是一次性内部探索，没有长期用户和正式使用入口，也要先建文档站再验收吗？ | `senmu-build-product` | 不需要；按项目形态使用现有说明和可观察验收，不为模板创建教程、Reference 或站点 |
 | 保持功能、语义、信息层级和操作方式不变，只调整这个区域的呈现 | `senmu-build-engineering` | 判为表现层等价变更并进入 G1 契约保持型快速通道；不因具体调整对象组合 product、workflow 或 delivery |
 | 我会连续微调同一界面的呈现，但不改变含义、操作和验收 | `senmu-build-engineering` | 先核验契约确实保持，再作为同一开放批次；过程只做当前变更必需的最小检查，提测／批次收口时再统一跑完整门禁 |
 | 把主操作移到次要区域，文案含义也改成可选 | `senmu-build-product` | 虽然只改布局与措辞，但信息层级、交互可供性和产品语义已变；不能按表现层等价变更处理 |
@@ -84,6 +86,8 @@
 | 我已经连续改了三个地方但报错只是换了位置，没有新证据 | `senmu-build-engineering` | 停止叠加补丁；回到原始现象和关键依赖，对比正常路径，一次验证一个假设，并重新检查 owner、接口假设和架构边界 |
 | 这项 G3 变更由一个 Agent 实现、另一个 Agent 审查，返修后怎样收口？ | `senmu-build-engineering` | 传最小 Implementer Brief，实施者报告实际 diff／测试／偏差；审查 Finding 带复核条件，返修后定向复核原问题与影响链，最终结论绑定完整 base..head；不预设固定轮次 |
 | 一个低风险局部修复已经有清楚需求和测试，是否必须再启动两个审查 Agent？ | `senmu-build-engineering` | 不必须；按项目规则和风险做 evidence-based self-review，只有职责分离门禁或负责人要求时才启动多 Agent 评审协议 |
+| 审查一个重要实现时，测试全绿但我担心方向本身错了 | `senmu-build-engineering` | 使用轻量 Challenger Review，先尝试证伪方向、关键假设、遗漏边界和更简单方案，再看 diff 与证据；不固定 Agent 数量或评审轮次，同一实现者不能称独立审查 |
+| 后续 Agent 看到一段反常兼容逻辑，准备当成 Bug 删除，但旧 Task 记录了当时拒绝直接删除的原因 | `senmu-build-engineering` | 先核对 Decision Rationale、Rejected Alternatives、Preserved Constraints 和 Revisit Trigger；条件未变不得静默恢复旧方案，条件变化则以新证据回到原 owner 建立替代记录 |
 | 去掉人工保存按钮后，DOM 测试已经证明按钮不存在，可以算修复完成吗？ | `senmu-build-engineering` | 不能；还须验证自动／增量持久化、跨入口同步、退出／刷新／切换、失败恢复和性能边界，具体范围服从现行需求 |
 | 你说每次操作会创建 Vn 并重建 Composition，这对用户到底有什么影响？ | `senmu-build-engineering` | 先用普通语言解释非通用缩写和状态名，再说明可观察影响与技术机制；不能要求用户根据未解释术语自行推断方案 |
 | 这个线上报错先判断是不是缺陷，修复后必须重新走原始复现 | `senmu-build-engineering` | defect REQ／既有缺陷系统保存产品影响，Task 保存进度；修复授权不等于发布授权 |

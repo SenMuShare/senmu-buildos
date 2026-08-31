@@ -11,6 +11,7 @@ import sys
 from pathlib import Path
 
 from extract_release_notes import ReleaseNotesError, extract_release_notes
+from manage_github_product_surface import ProductSurfaceError, validate_local_surface
 
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -333,10 +334,12 @@ def validate_skills() -> None:
 
     required_resources = (
         ROOT / "AGENTS.md",
+        ROOT / "GITHUB_PRODUCT_SURFACE.json",
         ROOT / "RELEASE_NOTES.md",
         ROOT / ".github/workflows/release.yml",
         ROOT / "scripts/bump_version.py",
         ROOT / "scripts/extract_release_notes.py",
+        ROOT / "scripts/manage_github_product_surface.py",
         ROOT / "scripts/validate_distillation_batch.py",
         ROOT / "scripts/validate_distillation_evaluation.py",
         ROOT / "scripts/validate_skill_integrity_review.py",
@@ -367,6 +370,8 @@ def validate_skills() -> None:
         fail("release workflow must enforce the public source boundary")
     if "scripts/extract_release_notes.py" not in release_workflow or "--notes-file" not in release_workflow:
         fail("release workflow must publish the curated user release notes")
+    if "scripts/manage_github_product_surface.py" not in release_workflow:
+        fail("release workflow must validate the reviewed GitHub product surface")
     if "--generate-notes" in release_workflow:
         fail("release workflow must not replace curated user notes with generated commit notes")
     version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
@@ -374,9 +379,15 @@ def validate_skills() -> None:
         extract_release_notes((ROOT / "RELEASE_NOTES.md").read_text(encoding="utf-8"), version)
     except (OSError, ReleaseNotesError) as exc:
         fail(f"current user release notes are invalid: {exc}")
+    try:
+        validate_local_surface(ROOT)
+    except (OSError, ProductSurfaceError) as exc:
+        fail(f"current GitHub product surface is invalid: {exc}")
     validation_workflow = (ROOT / ".github/workflows/validate.yml").read_text(encoding="utf-8")
     if "python3 scripts/validate_public_surface.py" not in validation_workflow:
         fail("validation workflow must validate the public source boundary")
+    if "scripts/manage_github_product_surface.py" not in validation_workflow:
+        fail("validation workflow must validate the reviewed GitHub product surface")
 
 
 def validate_no_exact_duplicate_active_files() -> None:

@@ -8,6 +8,8 @@
   <a href="README.md">简体中文</a> · <a href="README.en.md">English</a> · <a href="README.ja.md">日本語</a>
 </p>
 
+<!-- product-surface-review: 2.1.1 -->
+
 <p align="center">
   <a href="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml"><img src="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml/badge.svg" alt="Validate Senmu BuildOS"></a>
   <a href="LICENSE"><img src="https://img.shields.io/github/license/SenMuShare/senmu-buildos" alt="License"></a>
@@ -15,7 +17,7 @@
   <a href="https://github.com/SenMuShare/senmu-buildos/releases/latest"><img src="https://img.shields.io/github/v/release/SenMuShare/senmu-buildos" alt="Release"></a>
 </p>
 
-Senmu BuildOS is an open-source operating discipline and software-engineering coach for **AI coding agents**. It covers requirements, interface design, technical design, framework and component selection, frontend and backend implementation, testing, Git, releases, and reusable learning. The goal is sustainable work in real projects, not another ever-growing prompt.
+Senmu BuildOS is an open-source operating discipline and software-engineering coach for **AI coding agents**. It covers requirements, interface and experience design, technical design, framework and component selection, frontend and backend implementation, testing, Git, releases, and reusable learning. The goal is sustainable work in real projects, not another ever-growing prompt. Acceptance authority, user documentation, and decision rationale become project facts, so later agents know what should change and what is an intentional constraint.
 
 It focuses on two outcomes:
 
@@ -33,7 +35,8 @@ It focuses on two outcomes:
 | One framework option would solve the problem, but the agent hand-rolls a component or watches internal DOM | Check public APIs for the installed version first; add a minimal adapter only when evidence shows a real gap |
 | Code runs but becomes difficult to read, test, or change | Protect single ownership, module boundaries, explicit side effects, change locality, regression tests, and deletability |
 | Abstractions, plugin systems, and generic platforms are built for imagined future needs | Close the current minimum value slice first; expand when a second real use case or an approved roadmap requires it |
-| Every new chat repeats explanations and reloads long rules | Record decisions, progress, and evidence in project documents and tasks; load only relevant guidance and reuse information that is still valid |
+| An interface looks like a generic AI template, with hierarchy, typography, interaction, and brand intent pulling in different directions | Start from real tasks, content hierarchy, and the design system; align layout, type, color, motion, responsive behavior, and accessibility, then review the rendered result |
+| A later session treats an intentional constraint as a bug and restores an option that was already rejected | Preserve the rationale, rejected alternatives, protected boundaries, and revisit triggers; append a new decision when conditions change instead of rewriting history |
 | A passing test, tag, or command is reported as production success | Separate implementation, acceptance, artifacts, deployment, and production truth, each with matching evidence |
 
 ## Start in 30 seconds
@@ -84,7 +87,7 @@ Technical direction, frameworks, components, and public extension points
         ↓
 Minimum correct frontend and backend implementation
         ↓
-Risk-matched testing and product acceptance
+Risk-matched testing, documentation walkthroughs, and product acceptance
         ↓
 Git, version, artifact, deployment, and production evidence
         ↓
@@ -110,9 +113,10 @@ Reuse still passes semantic and risk checks. If a framework capability fails bus
 - **Understand the project before changing it.** The current README, code, configuration, tests, CI, and runtime state are closer to the truth than generic advice.
 - **Confirm the requirement before writing code.** Features outside the approved scope do not enter the current implementation simply because they seem useful later.
 - **Reuse before custom code.** Prefer public capabilities already provided by the project, framework, component system, platform, and standard library; add the smallest adapter only when a real gap remains.
-- **Make interfaces serve real tasks.** Visuals, interaction, motion, and accessibility work together to improve understanding and action; style does not replace product truth.
+- **Make design intentional, implementable, and reviewable.** Start from real tasks, content hierarchy, and the existing design system; coordinate layout, typography, color, interaction, motion, responsive behavior, and accessibility, then verify the rendered result instead of substituting decoration or a generic template for product judgment.
 - **Keep small work lightweight.** Routine changes need only the checks they justify; data, permissions, payments, production releases, and other high-risk work retain design, verification, and rollback evidence.
 - **Use evidence to define done.** Passing tests, product acceptance, artifact creation, deployment, and production availability are different facts and cannot substitute for one another.
+- **Understand why before changing the outcome.** Preserve rationale, rejected alternatives, protected boundaries, and revisit triggers; append a new decision when conditions change instead of deleting an old constraint or making it permanent.
 - **Let the project remember.** Important decisions, progress, and recovery entrypoints belong in the project, not in one conversation that may disappear.
 
 For the full system design, see [System overview](docs/architecture/system-overview.md), [Skill boundaries](docs/architecture/skill-boundaries.md), and [Project artifact map](docs/architecture/project-artifact-map.md).
@@ -162,7 +166,7 @@ BuildOS does not promise a fixed percentage. It reduces avoidable cost by preven
 
 ## Install, update, and remove
 
-The current formal release is Senmu BuildOS `v2.1.0`. It supports Codex, Claude Code, and a Doubao adapter. Install the plugin as one unit; the eight Skills do not need separate downloads.
+The current formal release is Senmu BuildOS `v2.1.1`. It supports Codex, Claude Code, and a Doubao adapter. Install the plugin as one unit; the eight Skills do not need separate downloads.
 
 ### Update Codex
 

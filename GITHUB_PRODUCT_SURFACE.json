@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "repository": "SenMuShare/senmu-buildos",
+  "reviewed_for_version": "2.1.1",
+  "description": "AI-native BuildOS for Codex, Claude Code and Doubao: product discovery, UI/UX design, software engineering, context-aware workflows, testing, Git and verifiable releases.",
+  "topics": [
+    "agent-skills",
+    "agentic-coding",
+    "ai-agents",
+    "ai-coding",
+    "claude-code",
+    "claude-code-plugin",
+    "code-quality",
+    "codex",
+    "codex-plugin",
+    "context-management",
+    "design-system",
+    "multi-agent-systems",
+    "openai-codex",
+    "product-management",
+    "project-governance",
+    "project-management",
+    "release-management",
+    "software-architecture",
+    "software-engineering",
+    "ui-ux"
+  ],
+  "readme_review": {
+    "updated_sections": [
+      "positioning",
+      "why-buildos",
+      "how-it-works",
+      "design-principles"
+    ],
+    "summary": {
+      "zh": "强化设计意图、验收权威、用户文档走查与跨会话决策可追溯。",
+      "en": "Strengthen design intent, acceptance authority, documentation walkthroughs, and cross-session decision traceability.",
+      "ja": "設計意図、受入権限、ユーザー文書の走査、セッションをまたぐ判断追跡を強化。"
+    }
+  },
+  "readmes": {
+    "zh": "README.md",
+    "en": "README.en.md",
+    "ja": "README.ja.md"
+  }
+}

@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+## [2.1.1] - 2026-09-01
+
+### Changed
+
+- 将受影响的 Get Started、用户手册与公开 Reference 纳入条件式产品验收，显式区分 Acceptance Authority、可委托验证、实现完成和发布授权。
+- 强化跨会话决策可追溯与轻量 Challenger Review：保存采用／拒绝方案的依据和 Revisit Trigger，后续 Agent 修改看似异常的实现前先核对原约束，审查主动证伪方向、假设、遗漏边界和更简单方案。
+- 将三语 README 产品叙事复审、GitHub Release 正文、项目简介与 Topics 纳入正式发布门禁；版本未复核或远端发现表面未同步时阻断 Tag。
+
 ## [2.1.0] - 2026-09-01
 
 ### Added
