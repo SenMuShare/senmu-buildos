@@ -62,7 +62,7 @@
 | Skill | 项目内权威产物 | 默认位置 | 不应写入 |
 | --- | --- | --- | --- |
 | `senmu-build-project` | 项目治理章程、项目地图、任务登记与编号计划、治理 policy 和工作日志 | 新项目默认 `governance/`；成熟项目映射并演进已有 owner | 产品正文、技术实现、运行状态、经验规则或发布结果的复制件 |
-| `senmu-build-product` | 可选用户需求、每版本 PRD、当前产品规格和产品验收事实 | `product/` 与 `versions/<version>/PRD.md` | 技术实现决定、部署事实、任务执行状态副本 |
+| `senmu-build-product` | 可选用户需求、每版本 PRD、当前产品规格、跨页面界面内容标准和产品验收事实 | `product/`、项目既有设计系统与 `versions/<version>/PRD.md`；不为文案另建平行台账 | 技术实现决定、部署事实、任务执行状态副本 |
 | `senmu-build-workflow` | 流程契约、项目 Agent 定义、schema/config、输入、工作区、运行状态、交付物、证据和归档 | 项目系统内 `workflows/`；启用时使用 `agents/`；物料型项目外部角色目录由 Project Map 映射 | 软件架构正文、版本发布计划、第二份任务登记表或根 `AGENTS.md` 的复制件 |
 | `senmu-build-engineering` | 当前系统技术规格、按需版本技术设计、测试用例、选型、代码质量、技术债、ADR、语言／框架规则和测试策略 | `engineering/`、`versions/<version>/`；测试代码与 fixtures 位于项目既有 `tests/` 或语言生态目录 | 产品优先级、发布批准、独立审查结论 |
 | `senmu-build-delivery` | 分支与合并、发布单元、版本、changelog、制品、部署、回滚、线上验证 | `delivery/`、`operations/`、各发布单元及适用的发布证据 owner | 需求正文、工程设计副本、未发生的发布状态 |

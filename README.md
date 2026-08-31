@@ -128,7 +128,7 @@ Agent 在新增实现前按以下顺序判断：
 | 能力 | 什么时候使用 |
 | --- | --- |
 | `senmu-build-project` | 新项目建立基本秩序，或老项目需要识别现有结构、规则和长期任务状态时 |
-| `senmu-build-product` | 需要明确需求、范围、优先级、路线图或验收条件时 |
+| `senmu-build-product` | 需要明确需求、范围、优先级、界面内容规范或验收条件时 |
 | `senmu-build-workflow` | 需要设计多步骤流程、Agent 分工、物料流转、恢复和交付状态时 |
 | `senmu-build-engineering` | 需要做技术设计、架构选型、代码质量、测试、重构或技术债治理时 |
 | `senmu-build-delivery` | 需要处理复杂 Git 协作、版本、制品、发布、回滚或生产核验时 |
@@ -157,7 +157,7 @@ BuildOS 不承诺固定比例。它通过减少不必要的功能、重复代码
 
 ## 安装、更新与卸载
 
-Senmu BuildOS 当前正式版本为 `v2.0.7`，支持 Codex、Claude Code 和豆包适配。安装的是整个插件，不需要逐个下载七个 Skill。
+Senmu BuildOS 当前正式版本为 `v2.0.8`，支持 Codex、Claude Code 和豆包适配。安装的是整个插件，不需要逐个下载七个 Skill。
 
 ### 更新 Codex
 

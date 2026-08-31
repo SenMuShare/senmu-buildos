@@ -128,7 +128,7 @@ For the full system design, see [System overview](docs/architecture/system-overv
 | Skill | Use it when |
 | --- | --- |
 | `senmu-build-project` | A new project needs a basic operating structure, or a mature project needs its existing structure, rules, and durable task state identified |
-| `senmu-build-product` | Requirements, scope, priority, roadmap, or acceptance criteria need to be defined or changed |
+| `senmu-build-product` | Requirements, scope, priority, interface content standards, or acceptance criteria need to be defined or changed |
 | `senmu-build-workflow` | A multi-step workflow, agent responsibility, material flow, recovery path, or delivery state needs to be designed |
 | `senmu-build-engineering` | Technical design, architecture, technology selection, code quality, testing, refactoring, or technical debt needs governance |
 | `senmu-build-delivery` | Complex Git collaboration, versions, artifacts, releases, rollback, or production verification needs governance |
@@ -157,7 +157,7 @@ BuildOS does not promise a fixed percentage. It reduces avoidable cost by preven
 
 ## Install, update, and remove
 
-The current formal release is Senmu BuildOS `v2.0.7`. It supports Codex, Claude Code, and a Doubao adapter. Install the plugin as one unit; the seven Skills do not need separate downloads.
+The current formal release is Senmu BuildOS `v2.0.8`. It supports Codex, Claude Code, and a Doubao adapter. Install the plugin as one unit; the seven Skills do not need separate downloads.
 
 ### Update Codex
 

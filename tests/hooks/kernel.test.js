@@ -14,28 +14,32 @@ const claudeHooksConfig = require('../../adapters/claude-code/hooks/hooks.json')
 test('SessionStart kernel stays short and preserves core boundaries', () => {
   const context = getSessionContext();
   assert.ok(context.length <= MAX_SESSION_CONTEXT_CHARS);
-  assert.match(context, /project authority\/runtime/);
-  assert.match(context, /requested path/);
+  assert.match(context, /User\/project authority\/runtime/);
+  assert.match(context, /authority\/path\/risk/);
   assert.match(context, /tools\/sessions grant no authority/);
   assert.match(context, /project\/framework\/platform/);
-  assert.match(context, /reuse evidence/);
-  assert.match(context, /bound missing\/changed reads\/outputs/);
-  assert.match(context, /durable task/);
-  assert.match(context, /active lessons/);
-  assert.match(context, /gates cover only material residual risk/);
+  assert.match(context, /reuse bounded evidence/);
+  assert.match(context, /durable task\/lessons/);
+  assert.match(context, /gate only material residual risk/);
+  assert.match(context, /Open batch/);
+  assert.match(context, /infer version\/intent/);
+  assert.match(context, /reuse its unit/);
+  assert.match(context, /ask only outcome-changing ambiguity/);
+  assert.match(context, /full gate at closeout/);
+  assert.match(context, /release needs authorization/);
   assert.match(context, /Valid output beats bookkeeping/);
-  assert.match(context, /stale records alone do not invalidate it/);
-  assert.match(context, /identity\/safety\/authorization\/side-effect\/release controls/);
-  assert.match(context, /preflight\/Delivery Change Unit/);
+  assert.match(context, /stale records do not invalidate it/);
+  assert.match(context, /preflight\/unit/);
   assert.match(context, /task branch/);
   assert.match(context, /worktree unless exclusive/);
-  assert.match(context, /never edit integration lines\/reuse sealed work/);
+  assert.match(context, /no integration line\/sealed work/);
   assert.match(context, /verify\/commit/);
+  assert.match(context, /Fail closed/);
   assert.match(context, /feedback CLI/);
-  assert.match(context, /not user requests/i);
+  assert.match(context, /never user requests/i);
   assert.match(context, /expose no IDs/);
   assert.doesNotMatch(context, /BuildOS feedback candidate:/);
-  assert.match(context, /unverified\/undeployed\/unpublished is incomplete/);
+  assert.match(context, /do not claim unverified\/undeployed\/unpublished/);
 });
 
 test('SessionStart identifies the exact installed internal snapshot', () => {

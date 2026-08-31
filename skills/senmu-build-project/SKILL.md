@@ -5,7 +5,7 @@ description: Create, assess, or change project governance, authority mapping, pr
 
 # Project Management
 
-负责项目治理实例、权威结构和跨领域 owner，不是其他 Skill 的父级。项目入口已回答单领域任务时立即交还项目；只有治理入口缺失／冲突、结构演进、状态 owner 需要建立或修复，或用户明确要求治理时才继续。
+负责项目治理实例、权威结构和跨领域 owner，不是其他 Skill 的父级。先区分空白项目初始化、新项目正常开发、已有项目继续开发和已有项目整体治理；两类正常开发在项目入口足够时立即交还项目。只有治理入口缺失／冲突、结构演进、状态 owner 需要建立或修复，或用户明确要求治理时才继续。
 
 ## 按结果读取
 
@@ -15,7 +15,7 @@ description: Create, assess, or change project governance, authority mapping, pr
 - 项目根、目录布局、文档 owner 或项目地图：读取 [项目目录与文档规范](references/项目目录与文档规范.md)。
 - 从成熟项目发现真实规范或建立按需索引：读取 [项目规范发现与按需加载规范](references/项目规范发现与按需加载规范.md)。
 - 创建、选择或修复跨阶段任务状态 owner：读取 [任务执行与状态管理规范](references/任务执行与状态管理规范.md)。
-- 项目移交或 Skill 调用边界：读取 [项目落地移交与场景路由规范](references/项目落地移交与场景路由规范.md)。
+- 四类项目处境、项目移交或 Skill 调用边界：读取 [项目落地移交与场景路由规范](references/项目落地移交与场景路由规范.md)。
 - 确实需要判断 G0-G4 或门禁强度时才读取 [治理强度分级与门禁规范](references/治理强度分级与门禁规范.md)。
 
 只读取当前结果所需 reference。Git 执行由 Delivery 负责。

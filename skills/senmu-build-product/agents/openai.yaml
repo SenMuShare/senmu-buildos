@@ -1,4 +1,4 @@
 interface:
   display_name: "Senmu Build Product Management"
-  short_description: "用户需求、版本PRD、产品规格与验收治理"
-  default_prompt: "Use $senmu-build-product to turn the current product decision into an appropriately sized version PRD, acceptance contract, or current product specification."
+  short_description: "用户需求、版本PRD、产品规格、界面内容与验收治理"
+  default_prompt: "Use $senmu-build-product to turn the current product decision into an appropriately sized version PRD, acceptance contract, product specification, or durable interface content standard."
