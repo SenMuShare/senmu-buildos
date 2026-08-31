@@ -32,6 +32,9 @@ jobs:
       - name: Verify release identity
         run: python3 scripts/bump_version.py --check --tag "$GITHUB_REF_NAME"
 
+      - name: Validate user release notes
+        run: python3 scripts/extract_release_notes.py --version "${GITHUB_REF_NAME#v}" >/dev/null
+
       - name: Validate package
         run: python3 scripts/validate_package.py
 
@@ -52,6 +55,9 @@ jobs:
       contents: write
 
     steps:
+      - name: Check out source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
       - name: Create GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
@@ -60,9 +66,12 @@ jobs:
           if gh release view "$GITHUB_REF_NAME" --repo "$GH_REPO" >/dev/null 2>&1; then
             echo "Release already exists; source snapshots are provided by GitHub for the verified tag."
           else
+            python3 scripts/extract_release_notes.py \
+              --version "${GITHUB_REF_NAME#v}" \
+              > "$RUNNER_TEMP/release-notes.md"
             gh release create "$GITHUB_REF_NAME" \
               --repo "$GH_REPO" \
               --verify-tag \
               --title "Senmu BuildOS ${GITHUB_REF_NAME}" \
-              --generate-notes
+              --notes-file "$RUNNER_TEMP/release-notes.md"
           fi

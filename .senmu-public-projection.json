@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
   "projection_mode": "generated_only",
-  "manifest_sha256": "24624f7650c3cc6c95bf1bb8c09568a523c73ffd9bc32e9e89cf6c04f77531d7",
-  "projection_sha256": "6dc3737bc041e4e7f13a1731cd5cfca3f040eb3fe52b7e242407c0a91e6470bf"
+  "manifest_sha256": "26afe04ae26cb61a0016d3997b94200e574e3a5b93a87ce8994fa0f574f472a5",
+  "projection_sha256": "6ccdf991cd864746627355b48a22df46fc3505fb38f567062d2b9ae18f7c30b5"
 }

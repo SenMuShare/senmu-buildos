@@ -69,6 +69,8 @@ python3 -m unittest discover -s tests -p 'test_*.py'
 node --test tests/hooks/*.test.js
 ```
 
+每个正式版本还必须在 `RELEASE_NOTES.md` 中维护简短的用户更新说明，只保留“主要更新”和“修复问题”两个栏目。内容描述用户最终得到的变化，不写任务编号、参考来源、内部讨论、验证过程或未公开计划。Tag 发布流程会读取对应版本段落作为 GitHub Release 正文；缺少任一栏目时停止创建 Release。
+
 内部候选还需运行 publication 测试；生成公开投影后，再在公开根运行 `python3 scripts/validate_public_surface.py`。
 
 版本准备、候选 commit、公开主线验证、正式 Tag 和 GitHub Release 是不同状态。取得明确发布授权后，先提交并冻结版本候选，生成脱敏公开投影，将候选提交到公开主线并等待验证。只有该精确公开 commit 已有成功的 `main` push 验证回执后，才能使用 `python3 governance/publication/manage_lifecycle.py promote-public-release --commit <sha> --apply` 创建并推送正式 Tag；Tag 工作流复核后创建 GitHub Release。当前安装链直接消费 Git 源码，所以 GitHub 自动源码快照足够，不另造无消费者的定制制品。
