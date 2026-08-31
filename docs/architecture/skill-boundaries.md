@@ -8,6 +8,10 @@ Project Management，负责单项放置建议、空白项目规划／初始化�
 
 负责从可选用户需求、每版本 PRD 到当前产品规格和验收的产品事实，并拥有跨页面长期生效的界面内容标准及其语种 Profile。项目术语和品牌语气仍写入现有产品规格、设计系统或等价 owner；单条契约保持型文案修改由实现 owner 直接完成。Product 不决定技术实现、任务进度，也不宣称代码或部署已经完成。
 
+## `senmu-build-design`
+
+负责视觉方向、设计系统、布局、字体、色彩、数据可视化、素材、响应式、交互模式、动效、可访问性、界面原型和 UI/UX 评审。它先扩展项目已有设计 owner，并把模糊审美转成可实现、可验证的设计决定；不拥有产品功能／界面内容、组件库 API、技术架构或独立证据结论。已有明确设计规则下的普通代码实现仍由项目／Engineering 直接完成。
+
 ## `senmu-build-workflow`
 
 负责工作流、Agent／Harness 契约、数据和物料角色、输入输出、过程状态、附件与交付物。它不替代软件架构规范或正式发布治理。
@@ -26,7 +30,7 @@ Project Management，负责单项放置建议、空白项目规划／初始化�
 
 ## `senmu-build-learning`
 
-负责组织学习与持续改进：集中审议 BuildOS 使用反馈候选，执行复盘、经验捕获、查重、晋级、检索、替代、退役，以及跨项目候选向 Senmu BuildOS 源码项目的反哺。网页、PDF、书、仓库和第三方 Skill 等外部工程知识也由 Learning 作为不可信教材建立临时蒸馏批次，经合并、替代、新增、项目特有、待证据或拒绝六类裁决后，只把稳定规则写回专业 owner。Agent 通过 CLI 提交的单条反馈只是待审信号，不是需求、事实或规则；Learning 拥有 Lessons Learned Register 的语义、schema 和生命周期，但稳定规则仍写回 Product、Workflow、Engineering、Delivery 等源头 owner。根因需要独立裁决时由 Assurance 提供证据；项目目录和跨生命周期任务状态仍由 Project 负责。
+负责组织学习与持续改进：集中审议 BuildOS 使用反馈候选，执行复盘、经验捕获、查重、晋级、检索、替代、退役，以及跨项目候选向 Senmu BuildOS 源码项目的反哺。网页、PDF、书、仓库和第三方 Skill 等外部工程知识也由 Learning 作为不可信教材建立临时蒸馏批次，经合并、替代、新增、项目特有、待证据或拒绝六类裁决后，只把稳定规则写回专业 owner。Agent 通过 CLI 提交的单条反馈只是待审信号，不是需求、事实或规则；Learning 拥有 Lessons Learned Register 的语义、schema 和生命周期，但稳定规则仍写回 Product、Design、Workflow、Engineering、Delivery 等源头 owner。根因需要独立裁决时由 Assurance 提供证据；项目目录和跨生命周期任务状态仍由 Project 负责。
 
 当治理对象是 Senmu BuildOS 自身时，Learning 面向完整 Git 仓库执行整仓影响分析。某次改进最终可以只修改一个 Skill 或一份文档，但插件清单、全部 Skills、Hooks、文档、脚本、测试、迁移和版本共同构成一个产品与发布单元。
 
@@ -34,7 +38,7 @@ Project Management，负责单项放置建议、空白项目规划／初始化�
 
 | 类型 | 拥有什么 | 不得冒充 |
 | --- | --- | --- |
-| 专业事实 owner | Product 拥有需求／PRD／产品验收，Engineering 拥有技术设计、实现与工程测试，Workflow 拥有运行事实，Delivery 拥有版本／发布事实，Assurance 拥有独立审查结论 | 一个 Skill 接管全部生命周期正文 |
+| 专业事实 owner | Product 拥有需求／PRD／产品验收，Design 拥有视觉／交互／设计系统决定，Engineering 拥有技术设计、实现与工程测试，Workflow 拥有运行事实，Delivery 拥有版本／发布事实，Assurance 拥有独立审查结论 | 一个 Skill 接管全部生命周期正文 |
 | 语义／运行 owner | 同一业务规则、数据、状态、副作用或业务不变量的唯一权威实现 | PRD、技术设计、代码和测试采用同一物理 owner |
 | Durable Task State Owner | 跨阶段进度、决定摘要、证据链接、未完成项与下一步 | 复制或改写各专业事实正文 |
 
@@ -44,8 +48,8 @@ Project Management，负责单项放置建议、空白项目规划／初始化�
 
 - 一个任务先确定主 Skill；只有跨越真实职责边界时才组合其他 Skill。
 - 默认只加载能直接产出当前结果的一个主 Skill。“与某专业相关”、“最终可能提交”、“对用户可见”或“代码里存在步骤”都不构成组合理由。
-- 支持 Skill 只在当前回合需要它的独立决定或产物时加载：业务行为／验收变化才交 Product，流程契约／可恢复运行状态变化才交 Workflow，Git／版本／发布决定成为当前结果才交 Delivery。交接是职责转换，不是每次修改的固定流水线。
-- G1 的契约保持型局部变更由 Engineering 单独主责；判断依据是产品、运行和交付契约是否保持，而不是枚举按钮、颜色、文案等表面对象。项目本地规则可直接指导执行时，不为重述通用原则继续加载 BuildOS Skill。安全、隐私、权限、支付／计费、生产数据、破坏性操作和正式发布仍按真实边界升级。
+- 支持 Skill 只在当前回合需要它的独立决定或产物时加载：业务行为／验收变化才交 Product，视觉／交互标准或界面质量判断才交 Design，流程契约／可恢复运行状态变化才交 Workflow，Git／版本／发布决定成为当前结果才交 Delivery。交接是职责转换，不是每次修改的固定流水线。
+- 已有明确设计与项目规则下的 G1 契约保持型局部实现由 Engineering 单独主责；当前交付物是视觉方向、交互决定、设计系统或 UI/UX 评审时由 Design 主责。判断依据是所需决定和产物，不按按钮、颜色、文案等表面对象机械路由。项目本地规则可直接指导执行时，不为重述通用原则继续加载 BuildOS Skill。安全、隐私、权限、支付／计费、生产数据、破坏性操作和正式发布仍按真实边界升级。
 - 专业 Skill 之间传递项目事实和证据，不复制对方的规范正文。
 - 只有真正的项目初始化、治理修复或跨生命周期任务才由 `senmu-build-project` 校准范围；单领域任务直接加载对应专业 Skill。
 - 项目已经有稳定本地规则时，日常执行优先使用项目本地入口，不强制调用 Senmu BuildOS。
@@ -53,7 +57,7 @@ Project Management，负责单项放置建议、空白项目规划／初始化�
 
 ## 选择与交接机制
 
-Senmu BuildOS 不设置第八个“总导演”Skill，也不要求 Agent 先读取总索引再决定路由。Codex 先根据七个平级 Skill 的 `description` 和用户期望结果选择主 Skill；用户也可以显式指定。`SKILL.md` 正文只在对应 Skill 已被选择后，按需指向本域 reference 和跨域交接对象。
+Senmu BuildOS 不设置第九个“总导演”Skill，也不要求 Agent 先读取总索引再决定路由。Codex 先根据八个平级 Skill 的 `description` 和用户期望结果选择主 Skill；用户也可以显式指定。`SKILL.md` 正文只在对应 Skill 已被选择后，按需指向本域 reference 和跨域交接对象。
 
 Handoff 不是固定流水线，也不是把整个上下文交给下一个 Skill。发生真实职责切换时，当前主 Skill 只传递最小任务包：任务／需求／run／finding／release 标识、当前阶段、范围与非目标、权威入口、已确认事实与证据、未决问题、下一项预期结果，以及仍然有效的授权边界。接收方成为下一结果的主责；原 Skill 只继续拥有自己的专业事实。
 
@@ -88,7 +92,7 @@ Handoff 不是固定流水线，也不是把整个上下文交给下一个 Skill
 
 当前 Software Engineering 虽然包含架构、开发、测试和重构，但入口只负责路由，详细内容按 reference 渐进加载；测试已有独立的专业 reference 和项目模板，但仍服务于工程实现、产品验收与交付证据之间的共同链路，暂时拆出独立 Testing Skill 会增加路由和 owner 冲突。等测试形成稳定的独立任务语料、工具入口和跨项目资产后，再评估拆为 Quality Engineering 或 Software Testing。
 
-“成熟项目先确认现有语义 owner、不得泄漏默认目录”是单领域 Skill 直接调用时仍必须成立的写入安全边界，因此允许在七个 `SKILL.md` 短入口中显式重复；详细目录规则和示例仍只由 Project reference 唯一维护。
+“成熟项目先确认现有语义 owner、不得泄漏默认目录”是单领域 Skill 直接调用时仍必须成立的写入安全边界，因此允许在八个 `SKILL.md` 短入口中显式重复；详细目录规则和示例仍只由 Project reference 唯一维护。
 
 ## Skill 文本设计与瘦身
 

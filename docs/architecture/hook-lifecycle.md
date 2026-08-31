@@ -47,11 +47,12 @@ Agent 在真实项目中使用 BuildOS，发现某个 Skill、reference、模板
 
 ## 当前专业 Skill 如何选择
 
-当前实现不让 Hook 猜岗位。Codex 根据用户当前请求和七个 Skill 的 description 选择主 Skill：
+当前实现不让 Hook 猜岗位。Codex 根据用户当前请求和八个 Skill 的 description 选择主 Skill：
 
 ```text
 项目初始化／目录／整体治理  → project
 需求／PRD／路线图／迭代     → product
+视觉／设计系统／交互／动效   → design
 Harness／Agent／物料／流程   → workflow
 架构／编码／测试／重构       → engineering
 Git／版本／部署／发布        → delivery

@@ -1,8 +1,8 @@
 # 项目产物与目录责任地图
 
-本地图规定七个 Senmu BuildOS Skill 为新项目提供的默认 owner，以及已有项目映射和演进 owner 的规则。目录服务于事实类型，不按 Agent 名称建立。已有项目先把真实入口作为事实权威；若 owner 完整且合理则登记并沿用，若存在缺失、冲突、重复、过时或不可搬迁问题，则在授权后治理原 owner，不建立平行副本。
+本地图规定八个 Senmu BuildOS Skill 为新项目提供的默认 owner，以及已有项目映射和演进 owner 的规则。目录服务于事实类型，不按 Agent 名称建立。已有项目先把真实入口作为事实权威；若 owner 完整且合理则登记并沿用，若存在缺失、冲突、重复、过时或不可搬迁问题，则在授权后治理原 owner，不建立平行副本。
 
-初始化模板的物理 owner 与项目内产物 owner 保持一致：Project 负责项目入口、地图、任务和治理模板；Product、Workflow、Engineering、Delivery、Assurance、Learning 分别持有本域的初始化模板。Project 的初始化器只做组合和渲染，不拥有其他领域的第二份模板。
+初始化模板的物理 owner 与项目内产物 owner 保持一致：Project 负责项目入口、地图、任务和治理模板；Product、Design、Workflow、Engineering、Delivery、Assurance、Learning 分别持有本域的规则或初始化模板。Project 的初始化器只做组合和渲染，不拥有其他领域的第二份模板。
 
 ## 三种物理布局
 
@@ -34,6 +34,7 @@
 | 用户需求 | User Requirements | `product/USER_REQUIREMENTS.md`；可选需求池，状态和处理版本写在条目旁 |
 | 版本产品需求文档 | Product Requirements Document | `versions/<version>/PRD.md` |
 | 产品规格书 | Product Specification | `product/PRODUCT_SPECIFICATION.md`；当前完整产品事实 |
+| 界面设计系统／规范 | Interface Design System / Specification | 项目已有设计系统、组件主题或 `design/`；只在存在跨页面稳定设计事实时建立 |
 | 工作流契约 | Workflow Contract | `workflows/<workflow-id>/WORKFLOW.md` 或项目既有定义入口 |
 | 运行清单 | Run Manifest | `state/runs/<run-id>.json`、运行数据库或编排系统 |
 | 运行回执 | Run Receipt | `evidence/runs/<run-id>/` 或项目既有证据系统 |
@@ -57,12 +58,13 @@
 
 文件名使用稳定英文大写词组和下划线；编号对象使用固定前缀与四位序号，例如 `TASK-0001-<slug>.md`、`REQ-0001-<slug>.md`、`TD-0001-<slug>.md`、`ADR-0001-<slug>.md`、`EXP-0001-<slug>/`。目录使用小写英文 kebab-case。不要同时建立 `task/`、`tasks/`、`work-items/`、`plans/` 等多个近义任务目录。
 
-## 七个 Skill 的默认项目落点
+## 八个 Skill 的默认项目落点
 
 | Skill | 项目内权威产物 | 默认位置 | 不应写入 |
 | --- | --- | --- | --- |
 | `senmu-build-project` | 项目治理章程、项目地图、任务登记与编号计划、治理 policy 和工作日志 | 新项目默认 `governance/`；成熟项目映射并演进已有 owner | 产品正文、技术实现、运行状态、经验规则或发布结果的复制件 |
 | `senmu-build-product` | 可选用户需求、每版本 PRD、当前产品规格、跨页面界面内容标准和产品验收事实 | `product/`、项目既有设计系统与 `versions/<version>/PRD.md`；不为文案另建平行台账 | 技术实现决定、部署事实、任务执行状态副本 |
+| `senmu-build-design` | 视觉方向、设计 Token、组件表现、布局、响应式、交互、动效、可访问性和界面评审决定 | 项目已有设计系统、组件主题、原型入口或按需 `design/`；一次性调整留在现有实现 owner | 产品功能／文案、组件库 API、技术架构、独立审查结论或平行设计系统 |
 | `senmu-build-workflow` | 流程契约、项目 Agent 定义、schema/config、输入、工作区、运行状态、交付物、证据和归档 | 项目系统内 `workflows/`；启用时使用 `agents/`；物料型项目外部角色目录由 Project Map 映射 | 软件架构正文、版本发布计划、第二份任务登记表或根 `AGENTS.md` 的复制件 |
 | `senmu-build-engineering` | 当前系统技术规格、按需版本技术设计、测试用例、选型、代码质量、技术债、ADR、语言／框架规则和测试策略 | `engineering/`、`versions/<version>/`；测试代码与 fixtures 位于项目既有 `tests/` 或语言生态目录 | 产品优先级、发布批准、独立审查结论 |
 | `senmu-build-delivery` | 分支与合并、发布单元、版本、changelog、制品、部署、回滚、线上验证 | `delivery/`、`operations/`、各发布单元及适用的发布证据 owner | 需求正文、工程设计副本、未发生的发布状态 |
@@ -107,6 +109,7 @@
 Durable Task State Owner             当前边界、阶段、进度、证据链接、恢复入口
 ├── versions/<version>/PRD.md        本版本产品范围、行为与验收事实
 ├── product/PRODUCT_SPECIFICATION.md 当前完整产品事实
+├── design/...                       跨页面视觉、交互与设计系统事实（如项目需要）
 ├── workflows/...                    流程、运行和物料事实
 ├── agents/<agent-key>/AGENT.md       项目 Agent／Prompt 的稳定契约（如启用）
 ├── versions/<version>/TECHNICAL_DESIGN.md  按需版本技术设计

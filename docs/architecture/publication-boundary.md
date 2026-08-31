@@ -4,7 +4,7 @@ Senmu BuildOS 使用“私有权威库 -> 白名单公开投影 -> GitHub”的�
 
 ## 公开内容
 
-- 插件元数据、七个 Skill、Harness 适配、Hooks 和 CLI。
+- 插件元数据、八个 Skill、Harness 适配、Hooks 和 CLI。
 - 用户需要的架构文档、使用说明、贡献规则、许可证、公开验证脚本与测试。
 - 版本和 Changelog。
 

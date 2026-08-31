@@ -1,6 +1,6 @@
 # 轻量 HTML 与 daisyUI 前端实践
 
-本 Profile 面向可以由原生 HTML、少量 JavaScript 和一个统一 UI 系统完成的轻量 H5、活动页、说明页、内部小工具和静态交付。它不是所有前端项目的默认方案；已有 React、Vue、Ant Design 或其他稳定技术栈时，先遵守项目现状。
+本 Profile 面向可以由原生 HTML、少量 JavaScript 和一个统一 UI 系统完成的轻量 H5、活动页、说明页、内部小工具和静态交付。它只负责技术路线与实现；视觉方向、设计系统、响应式体验或交互质量需要建立／评审时交 `senmu-build-design`。它不是所有前端项目的默认方案；已有 React、Vue、Ant Design 或其他稳定技术栈时，先遵守项目现状。
 
 ## 1. 适用判断
 
@@ -30,9 +30,9 @@ daisyUI 官方支持作为 Tailwind 插件安装，也提供 CDN 使用方式。
 
 - 使用 `header`、`nav`、`main`、`section`、`form`、`button` 等语义元素，不用无意义 `div` 堆叠一切。
 - 优先复用 daisyUI 已有组件类和主题变量，避免为按钮、卡片、弹窗、表单重复写一套 CSS。
-- 一个页面保持有限的视觉层级、间距和颜色角色；自定义样式只表达品牌和真实交互差异。
+- 沿用项目已批准的视觉层级、间距、颜色角色和设计 Token；自定义样式只表达已有系统未覆盖的真实差异。
 - JavaScript 按功能组织，事件入口、状态、I/O 和错误反馈可发现；不要把全部逻辑塞入一个内联脚本。
-- 动效服务于状态变化和反馈，优先 CSS transition；尊重 reduced-motion。
+- 已批准的简单状态动效优先组件能力或 CSS transition，并实现项目规定的 reduced-motion 路径；复杂动效使用 Design 决定和匹配技术专项。
 
 ## 4. 响应式与可访问性
 

@@ -17,6 +17,7 @@ ROOT = Path(__file__).resolve().parent.parent
 EXPECTED_SKILLS = {
     "senmu-build-project",
     "senmu-build-product",
+    "senmu-build-design",
     "senmu-build-workflow",
     "senmu-build-engineering",
     "senmu-build-delivery",
@@ -37,6 +38,9 @@ REFERENCE_OWNERS = {
     "界面文案与内容设计规范.md": "senmu-build-product",
     "界面文案中文规范.md": "senmu-build-product",
     "界面文案英文规范.md": "senmu-build-product",
+    "界面视觉与设计系统规范.md": "senmu-build-design",
+    "交互动效与可访问性规范.md": "senmu-build-design",
+    "原型探索与界面评审规范.md": "senmu-build-design",
     "工作流、物料与交付物治理规范.md": "senmu-build-workflow",
     "工作流运行状态与恢复协议.md": "senmu-build-workflow",
     "reference附件治理.md": "senmu-build-workflow",
@@ -334,6 +338,7 @@ def validate_skills() -> None:
         ROOT / "scripts/bump_version.py",
         ROOT / "scripts/extract_release_notes.py",
         ROOT / "scripts/validate_distillation_batch.py",
+        ROOT / "scripts/validate_distillation_evaluation.py",
         ROOT / "scripts/validate_skill_integrity_review.py",
         ROOT / "scripts/validate_public_surface.py",
         ROOT / "skills/senmu-build-project/scripts/validate_mature_project_governance.py",
@@ -497,7 +502,7 @@ def main() -> None:
         f"two-route<={MAX_TWO_REFERENCE_ROUTE_CONTEXT_UNITS}"
     )
     print("[OK] Senmu BuildOS product identity is clean")
-    print("[OK] Codex and Claude Code plugin structures and seven Skill entrypoints are valid")
+    print("[OK] Codex and Claude Code plugin structures and eight Skill entrypoints are valid")
     print("[OK] VERSION, plugin manifests, and marketplace release metadata agree")
     print(f"[OK] active references: {len(REFERENCE_OWNERS)}/{len(REFERENCE_OWNERS)} files have one owner")
     print("[OK] no exact duplicate active Skill resources found")

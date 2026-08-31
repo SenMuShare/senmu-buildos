@@ -8,7 +8,7 @@ Senmu BuildOS 使用 Codex 已有的发现、上下文和生命周期能力，�
 | --- | --- | --- | --- |
 | 项目指令发现 | 从全局到当前目录自动加载 `AGENTS.md`／`AGENTS.override.md` | 生成短项目入口及读取顺序；详细事实留在 owner 文档 | Hook 或 Skill 再注入完整 `AGENTS.md` |
 | 项目业务 Agent | 按实际 Harness 装配系统提示词、工具和运行上下文 | 项目需要自有 Agent 时维护 Agent Register、稳定定义、版本和结构校验 | 把根 `AGENTS.md`、Skill 的 `agents/openai.yaml` 和业务 Agent Prompt 合成一份 |
-| Skill 发现与选择 | 暴露 Skill 名称和 description，并支持显式或隐式调用 | 提供七个边界清晰的专业 Skill 与渐进 references | 建一份隐藏“当前岗位状态”替代宿主路由 |
+| Skill 发现与选择 | 暴露 Skill 名称和 description，并支持显式或隐式调用 | 提供八个边界清晰的专业 Skill 与渐进 references | 建一份隐藏“当前岗位状态”替代宿主路由 |
 | 会话历史与压缩 | 保存会话历史并执行上下文压缩 | 用项目声明的 Durable Task State Owner 保存跨会话仍需可信的边界、进度和恢复入口 | 把聊天 transcript、memory 或压缩摘要当项目权威台账 |
 | 会话内证据使用 | 保存当前会话可见的消息和工具结果，并决定何时压缩 | 要求 Agent 复用仍有效的证据，先取目录、命中、差异、失败项或有界状态，只补读会改变决定的缺失、变化或范围扩大部分 | 建立已读文件数据库、全文缓存或 Hook 动态上下文台账；拼接多份长输出导致截断后重读 |
 | 会话内计划 | 宿主可维护当前任务的临时 plan／进度显示 | 仅在工作必须跨阶段、Agent、会话或需要审计时更新项目声明的持久任务 owner | 把每次临时 plan 逐字复制进项目状态，或反向依赖宿主 plan 作长期事实源 |

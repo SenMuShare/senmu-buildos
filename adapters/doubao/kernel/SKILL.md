@@ -1,6 +1,6 @@
 ---
 name: senmu-build-kernel
-description: "Senmu BuildOS 治理内核引导入口（豆包适配）。当用户开始或继续一个需要项目治理的多阶段、跨会话开发或项目管理任务，需要先明确权威项目根、owner、授权、门禁与交付证据时加载本 Skill。它提供通用治理底线和七个专业 Skill（project/product/workflow/engineering/delivery/assurance/learning）的路由表。豆包没有 Codex／Claude Code 的生命周期 Hook，本 Skill 以引导入口形式替代 SessionStart 内核注入。"
+description: "Senmu BuildOS 治理内核引导入口（豆包适配）。当用户开始或继续一个需要项目治理的多阶段、跨会话开发或项目管理任务，需要先明确权威项目根、owner、授权、门禁与交付证据时加载本 Skill。它提供通用治理底线和八个专业 Skill（project/product/design/workflow/engineering/delivery/assurance/learning）的路由表。豆包没有 Codex／Claude Code 的生命周期 Hook，本 Skill 以引导入口形式替代 SessionStart 内核注入。"
 ---
 
 # Senmu BuildOS 治理内核（豆包引导入口）
@@ -27,6 +27,7 @@ description: "Senmu BuildOS 治理内核引导入口（豆包适配）。当用�
 | --- | --- | --- |
 | `senmu-build-project` | 项目治理实例、权威结构与跨领域 owner | 创建／审视／演进治理；结构清理、权威冲突、治理迁移 |
 | `senmu-build-product` | 产品范围、需求、优先级、路线图、验收 | 需求进入／澄清／取舍／迭代／关闭的单一事实链 |
+| `senmu-build-design` | 界面视觉、设计系统、交互、动效与可访问性 | 设计／改版／原型／UI/UX 评审 |
 | `senmu-build-workflow` | 工作流契约、项目 Agent、物料流、运行状态 | 设计／修复流程契约与可恢复运行状态 |
 | `senmu-build-engineering` | 工程契约、架构、技术债、测试 | 建立／修复工程规范、选型、重构 |
 | `senmu-build-delivery` | Git／仓库边界、版本、制品、部署、发布 | 非例行 Git／发布决策与生产事实 |
@@ -35,6 +36,6 @@ description: "Senmu BuildOS 治理内核引导入口（豆包适配）。当用�
 
 ## 豆包适配说明
 
-- 七个专业 Skill 的 `SKILL.md` 保持与 Codex／Claude Code 共用的权威版本，本 Skill 不复制其正文；只补充豆包缺失的 hook 注入层和路由表。
+- 八个专业 Skill 的 `SKILL.md` 保持与 Codex／Claude Code 共用的权威版本，本 Skill 不复制其正文；只补充豆包缺失的 hook 注入层和路由表。
 - 豆包按 description 路由，无法像 Codex 那样在每会话强制注入内核；需要完整治理基线时，先让本 Skill 命中（例如"开始这个多阶段项目"“先建立项目治理基线”等请求）。
 - 各 Skill 内的 `agents/openai.yaml` 是 Codex 展示元数据，豆包安装时不复制；Git 执行、验证与发布仍由对应专业 Skill 负责。

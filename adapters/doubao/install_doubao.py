@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Install Senmu BuildOS into a Doubao workspace as user skills.
 
-Copies the seven shared skills from skills/ and the Doubao kernel bootstrap
+Copies the eight shared skills from skills/ and the Doubao kernel bootstrap
 skill from adapters/doubao/kernel/, stripping Codex-only metadata, then writes
 an install identity file. Deterministic and idempotent; only writes under the
 target .user_skills directory.
@@ -32,6 +32,7 @@ INSTALL_IDENTITY_NAME = ".senmu-buildos-install.json"
 DOUBAO_SKILL_NAMES = [
     "senmu-build-project",
     "senmu-build-product",
+    "senmu-build-design",
     "senmu-build-workflow",
     "senmu-build-engineering",
     "senmu-build-delivery",

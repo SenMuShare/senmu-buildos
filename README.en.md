@@ -15,7 +15,7 @@
   <a href="https://github.com/SenMuShare/senmu-buildos/releases/latest"><img src="https://img.shields.io/github/v/release/SenMuShare/senmu-buildos" alt="Release"></a>
 </p>
 
-Senmu BuildOS is an open-source operating discipline and software-engineering coach for **AI coding agents**. It covers requirements, technical design, framework and component selection, frontend and backend implementation, testing, Git, releases, and reusable learning. The goal is sustainable work in real projects, not another ever-growing prompt.
+Senmu BuildOS is an open-source operating discipline and software-engineering coach for **AI coding agents**. It covers requirements, interface design, technical design, framework and component selection, frontend and backend implementation, testing, Git, releases, and reusable learning. The goal is sustainable work in real projects, not another ever-growing prompt.
 
 It focuses on two outcomes:
 
@@ -78,6 +78,8 @@ Real problem and approved scope
         ↓
 Project facts, architecture boundaries, and existing capabilities
         ↓
+Interface visuals, interaction, and design systems
+        ↓
 Technical direction, frameworks, components, and public extension points
         ↓
 Minimum correct frontend and backend implementation
@@ -108,6 +110,7 @@ Reuse still passes semantic and risk checks. If a framework capability fails bus
 - **Understand the project before changing it.** The current README, code, configuration, tests, CI, and runtime state are closer to the truth than generic advice.
 - **Confirm the requirement before writing code.** Features outside the approved scope do not enter the current implementation simply because they seem useful later.
 - **Reuse before custom code.** Prefer public capabilities already provided by the project, framework, component system, platform, and standard library; add the smallest adapter only when a real gap remains.
+- **Make interfaces serve real tasks.** Visuals, interaction, motion, and accessibility work together to improve understanding and action; style does not replace product truth.
 - **Keep small work lightweight.** Routine changes need only the checks they justify; data, permissions, payments, production releases, and other high-risk work retain design, verification, and rollback evidence.
 - **Use evidence to define done.** Passing tests, product acceptance, artifact creation, deployment, and production availability are different facts and cannot substitute for one another.
 - **Let the project remember.** Important decisions, progress, and recovery entrypoints belong in the project, not in one conversation that may disappear.
@@ -119,23 +122,25 @@ For the full system design, see [System overview](docs/architecture/system-overv
 - **New projects:** establish the smallest useful requirements, architecture, quality, and delivery baseline—not a document castle.
 - **Mature projects:** inspect existing docs, configuration, code, tests, CI, and release facts before filling gaps; do not create a second governance tree.
 - **Features and bugs:** follow project-local rules, reuse framework and existing implementation, make the smallest change, and run matching verification.
+- **Interface design and redesign:** turn fuzzy taste into implementable visual, interaction, responsive, and accessibility rules, then review them in the real rendered context.
 - **Long-running work:** preserve stages, decisions, evidence, and recovery entrypoints for cross-session and multi-agent handoffs.
 - **Formal releases:** align scope, review, tests, versions, artifacts, deployment, production verification, and rollback identity.
 - **Governance and learning:** review technical debt and duplicate implementations; turn verified lessons that apply across projects into reusable guidance.
 
-## One plugin, seven focused Skills
+## One plugin, eight focused Skills
 
 | Skill | Use it when |
 | --- | --- |
 | `senmu-build-project` | A new project needs a basic operating structure, or a mature project needs its existing structure, rules, and durable task state identified |
 | `senmu-build-product` | Requirements, scope, priority, interface content standards, or acceptance criteria need to be defined or changed |
+| `senmu-build-design` | Visual direction, design systems, layout, interaction, motion, responsive behavior, accessibility, or interface quality needs design or review |
 | `senmu-build-workflow` | A multi-step workflow, agent responsibility, material flow, recovery path, or delivery state needs to be designed |
 | `senmu-build-engineering` | Technical design, architecture, technology selection, code quality, testing, refactoring, or technical debt needs governance |
 | `senmu-build-delivery` | Complex Git collaboration, versions, artifacts, releases, rollback, or production verification needs governance |
 | `senmu-build-assurance` | Independent reproduction, a POC, an audit, or an evidence-strength judgment is the requested result |
 | `senmu-build-learning` | A problem needs a retrospective, feedback needs review, or external knowledge should become reusable guidance |
 
-If project `AGENTS.md`, the active framework, and tests already govern an ordinary code change, BuildOS can stay out. When it is needed, load the closest Skill and only the relevant reference—not all seven manuals.
+If project `AGENTS.md`, the active framework, and tests already govern an ordinary code change, BuildOS can stay out. When it is needed, load the closest Skill and only the relevant reference—not all eight manuals.
 
 ## Frequently asked questions
 
@@ -157,7 +162,7 @@ BuildOS does not promise a fixed percentage. It reduces avoidable cost by preven
 
 ## Install, update, and remove
 
-The current formal release is Senmu BuildOS `v2.0.8`. It supports Codex, Claude Code, and a Doubao adapter. Install the plugin as one unit; the seven Skills do not need separate downloads.
+The current formal release is Senmu BuildOS `v2.1.0`. It supports Codex, Claude Code, and a Doubao adapter. Install the plugin as one unit; the eight Skills do not need separate downloads.
 
 ### Update Codex
 

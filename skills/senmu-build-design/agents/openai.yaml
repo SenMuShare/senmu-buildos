@@ -1,0 +1,4 @@
+interface:
+  display_name: "Senmu Build Interface Design"
+  short_description: "视觉方向、设计系统、交互动效、可访问性与界面评审"
+  default_prompt: "Use $senmu-build-design to turn the current UI or UX goal into a coherent, implementable, accessible interface direction and verify it in the real rendered context."

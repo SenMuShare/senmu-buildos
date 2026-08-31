@@ -51,7 +51,7 @@ node --test tests/hooks/*.test.js
 
 ## 正式版本准备
 
-Senmu BuildOS 使用统一插件版本，不分别发布七个 Skill。先整理 `CHANGELOG.md` 的 `Unreleased` 内容，再使用项目自有入口准备下一个 SemVer 版本：
+Senmu BuildOS 使用统一插件版本，不分别发布八个 Skill。先整理 `CHANGELOG.md` 的 `Unreleased` 内容，再使用项目自有入口准备下一个 SemVer 版本：
 
 ```bash
 python3 scripts/bump_version.py 1.0.1 --date 2026-08-26 --dry-run

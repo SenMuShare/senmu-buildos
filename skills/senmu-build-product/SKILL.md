@@ -34,4 +34,4 @@ description: Define or change durable product scope, version placement, prioriti
 - 需求生命周期、迭代承诺、实现完成、产品验收和真实发布分别登记；不得互相冒充。
 - 进入实现的需求建立稳定 ID，并关联 PRD、任务、实现、测试、验收和发布证据。
 
-技术路线交 Engineering，版本／生产事实交 Delivery，项目权威冲突交 Project，可复用经验交 Learning。跨阶段工作沿用项目现有任务 owner，不建立第二套状态或产品文档。
+视觉方向、设计系统、交互、动效和 UI/UX 评审交 Design；技术路线交 Engineering，版本／生产事实交 Delivery，项目权威冲突交 Project，可复用经验交 Learning。跨阶段工作沿用项目现有任务 owner，不建立第二套状态或产品文档。

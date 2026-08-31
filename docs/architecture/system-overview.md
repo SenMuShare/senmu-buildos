@@ -2,11 +2,11 @@
 
 ## 产品模型
 
-Senmu BuildOS 采用“一个插件、七个平级专业 Skill、插件级短通用底线、确定性工具和行为测试”的结构。专业 Skill 按当前任务职责加载，不按组织部门或现有 reference 数量机械拆分。BuildOS 是通用治理系统，每个项目通过选择、映射和演进形成自己的 Project Governance Instance。
+Senmu BuildOS 采用“一个插件、八个平级专业 Skill、插件级短通用底线、确定性工具和行为测试”的结构。专业 Skill 按当前任务职责加载，不按组织部门或现有 reference 数量机械拆分。BuildOS 是通用治理系统，每个项目通过选择、映射和演进形成自己的 Project Governance Instance。
 
 ## 源码项目、插件包与运行入口
 
-Senmu BuildOS 有一个内部权威 Git 库和一个白名单生成的公开 Git 投影。权威库保存完整源码、项目任务、工作日志和私有验证证据；公开投影只保存用户安装、理解和验证产品所需的源码面。`.codex-plugin/`、全部 Skills、Hooks、公开文档、脚本和测试共同构成一个统一版本的发布单元。Codex 安装后看到的七个 Skill 不是七个独立发布项目；安装或缓存目录也不是源码权威。
+Senmu BuildOS 有一个内部权威 Git 库和一个白名单生成的公开 Git 投影。权威库保存完整源码、项目任务、工作日志和私有验证证据；公开投影只保存用户安装、理解和验证产品所需的源码面。`.codex-plugin/`、全部 Skills、Hooks、公开文档、脚本和测试共同构成一个统一版本的发布单元。Codex 安装后看到的八个 Skill 不是八个独立发布项目；安装或缓存目录也不是源码权威。
 
 因此，通用经验反哺以 BuildOS 仓库根为变更边界：先做整仓影响分析，再修改正确 owner。最终即使只改一份 Markdown，也要确认相邻 Skill、路由、模板、Hook、脚本、测试和发布信息是否受影响。应用项目、BuildOS 源码修改、候选安装和公开发布分别拥有独立 Git／状态／授权，不能互相代替。
 
@@ -27,7 +27,7 @@ Senmu BuildOS 不替代具体项目的事实源，也不把“已有”误判为
 
 ## 任务连续性
 
-需要多个依赖步骤、阶段、Agent 或会话的工作统一登记到项目声明的 Durable Task State Owner。standard/release 新项目默认使用 `governance/tasks/`；core 可沿用 README、Issue 或外部任务系统，成熟项目可以映射任务包、数据库或外部系统。七个专业 Skill 仍分别维护自己的领域事实。当前 Hooks 不自动读取或总结任务状态。
+需要多个依赖步骤、阶段、Agent 或会话的工作统一登记到项目声明的 Durable Task State Owner。standard/release 新项目默认使用 `governance/tasks/`；core 可沿用 README、Issue 或外部任务系统，成熟项目可以映射任务包、数据库或外部系统。八个专业 Skill 仍分别维护自己的领域事实。当前 Hooks 不自动读取或总结任务状态。
 
 ## 从产品意图到 Git 行为
 
@@ -62,6 +62,7 @@ Codex 插件 senmu-buildos
 └── 平级 Skills
     ├── senmu-build-project
     ├── senmu-build-product
+    ├── senmu-build-design
     ├── senmu-build-workflow
     ├── senmu-build-engineering
     ├── senmu-build-delivery
@@ -79,7 +80,7 @@ Senmu BuildOS 与 Codex 原生能力的分工见 [Codex Harness 责任边界](co
 - 其他 Skill 需要该内容时，通过职责路由或明确链接访问，不复制正文。
 - 少量跨领域底线由 Hooks 恢复；完整方法论只存在于唯一专业 owner。
 - 真正需要在多个入口重复的安全边界必须保持短小，并在架构文档中说明重复理由。
-- 任务状态模型、目录和模板由 `senmu-build-project` 唯一负责；Lessons Learned Register 的语义、schema 和生命周期由 `senmu-build-learning` 唯一负责；其他 Skill 只链接自己的专业产物和更新对应阶段。
+- 任务状态模型、目录和模板由 `senmu-build-project` 唯一负责；产品行为与界面内容由 `senmu-build-product` 负责，视觉、交互与设计系统由 `senmu-build-design` 负责；Lessons Learned Register 的语义、schema 和生命周期由 `senmu-build-learning` 唯一负责。其他 Skill 只链接自己的专业产物和更新对应阶段。
 - 项目 Agent 的定义框架、登记与模板由 `senmu-build-workflow` 唯一负责；Project 初始化器仅在显式 `--with-agents` 时组合这些资源，不复制其内容 owner。
 
 ## 当前排除项

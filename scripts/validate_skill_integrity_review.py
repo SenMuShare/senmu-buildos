@@ -40,6 +40,7 @@ def surface_files(root: Path = ROOT) -> list[Path]:
         "docs/architecture/hook-lifecycle.md",
         "scripts/validate_package.py",
         "scripts/validate_distillation_batch.py",
+        "scripts/validate_distillation_evaluation.py",
         "scripts/validate_skill_integrity_review.py",
     ):
         path = root / relative

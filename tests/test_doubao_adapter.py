@@ -15,6 +15,7 @@ SKILLS = ROOT / "skills"
 DOUBAO_SKILL_NAMES = [
     "senmu-build-project",
     "senmu-build-product",
+    "senmu-build-design",
     "senmu-build-workflow",
     "senmu-build-engineering",
     "senmu-build-delivery",
@@ -33,7 +34,7 @@ class DoubaoAdapterTest(unittest.TestCase):
         self.assertIn("name: senmu-build-kernel", text)
         self.assertIn("description:", text)
 
-    def test_kernel_routes_all_seven_skills(self):
+    def test_kernel_routes_all_eight_skills(self):
         text = (ADAPTER / "kernel" / "SKILL.md").read_text(encoding="utf-8")
         for name in DOUBAO_SKILL_NAMES:
             self.assertIn(name, text, f"kernel routing table missing {name}")

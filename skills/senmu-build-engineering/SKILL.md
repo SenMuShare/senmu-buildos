@@ -39,4 +39,4 @@ description: Govern engineering contracts, architecture, technical debt, testing
 - 验证强度与风险相称；不得靠放宽类型、断言、测试或安全控制换取通过。
 - 最终收口检查重复、职责、错误、副作用和资源浪费，但不以删行数或增加抽象为成绩。
 
-职责变化才交接：产品决定给 Product，独立裁决给 Assurance，版本／部署给 Delivery，可复用经验给 Learning。传递事实、范围、证据、未决问题和授权边界。
+职责变化才交接：产品决定给 Product，设计给 Design，独立裁决给 Assurance，交付给 Delivery，经验给 Learning。传递事实、范围、证据、未决问题和授权边界。
