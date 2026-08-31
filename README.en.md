@@ -157,7 +157,7 @@ BuildOS does not promise a fixed percentage. It reduces avoidable cost by preven
 
 ## Install, update, and remove
 
-The current formal release is Senmu BuildOS `v2.0.6`. It supports Codex, Claude Code, and a Doubao adapter. Install the plugin as one unit; the seven Skills do not need separate downloads.
+The current formal release is Senmu BuildOS `v2.0.7`. It supports Codex, Claude Code, and a Doubao adapter. Install the plugin as one unit; the seven Skills do not need separate downloads.
 
 ### Update Codex
 

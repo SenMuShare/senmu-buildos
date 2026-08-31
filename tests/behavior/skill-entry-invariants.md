@@ -13,6 +13,7 @@
 | S-05 | 每个获准写源码的主会话和子 Agent 都从 Kernel 获得最小写入合同：首次写入前通过项目预检或 Delivery Change Unit 准备，保护现有脏改动、默认隔离任务、不复用 sealed 单元、匹配验证并本地 commit；用户不需要预告并发数量或下 Git 指令 | `hooks/kernel.js`、`manage_change_unit.py` |
 | S-06 | 第一次需要时取得最小充分证据；同一连续工作中来源、内容、范围和授权仍有效时直接复用，只补读缺失／变化范围。压缩、恢复、交接、版本或范围变化后按需重新取得；不建立已读台账、全文缓存或固定一 Skill 一 reference 门禁 | `hooks/kernel.js`、`docs/architecture/skill-boundaries.md`、`docs/architecture/codex-harness-boundary.md` |
 | S-07 | 最小充分同时约束工具输出：长 reference、源码、diff、日志和检查先取索引／摘要／失败项并按决定展开，不拼接到截断；截断结果只证明可见部分，后续只补缺失范围 | `hooks/kernel.js`、`docs/architecture/skill-boundaries.md` |
+| S-08 | 正确产物优先于内部记账：纯行政哈希、回执或进度记录不得单独否定成果、回退流程、扩大重跑或改变运行时身份；仅当记录承担产品完整性、身份、安全、授权、外部副作用或发布事实时才可阻断 | `hooks/kernel.js`、`实现经济性与过度工程治理规范.md`、`工作流运行状态与恢复协议.md`、`版本制品与发布规范.md` |
 
 ## Project
 

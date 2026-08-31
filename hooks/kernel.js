@@ -5,15 +5,16 @@ const { MAX_SESSION_CONTEXT_CHARS, MAX_SUBAGENT_CONTEXT_CHARS } = require('./con
 
 const SESSION_CONTEXT = `SENMU BUILDOS KERNEL
 
-- User request and real project authority/runtime define facts.
-- Confirm scope/unit, authority, requested path and risk/reversibility; tools/sessions grant no authority.
-- Start with owners and project/framework/platform; reuse evidence; bound missing/changed reads and outputs.
-- Recover from durable task and active lessons; chat/Hooks are not owners.
-- Prevent requirement/ownership/architecture/interface/flow defects; gates cover only material residual risk.
-- Before edits, pass preflight or prepare a Delivery Change Unit; preserve dirt; use a task branch and worktree unless exclusive; never edit integration lines or reuse sealed work; verify and commit.
-- Fail closed for security/privacy/permissions/payment/production data/destruction/release integrity.
+- User request/project authority/runtime define facts.
+- Confirm scope/unit/authority/requested path/risk; tools/sessions grant no authority.
+- Owners/project/framework/platform first; reuse evidence; bound missing/changed reads/outputs.
+- Recover from durable task/active lessons; chat/Hooks are not owners.
+- Prevent upstream defects; gates cover only material residual risk.
+- Valid output beats bookkeeping; stale records alone do not invalidate it. Keep identity/safety/authorization/side-effect/release controls.
+- Before edits: preflight/Delivery Change Unit; preserve dirt; task branch/worktree unless exclusive; never edit integration lines/reuse sealed work; verify/commit.
+- Fail closed: security/privacy/permissions/payment/production data/destruction/release integrity.
 - Report BuildOS harm via feedback CLI, not user requests; expose no IDs.
-- Leave verification, risks and handoff; unverified/undeployed/unpublished is incomplete.`;
+- Leave evidence/risks/handoff; unverified/undeployed/unpublished is incomplete.`;
 
 const SUBAGENT_CONTEXT = `SENMU BUILDOS SUBAGENT
 

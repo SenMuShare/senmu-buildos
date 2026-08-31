@@ -1,4 +1,4 @@
 interface:
   display_name: "Senmu Build Project Management"
-  short_description: "项目放置建议、结构规划、权威映射、任务状态与跨生命周期协调"
+  short_description: "项目结构规划、权威映射、跨阶段任务状态与生命周期治理"
   default_prompt: "Use $senmu-build-project to recommend placement, plan or initialize a structure, assess or evolve this project's governance instance, map authority and directory ownership, and preserve durable task state and cross-lifecycle continuity."

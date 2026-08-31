@@ -1,4 +1,4 @@
 interface:
   display_name: "Senmu Build Organizational Learning"
-  short_description: "反馈审议、外部知识蒸馏、经验沉淀与反哺"
+  short_description: "BuildOS 使用反馈审议、外部知识蒸馏、经验沉淀与反哺"
   default_prompt: "Use $senmu-build-learning to review feedback or external guidance, merge reusable knowledge into its canonical owner, and promote only approved evidence-backed improvements."
