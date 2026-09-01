@@ -46,6 +46,7 @@
 | P-22 | 只有真实委派时才形成最小自足任务包，包含 Current Task、Global Constraints、Interfaces 和 Output Contract；不复制完整聊天、全部专业规范或无关 Agent 历史，也不扩大原授权 | `任务执行与状态管理规范.md` |
 | P-23 | 影响后续执行的关键决定保存 Decision Rationale、Rejected Alternatives、Preserved Constraints 和 Revisit Trigger；Task 只保存任务级摘要，长期决定晋级原专业 owner，不复制完整聊天或改写历史结论 | `任务执行与状态管理规范.md`、`TASK.template.md` |
 | P-24 | 大型任务优先拆成穿过必要技术层的纵向价值切片；依赖前序发现的远期区域保持 `Not yet specified`，只记录约束、未知和展开触发，不为表面完整编造任务、依赖或验收 | `任务执行与状态管理规范.md` |
+| P-25 | 用户展示名称为 Project Governance，强调治理实例而非通用项目管理；运行 slug 保持 `senmu-build-project`，不建立迁移或新 Skill | `skills/senmu-build-project/SKILL.md`、`skills/senmu-build-project/agents/openai.yaml`、`docs/architecture/skill-boundaries.md` |
 
 ## Product
 

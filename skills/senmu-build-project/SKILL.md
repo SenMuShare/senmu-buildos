@@ -3,7 +3,7 @@ name: senmu-build-project
 description: Create or repair project governance, authority mapping, structure, and durable cross-stage state. Not for routine work under an established project system.
 ---
 
-# Project Management
+# Project Governance
 
 负责项目治理实例、权威结构和跨领域 owner，不是其他 Skill 的父级。正常开发在项目入口足够时立即交还；只有治理入口缺失／冲突、结构演进、状态 owner 需要修复或明确要求治理时才继续。
 

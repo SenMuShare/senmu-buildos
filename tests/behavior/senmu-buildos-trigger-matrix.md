@@ -253,8 +253,11 @@
 | 实现中发现需求歧义会改变架构 | Engineering 交接冲突事实、技术影响、选项和必须回答的问题；Product 处理产品决定 | 工程侧自行扩大范围，或由 Project 充当无必要中转站 |
 | 实现和测试完成，只要求准备候选且明确不发布 | Engineering 交接 commit、变更范围、验证和残余风险；Delivery 保持候选／预检状态 | 因交接自动创建 Tag、上传、部署或通知 |
 | 工作流运行失败并定位到代码缺陷 | Workflow 交接 run ID、失败步骤、契约、日志和最小复现；Engineering 修复代码，Workflow 保留运行状态 | 把 Run Manifest 复制成工程任务正文，或丢失原 run identity |
+| 跨会话工作流已有明确项目任务，现在要设计每次运行的 step、checkpoint、重试和恢复 | Workflow 拥有 Workflow Contract 与 Run State；Project 只在跨阶段任务 owner 本身缺失或冲突时介入 | 用 Project 复制 Run Manifest，或因工作流跨会话就重建项目任务系统 |
 | 独立审查发现需要整改的问题 | Assurance 交接 finding ID、证据、影响、目标 owner 和复核条件；专业 Skill 实施，Assurance 再复核 | 审查者未经授权直接修改，或实施者自行关闭 finding |
+| 实施者在同一会话里对自己的冻结候选做证据化复核 | Assurance 使用 `evidence-based self-review` 身份输出有界结论；实施和修复仍归 Engineering 或对应专业 owner | 因使用 Assurance 就声称独立审查，或用自查结论冒充项目要求的职责分离 |
 | 重复问题已解决并验证，值得复用 | 专业 owner 交接触发场景、根因、修复证据和适用范围；Learning 查重并把稳定规则回写源头 owner | 把工作日志、完整报告或未验证建议复制为长期规则 |
+| Assurance 已给出争议根因的证据结论，现在要决定是否晋级为长期规则 | Learning 负责查重、适用范围、晋级／拒绝与回写正确专业 owner；Assurance 继续拥有原证据结论 | Assurance 直接拥有经验台账或正式规则，或 Learning 重写原审查结论 |
 | 单领域任务的目标和 owner 已明确 | 直接选择对应专业 Skill，不加载 Project 或任何总索引 | 设置第九个编排 Skill，或把八个 Skill 组成固定流程 |
 | 跨多个阶段且任务状态本身需要治理 | Project 维护唯一 Durable Task State，并链接各专业产物；每一阶段仍由对应专业 Skill 主责 | Project 复制 PRD、技术设计、Run Manifest 或 Release Record 正文 |
 | 当前实现阶段结束，准备判断任务是否真正完成 | 当前专业 Skill 核对承诺范围、正式 owner、实际结果和验证；缺口继续写回原任务，Project 只维护跨阶段状态 | 仅凭任务勾选宣称完成，或另建 Converge 文件和第二份任务清单 |

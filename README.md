@@ -8,7 +8,7 @@
   <a href="README.md">简体中文</a> · <a href="README.en.md">English</a> · <a href="README.ja.md">日本語</a>
 </p>
 
-<!-- product-surface-review: 2.1.1 -->
+<!-- product-surface-review: 2.1.2 -->
 
 <p align="center">
   <a href="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml"><img src="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml/badge.svg" alt="Validate Senmu BuildOS"></a>
@@ -174,7 +174,7 @@ BuildOS 不承诺固定比例。它通过减少不必要的功能、重复代码
 
 ## 安装、更新与卸载
 
-Senmu BuildOS 当前正式版本为 `v2.1.1`，支持 Codex、Claude Code 和豆包适配。安装的是整个插件，不需要逐个下载八个 Skill。
+Senmu BuildOS 当前正式版本为 `v2.1.2`，支持 Codex、Claude Code 和豆包适配。安装的是整个插件，不需要逐个下载八个 Skill。
 
 ### 更新 Codex
 

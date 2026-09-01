@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## [2.1.2] - 2026-09-01
+
 ### Added
 
 - Design 新增“参考界面解析与还原”工作方法与渐进式设计资源库，把截图、URL、设计稿或现有页面转为可实施、可验证的设计规格。
@@ -9,6 +11,7 @@
 
 ### Changed
 
+- Project 的用户展示名称校准为 Project Governance，保持 `senmu-build-project` slug 与八个平级 Skill 结构不变；Assurance 明确区分 independent、peer 和 evidence-based self-review，自查不再被表述为独立审查。
 - 明确 Skill 以独立任务闭环而非组织岗位划分，Reference 承载同一工作流的技术变体，Plugin 只负责组合分发。
 - 已有项目不会因安装 BuildOS 自动生成设计上下文；先复用正式设计 owner，缺失时从真实页面与实现重建隐含基线，只有跨页面长期需要才建立最小项目 owner。
 - 嵌套设计资源现在同样接受唯一 owner、渐进可达、上下文链和重复段落校验；同时压缩 Skill description 与高占用入口并收紧预算，避免资源库成为防膨胀盲区。

@@ -2,7 +2,7 @@
 
 ## `senmu-build-project`
 
-Project Management，负责单项放置建议、空白项目规划／初始化、成熟项目结构审视／演进，以及项目形态、G0-G4、权威项目根、目录、文档、状态源、项目地图、legacy 边界、项目内移交和跨生命周期协调。建议和规划默认零写入；迁移需要独立实施授权。它的审视结果是治理实例的 owner／目录／状态映射、缺口和演进边界，不是独立证据裁决，也不是其他专业 Skill 的父级。
+Project Governance（项目治理），负责单项放置建议、空白项目规划／初始化、成熟项目结构审视／演进，以及项目形态、G0-G4、权威项目根、目录、文档、状态源、项目地图、legacy 边界、项目内移交和跨生命周期协调。建议和规划默认零写入；迁移需要独立实施授权。它的审视结果是治理实例的 owner／目录／状态映射、缺口和演进边界，不是独立证据裁决，也不是其他专业 Skill 的父级。
 
 ## `senmu-build-product`
 
@@ -26,7 +26,7 @@ Project Management，负责单项放置建议、空白项目规划／初始化�
 
 ## `senmu-build-assurance`
 
-负责独立、证据化的实验、冻结对象审查、债务盘点和争议性因果核验，输出证据等级、覆盖、发现和结论；普通一致性自查仍由 Product／Engineering 自己完成，只有明确要求独立结论、跨域争议或 G3-G4 正式审查时才由 Assurance 主责。治理实例的 owner／目录／状态映射与演进仍由 `senmu-build-project` 负责。默认只读；除非用户另行授权，不应用审查中发现的修复，也不直接拥有经验台账或通用规则晋级。
+负责证据化的实验、冻结对象审查、债务盘点和争议性因果核验，输出证据等级、覆盖、发现和结论。每次审查必须声明 `independent`、`peer` 或 `evidence-based self-review` 身份；无法证明职责分离时不得称独立审查。普通一致性自查仍由 Product／Engineering 自己完成，只有明确要求证据化结论、跨域争议或 G3-G4 正式审查时才由 Assurance 主责。治理实例的 owner／目录／状态映射与演进仍由 `senmu-build-project` 负责。默认只读；除非用户另行授权，不应用审查中发现的修复，也不直接拥有经验台账或通用规则晋级。
 
 ## `senmu-build-learning`
 
@@ -38,7 +38,7 @@ Project Management，负责单项放置建议、空白项目规划／初始化�
 
 | 类型 | 拥有什么 | 不得冒充 |
 | --- | --- | --- |
-| 专业事实 owner | Product 拥有需求／PRD／产品验收，Design 拥有视觉／交互／设计系统决定，Engineering 拥有技术设计、实现与工程测试，Workflow 拥有运行事实，Delivery 拥有版本／发布事实，Assurance 拥有独立审查结论 | 一个 Skill 接管全部生命周期正文 |
+| 专业事实 owner | Product 拥有需求／PRD／产品验收，Design 拥有视觉／交互／设计系统决定，Engineering 拥有技术设计、实现与工程测试，Workflow 拥有运行事实，Delivery 拥有版本／发布事实，Assurance 拥有标明审查身份的证据化结论 | 一个 Skill 接管全部生命周期正文 |
 | 语义／运行 owner | 同一业务规则、数据、状态、副作用或业务不变量的唯一权威实现 | PRD、技术设计、代码和测试采用同一物理 owner |
 | Durable Task State Owner | 跨阶段进度、决定摘要、证据链接、未完成项与下一步 | 复制或改写各专业事实正文 |
 

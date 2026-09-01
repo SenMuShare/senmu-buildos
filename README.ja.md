@@ -8,7 +8,7 @@
   <a href="README.md">简体中文</a> · <a href="README.en.md">English</a> · <a href="README.ja.md">日本語</a>
 </p>
 
-<!-- product-surface-review: 2.1.1 -->
+<!-- product-surface-review: 2.1.2 -->
 
 <p align="center">
   <a href="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml"><img src="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml/badge.svg" alt="Validate Senmu BuildOS"></a>
@@ -166,7 +166,7 @@ BuildOS は固定割合を約束しません。不要な機能、重複コード
 
 ## インストール、更新、削除
 
-Senmu BuildOS の現行正式リリースは `v2.1.1` です。Codex、Claude Code、豆包アダプターをサポートします。8 Skill は個別ではなく、1 つのプラグインとしてインストールします。
+Senmu BuildOS の現行正式リリースは `v2.1.2` です。Codex、Claude Code、豆包アダプターをサポートします。8 Skill は個別ではなく、1 つのプラグインとしてインストールします。
 
 ### Codex の更新
 
