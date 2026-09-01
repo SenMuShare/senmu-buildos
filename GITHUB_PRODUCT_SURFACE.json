@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "repository": "SenMuShare/senmu-buildos",
-  "reviewed_for_version": "2.1.2",
+  "reviewed_for_version": "2.1.3",
   "description": "AI-native BuildOS for Codex, Claude Code and Doubao: product discovery, UI/UX design, software engineering, context-aware workflows, testing, Git and verifiable releases.",
   "topics": [
     "agent-skills",
@@ -27,13 +27,13 @@
   ],
   "readme_review": {
     "updated_sections": [
-      "how-it-works",
+      "why-buildos",
       "design-principles"
     ],
     "summary": {
-      "zh": "校准项目治理定位，并区分独立审查、同行审查与证据化自查。",
-      "en": "Clarify project governance scope and distinguish independent, peer, and evidence-based self-review identities.",
-      "ja": "プロジェクトガバナンスの範囲を明確にし、独立・同僚・証拠ベースの自己レビューを区別。"
+      "zh": "优先治理缺陷生产源，并用单一版本清单防止多需求协作在发布时漏项。",
+      "en": "Fix defect sources before symptoms and use one version list to prevent release omissions across queued work.",
+      "ja": "症状より欠陥の発生源を優先し、単一のバージョンリストで複数作業のリリース漏れを防止。"
     }
   },
   "readmes": {
