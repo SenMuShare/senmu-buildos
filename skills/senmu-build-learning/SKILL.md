@@ -1,6 +1,6 @@
 ---
 name: senmu-build-learning
-description: Review the BuildOS feedback inbox, run a formal retrospective, promote verified lessons, or distill external guidance into reusable rules. Not for ordinary user corrections, routine logs, or independent audits.
+description: Review BuildOS feedback, retrospectives, verified lessons, or external guidance for reusable rules. Not for ordinary corrections, logs, or independent audits.
 ---
 
 # Organizational Learning

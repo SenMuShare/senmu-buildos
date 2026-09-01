@@ -13,6 +13,7 @@
 | 这是一个 AI 写了很久的混乱项目，请先审计并建立可恢复治理计划，我确认整改项后再分阶段实施 | `senmu-build-project` | 先映射唯一任务 owner 和只读基线；组合 assurance、engineering、delivery，不新建第九个编排 Skill |
 | 成熟项目整改已写完，但 P1 Finding 还没复核，临时报告也没决定保留还是删除，可以标 completed 吗？ | `senmu-build-project` | 不可完成；先由 assurance 复核原 Finding，再由用户决定临时内容去留 |
 | 只允许你审计这个老项目，先不要修代码、移动目录或删文件 | `senmu-build-project` | 只读冻结基线和 Finding；审计授权不推导出实施授权 |
+| 审视这个项目的 owner、目录和状态源并给出治理迁移方案 | `senmu-build-project` | 交付治理实例与演进边界；若用户要证据分级的独立审计 verdict 才转 Assurance |
 | 这个项目规则互相冲突，帮我重新判断项目形态和治理强度 | `senmu-build-project` | 根据发现组合专业 Skill |
 | 帮我规划项目根目录、项目地图和权威文档 | `senmu-build-project` | 无 |
 | 我准备做一个 POC，这份实验说明文档放在哪里比较合适？先给建议 | `senmu-build-project` | 给出首选 owner／路径、理由和替代；不创建文件 |
@@ -52,6 +53,8 @@
 | 为产品建立跨页面视觉 Token、组件状态、暗色模式和无障碍规则 | `senmu-build-design` | 扩展项目现有设计系统；内容语义由 product、组件 API 由项目／专项 Skill 负责 |
 | 这个抽屉拖起来不跟手，重新设计手势、回弹、可中断动画和减弱动效 | `senmu-build-design` | 先确认交互目的和频率，在真实设备验证；需要 GSAP／Motion API 时再使用对应技术专项 |
 | 审查这个页面的 UI/UX、可访问性和移动端体验，并修复确认的问题 | `senmu-build-design` | 属于专业设计评审与整改；只有明确要求独立证据结论时才交 assurance |
+| 参考这个网站和截图，分析它的设计语言并高保真还原到我们的产品页 | `senmu-build-design` | 区分还原、转译或模式提取；输出结构、视觉、状态、响应式、观察／推断／未知和验证标准，实现再交项目／engineering |
+| 旧项目没有设计文档，安装 BuildOS 后先给它生成一套 Design Context | `senmu-build-project` | 不自动生成；先读取真实页面、Token、组件和品牌资产，复用正式 owner 或重建隐含基线，跨页面稳定需求获授权后才建立最小 owner |
 | 给三个交互原型让我选择，选定前不要改正式产品入口 | `senmu-build-design` | 候选在隔离原型面保持同一内容和任务，选定后写回现有 owner，未选方案不进入生产线 |
 | 设计稿、Token 和交互规格已经批准，请按项目现有 React 组件实现 | `senmu-build-engineering` | 普通实现按项目规则执行；不为复述已决定设计再加载 Design |
 | Ant Design 的这个组件当前版本用哪个 prop 控制焦点返回？ | `antd` 或项目专项 Skill | 查询当前组件 API；不让 BuildOS Design 复制组件手册 |
@@ -73,10 +76,12 @@
 | 检查需求、技术设计、任务、代码和测试是否完整对应 | `senmu-build-engineering` | 普通技术一致性自查，不触发 assurance |
 | 这个契约保持型局部变更已经通过定向测试，帮我做一个范围清楚的本地 commit | `senmu-build-engineering` | 日常工程收口；不因例行本地 commit 组合 delivery，除非当前需要分支／合并／发布决定 |
 | 我觉得现有系统就是通过消息队列重试的，你直接按这个结论给技术建议 | `senmu-build-engineering` | 若项目可查，先核对设计、调用链、配置、测试或运行证据；与用户判断不一致时据实说明，未核验时只给条件性建议 |
+| 设计消息队列事务、重试和后台任务的数据契约 | `senmu-build-engineering` | 若结果是跨步骤物料、checkpoint、Run 状态和恢复协议则转 Workflow；不因出现“队列”同时加载两者 |
 | 我偏好微服务，这个小工具是不是也应该拆成五个服务？ | `senmu-build-engineering` | 独立比较需求契合、现有基线、维护成本、失败边界与更小替代；不能因用户偏好而同意过度设计 |
 | 普通功能准备从技术设计进入实现，检查范围、契约和测试是否一致 | `senmu-build-engineering` | 在自然转换点自查；不新增 Analyze 阶段或 Checklist 文件 |
 | 讨论稿、现行 PRD、技术设计、代码和旧测试互相冲突，先把它们统一到同一个 owner 再开发，对吗？ | `senmu-build-engineering` | 不对；先由 Product 以用户批准和现行需求校准产品事实，Engineering 再让设计、实现与工程测试承接同一 REQ／验收合同。各产物保留专业 owner，只有同一规则、数据或运行状态保持唯一语义 owner；讨论稿和旧测试只是证据 |
 | 这个改动很大，先完成后端核心路径并验证，记录进度后再继续前端 | `senmu-build-engineering` | 使用现有 Durable Task State 保存阶段结果；不固定阶段名或任务数量 |
+| 我们有一个 Engineering Skill，前端开发和后端开发是否应各拆成子 Skill？ | `senmu-build-engineering` | 默认不拆；按独立任务闭环而非岗位裁决，同一工程工作流的差异进入按需 reference，专项工作流保持平级 Skill，Plugin 只负责组合分发 |
 | 实现时发现原需求遗漏权限规则，继续写会改变验收范围 | `senmu-build-engineering` | 交回 Product 更新 REQ／PRD 并确认；不得只改代码或留在聊天里 |
 | 自动保存每次操作都会变慢，我准备改成用户点击“保存”后才生效 | `senmu-build-engineering` | 识别为产品行为变化；先说明原行为、技术约束、用户影响，并比较增量保存、合并写入等保持原行为的方案，未经 Product 确认不得直接实现 |
 | 只调整页面布局时发现历史控件仍在，但当前需求和验收没有它 | `senmu-build-engineering` | 只排列已批准控件并向 Product 报告冲突；不得以代码或旧测试为需求依据决定保留或移除，也不得改写 PRD／测试适配残留实现 |
@@ -84,9 +89,14 @@
 | PRD 已明确永久退役导出功能，我把按钮隐藏并把 feature flag 默认设为 false 就完成了吗？ | `senmu-build-engineering` | 未完成；继续删除路由／API、后台任务／事件、服务分支、配置与权限暴露，处理失效测试和当前文档，并证明直接调用、自动触发和重启默认状态都不能恢复；数据销毁另行授权 |
 | 这个回归测试只断言 mock 服务被调用三次，可以证明订单恢复正常吗？ | `senmu-build-engineering` | 不能；测试应命名订单哪项生产行为会退化，以独立预期断言公开结果、状态或副作用；调用契约测试只证明适配器交互 |
 | 我已经连续改了三个地方但报错只是换了位置，没有新证据 | `senmu-build-engineering` | 停止叠加补丁；回到原始现象和关键依赖，对比正常路径，一次验证一个假设，并重新检查 owner、接口假设和架构边界 |
+| 这个偶发故障可能有五个原因，我准备同时加日志、改超时并重试看看 | `senmu-build-engineering` | 先建立可失败短循环，按证据和区分能力排序可证伪假设；一次只增加一个观测或变量，修复后复跑原路径并清理临时调试面 |
+| 新增的纯业务规则可以在毫秒级单元测试中表达，应该先写实现还是先写测试？ | `senmu-build-engineering` | 优先先写会因能力缺失而失败的公开行为测试，再做最小实现；若是探索、视觉或昂贵不稳定环境则先稳定契约后补匹配证据，不机械强制 TDD |
+| 我在探索一个一次性视觉动效方向，真实渲染比单元测试更有意义，必须先写失败测试吗？ | `senmu-build-design` | 当前结果是视觉／动效方向和原型判断；用隔离原型与真实渲染验证，不因问题提到测试就改由 Engineering 主责 |
+| 一个局部拼写错误已有稳定失败单测，根因明确且无外部副作用 | 项目现有入口 | 直接做最小修复并复跑匹配测试；不加载 Engineering 治理或额外 reference |
 | 这项 G3 变更由一个 Agent 实现、另一个 Agent 审查，返修后怎样收口？ | `senmu-build-engineering` | 传最小 Implementer Brief，实施者报告实际 diff／测试／偏差；审查 Finding 带复核条件，返修后定向复核原问题与影响链，最终结论绑定完整 base..head；不预设固定轮次 |
 | 一个低风险局部修复已经有清楚需求和测试，是否必须再启动两个审查 Agent？ | `senmu-build-engineering` | 不必须；按项目规则和风险做 evidence-based self-review，只有职责分离门禁或负责人要求时才启动多 Agent 评审协议 |
 | 审查一个重要实现时，测试全绿但我担心方向本身错了 | `senmu-build-engineering` | 使用轻量 Challenger Review，先尝试证伪方向、关键假设、遗漏边界和更简单方案，再看 diff 与证据；不固定 Agent 数量或评审轮次，同一实现者不能称独立审查 |
+| 这次代码实现很干净，但我不确定它是不是按批准需求做的 | `senmu-build-engineering` | 分别给出 Requirement／Spec 与 Engineering／Standards 两轴结论；代码质量通过不能掩盖需求偏离，Finding 标明所属轴，需要独立结论时再交 Assurance |
 | 后续 Agent 看到一段反常兼容逻辑，准备当成 Bug 删除，但旧 Task 记录了当时拒绝直接删除的原因 | `senmu-build-engineering` | 先核对 Decision Rationale、Rejected Alternatives、Preserved Constraints 和 Revisit Trigger；条件未变不得静默恢复旧方案，条件变化则以新证据回到原 owner 建立替代记录 |
 | 去掉人工保存按钮后，DOM 测试已经证明按钮不存在，可以算修复完成吗？ | `senmu-build-engineering` | 不能；还须验证自动／增量持久化、跨入口同步、退出／刷新／切换、失败恢复和性能边界，具体范围服从现行需求 |
 | 你说每次操作会创建 Vn 并重建 Composition，这对用户到底有什么影响？ | `senmu-build-engineering` | 先用普通语言解释非通用缩写和状态名，再说明可观察影响与技术机制；不能要求用户根据未解释术语自行推断方案 |
@@ -95,6 +105,11 @@
 | Microsoft 手册举例说覆盖率 80%、圈复杂度低于 10、函数少于 50 行，所有项目都按这个阻断吗？ | `senmu-build-engineering` | 不把示例数字晋级为通用 Hard Gate；质量属性和指标按业务影响、范围、项目基线、风险与可验证目标决定 |
 | 技术设计写了“高性能、高可用”，但没有范围、指标、owner 或验证方法 | `senmu-build-engineering` | 将实际相关质量属性绑定业务影响、作用范围、可观察目标、验证、约束／依赖与取舍；无法验证的标为假设或未决 |
 | 把一个跨会话任务拆成可恢复阶段，但需求不是用户故事 | `senmu-build-project` | 继续使用唯一 TASK.md；按结果和真实前置拆分，不新增 tasks.md 或固定阶段 |
+| 大需求后半段要等前两段跑完才知道细节，现在先把所有任务都列满吗？ | `senmu-build-project` | 先拆能交付可观察结果的纵向切片；远期区域标记 `Not yet specified`，只记录已知约束、未知和展开触发，不编造任务、依赖或验收 |
+| 一次 schema 变化会影响三个独立消费者，无法同时发布 | `senmu-build-engineering` | 使用 expand → migrate → contract：先兼容扩展，再迁移和观测，确认无旧消费者后收缩旧路径；每段可验证并可恢复 |
+| 状态机逻辑很复杂，先做一个漂亮后台页面帮助验证可以吗？ | `senmu-build-engineering` | 先用隔离逻辑 harness 暴露输入、状态转换、输出、错误和代表场景；不让生产 UI 外壳冒充逻辑正确，正式比较结论按 Assurance POC |
+| 这个安装流程没有可靠向导：大部分步骤可自动完成，但登录、密钥和最后提交必须由人操作，请把它设计成可恢复的操作向导 | `senmu-build-workflow` | 设计向导契约：自动准备与校验，只逐段暴露人类步骤、字段边界和返回信号；秘密不进聊天，不可逆提交前单独确认，恢复时从真实 checkpoint 继续 |
+| 项目已有可靠操作向导，我只要按它完成一次普通配置 | 项目现有入口 | 直接执行并保存真实结果；不因出现多个步骤或人工点击重新加载 Workflow、建立第二套向导或改写流程契约 |
 | 判断 monorepo 中这两个服务是否应成为独立发布单元 | `senmu-build-delivery` | engineering（接口边界） |
 | 准备正式发布，核对版本、制品、线上验证和回滚 | `senmu-build-delivery` | engineering（质量结果） |
 | 正式发布成功后，服务器和本地只保留当前版与上一相邻稳定版 | `senmu-build-delivery` | 将“上一版”核对为已验证回滚点，使用项目级保留配置和唯一收口入口；不得全局 prune |
@@ -108,6 +123,7 @@
 | 三项互不相关的改动共用一个分支，其中一项还在等待视觉验收 | `senmu-build-delivery` | 拆为可独立验证和回退的短分支／commit，继续另两项；只有共同契约或原子迁移才绑定等待 |
 | 功能分支同时改了交互、PRD 和测试，三者现在完全一致，可以直接合并吗？ | `senmu-build-delivery` | 一致性不足以自证授权；核对先前批准行为、本次获确认变化和候选实际行为，缺少独立于实现分支的产品决定时阻断行为变更的合并 |
 | 这个仓库的分支和 worktree 越来越多，先审视并告诉我应该怎么治理 | `senmu-build-delivery` | 只读核对目标分支、合并可达性、脏状态、执行面和 Remote；分类建议并说明理由，不自动清理 |
+| 公开 GitHub 上十个贡献者和 AI 会提交 PR，怎样同步回私有权威库 | `senmu-build-delivery` | 把 PR 冻结为入站候选，只导入公开白名单语义差异到内部 Change Unit；内部审查后重新投影并保留作者归属，禁止把公开 main 直接 pull／merge 到私有主线 |
 | 短分支已合入 main 且目标验证通过，对应 worktree 干净且无独有资产 | `senmu-build-delivery` | 建议经授权先移除 worktree、再用非强制方式删除本地短分支；远程删除另行受 Remote 和授权限制 |
 | 分支已合并，但 worktree 还有未提交文件和被忽略运行资产 | `senmu-build-delivery` | 标记需 owner 核对，不用 `-D`、`--force`、全局 prune 或直接删目录；它不当然阻塞无关发布 |
 | 新项目的源码就在 Codex 管理目录，另一个项目则有明确的外部项目根；它们的 worktree 应放哪里？ | `senmu-build-delivery` | 分别确认各自权威项目根、Git 仓库和受管容器；不因目录名统一允许或禁止，也不套用另一项目的路径 |

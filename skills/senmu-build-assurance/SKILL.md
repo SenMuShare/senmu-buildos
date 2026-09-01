@@ -1,6 +1,6 @@
 ---
 name: senmu-build-assurance
-description: "Produce evidence-graded POC, audit, reproduction, or disputed-cause verdicts when an independent finding is the requested result. Not for implementation, routine technical judgment, retrospectives, or applying fixes."
+description: "Produce read-only, evidence-graded POC, audit, reproduction, or disputed-cause verdicts. Not for implementation, routine review, retrospectives, or fixes."
 ---
 
 # Governance Assurance

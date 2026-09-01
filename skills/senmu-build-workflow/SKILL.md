@@ -1,6 +1,6 @@
 ---
 name: senmu-build-workflow
-description: Design or repair workflow contracts, project Agents, material flows, receipts, or recoverable run state. Not for running an existing workflow, tracking ordinary tasks, designing code, or setting release policy.
+description: Design workflow, Agent, human-operator-guide, material-flow, receipt, and recoverable run-state contracts. Not for executing workflows, tracking ordinary tasks, coding, or release policy.
 ---
 
 # Workflow Governance
@@ -9,7 +9,7 @@ description: Design or repair workflow contracts, project Agents, material flows
 
 ## 按结果读取
 
-- 物料角色、处理流程、交付和归档：读取 [工作流、物料与交付物治理规范](references/工作流、物料与交付物治理规范.md)。
+- 物料角色、处理流程、人机操作向导、交付和归档：读取 [工作流、物料与交付物治理规范](references/工作流、物料与交付物治理规范.md)。
 - run identity、幂等、步骤状态、断点续作或最小重跑：读取 [工作流运行状态与恢复协议](references/工作流运行状态与恢复协议.md)。
 - reference 附件的来源、版本和读取边界：读取 [reference 附件治理](references/reference附件治理.md)。
 - 新建、重构或审查项目 Agent／系统提示词：读取 [Agent 定义与系统提示词框架](references/Agent定义与系统提示词框架.md)。

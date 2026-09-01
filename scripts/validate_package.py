@@ -42,6 +42,10 @@ REFERENCE_OWNERS = {
     "界面视觉与设计系统规范.md": "senmu-build-design",
     "交互动效与可访问性规范.md": "senmu-build-design",
     "原型探索与界面评审规范.md": "senmu-build-design",
+    "参考界面解析与还原规范.md": "senmu-build-design",
+    "design-library/INDEX.md": "senmu-build-design",
+    "design-library/页面结构与视觉方向.md": "senmu-build-design",
+    "design-library/组件设计模式.md": "senmu-build-design",
     "工作流、物料与交付物治理规范.md": "senmu-build-workflow",
     "工作流运行状态与恢复协议.md": "senmu-build-workflow",
     "reference附件治理.md": "senmu-build-workflow",
@@ -53,6 +57,8 @@ REFERENCE_OWNERS = {
     "架构约束与技术债治理规范.md": "senmu-build-engineering",
     "源代码工程质量与AI协作规范.md": "senmu-build-engineering",
     "软件测试与质量验证规范.md": "senmu-build-engineering",
+    "前端工程契约与验证规范.md": "senmu-build-engineering",
+    "后端服务与数据契约规范.md": "senmu-build-engineering",
     "源码级重构与技术栈升级规范.md": "senmu-build-engineering",
     "Python工程编码规范.md": "senmu-build-engineering",
     "TypeScript工程编码规范.md": "senmu-build-engineering",
@@ -88,12 +94,13 @@ MAX_SKILL_DESCRIPTION_CHARS = 400
 MAX_DESCRIPTION_CATALOG_CHARS = 2_400
 MAX_REFERENCE_CHARS = 10_000
 MAX_PROJECT_AGENTS_TEMPLATE_CHARS = 2_300
-MAX_SKILL_ENTRY_CONTEXT_UNITS = 1_200
+MAX_SKILL_ENTRY_CONTEXT_UNITS = 1_050
 MAX_SKILL_DESCRIPTION_CONTEXT_UNITS = 90
-MAX_DESCRIPTION_CATALOG_CONTEXT_UNITS = 500
+MAX_DESCRIPTION_CATALOG_CONTEXT_UNITS = 425
 MAX_REFERENCE_CONTEXT_UNITS = 5_500
 MAX_SINGLE_REFERENCE_ROUTE_CONTEXT_UNITS = 6_500
 MAX_TWO_REFERENCE_ROUTE_CONTEXT_UNITS = 12_000
+MAX_REFERENCE_CHAIN_CONTEXT_UNITS = 12_000
 
 
 def fail(message: str) -> None:
@@ -134,6 +141,67 @@ def parse_skill_description(text: str) -> str:
     if not description_match:
         fail("SKILL.md frontmatter missing description")
     return description_match.group(1).strip().strip('"\'')
+
+
+def reference_graph(skill_root: Path, references: list[Path]) -> dict[Path, set[Path]]:
+    """Return links from the entry/reference files to references in the same Skill."""
+    entry = (skill_root / "SKILL.md").resolve()
+    resolved_references = {path.resolve() for path in references}
+    graph = {path: set() for path in (entry, *resolved_references)}
+    for source in graph:
+        text = source.read_text(encoding="utf-8")
+        for raw_target in re.findall(r"\[[^\]]+\]\(([^)]+)\)", text):
+            target = raw_target.split("#", 1)[0].strip()
+            if not target or "://" in target or target.startswith("mailto:"):
+                continue
+            resolved = (source.parent / target).resolve()
+            if resolved in resolved_references:
+                graph[source].add(resolved)
+    return graph
+
+
+def reachable_references(entry: Path, graph: dict[Path, set[Path]]) -> set[Path]:
+    pending = [entry.resolve()]
+    seen: set[Path] = set()
+    while pending:
+        current = pending.pop()
+        for target in graph[current]:
+            if target in seen:
+                continue
+            seen.add(target)
+            pending.append(target)
+    return seen
+
+
+def largest_reference_chain(
+    entry: Path,
+    graph: dict[Path, set[Path]],
+    context_units: dict[Path, int],
+) -> tuple[int, list[Path]]:
+    """Measure the largest progressive-disclosure route; reject routing cycles."""
+    resolved_entry = entry.resolve()
+    visiting: set[Path] = set()
+    cache: dict[Path, tuple[int, list[Path]]] = {}
+
+    def visit(current: Path) -> tuple[int, list[Path]]:
+        if current in visiting:
+            raise ValueError(f"reference routing cycle reaches {current}")
+        if current in cache:
+            return cache[current]
+        visiting.add(current)
+        best_units = context_units[current]
+        best_path = [current]
+        for target in graph[current]:
+            child_units, child_path = visit(target)
+            candidate_units = context_units[current] + child_units
+            if candidate_units > best_units:
+                best_units = candidate_units
+                best_path = [current, *child_path]
+        visiting.remove(current)
+        cache[current] = (best_units, best_path)
+        return cache[current]
+
+    return visit(resolved_entry)
 
 
 def validate_product_identity() -> None:
@@ -294,20 +362,46 @@ def validate_skills() -> None:
         for field in ("display_name:", "short_description:", "default_prompt:"):
             if field not in ui:
                 fail(f"{skill_name}/agents/openai.yaml missing {field}")
+        references_root = skill_root / "references"
+        references = sorted(references_root.rglob("*.md"))
         reference_units: list[tuple[int, Path]] = []
-        for reference in sorted((skill_root / "references").glob("*.md")):
+        context_units = {(skill_root / "SKILL.md").resolve(): entry_units}
+        for reference in references:
             reference_text = reference.read_text(encoding="utf-8")
             if len(reference_text) > MAX_REFERENCE_CHARS:
                 fail(f"{reference} exceeds {MAX_REFERENCE_CHARS} characters")
             units = estimate_context_units(reference_text)
             if units > MAX_REFERENCE_CONTEXT_UNITS:
                 fail(f"{reference} exceeds {MAX_REFERENCE_CONTEXT_UNITS} context units")
-            if f"references/{reference.name}" not in text:
+            relative = reference.relative_to(references_root).as_posix()
+            if reference.parent == references_root and f"references/{relative}" not in text:
                 fail(f"{reference} is not directly routed from its owner SKILL.md")
-            if reference.name in seen_references:
-                fail(f"reference has duplicate active owners: {reference.name}")
-            seen_references[reference.name] = skill_name
+            if relative in seen_references:
+                fail(f"reference has duplicate active owners: {relative}")
+            seen_references[relative] = skill_name
             reference_units.append((units, reference))
+            context_units[reference.resolve()] = units
+        graph = reference_graph(skill_root, references)
+        reachable = reachable_references(skill_root / "SKILL.md", graph)
+        unresolved = sorted(
+            (reference.resolve() for reference in references if reference.resolve() not in reachable),
+            key=lambda path: path.as_posix(),
+        )
+        if unresolved:
+            names = [path.relative_to(skill_root.resolve()).as_posix() for path in unresolved]
+            fail(f"{skill_name} has references unreachable from SKILL.md: {names}")
+        try:
+            chain_units, chain = largest_reference_chain(
+                skill_root / "SKILL.md", graph, context_units
+            )
+        except ValueError as exc:
+            fail(f"{skill_name} has cyclic progressive reference routing: {exc}")
+        if chain_units > MAX_REFERENCE_CHAIN_CONTEXT_UNITS:
+            chain_names = [path.relative_to(skill_root.resolve()).as_posix() for path in chain]
+            fail(
+                f"{skill_name} progressive reference chain {chain_names} exceeds "
+                f"{MAX_REFERENCE_CHAIN_CONTEXT_UNITS} context units"
+            )
         largest = sorted(reference_units, reverse=True)
         if largest and entry_units + largest[0][0] > MAX_SINGLE_REFERENCE_ROUTE_CONTEXT_UNITS:
             fail(
@@ -410,7 +504,7 @@ def validate_no_duplicate_instruction_paragraphs() -> None:
     candidates = []
     for skill_root in sorted((ROOT / "skills").iterdir()):
         candidates.append(skill_root / "SKILL.md")
-        candidates.extend(sorted((skill_root / "references").glob("*.md")))
+        candidates.extend(sorted((skill_root / "references").rglob("*.md")))
     for path in candidates:
         text = path.read_text(encoding="utf-8")
         for raw in re.split(r"\n\s*\n", text):
@@ -510,12 +604,16 @@ def main() -> None:
         f"catalog<={MAX_DESCRIPTION_CATALOG_CONTEXT_UNITS}, "
         f"reference<={MAX_REFERENCE_CONTEXT_UNITS}, "
         f"one-route<={MAX_SINGLE_REFERENCE_ROUTE_CONTEXT_UNITS}, "
-        f"two-route<={MAX_TWO_REFERENCE_ROUTE_CONTEXT_UNITS}"
+        f"two-route<={MAX_TWO_REFERENCE_ROUTE_CONTEXT_UNITS}, "
+        f"reference-chain<={MAX_REFERENCE_CHAIN_CONTEXT_UNITS}"
     )
     print("[OK] Senmu BuildOS product identity is clean")
     print("[OK] Codex and Claude Code plugin structures and eight Skill entrypoints are valid")
     print("[OK] VERSION, plugin manifests, and marketplace release metadata agree")
-    print(f"[OK] active references: {len(REFERENCE_OWNERS)}/{len(REFERENCE_OWNERS)} files have one owner")
+    print(
+        f"[OK] active references: {len(REFERENCE_OWNERS)}/{len(REFERENCE_OWNERS)} "
+        "files have one owner and an acyclic route from SKILL.md"
+    )
     print("[OK] no exact duplicate active Skill resources found")
     print("[OK] no duplicated long instruction paragraphs found across active Skills")
     print("[OK] behavior invariant identifiers are unique")

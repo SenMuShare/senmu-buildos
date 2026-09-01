@@ -15,6 +15,8 @@
 | S-07 | 最小充分同时约束工具输出：长 reference、源码、diff、日志和检查先取索引／摘要／失败项并按决定展开，不拼接到截断；截断结果只证明可见部分，后续只补缺失范围 | `hooks/kernel.js`、`docs/architecture/skill-boundaries.md` |
 | S-08 | 正确产物优先于内部记账：纯行政哈希、回执或进度记录不得单独否定成果、回退流程、扩大重跑或改变运行时身份；仅当记录承担产品完整性、身份、安全、授权、外部副作用或发布事实时才可阻断 | `hooks/kernel.js`、`实现经济性与过度工程治理规范.md`、`工作流运行状态与恢复协议.md`、`版本制品与发布规范.md` |
 | S-09 | 开放开发批次默认复用已匹配单元，只对会改变版本归属、验收或交付时机的歧义询问；单项完成不触发批次完整门禁，正式发布始终需要授权 | `hooks/kernel.js`、Product／Engineering／Delivery owner |
+| S-10 | `references/` 任意深度的 active reference 都必须有唯一 owner、可从 `SKILL.md` 经 Markdown 路由到达，并纳入单文件、渐进链和重复段落预算；嵌套资源库不构成校验豁免 | `scripts/validate_package.py` |
+| S-11 | 八个 Skill 保持平级入口；同域稳定多步方法进入现有 reference 的短操作配方，以主导概念、触发、动作、完成判断、停止点和例外表达。项目路径／配置／版本只引用真实 owner，正向动作优先于无动作句子和成组禁令 | `docs/architecture/skill-boundaries.md` |
 
 ## Project
 
@@ -43,6 +45,7 @@
 | P-21 | Project 路由依次回答当前项目处境、是否需要 BuildOS、需要哪个唯一主责 Skill；普通实现、Bug、单条文案、局部样式和既有流程执行不因出现在场景说明中被升级为 BuildOS 治理流程 | `项目落地移交与场景路由规范.md` |
 | P-22 | 只有真实委派时才形成最小自足任务包，包含 Current Task、Global Constraints、Interfaces 和 Output Contract；不复制完整聊天、全部专业规范或无关 Agent 历史，也不扩大原授权 | `任务执行与状态管理规范.md` |
 | P-23 | 影响后续执行的关键决定保存 Decision Rationale、Rejected Alternatives、Preserved Constraints 和 Revisit Trigger；Task 只保存任务级摘要，长期决定晋级原专业 owner，不复制完整聊天或改写历史结论 | `任务执行与状态管理规范.md`、`TASK.template.md` |
+| P-24 | 大型任务优先拆成穿过必要技术层的纵向价值切片；依赖前序发现的远期区域保持 `Not yet specified`，只记录约束、未知和展开触发，不为表面完整编造任务、依赖或验收 | `任务执行与状态管理规范.md` |
 
 ## Product
 
@@ -85,6 +88,9 @@
 | UX-08 | UI/UX 完成依据真实渲染、目标视口、关键状态、输入方式和运行观感；代码存在、静态检查或截图不能单独证明交互手感与设备可用性 | `skills/senmu-build-design/SKILL.md`、`交互动效与可访问性规范.md` |
 | UX-09 | 原型只在方向或交互风险需要时创建；候选保持内容与任务可比、隔离于生产入口，选定后写回现有 owner，未选方案不长期并存 | `原型探索与界面评审规范.md` |
 | UX-10 | 设计评审按具体位置、证据、用户影响、建议结果和验证排序，不以个人偏好或默认挑错制造 Finding；设计自查不冒充用户研究、独立审查或生产事实 | `原型探索与界面评审规范.md` |
+| UX-11 | 截图、URL、设计稿或现有页面的分析区分界面还原、设计转译和模式提取，输出已观察、推断、冲突与未知；设计资源库按需提供候选，不成为项目 owner 或前端组件代码包 | `参考界面解析与还原规范.md`、`design-library/INDEX.md` |
+| UX-12 | 已有项目无正式设计文档时先从真实页面、样式、Token、组件与品牌资产重建隐含基线；安装 BuildOS 不自动生成平行 Design Context，只有跨页面稳定需要才建立最小项目 owner | `界面视觉与设计系统规范.md`、`项目治理实例与演进规范.md` |
+| UX-13 | 当前结果是视觉、交互、动效方向或界面原型时由 Design 主责，即使用户同时询问是否需要测试先行；Engineering 只承接方向确定后的技术实现或测试策略 | `skills/senmu-build-design/SKILL.md`、`skills/senmu-build-engineering/SKILL.md` |
 
 ## Workflow
 
@@ -98,6 +104,7 @@
 | W-06 | Agent 模板、根 `AGENTS.md`、Skill UI 元数据和业务 Agent 定义不得互相冒充 | `Agent定义与系统提示词框架.md` |
 | W-07 | `waiting` 只标记真依赖步骤；其他 ready 步骤继续，整次运行只剩等待时保存恢复信息、释放 worker 并优先事件唤醒 | `工作流运行状态与恢复协议.md` |
 | W-08 | 用户指定的 SSH／CLI／API／浏览器等访问路径是任务边界；工具存在、应用运行、会话已登录或权限可申请不会自动扩大授权，指定路径不可用／不安全／无法达标时才提出最小替代 | `Agent定义与系统提示词框架.md`、`hooks/kernel.js` |
+| W-09 | Workflow 设计或修复人机操作向导：先自动完成已授权且机器可做的准备，只把当前人类专属步骤按入口、字段边界、预期结果和返回信号交给用户；秘密不进聊天／日志／Git，恢复幂等，不可逆动作单独确认。已有可靠向导的日常执行不触发 Workflow | `skills/senmu-build-workflow/SKILL.md`、`工作流、物料与交付物治理规范.md` |
 
 ## Engineering
 
@@ -132,6 +139,7 @@
 | E-27 | 故障诊断先在用户点名的系统、原始现象和真实调用链取证，只有新证据指向相邻依赖时才扩大范围 | `skills/senmu-build-engineering/SKILL.md` |
 | E-28 | 版本测试用例直接从 PRD 的行为、交互、异常、边界和验收产生，沿用页面／功能／能力结构；低风险小改只做最小匹配用例，不另建追踪矩阵或填满固定测试层级 | `软件测试与质量验证规范.md`、`TEST_CASES.template.md` |
 | E-29 | “提测／批次收口／准备发布”才冻结开放批次并运行集成与完整门禁；候选不变时发布复用该结果，候选变更则补受影响检查并按项目标准入口裁决完整重跑 | `软件测试与质量验证规范.md`、`代码管理与合并规范.md` |
+| E-45 | Engineering 的测试治理只在测试策略或工程契约缺失、冲突或变化时触发；规则清楚、已有稳定失败测试的普通局部修复直接走项目入口，不因“修复并验证”加载治理 Skill | `skills/senmu-build-engineering/SKILL.md`、`软件测试与质量验证规范.md` |
 | E-30 | Engineering 按已批准产品与设计标准实现界面；Ant Design、shadcn、GSAP 等专项只拥有当前组件／动画 API 与实现方法，默认文案不是 Product owner，组件手册也不是 Design owner | `frontend-ant-design-practice.md`、`docs/architecture/skill-boundaries.md` |
 | E-31 | 永久退役功能必须删除前端入口、路由／API、后台任务／事件、服务分支、开关配置、权限暴露和失效测试／当前文档，并证明直接调用、自动触发和重启默认状态都不能恢复；隐藏、固定失败或默认关 flag 不算删除，历史数据销毁另行授权 | `源代码工程质量与AI协作规范.md`、`软件测试与质量验证规范.md`、`CODE_QUALITY.template.md` |
 | E-32 | 测试名称和失败信息指出会破坏的生产行为，预期值来自独立依据，断言公开结果／状态／副作用；mock 调用和私有实现细节不能单独证明业务完成 | `软件测试与质量验证规范.md`、`TEST_CASES.template.md` |
@@ -140,6 +148,13 @@
 | E-35 | 看似反常或像 Bug 的行为已有相关 Task／TD／ADR 决策时，先核对原依据、拒绝方案、保持边界和 Revisit Trigger；条件未变不得静默恢复旧方案，条件变化则以新证据在原 owner 建立 supersession 链 | `源代码工程质量与AI协作规范.md`、`任务执行与状态管理规范.md` |
 | E-36 | 安装、配置、公开操作、API、CLI、SDK 或恢复路径变化时，测试受影响的现行用户文档命令／示例和代表性 walkthrough；链接或文档构建通过不能替代真实产品结果，无使用契约变化时不增加文档测试 | `软件测试与质量验证规范.md`、`TEST_CASES.template.md` |
 | E-37 | Task Review 以轻量 Challenger Review 主动证伪方向、关键假设、遗漏边界和更简单方案；它是审查方法而非固定岗位，同一实现者仍是 self-review，需要独立结论时服从 Assurance 身份 | `源代码工程质量与AI协作规范.md` |
+| E-38 | 前端与后端是 Engineering 中按任务加载的 reference，不按岗位建立父子 Skill；独立工具或工作流能力保持平级专项 Skill，由 Plugin 负责组合分发 | `docs/architecture/skill-boundaries.md`、Engineering `SKILL.md` |
+| E-39 | 前端契约区分服务器事实、URL、持久状态、表单草稿和展示状态，并以真实浏览器验证可观察界面；后端契约明确唯一数据 owner、信任边界、事务外副作用、幂等、重试、恢复和数据演进 | 前端／后端工程契约 reference |
+| E-40 | 复杂故障先建立可失败短循环，把原因按证据与区分能力排序为可证伪假设；一次只增加一个观测或变量，修复后复跑原路径与影响面，并删除临时日志、开关、脚本和放宽保护 | `源代码工程质量与AI协作规范.md` |
+| E-41 | 行为契约可预先表达且反馈便宜时优先测试先行；探索、视觉或昂贵不稳定环境先稳定契约再补匹配证据，不把 TDD 变成所有修改的审批仪式 | `软件测试与质量验证规范.md` |
+| E-42 | Task Review 分别给出 Requirement／Spec 与 Engineering／Standards 两轴状态；一个轴通过不能掩盖另一个轴失败，Finding 标明所属轴，普通自查与 Assurance 独立结论边界不变 | `源代码工程质量与AI协作规范.md` |
+| E-43 | 多消费者公共接口／schema／事件迁移采用 expand → migrate → contract，每段可部署、可验证、可恢复；没有旧消费者证据后才移除旧路径，不把永久双轨当完成 | `架构约束与技术债治理规范.md` |
+| E-44 | 算法、状态机、流程或数据转换不确定时，逻辑原型以隔离 harness 暴露输入、状态、转换、输出、错误和代表场景；不搭生产 UI 冒充逻辑验证，正式结论仍服从 Assurance POC | `技术路线与组件选型.md` |
 
 ## Delivery
 
@@ -189,6 +204,7 @@
 | D-42 | 正式版本包含 Skill、Hook、路由或行为契约变化时，发布前复审记录必须与当前冻结表面一致且没有未关闭阻断 Finding；结构测试绿灯不能替代 Skill 完整性复审 | `版本制品与发布规范.md`、`工程知识蒸馏与标准晋级规范.md` |
 | D-43 | 用户未表达发布意图时默认不发布，无需反复要求其说“不发布”；“提测／批次收口／准备发布”只授权冻结、集成、完整门禁和候选准备，正式 Tag、上传、部署和切流需要明确发布授权 | `skills/senmu-build-delivery/SKILL.md`、`发布授权与生产事实协议.md` |
 | D-44 | 公开源码产品发布必须具备用户可读 Release notes 和 Product owner 的 README／仓库发现表面复审；已配置的简介／Topics 由唯一发布入口在正式 Tag 前同步并回读，任一缺失或漂移均阻断 Tag | `版本制品与发布规范.md`、`manage_lifecycle.py` |
+| D-45 | 私有权威生成公开投影时，公开 PR 只作为冻结入站候选：白名单语义差异进入内部 Change Unit，经内部审查后重新投影并保留贡献归属；公开 main 不直接 pull／merge 到私有主线，接收、内部合并和公开发布分别授权 | `仓库边界与发布单元治理规范.md`、`CONTRIBUTING.md` |
 
 ## Assurance
 

@@ -12,10 +12,11 @@ DESIGN = ROOT / "skills" / "senmu-build-design"
 
 
 class DesignSkillTest(unittest.TestCase):
-    def test_entry_routes_three_distinct_design_results(self):
+    def test_entry_routes_distinct_design_results(self):
         text = (DESIGN / "SKILL.md").read_text(encoding="utf-8")
         for reference in (
             "界面视觉与设计系统规范.md",
+            "参考界面解析与还原规范.md",
             "交互动效与可访问性规范.md",
             "原型探索与界面评审规范.md",
         ):
@@ -26,6 +27,25 @@ class DesignSkillTest(unittest.TestCase):
         for owner in ("Product", "Engineering", "Assurance", "Delivery"):
             self.assertIn(owner, text)
         self.assertIn("Ant Design、shadcn、GSAP", text)
+
+    def test_reference_analysis_routes_progressively_to_design_library(self):
+        analysis = (DESIGN / "references" / "参考界面解析与还原规范.md").read_text(
+            encoding="utf-8"
+        )
+        index = (
+            DESIGN / "references" / "design-library" / "INDEX.md"
+        ).read_text(encoding="utf-8")
+        self.assertIn("design-library/INDEX.md", analysis)
+        self.assertIn("页面结构与视觉方向.md", index)
+        self.assertIn("组件设计模式.md", index)
+        self.assertIn("不是前端组件代码包", index)
+
+    def test_reference_analysis_preserves_project_owner_and_unknowns(self):
+        analysis = (DESIGN / "references" / "参考界面解析与还原规范.md").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("已观察、推断、冲突和未知", analysis)
+        self.assertIn("不会自动成为项目设计 owner", analysis)
 
     def test_runtime_guidance_does_not_embed_source_products(self):
         runtime = "\n".join(
