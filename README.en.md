@@ -8,7 +8,7 @@
   <a href="README.md">简体中文</a> · <a href="README.en.md">English</a> · <a href="README.ja.md">日本語</a>
 </p>
 
-<!-- product-surface-review: 2.1.3 -->
+<!-- product-surface-review: 2.2.0 -->
 
 <p align="center">
   <a href="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml"><img src="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml/badge.svg" alt="Validate Senmu BuildOS"></a>
@@ -37,6 +37,7 @@ It focuses on two outcomes:
 | Abstractions, plugin systems, and generic platforms are built for imagined future needs | Close the current minimum value slice first; expand when a second real use case or an approved roadmap requires it |
 | An interface looks like a generic AI template, with hierarchy, typography, interaction, and brand intent pulling in different directions | Start from real tasks, content hierarchy, and the design system; align layout, type, color, motion, responsive behavior, and accessibility, then review the rendered result |
 | A later session treats an intentional constraint as a bug and restores an option that was already rejected | Preserve the rationale, rejected alternatives, protected boundaries, and revisit triggers; append a new decision when conditions change instead of rewriting history |
+| A handoff starts another branch from main and applies revisions to the wrong code baseline | Resume the original branch and worktree by stable Change Unit ID; a repeated experiment creates only a new run, not a new code unit |
 | Requirements and bugs queue up, context is lost, and omissions appear only at release time | Keep one requirements-and-defects list in the existing version document, update outcome states during development, and reconcile it once against tasks, Git, tests, and the candidate before release |
 | A passing test, tag, or command is reported as production success | Separate implementation, acceptance, artifacts, deployment, and production truth, each with matching evidence |
 
@@ -168,7 +169,7 @@ BuildOS does not promise a fixed percentage. It reduces avoidable cost by preven
 
 ## Install, update, and remove
 
-The current formal release is Senmu BuildOS `v2.1.3`. It supports Codex, Claude Code, and a Doubao adapter. Install the plugin as one unit; the eight Skills do not need separate downloads.
+The current formal release is Senmu BuildOS `v2.2.0`. It supports Codex, Claude Code, and a Doubao adapter. Install the plugin as one unit; the eight Skills do not need separate downloads.
 
 ### Update Codex
 

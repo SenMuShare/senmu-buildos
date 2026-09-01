@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "repository": "SenMuShare/senmu-buildos",
-  "reviewed_for_version": "2.1.3",
+  "reviewed_for_version": "2.2.0",
   "description": "AI-native BuildOS for Codex, Claude Code and Doubao: product discovery, UI/UX design, software engineering, context-aware workflows, testing, Git and verifiable releases.",
   "topics": [
     "agent-skills",
@@ -27,13 +27,12 @@
   ],
   "readme_review": {
     "updated_sections": [
-      "why-buildos",
-      "design-principles"
+      "why-buildos"
     ],
     "summary": {
-      "zh": "优先治理缺陷生产源，并用单一版本清单防止多需求协作在发布时漏项。",
-      "en": "Fix defect sources before symptoms and use one version list to prevent release omissions across queued work.",
-      "ja": "症状より欠陥の発生源を優先し、単一のバージョンリストで複数作業のリリース漏れを防止。"
+      "zh": "跨 Agent 续作恢复原代码单元，正式发布用可恢复控制单逐项核对并清理 Git 执行面。",
+      "en": "Resume the original code unit across agents and close releases with a recoverable, evidence-backed control sheet.",
+      "ja": "Agent 間で元のコード単位を復元し、復旧可能な管理表でリリースと Git 実行面を段階的に閉じます。"
     }
   },
   "readmes": {

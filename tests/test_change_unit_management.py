@@ -79,6 +79,71 @@ class ChangeUnitManagementTests(unittest.TestCase):
             self.assertNotEqual(blocked.returncode, 0)
             self.assertIn("already exists without a matching Change Unit record", blocked.stderr)
 
+    def test_resume_returns_to_registered_branch_without_creating_a_sibling(self) -> None:
+        with tempfile.TemporaryDirectory() as raw:
+            root = Path(raw)
+            repo = self.make_repo(root)
+            worktree = root / "continued-poc"
+            self.command(
+                "prepare",
+                "--repo", str(repo),
+                "--unit", "TASK-1006",
+                "--slug", "continued-poc",
+                "--worktree", str(worktree),
+                cwd=ROOT,
+            )
+            (worktree / "checkpoint.txt").write_text("checkpoint\n", encoding="utf-8")
+            run("git", "add", "checkpoint.txt", cwd=worktree)
+            run("git", "commit", "-m", "checkpoint", cwd=worktree)
+            run("git", "worktree", "remove", str(worktree), cwd=repo)
+
+            report = json.loads(
+                self.command(
+                    "resume",
+                    "--repo", str(repo),
+                    "--unit", "TASK-1006",
+                    cwd=ROOT,
+                ).stdout
+            )
+            branches = run(
+                "git", "for-each-ref", "--format=%(refname:short)", "refs/heads", cwd=repo
+            ).stdout.splitlines()
+
+            self.assertEqual(report["action"], "resumed")
+            self.assertEqual(report["branch"], "codex/continued-poc")
+            self.assertEqual(Path(report["worktree"]).resolve(), worktree.resolve())
+            self.assertTrue((worktree / "checkpoint.txt").is_file())
+            self.assertEqual(branches, ["codex/continued-poc", "main"])
+
+    def test_resume_rejects_a_sealed_unit(self) -> None:
+        with tempfile.TemporaryDirectory() as raw:
+            root = Path(raw)
+            repo = self.make_repo(root)
+            worktree = root / "sealed-resume"
+            self.command(
+                "prepare",
+                "--repo", str(repo),
+                "--unit", "TASK-1007",
+                "--slug", "sealed-resume",
+                "--worktree", str(worktree),
+                cwd=ROOT,
+            )
+            (worktree / "change.txt").write_text("change\n", encoding="utf-8")
+            run("git", "add", "change.txt", cwd=worktree)
+            run("git", "commit", "-m", "change", cwd=worktree)
+            self.command("seal", "--repo", str(worktree), "--unit", "TASK-1007", cwd=ROOT)
+
+            blocked = self.command(
+                "resume",
+                "--repo", str(repo),
+                "--unit", "TASK-1007",
+                cwd=ROOT,
+                check=False,
+            )
+
+            self.assertNotEqual(blocked.returncode, 0)
+            self.assertIn("sealed or closed work cannot be reused", blocked.stderr)
+
     def test_sealed_branch_cannot_be_reused_by_same_or_different_unit(self) -> None:
         with tempfile.TemporaryDirectory() as raw:
             root = Path(raw)

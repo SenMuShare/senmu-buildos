@@ -23,6 +23,7 @@ description: Govern development batches, non-routine Git, repository and release
 
 - 从项目 owner、Git 和上下文恢复权威根、版本线、开放批次、发布单元、授权和恢复点。能推断时直接执行；只有会改变版本、批次或外部结果的歧义才确认。
 - 同一版本、验收和发布／回退边界复用 `in_progress` 单元；真实并行才隔离。禁止写集成线、复用 sealed 单元或隐式串联任务分支。
+- 换 Agent、换会话或重跑实验不改变 Change Unit；续作恢复原执行面。发布收口使用逐项留证、可中断恢复的 Release Control，不靠聊天记忆或口头“已完成”。
 - 单项完成不等于批次完成。确认提测／收口后才冻结候选并运行集中门禁；明确发布后才进入制品、部署、生产验证和正式 Tag。
 - 项目声明 `main` 为 `integration` 或 `release_ready`，否则停止自动集成；真实依赖仅可 stacked 到 sealed 父单元。职责不绑定会话或固定 Team Leader。
 - 发布窗口只有一个可变源；截止后无关分支不改候选，Tag／制品前运行 [身份校验](scripts/verify_release_identity.py)。

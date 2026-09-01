@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Prepare, verify, seal, and close one task-specific Git Change Unit."""
+"""Prepare, resume, verify, seal, and close one task-specific Git Change Unit."""
 
 from __future__ import annotations
 
@@ -199,6 +199,35 @@ def ensure_record_matches(record: dict[str, Any], *, branch: str, unit: str) -> 
         )
 
 
+def resume(args: argparse.Namespace) -> dict[str, Any]:
+    """Restore the registered execution surface without creating a new branch."""
+    validate_identity(args.unit)
+    repo = git_root(args.repo)
+    path, record = record_for_unit(repo, args.unit)
+    branch = str(record.get("branch") or "")
+    ensure_record_matches(record, branch=branch, unit=args.unit)
+    if not branch_exists(repo, branch):
+        raise SystemExit(f"[BLOCKED] registered branch {branch} no longer exists; reconcile the owner record")
+    registered_worktree = record.get("worktree")
+    if not isinstance(registered_worktree, str) or not registered_worktree.strip():
+        raise SystemExit(f"[BLOCKED] Change Unit {args.unit} has no registered worktree")
+    expected = Path(registered_worktree).expanduser().resolve()
+    checked_out = worktree_for_branch(repo, branch)
+    if checked_out is None:
+        if expected.exists():
+            raise SystemExit(f"[BLOCKED] registered worktree path exists but is not attached: {expected}")
+        git(repo, "worktree", "add", str(expected), branch)
+    elif checked_out != expected:
+        raise SystemExit(f"[BLOCKED] branch {branch} is checked out at {checked_out}, not {expected}")
+    return {
+        **record,
+        "action": "resumed",
+        "head": git(repo, "rev-parse", f"{branch}^{{commit}}"),
+        "dirty": bool(git(expected, "status", "--porcelain")),
+        "record": str(path),
+    }
+
+
 def prepare(args: argparse.Namespace) -> dict[str, Any]:
     validate_identity(args.unit, args.slug)
     repo = git_root(args.repo)
@@ -391,7 +420,7 @@ def main() -> int:
     prepare_parser.add_argument("--branch")
     prepare_parser.add_argument("--worktree", type=Path, required=True)
 
-    for name in ("verify", "seal"):
+    for name in ("resume", "verify", "seal"):
         subparser = subparsers.add_parser(name)
         subparser.add_argument("--repo", type=Path, required=True)
         subparser.add_argument("--unit", required=True)
@@ -409,6 +438,8 @@ def main() -> int:
     args = parser.parse_args()
     if args.command == "prepare":
         report = prepare(args)
+    elif args.command == "resume":
+        report = resume(args)
     elif args.command == "verify":
         report = verify(args)
     elif args.command == "seal":

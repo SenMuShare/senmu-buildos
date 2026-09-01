@@ -8,7 +8,7 @@
   <a href="README.md">简体中文</a> · <a href="README.en.md">English</a> · <a href="README.ja.md">日本語</a>
 </p>
 
-<!-- product-surface-review: 2.1.3 -->
+<!-- product-surface-review: 2.2.0 -->
 
 <p align="center">
   <a href="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml"><img src="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml/badge.svg" alt="Validate Senmu BuildOS"></a>
@@ -37,6 +37,7 @@ Senmu BuildOS は、**AI coding agent** のためのオープンソース運用�
 | 想像上の将来のために抽象、プラグイン基盤、汎用プラットフォームを先に作る | 現在の最小価値スライスを閉じ、第二の実例または承認済み Roadmap ができてから拡張する |
 | 画面が汎用 AI テンプレートのようになり、情報階層、タイポグラフィ、操作、ブランド意図が噛み合わない | 実際のタスク、内容階層、デザインシステムから始め、レイアウト、書体、色、モーション、レスポンシブ、アクセシビリティを揃え、実表示で確認する |
 | 後続セッションが意図的な制約を Bug と誤認し、以前却下した案を復活させる | 判断理由、却下案、維持すべき境界、再評価条件を残し、条件が変わった時だけ新しい判断を追記する |
+| 引き継ぎ後に main から別ブランチを作り、誤ったコード基準で修正を続ける | 安定した Change Unit ID で元のブランチと worktree を復元し、実験の再実行は新しい run のみにする |
 | 要件や Bug が積み上がり、文脈が失われ、リリース時になって漏れが見つかる | 既存のバージョン文書に要件／欠陥リストを一つだけ置き、開発中に結果状態を更新し、リリース前に Task、Git、Test、候補と一度照合する |
 | テスト成功、Tag、コマンド成功を「本番完了」と報告する | 実装、受入、成果物、デプロイ、本番事実を分離し、それぞれ対応する証拠を使う |
 
@@ -168,7 +169,7 @@ BuildOS は固定割合を約束しません。不要な機能、重複コード
 
 ## インストール、更新、削除
 
-Senmu BuildOS の現行正式リリースは `v2.1.3` です。Codex、Claude Code、豆包アダプターをサポートします。8 Skill は個別ではなく、1 つのプラグインとしてインストールします。
+Senmu BuildOS の現行正式リリースは `v2.2.0` です。Codex、Claude Code、豆包アダプターをサポートします。8 Skill は個別ではなく、1 つのプラグインとしてインストールします。
 
 ### Codex の更新
 

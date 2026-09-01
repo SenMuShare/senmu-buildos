@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "release": {
+    "id": "REL-NNNN",
+    "release_unit": "<release-unit>",
+    "target_line": "<target-line>",
+    "release_source_root": "<single-mutable-release-root>",
+    "candidate_commit": null,
+    "authorization_ref": null,
+    "release_record_ref": null,
+    "status": "planning"
+  },
+  "requirements": [
+    {
+      "id": "REQ-NNNN",
+      "disposition": "pending",
+      "evidence_refs": [],
+      "reason": null
+    }
+  ],
+  "change_units": [
+    {
+      "unit": "TASK-NNNN",
+      "branch": "codex/example",
+      "source_commit": null,
+      "disposition": "pending",
+      "evidence_refs": [],
+      "test_refs": [],
+      "integration_commit": null,
+      "reason": null
+    }
+  ],
+  "gates": [
+    {"id": "scope_accounted", "status": "pending", "evidence_refs": [], "reason": null},
+    {"id": "integration_complete", "status": "pending", "evidence_refs": [], "reason": null},
+    {"id": "candidate_verified", "status": "pending", "evidence_refs": [], "reason": null},
+    {"id": "release_authorized", "status": "pending", "evidence_refs": [], "reason": null},
+    {"id": "release_verified", "status": "pending", "evidence_refs": [], "reason": null},
+    {"id": "git_execution_closed", "status": "pending", "evidence_refs": [], "reason": null}
+  ],
+  "cleanup": [
+    {
+      "unit": "TASK-NNNN",
+      "branch": "codex/example",
+      "worktree": "<registered-worktree>",
+      "disposition": "pending",
+      "evidence_refs": [],
+      "owner": null,
+      "exit_condition": null
+    }
+  ],
+  "recovery": {
+    "checkpoint": "scope_accounted",
+    "next_action": "<next-action>"
+  }
+}

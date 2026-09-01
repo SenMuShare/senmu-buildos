@@ -22,27 +22,16 @@
 - 临时职责：实现者封口 Change Unit；收到合并／发布命令的当前 Agent 负责接收矩阵、审查、集成和候选收口，不登记固定 Team Leader。
 - worktree 仅作为临时源码执行面；正式状态、台账、交付和发布入口归属项目登记的各自 owner。POC 使用独立
   `POC_ROOT`，不得因状态归属要求写入产品 `main` 或发布工作树。
+- 跨 Agent／会话续作传递稳定 Change Unit ID，并用 `manage_change_unit.py resume` 回到原分支和 worktree。
 
-## 候选范围与并行任务
+## 发布收口控制
 
-- 候选 commit：`<精确 SHA>`
-- 本次纳入的分支／提交／需求：`<清单>`
-- 排除但继续运行的 POC／分支／worktree：`<清单、理由、后续 owner>`
-- 共享可变资源：`<数据库／配置／端口／对象存储／部署目录／无>`
-- 阻断原则：只有候选可达变化、本次承诺缺口或共享资源冲突阻断；无关脏工作树和已完成分支不自动阻断或合入。
-- 发布收口：用户说“发布最新版本／把这批修复发布”时，一次盘点并只纳入已完成、已验证、有稳定 commit 且属于当前发布单元的变化；历史、实验、未完成、来源不明或无关分支不得机械全合并。
-- 接收截止点：`<时点／候选 SHA>`；截止前 `sealed` 的单元进入盘点，进行中单元默认继续并排除，只有本次发布明确依赖时 blocked。
-- 唯一可变发布根：`<main／maint/*／release/* 中一个>`；不得同时推进第二个候选根。截止后无关分支只记录 `branch@HEAD`，不向候选追加排除 commit。
-
-### 接收矩阵
-
-| Task／需求 | 目标线 | source branch／commit | 测试 | disposition | integration commit／理由 |
-| --- | --- | --- | --- | --- | --- |
-| `<ID>` | `<current／successor>` | `<branch@sha>` | `<evidence>` | `<include／exclude／blocked>` | `<sha／reason>` |
-
-- 任务承诺、Git 分支／worktree／脏状态和候选 diff 三重对账；所有潜在属于本次的 Change Unit 都必须有 disposition。
-- 未提交源码只能是 `in_progress`，不能标记完成或由发布者猜入候选。
-- 发布身份：`reviewed_commit = tested_commit = release_source_head = tag_commit = artifact_source_commit`；不适用的阶段留空，已存在的阶段不得不一致。
+- 每次发布从 `RELEASE_CONTROL.template.json` 建立一份控制单；项目已有等价机器可读 owner 时复用，不双写。
+- 控制单按顺序登记需求、Change Unit 接收矩阵、候选、授权、发布验证和 Git 执行面清理；每一门附证据，未完成时保留 checkpoint 与下一动作。
+- 只有候选可达变化、本次承诺缺口或共享资源冲突阻断；历史、POC、未完成、来源不明和无关分支不得机械全合并。
+- 未提交源码只能是 `in_progress`，不能由收口者猜入候选。
+- 每个纳入单元的短分支／worktree 最终必须 `removed`，或以 owner 和退出条件明确 `retained`。
+- 发布身份：`reviewed_commit = tested_commit = release_source_head = tag_commit = artifact_source_commit`；不适用阶段留空，已有阶段不得不一致。
 
 ## 代码变更审查门禁
 

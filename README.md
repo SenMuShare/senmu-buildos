@@ -8,7 +8,7 @@
   <a href="README.md">简体中文</a> · <a href="README.en.md">English</a> · <a href="README.ja.md">日本語</a>
 </p>
 
-<!-- product-surface-review: 2.1.3 -->
+<!-- product-surface-review: 2.2.0 -->
 
 <p align="center">
   <a href="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml"><img src="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml/badge.svg" alt="Validate Senmu BuildOS"></a>
@@ -37,6 +37,7 @@ Senmu BuildOS 是一个面向 **AI coding agent** 的开源项目运行规范和
 | 为未来假设预建抽象、插件系统和通用平台 | 先闭合当前最小价值切片；第二个真实用例或明确路线图再触发扩展 |
 | 界面看起来像通用 AI 模板，信息层级、排版、交互和品牌意图彼此脱节 | 从真实任务、内容层级和设计系统出发，统一布局、字体、色彩、动效、响应式与可访问性，并在真实渲染中复核 |
 | 换会话后把有意约束当成 Bug，又恢复了早已拒绝的方案 | 保存关键决定的理由、拒绝方案、必须保持的边界和重评条件；条件变化时追加新裁决，不改写历史 |
+| Agent 交接后又从主线拉分支，整改建立在错误代码基线上 | 用稳定 Change Unit ID 恢复原分支和 worktree；重跑实验只增加运行记录，不改变代码单元 |
 | 多个需求和 Bug 排队后，上下文丢失，上线时才发现漏项 | 在一份现有版本文档中维护需求与缺陷清单，开发时更新结果状态，上线前与任务、Git、测试和候选一次核对 |
 | 测试通过、Tag 创建或命令成功就被说成“已经上线” | 区分实现、验收、制品、部署和生产事实，每个结论使用对应证据 |
 
@@ -176,7 +177,7 @@ BuildOS 不承诺固定比例。它通过减少不必要的功能、重复代码
 
 ## 安装、更新与卸载
 
-Senmu BuildOS 当前正式版本为 `v2.1.3`，支持 Codex、Claude Code 和豆包适配。安装的是整个插件，不需要逐个下载八个 Skill。
+Senmu BuildOS 当前正式版本为 `v2.2.0`，支持 Codex、Claude Code 和豆包适配。安装的是整个插件，不需要逐个下载八个 Skill。
 
 ### 更新 Codex
 
