@@ -8,7 +8,7 @@
   <a href="README.md">简体中文</a> · <a href="README.en.md">English</a> · <a href="README.ja.md">日本語</a>
 </p>
 
-<!-- product-surface-review: 2.2.0 -->
+<!-- product-surface-review: 2.3.0 -->
 
 <p align="center">
   <a href="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml"><img src="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml/badge.svg" alt="Validate Senmu BuildOS"></a>
@@ -28,8 +28,13 @@ It focuses on two outcomes:
 
 ## Why BuildOS
 
+The hard part of AI coding is often not whether one session can produce code. It is whether the project still remembers why it looks this way after dozens of changes. Sessions end, attention thins as context grows, and requirements, constraints, commands, and decisions get scattered across chats, READMEs, issues, comments, and agent-specific files. The next agent is then forced to guess again.
+
+Making the prompt longer does not solve that problem; it moves the reading cost into the next turn. BuildOS lets the project hold its current facts, decisions, progress, and evidence, then uses short entrypoints to route an agent to only what this task needs. Directory shapes and tools may differ. Ownership and the path to the truth must remain clear.
+
 | Common AI coding failure | BuildOS behavior |
 | --- | --- |
+| Attention fades in a long session, and a new agent has to reconstruct rules and decisions | A short project entrypoint routes to current facts, requirements, technical decisions, task state, and release evidence; load only what the task needs |
 | Coding starts before scope is clear, and unrequested features appear | Approved scope, non-goals, and observable acceptance constrain implementation; unapproved ideas remain candidates |
 | An agent creates new folders, services, or a second source of state without reading the project | Inspect the real root, existing code, call paths, and source of truth before extending what is already there |
 | One framework option would solve the problem, but the agent hand-rolls a component or watches internal DOM | Check public APIs for the installed version first; add a minimal adapter only when evidence shows a real gap |
@@ -76,7 +81,19 @@ See [adapters/doubao/README.md](adapters/doubao/README.md) for the Doubao adapte
 
 ## How it works
 
-BuildOS does not wait until formatting or code review to catch mistakes. It starts before bad decisions become code:
+Start with a five-layer map:
+
+```text
+Project entrypoint
+  → current facts and engineering constraints
+  → current-version requirements and technical decisions
+  → current task state and recovery entrypoint
+  → release, runtime, and production evidence
+```
+
+The entrypoint routes; it does not copy the rules. Current specifications say what the system must satisfy now. Requirements and technical decisions explain why it changes. Task state says where work can resume. Release and runtime evidence say what actually happened. BuildOS does not require fixed directories or five separate files in a small project. It requires one owner for each fact and a short route that a later agent can follow.
+
+In engineering work, BuildOS does not wait until the code is finished. It tries to absorb errors earlier in the production path:
 
 ```text
 Real problem and approved scope
@@ -114,7 +131,7 @@ Reuse still passes semantic and risk checks. If a framework capability fails bus
 
 - **Understand the project before changing it.** The current README, code, configuration, tests, CI, and runtime state are closer to the truth than generic advice.
 - **Confirm the requirement before writing code.** Features outside the approved scope do not enter the current implementation simply because they seem useful later.
-- **Fix the source of defects before patching symptoms.** Trace the most upstream cause through requirements and ownership, architecture, end-to-end flows, and business logic; apply a direct minimal fix when the defect is demonstrably local instead of turning simple work into a process.
+- **Unblock the flow before adding barriers.** Fix the requirements, ownership, architecture, interfaces, defaults, and production path that create defects, so the correct path becomes the default. Tests and gates control material residual risk that cannot be removed economically. Apply a direct minimal fix when the defect is demonstrably local instead of turning simple work into a process.
 - **Reuse before custom code.** Prefer public capabilities already provided by the project, framework, component system, platform, and standard library; add the smallest adapter only when a real gap remains.
 - **Make design intentional, implementable, and reviewable.** Start from real tasks, content hierarchy, and the existing design system; coordinate layout, typography, color, interaction, motion, responsive behavior, and accessibility, then verify the rendered result instead of substituting decoration or a generic template for product judgment.
 - **Keep small work lightweight.** Routine changes need only the checks they justify; data, permissions, payments, production releases, and other high-risk work retain design, verification, and rollback evidence.
@@ -169,7 +186,7 @@ BuildOS does not promise a fixed percentage. It reduces avoidable cost by preven
 
 ## Install, update, and remove
 
-The current formal release is Senmu BuildOS `v2.2.0`. It supports Codex, Claude Code, and a Doubao adapter. Install the plugin as one unit; the eight Skills do not need separate downloads.
+The current formal release is Senmu BuildOS `v2.3.0`. It supports Codex, Claude Code, and a Doubao adapter. Install the plugin as one unit; the eight Skills do not need separate downloads.
 
 ### Update Codex
 

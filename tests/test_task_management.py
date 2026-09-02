@@ -4,7 +4,6 @@ import tempfile
 import unittest
 from pathlib import Path
 
-
 ROOT = Path(__file__).resolve().parent.parent
 INIT = ROOT / "skills/senmu-build-project/scripts/init_project_governance.py"
 ASSESS = ROOT / "skills/senmu-build-project/scripts/assess_project_governance.py"
@@ -450,6 +449,116 @@ class ProjectGovernanceScaffoldTests(unittest.TestCase):
             validate = self.run_command("python3", str(VALIDATOR), "--root", str(target))
             self.assertNotEqual(validate.returncode, 0)
             self.assertIn("Project Map 缺少必要索引区：## 项目规范索引", validate.stdout)
+
+    def test_project_validator_reports_duplicate_index_row_as_json_warning(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_root:
+            target = Path(temporary_root) / "duplicate-index"
+            initialized = self.initialize(target, "software", "standard")
+            self.assertEqual(initialized.returncode, 0, initialized.stderr or initialized.stdout)
+            project_map = target / "governance/PROJECT_MAP.md"
+            row = (
+                "| 代码质量 | 修改源码 | 使用当前质量入口 | "
+                "[质量规范](../engineering/CODE_QUALITY.md) | active；2026-09-02 |\n"
+            )
+            project_map.write_text(
+                project_map.read_text(encoding="utf-8").replace(
+                    "| `<代码质量／架构／测试／工作流／交付等>` | `<什么任务或风险出现时读取>` | `<只写影响选择的短摘要>` | `<文档、配置或公开入口>` | `<active/candidate/legacy/retired；日期>` |\n",
+                    row + row,
+                ),
+                encoding="utf-8",
+            )
+
+            result = self.run_command(
+                "python3", str(VALIDATOR), "--root", str(target), "--json"
+            )
+            report = json.loads(result.stdout)
+
+            self.assertEqual(result.returncode, 0, result.stderr or result.stdout)
+            self.assertIn(
+                "project_map.duplicate_index_row",
+                {item["code"] for item in report["warnings"]},
+            )
+            self.assertEqual(report["stats"]["active_standards_rows"], 2)
+            self.assertEqual(report["stats"]["active_index_targets_checked"], 2)
+
+    def test_project_validator_allows_distinct_triggers_for_one_owner(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_root:
+            target = Path(temporary_root) / "multiple-triggers"
+            initialized = self.initialize(target, "software", "standard")
+            self.assertEqual(initialized.returncode, 0, initialized.stderr or initialized.stdout)
+            project_map = target / "governance/PROJECT_MAP.md"
+            project_map.write_text(
+                project_map.read_text(encoding="utf-8").replace(
+                    "| `<代码质量／架构／测试／工作流／交付等>` | `<什么任务或风险出现时读取>` | `<只写影响选择的短摘要>` | `<文档、配置或公开入口>` | `<active/candidate/legacy/retired；日期>` |\n",
+                    "| 代码质量 | 修改源码 | 使用当前质量入口 | `engineering/CODE_QUALITY.md` | active |\n"
+                    "| 代码质量 | 审查实现 | 先读取质量契约 | `engineering/CODE_QUALITY.md` | active |\n",
+                ),
+                encoding="utf-8",
+            )
+
+            result = self.run_command(
+                "python3", str(VALIDATOR), "--root", str(target), "--json"
+            )
+            report = json.loads(result.stdout)
+
+            self.assertEqual(result.returncode, 0, result.stderr or result.stdout)
+            self.assertNotIn(
+                "project_map.duplicate_index_row",
+                {item["code"] for item in report["warnings"]},
+            )
+            self.assertEqual(report["stats"]["active_index_targets_checked"], 2)
+
+    def test_project_validator_resolves_complex_links_and_ignores_fenced_examples(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_root:
+            target = Path(temporary_root) / "complex-links"
+            initialized = self.initialize(target, "software", "standard")
+            self.assertEqual(initialized.returncode, 0, initialized.stderr or initialized.stdout)
+            complex_owner = target / "engineering/code quality(v2).md"
+            complex_owner.write_text("# Code quality\n", encoding="utf-8")
+            project_map = target / "governance/PROJECT_MAP.md"
+            project_map.write_text(
+                project_map.read_text(encoding="utf-8").replace(
+                    "| `<代码质量／架构／测试／工作流／交付等>` | `<什么任务或风险出现时读取>` | `<只写影响选择的短摘要>` | `<文档、配置或公开入口>` | `<active/candidate/legacy/retired；日期>` |\n",
+                    "| 代码质量 | 修改源码 | 使用当前质量入口 | "
+                    "[质量规范](<../engineering/code quality(v2).md#checks>) | active |\n",
+                )
+                + "\n```markdown\n[示例坏链接](../missing(example).md)\n```\n",
+                encoding="utf-8",
+            )
+
+            result = self.run_command(
+                "python3", str(VALIDATOR), "--root", str(target), "--json"
+            )
+            report = json.loads(result.stdout)
+
+            self.assertEqual(result.returncode, 0, result.stderr or result.stdout)
+            self.assertEqual(report["errors"], [])
+            self.assertEqual(report["stats"]["active_index_targets_checked"], 1)
+
+    def test_project_validator_rejects_broken_and_outside_index_links(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_root:
+            target = Path(temporary_root) / "invalid-links"
+            initialized = self.initialize(target, "software", "standard")
+            self.assertEqual(initialized.returncode, 0, initialized.stderr or initialized.stdout)
+            project_map = target / "governance/PROJECT_MAP.md"
+            project_map.write_text(
+                project_map.read_text(encoding="utf-8").replace(
+                    "| `<代码质量／架构／测试／工作流／交付等>` | `<什么任务或风险出现时读取>` | `<只写影响选择的短摘要>` | `<文档、配置或公开入口>` | `<active/candidate/legacy/retired；日期>` |\n",
+                    "| 测试 | 修改测试 | 使用测试策略 | [缺失](../engineering/missing.md) | active |\n"
+                    "| 安全 | 修改权限 | 使用外部文件 | [越界](../../outside.md) | active |\n",
+                ),
+                encoding="utf-8",
+            )
+
+            result = self.run_command(
+                "python3", str(VALIDATOR), "--root", str(target), "--json"
+            )
+            report = json.loads(result.stdout)
+            codes = {item["code"] for item in report["errors"]}
+
+            self.assertEqual(result.returncode, 1, result.stderr or result.stdout)
+            self.assertIn("project_map.index_path_missing", codes)
+            self.assertIn("project_map.index_path_outside_root", codes)
 
     def test_project_validator_runs_lessons_validation(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_root:

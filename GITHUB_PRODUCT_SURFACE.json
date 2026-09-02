@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "repository": "SenMuShare/senmu-buildos",
-  "reviewed_for_version": "2.2.0",
+  "reviewed_for_version": "2.3.0",
   "description": "AI-native BuildOS for Codex, Claude Code and Doubao: product discovery, UI/UX design, software engineering, context-aware workflows, testing, Git and verifiable releases.",
   "topics": [
     "agent-skills",
@@ -27,12 +27,14 @@
   ],
   "readme_review": {
     "updated_sections": [
-      "why-buildos"
+      "why-buildos",
+      "how-it-works",
+      "design-principles"
     ],
     "summary": {
-      "zh": "跨 Agent 续作恢复原代码单元，正式发布用可恢复控制单逐项核对并清理 Git 执行面。",
-      "en": "Resume the original code unit across agents and close releases with a recoverable, evidence-backed control sheet.",
-      "ja": "Agent 間で元のコード単位を復元し、復旧可能な管理表でリリースと Git 実行面を段階的に閉じます。"
+      "zh": "把跨会话注意力衰减转成项目自有的事实、决定、任务和证据路线，并以宜疏不宜堵治理缺陷生产源。",
+      "en": "Turn cross-session attention loss into project-owned facts, decisions, task state, and evidence while fixing defect sources before adding gates.",
+      "ja": "会話をまたぐ注意の減衰を、プロジェクト所有の事実・判断・タスク・証拠経路へ変え、gate より先に欠陥の発生源を正します。"
     }
   },
   "readmes": {

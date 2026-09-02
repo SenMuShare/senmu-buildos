@@ -6,13 +6,11 @@ from __future__ import annotations
 import hashlib
 import json
 import re
-import subprocess
-import sys
 from pathlib import Path
+from urllib.parse import unquote
 
 from extract_release_notes import ReleaseNotesError, extract_release_notes
 from manage_github_product_surface import ProductSurfaceError, validate_local_surface
-
 
 ROOT = Path(__file__).resolve().parent.parent
 EXPECTED_SKILLS = {
@@ -538,6 +536,134 @@ def validate_behavior_invariant_ids() -> None:
         seen[invariant_id] = line_number
 
 
+def strip_fenced_code_blocks(text: str) -> str:
+    """Mask fenced code without changing the surrounding line structure."""
+
+    visible: list[str] = []
+    fence_character: str | None = None
+    fence_length = 0
+    for line in text.splitlines():
+        match = re.match(r"^\s*(`{3,}|~{3,})", line)
+        if match:
+            marker = match.group(1)
+            if fence_character is None:
+                fence_character = marker[0]
+                fence_length = len(marker)
+                visible.append("")
+                continue
+            if marker[0] == fence_character and len(marker) >= fence_length:
+                fence_character = None
+                fence_length = 0
+                visible.append("")
+                continue
+        visible.append(line if fence_character is None else "")
+    return "\n".join(visible)
+
+
+def find_matching_markdown_delimiter(
+    text: str, start: int, opening: str, closing: str
+) -> int | None:
+    depth = 0
+    index = start
+    while index < len(text):
+        character = text[index]
+        if character == "\\":
+            index += 2
+            continue
+        if character == opening:
+            depth += 1
+        elif character == closing:
+            depth -= 1
+            if depth == 0:
+                return index
+        index += 1
+    return None
+
+
+def parse_markdown_link_destination(content: str) -> str | None:
+    content = content.strip()
+    if not content:
+        return None
+    if content.startswith("<"):
+        closing = content.find(">", 1)
+        if closing < 0:
+            return None
+        destination = content[1:closing]
+    else:
+        escaped = False
+        destination_characters: list[str] = []
+        for character in content:
+            if escaped:
+                destination_characters.append(character)
+                escaped = False
+                continue
+            if character == "\\":
+                escaped = True
+                continue
+            if character.isspace():
+                break
+            destination_characters.append(character)
+        destination = "".join(destination_characters)
+    return destination.strip() or None
+
+
+def extract_markdown_link_targets(text: str) -> list[str]:
+    """Return inline Markdown link targets, excluding fenced examples."""
+
+    visible = strip_fenced_code_blocks(text)
+    targets: list[str] = []
+    index = 0
+    while index < len(visible):
+        opening = visible.find("[", index)
+        if opening < 0:
+            break
+        closing = find_matching_markdown_delimiter(visible, opening, "[", "]")
+        if closing is None:
+            break
+        cursor = closing + 1
+        while cursor < len(visible) and visible[cursor] in " \t":
+            cursor += 1
+        if cursor >= len(visible) or visible[cursor] != "(":
+            index = closing + 1
+            continue
+        destination_end = find_matching_markdown_delimiter(
+            visible, cursor, "(", ")"
+        )
+        if destination_end is None:
+            index = cursor + 1
+            continue
+        target = parse_markdown_link_destination(
+            visible[cursor + 1 : destination_end]
+        )
+        if target is not None:
+            targets.append(target)
+        index = destination_end + 1
+    return targets
+
+
+def local_markdown_target_error(
+    source: Path, raw_target: str, authority_root: Path
+) -> str | None:
+    target = raw_target.strip()
+    if (
+        not target
+        or target.startswith(("#", "//"))
+        or re.match(r"^[A-Za-z][A-Za-z0-9+.-]*:", target)
+    ):
+        return None
+    path_part = unquote(target.split("#", 1)[0].split("?", 1)[0]).strip()
+    if not path_part:
+        return None
+    resolved = (source.parent / path_part).resolve()
+    try:
+        resolved.relative_to(authority_root.resolve())
+    except ValueError:
+        return f"local Markdown link escapes the authority root: {raw_target}"
+    if not resolved.exists():
+        return f"broken local Markdown link: {raw_target}"
+    return None
+
+
 def validate_local_markdown_links() -> None:
     candidates = list((ROOT / "skills").rglob("*.md"))
     candidates.extend((ROOT / "docs/architecture").rglob("*.md"))
@@ -549,13 +675,10 @@ def validate_local_markdown_links() -> None:
     )
     for path in sorted(candidates):
         text = path.read_text(encoding="utf-8")
-        for raw_target in re.findall(r"\[[^\]]+\]\(([^)]+)\)", text):
-            target = raw_target.split("#", 1)[0].strip()
-            if not target or "://" in target or target.startswith("mailto:"):
-                continue
-            resolved = (path.parent / target).resolve()
-            if not resolved.exists():
-                fail(f"broken local Markdown link in {path.relative_to(ROOT)}: {raw_target}")
+        for raw_target in extract_markdown_link_targets(text):
+            error = local_markdown_target_error(path, raw_target, ROOT)
+            if error is not None:
+                fail(f"{error} in {path.relative_to(ROOT)}")
 
 
 def validate_project_instruction_layer() -> None:

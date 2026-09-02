@@ -17,6 +17,7 @@
 | S-09 | 开放开发批次默认复用已匹配单元，只对会改变版本归属、验收或交付时机的歧义询问；单项完成不触发批次完整门禁，正式发布始终需要授权 | `hooks/kernel.js`、Product／Engineering／Delivery owner |
 | S-10 | `references/` 任意深度的 active reference 都必须有唯一 owner、可从 `SKILL.md` 经 Markdown 路由到达，并纳入单文件、渐进链和重复段落预算；嵌套资源库不构成校验豁免 | `scripts/validate_package.py` |
 | S-11 | 八个 Skill 保持平级入口；同域稳定多步方法进入现有 reference 的短操作配方，以主导概念、触发、动作、完成判断、停止点和例外表达。项目路径／配置／版本只引用真实 owner，正向动作优先于无动作句子和成组禁令 | `docs/architecture/skill-boundaries.md` |
+| S-12 | BuildOS 以“宜疏不宜堵”处理质量：先修正制造错误的需求、职责、架构、接口、默认值和生产流程，使正确路径成为默认；测试与门禁只控制无法经济消除的重大剩余风险。安全、隐私、支付、权限、生产数据、破坏性操作和发布完整性继续 fail closed | `docs/architecture/system-overview.md`、`治理强度分级与门禁规范.md` |
 
 ## Project
 
@@ -47,6 +48,8 @@
 | P-23 | 影响后续执行的关键决定保存 Decision Rationale、Rejected Alternatives、Preserved Constraints 和 Revisit Trigger；Task 只保存任务级摘要，长期决定晋级原专业 owner，不复制完整聊天或改写历史结论 | `任务执行与状态管理规范.md`、`TASK.template.md` |
 | P-24 | 大型任务优先拆成穿过必要技术层的纵向价值切片；依赖前序发现的远期区域保持 `Not yet specified`，只记录约束、未知和展开触发，不为表面完整编造任务、依赖或验收 | `任务执行与状态管理规范.md` |
 | P-25 | 用户展示名称为 Project Governance，强调治理实例而非通用项目管理；运行 slug 保持 `senmu-build-project`，不建立迁移或新 Skill | `skills/senmu-build-project/SKILL.md`、`skills/senmu-build-project/agents/openai.yaml`、`docs/architecture/skill-boundaries.md` |
+| P-26 | 项目规则按一句话实际约束的对象进入唯一专业 owner；持久 Agent 指令要求非显而易见且反复需要或一次违反有重大伤害，当前稳定、面向实现且可验证的工程约束不要求先有失败历史。混合文件按职责拆分权威关系，不由关键词脚本自动搬迁 | `项目规范发现与按需加载规范.md` |
+| P-27 | Project Map 允许多个不同触发入口指向同一 owner；完全重复行只警告。validator 只对声明的 active 项目内路径、链接和确定性结构破坏返回错误，警告不阻断，JSON 使用稳定 code／path／message／severity／stats；结构合规不证明语义正确或新 Agent 已接线 | `项目规范发现与按需加载规范.md`、`validate_project_governance.py` |
 
 ## Product
 

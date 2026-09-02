@@ -9,7 +9,8 @@ import re
 import subprocess
 import sys
 from pathlib import Path
-
+from typing import Any
+from urllib.parse import unquote
 
 POLICY_REL = Path(".senmu-buildos/config.json")
 REQUIRED_POLICY_KEYS = {
@@ -57,6 +58,244 @@ ABSOLUTE_PRIVATE_PATH = re.compile(
 )
 
 
+def issue(code: str, message: str, path: str, severity: str) -> dict[str, str]:
+    return {"code": code, "path": path, "message": message, "severity": severity}
+
+
+def strip_fenced_code_blocks(text: str) -> str:
+    visible: list[str] = []
+    fence_character: str | None = None
+    fence_length = 0
+    for line in text.splitlines():
+        match = re.match(r"^\s*(`{3,}|~{3,})", line)
+        if match:
+            marker = match.group(1)
+            if fence_character is None:
+                fence_character = marker[0]
+                fence_length = len(marker)
+                visible.append("")
+                continue
+            if marker[0] == fence_character and len(marker) >= fence_length:
+                fence_character = None
+                fence_length = 0
+                visible.append("")
+                continue
+        visible.append(line if fence_character is None else "")
+    return "\n".join(visible)
+
+
+def find_matching_delimiter(
+    text: str, start: int, opening: str, closing: str
+) -> int | None:
+    depth = 0
+    index = start
+    while index < len(text):
+        character = text[index]
+        if character == "\\":
+            index += 2
+            continue
+        if character == opening:
+            depth += 1
+        elif character == closing:
+            depth -= 1
+            if depth == 0:
+                return index
+        index += 1
+    return None
+
+
+def parse_link_destination(content: str) -> str | None:
+    content = content.strip()
+    if not content:
+        return None
+    if content.startswith("<"):
+        closing = content.find(">", 1)
+        return content[1:closing].strip() if closing >= 0 else None
+    escaped = False
+    characters: list[str] = []
+    for character in content:
+        if escaped:
+            characters.append(character)
+            escaped = False
+        elif character == "\\":
+            escaped = True
+        elif character.isspace():
+            break
+        else:
+            characters.append(character)
+    return "".join(characters).strip() or None
+
+
+def extract_markdown_link_targets(text: str) -> list[str]:
+    visible = strip_fenced_code_blocks(text)
+    targets: list[str] = []
+    index = 0
+    while index < len(visible):
+        opening = visible.find("[", index)
+        if opening < 0:
+            break
+        closing = find_matching_delimiter(visible, opening, "[", "]")
+        if closing is None:
+            break
+        cursor = closing + 1
+        while cursor < len(visible) and visible[cursor] in " \t":
+            cursor += 1
+        if cursor >= len(visible) or visible[cursor] != "(":
+            index = closing + 1
+            continue
+        destination_end = find_matching_delimiter(visible, cursor, "(", ")")
+        if destination_end is None:
+            index = cursor + 1
+            continue
+        target = parse_link_destination(visible[cursor + 1 : destination_end])
+        if target is not None:
+            targets.append(target)
+        index = destination_end + 1
+    return targets
+
+
+def markdown_section(text: str, heading: str) -> str:
+    lines = text.splitlines()
+    start: int | None = None
+    level = len(heading) - len(heading.lstrip("#"))
+    for index, line in enumerate(lines):
+        if line.strip() == heading:
+            start = index + 1
+            break
+    if start is None:
+        return ""
+    end = len(lines)
+    for index in range(start, len(lines)):
+        match = re.match(r"^(#{1,6})\s+", lines[index])
+        if match and len(match.group(1)) <= level:
+            end = index
+            break
+    return "\n".join(lines[start:end])
+
+
+def table_rows(section: str) -> list[list[str]]:
+    rows: list[list[str]] = []
+    for line in section.splitlines():
+        if not line.strip().startswith("|"):
+            continue
+        cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
+        if cells and all(re.fullmatch(r":?-{3,}:?", cell) for cell in cells):
+            continue
+        rows.append(cells)
+    return rows[1:] if rows else []
+
+
+def is_external_or_anchor(target: str) -> bool:
+    return bool(
+        not target
+        or target.startswith(("#", "//"))
+        or re.match(r"^[A-Za-z][A-Za-z0-9+.-]*:", target)
+    )
+
+
+def resolve_governed_target(
+    root: Path, base: Path, raw_target: str
+) -> tuple[Path | None, str | None]:
+    target = raw_target.strip()
+    if is_external_or_anchor(target):
+        return None, None
+    path_part = unquote(target.split("#", 1)[0].split("?", 1)[0]).strip()
+    if not path_part or "{" in path_part or "<" in path_part:
+        return None, None
+    resolved = (base / path_part).resolve()
+    try:
+        resolved.relative_to(root)
+    except ValueError:
+        return resolved, "outside"
+    if not resolved.exists():
+        return resolved, "missing"
+    return resolved, None
+
+
+def validate_project_map_index(
+    root: Path,
+    project_map_path: Path,
+    text: str,
+    errors: list[str],
+    warnings: list[dict[str, str]],
+    stats: dict[str, int],
+) -> None:
+    relative_map = project_map_path.relative_to(root).as_posix()
+    section = markdown_section(text, "## 项目规范索引")
+    rows = table_rows(section)
+    stats["standards_rows"] = len(rows)
+    seen_rows: set[tuple[str, ...]] = set()
+    index_problems: set[tuple[str, str]] = set()
+    for row_number, cells in enumerate(rows, start=1):
+        if len(cells) < 5 or PLACEHOLDER.search(" | ".join(cells)):
+            continue
+        normalized = tuple(re.sub(r"\s+", " ", cell).strip() for cell in cells)
+        if normalized in seen_rows:
+            warnings.append(
+                issue(
+                    "project_map.duplicate_index_row",
+                    f"项目规范索引第 {row_number} 个数据行与前文完全重复；保留一个即可",
+                    relative_map,
+                    "warning",
+                )
+            )
+        seen_rows.add(normalized)
+        status = cells[4]
+        if (
+            re.search(
+                r"(?:^|[\s/；;,])active(?:$|[\s/；;,])",
+                status,
+                re.IGNORECASE,
+            )
+            is None
+        ):
+            continue
+        stats["active_standards_rows"] += 1
+        target_cell = cells[3]
+        link_targets = extract_markdown_link_targets(target_cell)
+        code_targets = re.findall(r"`([^`]+)`", target_cell)
+        governed_targets: list[tuple[Path, str]] = []
+        for target in link_targets:
+            governed_targets.append((project_map_path.parent, target))
+        for target in code_targets:
+            governed_targets.append((root, target))
+        checked = 0
+        for base, target in governed_targets:
+            resolved, problem = resolve_governed_target(root, base, target)
+            if resolved is None:
+                continue
+            checked += 1
+            stats["active_index_targets_checked"] += 1
+            if problem == "outside":
+                errors.append(f"Project Map 项目规范索引路径越出项目根：{target}")
+                index_problems.add((str(resolved), problem))
+            elif problem == "missing":
+                errors.append(f"Project Map 项目规范索引路径不存在：{target}")
+                index_problems.add((str(resolved), problem))
+        if checked == 0:
+            warnings.append(
+                issue(
+                    "project_map.active_index_unverifiable",
+                    f"项目规范索引第 {row_number} 个 active 数据行没有可校验的项目内路径",
+                    relative_map,
+                    "warning",
+                )
+            )
+
+    for target in extract_markdown_link_targets(text):
+        resolved, problem = resolve_governed_target(
+            root, project_map_path.parent, target
+        )
+        if resolved is not None:
+            stats["project_map_links_checked"] += 1
+        if problem is None or (str(resolved), problem) in index_problems:
+            continue
+        if problem == "outside":
+            errors.append(f"Project Map 本地链接越出项目根：{target}")
+        elif problem == "missing":
+            errors.append(f"Project Map 本地链接不存在：{target}")
+
+
 def canonical_git_root(root: Path) -> Path:
     """Return the main worktree root when root belongs to Git, otherwise root."""
 
@@ -81,8 +320,20 @@ def canonical_git_root(root: Path) -> Path:
     return common_dir.parent if common_dir.name == ".git" else checkout
 
 
-def validate(root: Path, strict: bool) -> list[str]:
+def validate(
+    root: Path,
+    strict: bool,
+    warnings: list[dict[str, str]] | None = None,
+    stats: dict[str, int] | None = None,
+) -> list[str]:
     errors: list[str] = []
+    warnings = warnings if warnings is not None else []
+    stats = stats if stats is not None else {
+        "standards_rows": 0,
+        "active_standards_rows": 0,
+        "active_index_targets_checked": 0,
+        "project_map_links_checked": 0,
+    }
     root = root.resolve()
     policy_path = root / POLICY_REL
     if not policy_path.is_file():
@@ -348,10 +599,20 @@ def validate(root: Path, strict: bool) -> list[str]:
         if not project_map_path or not (root / str(project_map_path)).is_file():
             errors.append("standard/release 档位必须提供有效 project_map_path")
         else:
-            project_map_text = (root / str(project_map_path)).read_text(encoding="utf-8")
+            resolved_project_map_path = root / str(project_map_path)
+            project_map_text = resolved_project_map_path.read_text(encoding="utf-8")
             for heading in PROJECT_MAP_REQUIRED_HEADINGS:
                 if heading not in project_map_text:
                     errors.append(f"Project Map 缺少必要索引区：{heading}")
+            if all(heading in project_map_text for heading in PROJECT_MAP_REQUIRED_HEADINGS):
+                validate_project_map_index(
+                    root,
+                    resolved_project_map_path,
+                    project_map_text,
+                    errors,
+                    warnings,
+                    stats,
+                )
     elif project_map_path is not None:
         errors.append("core 档位的 project_map_path 必须为 null")
 
@@ -467,22 +728,120 @@ def validate(root: Path, strict: bool) -> list[str]:
             text = target.read_text(encoding="utf-8")
             if ABSOLUTE_PRIVATE_PATH.search(text):
                 errors.append(f"严格校验发现持久化的本机绝对路径：{raw}")
-    return errors
+    return list(dict.fromkeys(errors))
 
 
-def main() -> None:
+def error_issue(message: str, policy: dict[str, Any] | None) -> dict[str, str]:
+    code = "governance.structural_violation"
+    path = "."
+    if message.startswith("缺少治理 policy"):
+        code, path = "policy.missing", POLICY_REL.as_posix()
+    elif message.startswith("治理 policy") or message.startswith("schema 3.0.0"):
+        code, path = "policy.invalid", POLICY_REL.as_posix()
+    elif message.startswith("Project Map 缺少必要索引区"):
+        code = "project_map.missing_section"
+    elif message.startswith("Project Map 本地链接越出项目根"):
+        code = "project_map.link_outside_root"
+    elif message.startswith("Project Map 本地链接不存在"):
+        code = "project_map.link_missing"
+    elif message.startswith("Project Map 项目规范索引路径越出项目根"):
+        code = "project_map.index_path_outside_root"
+    elif message.startswith("Project Map 项目规范索引路径不存在"):
+        code = "project_map.index_path_missing"
+    elif "越出项目根" in message or "越出工作区" in message:
+        code = "path.outside_root"
+    elif "不存在" in message or message.startswith("缺少治理文件"):
+        code = "path.missing"
+    elif message.startswith("严格校验"):
+        code = "strict.violation"
+    if code.startswith("project_map.") and isinstance(policy, dict):
+        path = str(policy.get("project_map_path") or ".")
+    elif code.startswith(("policy.", "path.")):
+        path = POLICY_REL.as_posix()
+    return issue(code, message, path, "error")
+
+
+def audit(root: Path, strict: bool) -> dict[str, Any]:
+    resolved_root = root.resolve()
+    warnings: list[dict[str, str]] = []
+    stats = {
+        "standards_rows": 0,
+        "active_standards_rows": 0,
+        "active_index_targets_checked": 0,
+        "project_map_links_checked": 0,
+    }
+    errors = validate(resolved_root, strict, warnings, stats)
+    policy: dict[str, Any] | None = None
+    try:
+        loaded = json.loads((resolved_root / POLICY_REL).read_text(encoding="utf-8"))
+        if isinstance(loaded, dict):
+            policy = loaded
+    except (OSError, json.JSONDecodeError):
+        pass
+    unique_warnings = {
+        (item["code"], item["path"], item["message"]): item for item in warnings
+    }
+    return {
+        "schema_version": 1,
+        "root": str(resolved_root),
+        "mode": "strict" if strict else "structural",
+        "errors": [error_issue(message, policy) for message in errors],
+        "warnings": list(unique_warnings.values()),
+        "stats": stats,
+    }
+
+
+def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=Path.cwd())
     parser.add_argument("--strict", action="store_true", help="要求 policy 激活且治理文档无占位符")
+    parser.add_argument("--json", action="store_true", help="输出稳定 JSON 回执")
     args = parser.parse_args()
-    errors = validate(args.root, args.strict)
-    if errors:
-        for error in errors:
-            print(f"[ERROR] {error}")
-        raise SystemExit(1)
+    try:
+        report = audit(args.root, args.strict)
+    except Exception as exc:  # pragma: no cover - defensive CLI boundary
+        if args.json:
+            print(
+                json.dumps(
+                    {
+                        "schema_version": 1,
+                        "root": str(args.root.resolve()),
+                        "mode": "strict" if args.strict else "structural",
+                        "errors": [
+                            issue(
+                                "validator.internal_failure",
+                                str(exc),
+                                ".",
+                                "error",
+                            )
+                        ],
+                        "warnings": [],
+                        "stats": {},
+                    },
+                    ensure_ascii=False,
+                    indent=2,
+                )
+            )
+        else:
+            print(f"[ERROR] 校验器内部失败：{exc}")
+        return 2
+    if args.json:
+        print(json.dumps(report, ensure_ascii=False, indent=2))
+    else:
+        for item in report["errors"]:
+            print(f"[ERROR] {item['message']}")
+        for item in report["warnings"]:
+            print(f"[WARNING] {item['message']}")
+    if report["errors"]:
+        return 1
     mode = "严格" if args.strict else "结构"
-    print(f"[OK] 项目治理{mode}校验通过：{args.root.resolve()}")
+    if not args.json:
+        print(
+            f"[OK] 项目治理{mode}校验通过：{args.root.resolve()}"
+            f"（{len(report['warnings'])} 条警告）"
+        )
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
