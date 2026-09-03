@@ -1,14 +1,14 @@
 # Senmu BuildOS（森木 BuildOS）— AI コーディングプロジェクトの工程コーチと運用規範
 
 <p align="center">
-  Codex、Claude Code、豆包が正しいものを作り、無駄を減らして品質を高めるために。
+  Codex、Claude Code、豆包、WorkBuddy、ZCode が正しいものを作り、無駄を減らして品質を高めるために。
 </p>
 
 <p align="center">
   <a href="README.md">简体中文</a> · <a href="README.en.md">English</a> · <a href="README.ja.md">日本語</a>
 </p>
 
-<!-- product-surface-review: 2.3.0 -->
+<!-- product-surface-review: 2.4.0 -->
 
 <p align="center">
   <a href="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml"><img src="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml/badge.svg" alt="Validate Senmu BuildOS"></a>
@@ -78,6 +78,32 @@ python3 adapters/doubao/install_doubao.py
 ```
 
 豆包アダプターの詳細は [adapters/doubao/README.md](adapters/doubao/README.md) を参照してください。
+
+### WorkBuddy
+
+```bash
+git clone https://github.com/SenMuShare/senmu-buildos.git
+cd senmu-buildos
+python3 adapters/workbuddy/install_workbuddy.py --dry-run
+python3 adapters/workbuddy/install_workbuddy.py --scope user
+```
+
+デフォルトではユーザーレベルの `~/.workbuddy/skills/` にインストールされます。プロジェクト限定にする場合は `--scope project --workspace <ワークスペースのルート>` を使います。WorkBuddy アダプターの詳細は [adapters/workbuddy/README.md](adapters/workbuddy/README.md) を参照してください。
+
+### ZCode
+
+ZCode の **設定 → プラグイン管理 → 発見** で **`+`** を押し、マーケットプレイスに `https://github.com/SenMuShare/senmu-buildos` を追加して **senmu-buildos** をインストールします。新しいセッションでは、`SessionStart` フックによってガバナンスカーネルが自動的に注入されます。
+
+Skill のみのインストール（フックなし、ブートストラップカーネルは任意）：
+
+```bash
+git clone https://github.com/SenMuShare/senmu-buildos.git
+cd senmu-buildos
+python3 adapters/zcode/install_zcode.py --dry-run
+python3 adapters/zcode/install_zcode.py --with-kernel
+```
+
+デフォルトではユーザーレベルの `~/.agents/skills/` にインストールされます。ZCode アダプターの詳細は [adapters/zcode/README.md](adapters/zcode/README.md) を参照してください。
 
 ## 仕組み
 
@@ -186,7 +212,7 @@ BuildOS は固定割合を約束しません。不要な機能、重複コード
 
 ## インストール、更新、削除
 
-Senmu BuildOS の現行正式リリースは `v2.3.0` です。Codex、Claude Code、豆包アダプターをサポートします。8 Skill は個別ではなく、1 つのプラグインとしてインストールします。
+Senmu BuildOS の現行正式リリースは `v2.4.0` です。Codex、Claude Code、豆包アダプター、WorkBuddy アダプター、ZCode アダプターをサポートします。8 Skill は個別ではなく、1 つのプラグインとしてインストールします。
 
 ### Codex の更新
 
@@ -204,6 +230,10 @@ claude plugin update senmu-buildos@senmu-buildos
 claude plugin list
 ```
 
+### ZCode の更新
+
+プラグインの場合：**設定 → プラグイン管理 → インストール済み** で更新するか、マーケットプレイスを削除して再追加します。スクリプトの場合：`python3 adapters/zcode/install_zcode.py --with-kernel` を再実行すると、冪等に上書きされます。
+
 ### 削除
 
 ```bash
@@ -213,6 +243,8 @@ codex plugin marketplace remove senmu-buildos
 claude plugin uninstall senmu-buildos@senmu-buildos
 claude plugin marketplace remove senmu-buildos
 ```
+
+ZCode の場合：**設定 → プラグイン管理** でアンインストールします。スクリプトインストールの場合は、Skills ディレクトリ内の `senmu-build-*` ディレクトリと `.senmu-buildos-install.json` を削除してください。
 
 プラグインには限定されたローカル Lifecycle Hook が含まれます。初回利用時または Hook 変更時に内容を確認して信頼してください。Feedback はローカル審議箱にだけ保存され、自動でネットワークへ接続、公開、またはプロジェクト規則を書き換えることはありません。[Hook lifecycle](docs/architecture/hook-lifecycle.md) と [Security](SECURITY.md) を参照してください。
 

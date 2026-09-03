@@ -112,3 +112,31 @@ test('Claude Code adapter is isolated and does not inspect user prompts', () => 
   assert.doesNotMatch(JSON.stringify(claudeHooksConfig), /UserPromptSubmit|user-prompt-submit/);
   assert.doesNotMatch(JSON.stringify(claudeHooksConfig), /curl|wget|git\s|rm\s|\.claude\//i);
 });
+
+test('shared plugin hooks resolve the plugin root across runtimes', () => {
+  const session = codexHooksConfig.hooks.SessionStart[0].hooks[0];
+  const subagent = codexHooksConfig.hooks.SubagentStart[0].hooks[0];
+  // The dispatch command must keep the Codex-native textual token and the
+  // ZCode/Claude Code environment variables, filtering unexpanded literals.
+  assert.match(session.command, /\$\{PLUGIN_ROOT\}/);
+  assert.match(session.command, /process\.env\.CLAUDE_PLUGIN_ROOT/);
+  assert.match(session.command, /process\.env\.ZCODE_PLUGIN_ROOT/);
+  assert.match(session.command, /charCodeAt\(0\)!==36/);
+  assert.match(session.command, /hooks\/session-start\.js/);
+  assert.match(subagent.command, /hooks\/subagent-start\.js/);
+  // No matcher so every runtime's SessionStart sources are covered.
+  assert.equal(codexHooksConfig.hooks.SessionStart[0].matcher, undefined);
+});
+
+test('shared session-start script emits lifecycle additionalContext', () => {
+  const { execFileSync } = require('node:child_process');
+  const stdout = execFileSync('node', [path.join(__dirname, '..', '..', 'hooks', 'session-start.js')], {
+    encoding: 'utf8',
+    cwd: path.join(__dirname, '..', '..'),
+  });
+  const output = JSON.parse(stdout);
+  assert.deepEqual(Object.keys(output), ['hookSpecificOutput']);
+  assert.equal(output.hookSpecificOutput.hookEventName, 'SessionStart');
+  assert.equal(output.hookSpecificOutput.additionalContext, getSessionContext());
+});
+

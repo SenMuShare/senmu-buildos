@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "repository": "SenMuShare/senmu-buildos",
-  "reviewed_for_version": "2.3.0",
-  "description": "AI-native BuildOS for Codex, Claude Code and Doubao: product discovery, UI/UX design, software engineering, context-aware workflows, testing, Git and verifiable releases.",
+  "reviewed_for_version": "2.4.0",
+  "description": "AI-native BuildOS for Codex, Claude Code, Doubao, WorkBuddy and ZCode: product discovery, UI/UX design, software engineering, context-aware workflows, testing, Git and verifiable releases.",
   "topics": [
     "agent-skills",
     "agentic-coding",
@@ -13,9 +13,7 @@
     "code-quality",
     "codex",
     "codex-plugin",
-    "context-management",
     "design-system",
-    "multi-agent-systems",
     "openai-codex",
     "product-management",
     "project-governance",
@@ -23,18 +21,19 @@
     "release-management",
     "software-architecture",
     "software-engineering",
-    "ui-ux"
+    "ui-ux",
+    "zcode",
+    "zcode-plugin"
   ],
   "readme_review": {
     "updated_sections": [
-      "why-buildos",
-      "how-it-works",
-      "design-principles"
+      "quick-start",
+      "install-update-remove"
     ],
     "summary": {
-      "zh": "把跨会话注意力衰减转成项目自有的事实、决定、任务和证据路线，并以宜疏不宜堵治理缺陷生产源。",
-      "en": "Turn cross-session attention loss into project-owned facts, decisions, task state, and evidence while fixing defect sources before adding gates.",
-      "ja": "会話をまたぐ注意の減衰を、プロジェクト所有の事実・判断・タスク・証拠経路へ変え、gate より先に欠陥の発生源を正します。"
+      "zh": "新增 ZCode 适配：插件市场安装（SessionStart 内核注入）与脚本安装（可选引导内核），并把安装、更新、卸载说明同步到三语 README 的快速开始与适配器列表。",
+      "en": "Add the ZCode adapter: plugin-marketplace install with SessionStart kernel injection plus a script install with an optional bootstrap kernel, and sync install, update, and remove guidance across the trilingual quick-start and adapter lists.",
+      "ja": "ZCode アダプターを追加しました：SessionStart カーネル注入ありのプラグインマーケットプレイス導入と、任意ブートストラップカーネル付きのスクリプト導入。三言語 README のクイックスタートとアダプター一覧に導入・更新・削除の手順を同期しています。"
     }
   },
   "readmes": {

@@ -2,6 +2,18 @@
 
 本页只说明每个正式版本带给用户的变化。
 
+## [2.4.0] - 2026-09-04
+
+### 主要更新
+
+- 新增 ZCode 适配：现在可以在 ZCode 的 插件管理 → 发现 中添加 `SenMuShare/senmu-buildos` 作为市场来源，一键安装整个插件，治理内核在会话启动时自动注入；也可以用 `adapters/zcode/install_zcode.py` 脚本把八个 Skill 装到用户级 `~/.agents/skills/`（`--with-kernel` 附带引导内核）。
+- 插件 Hook 现在按运行时分发插件根路径：同一条 Hook 配置同时服务 Codex、Claude Code 和 ZCode，会话启动与子代理注入在不同客户端下都能解析到正确位置。
+
+### 修复问题
+
+- 修复 Claude Code 插件安装可能误加载 Codex 版 Hook 路径的问题：共享 Hook 入口改为运行时中立脚本，不再依赖单一客户端的路径变量。
+- 修复 Codex/Claude Code 之外的新客户端（如 ZCode）安装后缺少子代理边界注入的问题；不支持该事件的客户端会将其记为预期内的警告，由 Skill 正文承载边界。
+
 ## [2.3.0] - 2026-09-02
 
 ### 主要更新

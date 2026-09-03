@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+## [2.4.0] - 2026-09-04
+
+### Added
+
+- 新增 WorkBuddy 适配器 `adapters/workbuddy/`：`senmu-build-kernel` 引导内核（替代生命周期 Hook 注入）与 `install_workbuddy.py`（支持用户级 `~/.workbuddy/skills/` 与项目级 `<workspace>/.workbuddy/skills/` 双作用域、`--target` 与 `--dry-run`，剔除 Codex 专属元数据，写入安装身份文件）；八个专业 Skill 与其他适配共用同一权威源。三语 README 同步 WorkBuddy 安装说明。
+- 新增 ZCode 适配：`.zcode-plugin/plugin.json` 插件清单（`skills: ./skills/`，Hook 走根 `hooks/hooks.json` 约定路径）与 `adapters/zcode/`（`install_zcode.py` 支持用户级 `~/.agents/skills/` 默认目标、项目级 `--scope project`、`--with-kernel` 可选引导内核、`--target` 与 `--dry-run`）及 `senmu-build-kernel` 引导内核。三语 README 与 GitHub 产品面同步 ZCode 安装说明。
+
+### Changed
+
+- 插件 Hook 命令改为运行时分发：同一条根 `hooks/hooks.json` 同时服务 Codex（`${PLUGIN_ROOT}` 文本替换或环境变量）、Claude Code 与 ZCode（`CLAUDE_PLUGIN_ROOT`／`ZCODE_PLUGIN_ROOT` 环境变量），未解析到插件根时静默退出；新增运行时中立的 `hooks/session-start.js` 与 `hooks/subagent-start.js` 入口，并移除 SessionStart matcher 以覆盖各运行时的全部会话来源。
+- 版本推进与包校验覆盖 `.zcode-plugin/plugin.json`；公开源白名单纳入 `.zcode-plugin`。
+
 ## [2.3.0] - 2026-09-02
 
 ### Added

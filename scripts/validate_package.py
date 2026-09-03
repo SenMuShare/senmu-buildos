@@ -219,11 +219,13 @@ def validate_plugins() -> None:
     hooks_path = ROOT / "hooks/hooks.json"
     claude_manifest_path = ROOT / ".claude-plugin/plugin.json"
     claude_hooks_path = ROOT / "adapters/claude-code/hooks/hooks.json"
+    zcode_manifest_path = ROOT / ".zcode-plugin/plugin.json"
     try:
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
         hooks = json.loads(hooks_path.read_text(encoding="utf-8"))
         claude_manifest = json.loads(claude_manifest_path.read_text(encoding="utf-8"))
         claude_hooks = json.loads(claude_hooks_path.read_text(encoding="utf-8"))
+        zcode_manifest = json.loads(zcode_manifest_path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
         fail(f"plugin or hook manifest is invalid: {exc}")
     if manifest.get("name") != "senmu-buildos":
@@ -265,6 +267,14 @@ def validate_plugins() -> None:
     for unsafe in ("curl ", "wget ", "git ", "rm ", ".claude/"):
         if unsafe in claude_serialized.casefold():
             fail(f"Claude Code Hook adapter contains unsafe side effect: {unsafe.strip()}")
+    if zcode_manifest.get("name") != "senmu-buildos":
+        fail("ZCode plugin name must be senmu-buildos")
+    if zcode_manifest.get("version") != version:
+        fail("VERSION and ZCode plugin manifest version must agree")
+    if zcode_manifest.get("skills") != "./skills/":
+        fail("ZCode plugin skill route is incorrect")
+    if "hooks" in zcode_manifest:
+        fail("ZCode uses the default hooks/hooks.json discovery path; do not duplicate it in plugin.json")
 
 
 def validate_marketplaces() -> None:

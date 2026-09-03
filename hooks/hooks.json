@@ -2,11 +2,10 @@
   "hooks": {
     "SessionStart": [
       {
-        "matcher": "startup|resume|clear|compact",
         "hooks": [
           {
             "type": "command",
-            "command": "node \"${PLUGIN_ROOT}/adapters/codex/hooks/session-start.js\"",
+            "command": "node -e \"var r=['${PLUGIN_ROOT}',process.env.PLUGIN_ROOT,process.env.CLAUDE_PLUGIN_ROOT,process.env.ZCODE_PLUGIN_ROOT].filter(function(v){return v&&v.charCodeAt(0)!==36})[0];if(r){require(r+'/hooks/session-start.js')}\"",
             "timeout": 5,
             "additionalContextLimit": 1000,
             "statusMessage": "Restoring Senmu BuildOS governance kernel..."
@@ -19,7 +18,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"${PLUGIN_ROOT}/adapters/codex/hooks/subagent-start.js\"",
+            "command": "node -e \"var r=['${PLUGIN_ROOT}',process.env.PLUGIN_ROOT,process.env.CLAUDE_PLUGIN_ROOT,process.env.ZCODE_PLUGIN_ROOT].filter(function(v){return v&&v.charCodeAt(0)!==36})[0];if(r){require(r+'/hooks/subagent-start.js')}\"",
             "timeout": 5,
             "additionalContextLimit": 500,
             "statusMessage": "Restoring Senmu BuildOS subagent boundaries..."

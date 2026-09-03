@@ -1,14 +1,14 @@
 # Senmu BuildOS（森木 BuildOS）— AI 编程项目的工程教练与运行规范
 
 <p align="center">
-  让 Codex、Claude Code 和豆包先把事情做对，再用更少的无效代码把它做好。
+  让 Codex、Claude Code、豆包、WorkBuddy 和 ZCode 先把事情做对，再用更少的无效代码把它做好。
 </p>
 
 <p align="center">
   <a href="README.md">简体中文</a> · <a href="README.en.md">English</a> · <a href="README.ja.md">日本語</a>
 </p>
 
-<!-- product-surface-review: 2.3.0 -->
+<!-- product-surface-review: 2.4.0 -->
 
 <p align="center">
   <a href="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml"><img src="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml/badge.svg" alt="Validate Senmu BuildOS"></a>
@@ -78,6 +78,32 @@ python3 adapters/doubao/install_doubao.py
 ```
 
 豆包适配说明见 [adapters/doubao/README.md](adapters/doubao/README.md)。
+
+### WorkBuddy
+
+```bash
+git clone https://github.com/SenMuShare/senmu-buildos.git
+cd senmu-buildos
+python3 adapters/workbuddy/install_workbuddy.py --dry-run
+python3 adapters/workbuddy/install_workbuddy.py --scope user
+```
+
+默认安装到用户级 `~/.workbuddy/skills/`；仅当前项目可用时改用 `--scope project --workspace <工作区根目录>`。WorkBuddy 适配说明见 [adapters/workbuddy/README.md](adapters/workbuddy/README.md)。
+
+### ZCode
+
+在 ZCode 的 **设置 → 插件管理 → 发现** 中点 **`+`** 添加市场来源 `https://github.com/SenMuShare/senmu-buildos`，安装 **senmu-buildos** 后新开会话，治理内核经 `SessionStart` Hook 自动注入。
+
+纯 Skill 方式（无 Hook，可选引导内核）：
+
+```bash
+git clone https://github.com/SenMuShare/senmu-buildos.git
+cd senmu-buildos
+python3 adapters/zcode/install_zcode.py --dry-run
+python3 adapters/zcode/install_zcode.py --with-kernel
+```
+
+默认安装到用户级 `~/.agents/skills/`。ZCode 适配说明见 [adapters/zcode/README.md](adapters/zcode/README.md)。
 
 ## 它怎样工作
 
@@ -194,7 +220,7 @@ BuildOS 不承诺固定比例。它通过减少不必要的功能、重复代码
 
 ## 安装、更新与卸载
 
-Senmu BuildOS 当前正式版本为 `v2.3.0`，支持 Codex、Claude Code 和豆包适配。安装的是整个插件，不需要逐个下载八个 Skill。
+Senmu BuildOS 当前正式版本为 `v2.4.0`，支持 Codex、Claude Code、豆包、WorkBuddy 和 ZCode 适配。安装的是整个插件，不需要逐个下载八个 Skill。
 
 ### 更新 Codex
 
@@ -212,6 +238,10 @@ claude plugin update senmu-buildos@senmu-buildos
 claude plugin list
 ```
 
+### 更新 ZCode
+
+插件方式：在 **设置 → 插件管理 → 已安装** 中更新，或移除市场后重新添加。脚本方式：重新运行 `python3 adapters/zcode/install_zcode.py --with-kernel`，幂等覆盖。
+
 ### 卸载
 
 ```bash
@@ -221,6 +251,8 @@ codex plugin marketplace remove senmu-buildos
 claude plugin uninstall senmu-buildos@senmu-buildos
 claude plugin marketplace remove senmu-buildos
 ```
+
+ZCode：在 **设置 → 插件管理** 中卸载；脚本安装则删除技能目录下的 `senmu-build-*` 目录与 `.senmu-buildos-install.json`。
 
 插件包含有限的本机生命周期 Hook。首次启用或 Hook 变化时应先审查并信任；反馈只会写入本机待审箱，不自动联网、发布或改写项目规则。完整边界见 [Hook 生命周期](docs/architecture/hook-lifecycle.md)与[安全说明](SECURITY.md)。
 

@@ -19,6 +19,12 @@ CLAUDE_PLUGIN = """{
 }
 """
 
+ZCODE_PLUGIN = """{
+  "name": "senmu-buildos",
+  "version": "1.0.0"
+}
+"""
+
 MARKETPLACE = """{
   "name": "senmu-buildos",
   "plugins": [
@@ -87,10 +93,12 @@ class ReleaseVersioningTests(unittest.TestCase):
         root = Path(temporary.name)
         (root / ".codex-plugin").mkdir()
         (root / ".claude-plugin").mkdir()
+        (root / ".zcode-plugin").mkdir()
         (root / ".agents/plugins").mkdir(parents=True)
         (root / "VERSION").write_text("1.0.0\n", encoding="utf-8")
         (root / ".codex-plugin/plugin.json").write_text(PLUGIN, encoding="utf-8")
         (root / ".claude-plugin/plugin.json").write_text(CLAUDE_PLUGIN, encoding="utf-8")
+        (root / ".zcode-plugin/plugin.json").write_text(ZCODE_PLUGIN, encoding="utf-8")
         (root / ".claude-plugin/marketplace.json").write_text(CLAUDE_MARKETPLACE, encoding="utf-8")
         (root / ".agents/plugins/marketplace.json").write_text(MARKETPLACE, encoding="utf-8")
         (root / "CHANGELOG.md").write_text(CHANGELOG, encoding="utf-8")
@@ -110,6 +118,7 @@ class ReleaseVersioningTests(unittest.TestCase):
         self.assertEqual(validate_current(root, "v1.1.0"), "1.1.0")
         self.assertIn('"version": "1.1.0"', (root / ".codex-plugin/plugin.json").read_text())
         self.assertIn('"version": "1.1.0"', (root / ".claude-plugin/plugin.json").read_text())
+        self.assertIn('"version": "1.1.0"', (root / ".zcode-plugin/plugin.json").read_text())
         self.assertIn('"version": "1.1.0"', (root / ".claude-plugin/marketplace.json").read_text())
         self.assertIn('"ref": "v1.1.0"', (root / ".agents/plugins/marketplace.json").read_text())
         changelog = (root / "CHANGELOG.md").read_text(encoding="utf-8")
@@ -138,6 +147,14 @@ class ReleaseVersioningTests(unittest.TestCase):
         marketplace = root / ".claude-plugin/marketplace.json"
         marketplace.write_text(CLAUDE_MARKETPLACE.replace('"version": "1.0.0"', '"version": "0.9.0"'), encoding="utf-8")
         with self.assertRaisesRegex(ReleaseError, "Claude Code marketplace version"):
+            validate_current(root)
+
+    def test_rejects_inconsistent_zcode_plugin_version(self) -> None:
+        temporary, root = self.make_repo()
+        self.addCleanup(temporary.cleanup)
+        plugin = root / ".zcode-plugin/plugin.json"
+        plugin.write_text(ZCODE_PLUGIN.replace('"version": "1.0.0"', '"version": "0.9.0"'), encoding="utf-8")
+        with self.assertRaisesRegex(ReleaseError, "ZCode plugin manifest version"):
             validate_current(root)
 
     def test_rejects_stale_public_readme_version(self) -> None:

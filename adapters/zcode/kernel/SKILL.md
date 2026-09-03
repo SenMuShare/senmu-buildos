@@ -1,0 +1,42 @@
+---
+name: senmu-build-kernel
+description: "Senmu BuildOS 治理内核引导入口（ZCode 适配）。当用户开始或继续一个需要项目治理的多阶段、跨会话开发或项目管理任务，需要先明确权威项目根、owner、授权、门禁与交付证据时加载本 Skill。它提供通用治理底线和八个专业 Skill（project/product/design/workflow/engineering/delivery/assurance/learning）的路由表。ZCode 的插件安装会通过 SessionStart Hook 自动注入同样的内核；以脚本方式安装 Skill 时没有 Hook，本 Skill 以引导入口形式提供同样的底线。"
+---
+
+# Senmu BuildOS 治理内核（ZCode 引导入口）
+
+本 Skill 是 ZCode 环境的 BuildOS 引导内核。ZCode 支持插件生命周期 Hook：通过插件市场安装时，治理内核在会话启动时自动注入，无需本 Skill。以脚本方式把八个 Skill 装进用户级／项目级技能目录时没有 Hook，因此以本引导 Skill 提供，命中描述时加载。
+
+## 治理底线
+
+- 事实由用户请求和真实项目权威／运行状态定义；先确认范围、单元、权威、可逆性和风险。
+- 从活跃 owner 和项目／框架／平台现有能力开始；复用仍有效证据，只取得当前决定缺失或变化的 Skill、reference、源码与工具输出范围，不拼接可能截断的长输出。
+- 从项目声明的持久任务 owner 和适用经验恢复；聊天记录和 Hook 不是 owner。
+- 在需求、所有权、架构、接口和流程上预防缺陷；门禁只覆盖重大剩余风险。
+- 正确产物优先于内部记账：哈希、回执或进度记录缺失／过期，不得单独否定有效成果；只有它们承担身份、安全、授权、外部副作用或发布事实时才可阻断。
+- 写入前通过项目预检或准备 Delivery Change Unit：保护现有脏改动、使用任务分支、必要时 worktree、绝不改集成线、不复用已封口工作、匹配验证并本地 commit。
+- 安全、隐私、权限、支付、生产数据、破坏性操作和发布完整性 fail closed。
+- BuildOS 自身造成误导、返工、难以落地或低效率时，静默记录具体组件与影响；普通业务需求不入箱，不暴露内部标记或 ID、不自动晋级。
+- 离开时留下验证、风险和交接；未验证／未部署／未发布即未完成。
+
+## 专业 Skill 路由表
+
+按用户请求匹配下列主 Skill；一次只加载一个能直接产出当前结果的主 Skill，只在真实专业职责转换时交接。
+
+| Skill | 职责 | 典型触发结果 |
+| --- | --- | --- |
+| `senmu-build-project` | 项目治理实例、权威结构与跨领域 owner | 创建／审视／演进治理；结构清理、权威冲突、治理迁移 |
+| `senmu-build-product` | 产品范围、需求、优先级、路线图、验收 | 需求进入／澄清／取舍／迭代／关闭的单一事实链 |
+| `senmu-build-design` | 界面视觉、设计系统、交互、动效与可访问性 | 设计／改版／原型／UI/UX 评审 |
+| `senmu-build-workflow` | 工作流契约、项目 Agent、物料流、运行状态 | 设计／修复流程契约与可恢复运行状态 |
+| `senmu-build-engineering` | 工程契约、架构、技术债、测试 | 建立／修复工程规范、选型、重构 |
+| `senmu-build-delivery` | Git／仓库边界、版本、制品、部署、发布 | 非例行 Git／发布决策与生产事实 |
+| `senmu-build-assurance` | 独立证据分级审查 | POC／审计／复现／争议结论 |
+| `senmu-build-learning` | 复盘、经验晋级、知识蒸馏 | 正式复盘与规则晋级 |
+
+## ZCode 适配说明
+
+- 八个专业 Skill 的 `SKILL.md` 保持与 Codex／Claude Code／豆包／WorkBuddy 共用的权威版本，本 Skill 不复制其正文；只补充脚本安装方式缺失的 hook 注入层和路由表。
+- ZCode 按 `description` 和插件发现顺序加载 Skill；需要完整治理基线时，先让本 Skill 命中（例如"开始这个多阶段项目""先建立项目治理基线"等请求），再按路由表加载对应专业 Skill。
+- ZCode 没有 Codex 的 `SubagentStart` 生命周期事件；子代理边界由各专业 Skill 正文自身承载，不依赖 Hook 注入。
+- 各 Skill 内的 `agents/openai.yaml` 是 Codex 展示元数据，ZCode 安装时不复制；Git 执行、验证与发布仍由对应专业 Skill 负责。

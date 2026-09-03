@@ -81,6 +81,7 @@ def current_version(root: Path) -> str:
 
     plugin = load_json(root / ".codex-plugin/plugin.json")
     claude_plugin = load_json(root / ".claude-plugin/plugin.json")
+    zcode_plugin = load_json(root / ".zcode-plugin/plugin.json")
     marketplace = load_json(root / ".agents/plugins/marketplace.json")
     claude_marketplace = load_json(root / ".claude-plugin/marketplace.json")
     plugins = marketplace.get("plugins")
@@ -94,6 +95,8 @@ def current_version(root: Path) -> str:
         raise ReleaseError("VERSION and plugin manifest version do not agree")
     if claude_plugin.get("version") != version:
         raise ReleaseError("VERSION and Claude Code plugin manifest version do not agree")
+    if zcode_plugin.get("version") != version:
+        raise ReleaseError("VERSION and ZCode plugin manifest version do not agree")
     if source.get("ref") != f"v{version}":
         raise ReleaseError("VERSION and marketplace release ref do not agree")
     claude_plugins = claude_marketplace.get("plugins")
@@ -141,6 +144,7 @@ def prepare_changes(root: Path, target: str, release_date: str) -> dict[Path, st
     version_path = root / "VERSION"
     plugin_path = root / ".codex-plugin/plugin.json"
     claude_plugin_path = root / ".claude-plugin/plugin.json"
+    zcode_plugin_path = root / ".zcode-plugin/plugin.json"
     marketplace_path = root / ".agents/plugins/marketplace.json"
     claude_marketplace_path = root / ".claude-plugin/marketplace.json"
     changelog_path = root / "CHANGELOG.md"
@@ -148,6 +152,7 @@ def prepare_changes(root: Path, target: str, release_date: str) -> dict[Path, st
 
     plugin_text = plugin_path.read_text(encoding="utf-8")
     claude_plugin_text = claude_plugin_path.read_text(encoding="utf-8")
+    zcode_plugin_text = zcode_plugin_path.read_text(encoding="utf-8")
     marketplace_text = marketplace_path.read_text(encoding="utf-8")
     claude_marketplace_text = claude_marketplace_path.read_text(encoding="utf-8")
     changelog_text = changelog_path.read_text(encoding="utf-8")
@@ -175,6 +180,12 @@ def prepare_changes(root: Path, target: str, release_date: str) -> dict[Path, st
             r'("version"\s*:\s*")[^"]+("(?=\s*[,}]))',
             rf"\g<1>{target}\g<2>",
             "Claude Code plugin version",
+        ),
+        zcode_plugin_path: replace_once(
+            zcode_plugin_text,
+            r'("version"\s*:\s*")[^"]+("(?=\s*[,}]))',
+            rf"\g<1>{target}\g<2>",
+            "ZCode plugin version",
         ),
         marketplace_path: replace_once(
             marketplace_text,
@@ -204,6 +215,7 @@ def prepare_changes(root: Path, target: str, release_date: str) -> dict[Path, st
 
     json.loads(changes[plugin_path])
     json.loads(changes[claude_plugin_path])
+    json.loads(changes[zcode_plugin_path])
     json.loads(changes[marketplace_path])
     json.loads(changes[claude_marketplace_path])
     return changes

@@ -1,14 +1,14 @@
 # Senmu BuildOS — Engineering Coach and Operating Rules for AI Coding Projects
 
 <p align="center">
-  Help Codex, Claude Code, and Doubao build the right thing, then build it with less waste.
+  Help Codex, Claude Code, Doubao, WorkBuddy, and ZCode build the right thing, then build it with less waste.
 </p>
 
 <p align="center">
   <a href="README.md">简体中文</a> · <a href="README.en.md">English</a> · <a href="README.ja.md">日本語</a>
 </p>
 
-<!-- product-surface-review: 2.3.0 -->
+<!-- product-surface-review: 2.4.0 -->
 
 <p align="center">
   <a href="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml"><img src="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml/badge.svg" alt="Validate Senmu BuildOS"></a>
@@ -78,6 +78,32 @@ python3 adapters/doubao/install_doubao.py
 ```
 
 See [adapters/doubao/README.md](adapters/doubao/README.md) for the Doubao adapter.
+
+### WorkBuddy
+
+```bash
+git clone https://github.com/SenMuShare/senmu-buildos.git
+cd senmu-buildos
+python3 adapters/workbuddy/install_workbuddy.py --dry-run
+python3 adapters/workbuddy/install_workbuddy.py --scope user
+```
+
+The default installs into the user-level `~/.workbuddy/skills/`; use `--scope project --workspace <workspace-root>` to keep it project-scoped. See [adapters/workbuddy/README.md](adapters/workbuddy/README.md) for the WorkBuddy adapter.
+
+### ZCode
+
+In ZCode, open **Settings → Plugin Management → Discover**, click **`+`** and add the marketplace source `https://github.com/SenMuShare/senmu-buildos`, then install **senmu-buildos**. A fresh session injects the governance kernel automatically through the `SessionStart` hook.
+
+Skills-only install (no hook, optional bootstrap kernel):
+
+```bash
+git clone https://github.com/SenMuShare/senmu-buildos.git
+cd senmu-buildos
+python3 adapters/zcode/install_zcode.py --dry-run
+python3 adapters/zcode/install_zcode.py --with-kernel
+```
+
+The default installs into the user-level `~/.agents/skills/`. See [adapters/zcode/README.md](adapters/zcode/README.md) for the ZCode adapter.
 
 ## How it works
 
@@ -186,7 +212,7 @@ BuildOS does not promise a fixed percentage. It reduces avoidable cost by preven
 
 ## Install, update, and remove
 
-The current formal release is Senmu BuildOS `v2.3.0`. It supports Codex, Claude Code, and a Doubao adapter. Install the plugin as one unit; the eight Skills do not need separate downloads.
+The current formal release is Senmu BuildOS `v2.4.0`. It supports Codex, Claude Code, a Doubao adapter, a WorkBuddy adapter, and a ZCode adapter. Install the plugin as one unit; the eight Skills do not need separate downloads.
 
 ### Update Codex
 
@@ -204,6 +230,10 @@ claude plugin update senmu-buildos@senmu-buildos
 claude plugin list
 ```
 
+### Update ZCode
+
+Plugin install: update it under **Settings → Plugin Management → Installed**, or remove and re-add the marketplace. Script install: rerun `python3 adapters/zcode/install_zcode.py --with-kernel`; it overwrites idempotently.
+
 ### Remove
 
 ```bash
@@ -213,6 +243,8 @@ codex plugin marketplace remove senmu-buildos
 claude plugin uninstall senmu-buildos@senmu-buildos
 claude plugin marketplace remove senmu-buildos
 ```
+
+ZCode: uninstall under **Settings → Plugin Management**; for a script install, delete the `senmu-build-*` directories and `.senmu-buildos-install.json` in the skills directory.
 
 The plugin includes limited local lifecycle Hooks. Review and trust them on first use or after Hook changes. Feedback is written only to a local review inbox; it does not automatically access the network, publish, or rewrite project rules. See [Hook lifecycle](docs/architecture/hook-lifecycle.md) and [Security](SECURITY.md).
 
