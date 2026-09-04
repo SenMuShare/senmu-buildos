@@ -6,13 +6,13 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 ENGINEERING = ROOT / "skills/senmu-build-engineering"
 ENTRY = ENGINEERING / "SKILL.md"
-COMMON = ENGINEERING / "references/源代码工程质量与AI协作规范.md"
+COMMON = ENGINEERING / "references/source-code-quality-and-ai-collaboration.md"
 BEHAVIOR = ROOT / "tests/behavior/senmu-buildos-trigger-matrix.md"
 
 PROFILES = {
-    "TypeScript工程编码规范.md": ("strict", "unknown", "stable discriminator", "import type"),
-    "Go工程编码规范.md": ("%w", "goroutine", "context.Context", "go test -race"),
-    "Java工程编码规范.md": ("AutoCloseable", "try-with-resources", "suppressed exceptions", "Maven/Gradle"),
+    "typescript-engineering-profile.md": ("strict", "unknown", "stable discriminator", "import type"),
+    "go-engineering-profile.md": ("%w", "goroutine", "context.Context", "go test -race"),
+    "java-engineering-profile.md": ("AutoCloseable", "try-with-resources", "suppressed exceptions", "Maven/Gradle"),
 }
 
 

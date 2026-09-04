@@ -9,14 +9,14 @@ Own the governance instance, authority structure, and cross-domain ownership bou
 
 ## Route by Outcome
 
-- Create, assess, evolve governance: [Governance Instances](references/项目治理实例与演进规范.md).
-- Staged established-project takeover: [Project Takeover](references/成熟项目接管治理专项规范.md).
-- Lifecycle, capability composition, done: [Project Practice](references/项目实践指南.md).
-- Roots, layout, document ownership, maps: [Directories](references/项目目录与文档规范.md).
-- Discover real standards/on-demand index: [Standards Discovery](references/项目规范发现与按需加载规范.md).
-- Create/select/repair cross-stage task state: [Task State](references/任务执行与状态管理规范.md).
-- Project situations, handoffs, skill boundaries: [Adoption and Routing](references/项目落地移交与场景路由规范.md).
-- Read [Governance Levels](references/治理强度分级与门禁规范.md) only for an actual G0-G4/gate decision.
+- Create, assess, evolve governance: [Governance Instances](references/project-governance-instances-and-evolution.md).
+- Staged established-project takeover: [Project Takeover](references/established-project-takeover-governance.md).
+- Lifecycle, capability composition, done: [Project Practice](references/project-lifecycle-guide.md).
+- Roots, layout, document ownership, maps: [Directories](references/project-directories-and-documentation.md).
+- Discover real standards/on-demand index: [Standards Discovery](references/project-standard-discovery-and-on-demand-loading.md).
+- Create/select/repair cross-stage task state: [Task State](references/task-execution-and-state-management.md).
+- Project situations, handoffs, skill boundaries: [Adoption and Routing](references/project-adoption-handoff-and-scenario-routing.md).
+- Read [Governance Levels](references/governance-levels-and-gates.md) only for an actual G0-G4/gate decision.
 
 Read only what the outcome needs. Delivery owns Git execution.
 

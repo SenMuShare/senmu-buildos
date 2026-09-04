@@ -17,7 +17,7 @@ If initial authority already includes safe audit and remediation, still surface 
 
 ## 2. One State Owner and Workspace
 
-Use the single Durable Task State Owner selected under [Task Execution and State Management](任务执行与状态管理规范.md). This standard adds objective, authorization, findings, evidence, and review entrypoints; it does not add another task system.
+Use the single Durable Task State Owner selected under [Task Execution and State Management](task-execution-and-state-management.md). This standard adds objective, authorization, findings, evidence, and review entrypoints; it does not add another task system.
 
 For extensive intermediates, register a bounded location in the project's existing temporary/work owner with purpose, owner, Git policy, sensitivity, retention, and recovery. Create a location only when no equivalent exists and the user approves. Final disposition is `retain`, `archive`, or `delete_authorized`; absent a decision, use `pending_user_decision` and do not delete.
 

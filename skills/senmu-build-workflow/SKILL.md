@@ -9,10 +9,10 @@ Define an executable contract across entrypoints, inputs, state, processing, out
 
 ## Route by Outcome
 
-- Material roles, processing, human guidance, delivery, archival: [Workflow and Deliverables](references/工作流、物料与交付物治理规范.md).
-- Run identity, idempotency, step state, recovery, minimum reruns: [Run State](references/工作流运行状态与恢复协议.md).
-- Attachment source, version, reading boundaries: [Reference Attachments](references/reference附件治理.md).
-- Create, refactor, or review a project agent/system prompt: [Agent Framework](references/Agent定义与系统提示词框架.md).
+- Material roles, processing, human guidance, delivery, archival: [Workflow and Deliverables](references/workflow-materials-and-deliverables.md).
+- Run identity, idempotency, step state, recovery, minimum reruns: [Run State](references/workflow-run-state-and-recovery.md).
+- Attachment source, version, reading boundaries: [Reference Attachments](references/reference-attachment-governance.md).
+- Create, refactor, or review a project agent/system prompt: [Agent Framework](references/agent-definition-and-system-prompt-framework.md).
 
 ## Core Contract
 

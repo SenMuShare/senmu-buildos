@@ -12,7 +12,7 @@ Senmu BuildOS 已从 `v1.0.0` 开始进入正式源码版本管理。任何变�
 6. 应用项目经验先在应用项目内闭环，只有已经验证且能够跨项目复用的候选才进入 BuildOS。
 7. 新增依赖、代码或内容时确认来源、许可证、维护责任和退出方式，不复制无法持续维护的材料。
 8. 公开仓是由维护者的私有权威库生成的发布投影；贡献会先作为候选吸收到权威库，再经同一隐私门禁重新投影，因此最终提交可能被重写但会保留贡献归属。
-9. 用外部网页、PDF、书、仓库或第三方 Skill 升级标准时，执行[工程知识蒸馏与标准晋级规范](skills/senmu-build-learning/references/工程知识蒸馏与标准晋级规范.md)；外部内容只作为临时候选，不把原文、来源目录或竞争规范直接装入运行时 Skill。
+9. 用外部网页、PDF、书、仓库或第三方 Skill 升级标准时，执行[工程知识蒸馏与标准晋级规范](skills/senmu-build-learning/references/engineering-knowledge-distillation-and-standard-promotion.md)；外部内容只作为临时候选，不把原文、来源目录或竞争规范直接装入运行时 Skill。
 
 ## 开放迭代飞轮贡献流程
 

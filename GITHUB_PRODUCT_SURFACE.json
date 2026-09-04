@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "repository": "SenMuShare/senmu-buildos",
-  "reviewed_for_version": "2.6.0",
+  "reviewed_for_version": "2.6.1",
   "description": "AI-native BuildOS for Codex, Claude Code, Doubao, WorkBuddy and ZCode: product discovery, UI/UX design, software engineering, context-aware workflows, testing, Git and verifiable releases.",
   "topics": [
     "agent-skills",
@@ -28,12 +28,13 @@
   "readme_review": {
     "updated_sections": [
       "install-update-remove",
-      "runtime-language-contract"
+      "runtime-language-contract",
+      "runtime-reference-paths"
     ],
     "summary": {
-      "zh": "八个 Skill 的运行时规则统一采用原生专业英文作为唯一正文，同时继续支持用户用中文或其他语言沟通与指定产物语言，避免后续迭代形成中英重复规范。",
-      "en": "Use native professional English as the single normative runtime specification for all eight Skills while preserving multilingual user interaction and output, preventing future iterations from creating duplicate bilingual rule owners.",
-      "ja": "8 つの Skill の実行規範を専門的な英語の単一正文に統一しつつ、多言語での依頼と成果物を維持し、今後の反復で日英中の重複規範が生じることを防ぎます。"
+      "zh": "八个 Skill 的运行时规范正文与 active Reference 路径均统一为专业英文；用户仍可使用中文或其他语言沟通，路径门禁会阻止后续重新引入中英混杂文件名。",
+      "en": "Use professional English for both the normative runtime specifications and all active Reference paths while preserving multilingual user interaction; a path gate prevents mixed-language filenames from returning.",
+      "ja": "8 つの Skill の実行規範と active Reference パスを専門的な英語に統一し、多言語での依頼を維持しながら、パス検証で混在言語のファイル名が再導入されることを防ぎます。"
     }
   },
   "readmes": {

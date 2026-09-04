@@ -1,6 +1,6 @@
 # Project Retrospectives and Organizational Learning
 
-Use this standard to turn resolved or evidenced project experience into reusable knowledge. When BuildOS itself causes confusion, rework, inefficiency, or poor adoption, first submit an agent-generated candidate under [Feedback Candidates and Central Adjudication](反馈候选与集中审议规范.md). Ordinary user corrections, business requirements, and project bugs do not enter that inbox. A raw candidate does not trigger a formal retrospective, log, Lessons ID, or validator automatically.
+Use this standard to turn resolved or evidenced project experience into reusable knowledge. When BuildOS itself causes confusion, rework, inefficiency, or poor adoption, first submit an agent-generated candidate under [Feedback Candidates and Central Adjudication](feedback-candidates-and-central-adjudication.md). Ordinary user corrections, business requirements, and project bugs do not enter that inbox. A raw candidate does not trigger a formal retrospective, log, Lessons ID, or validator automatically.
 
 The objective is not more ceremonial reports. Each effective correction should reduce repeated failure by later agents or developers.
 
@@ -68,7 +68,7 @@ Treatment:
 
 - Fix the current project's owners first; a general change alone does not resolve the application project.
 - Create a BuildOS candidate only when recurrence is likely across projects, the rule is project-independent, and ordinary tasks do not inherit disproportionate burden.
-- Maintain the generalization as a separate task in the BuildOS source project under [BuildOS Evolution and Upstream Feedback](BuildOS项目演进与反哺规范.md), using whole-repository analysis. Use `$skill-creator` when Skill entry, structure, or triggering changes.
+- Maintain the generalization as a separate task in the BuildOS source project under [BuildOS Evolution and Upstream Feedback](buildos-evolution-and-upstream-feedback.md), using whole-repository analysis. Use `$skill-creator` when Skill entry, structure, or triggering changes.
 - Source edits, Git commits, candidate installation, and public release are separate authorities and states; a valid project retrospective does not authorize them.
 - Report abstraction basis, candidate/update location, verification, and true boundaries of every state.
 

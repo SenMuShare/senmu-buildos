@@ -28,7 +28,7 @@ Read requirements, governance charter, current architecture, and existing capabi
 
 ## 2. Constrain Candidates by Architecture
 
-Use the principles/questions in `架构约束与技术债治理规范.md`; do not duplicate them here. Reject candidates that create dual primary frameworks, dependency cycles, layer bypasses, shared mutable state, ownership conflict, or duplicate capability unless benefit, isolation, verification, and exit are recorded.
+Use the principles/questions in `architecture-constraints-and-technical-debt.md`; do not duplicate them here. Reject candidates that create dual primary frameworks, dependency cycles, layer bypasses, shared mutable state, ownership conflict, or duplicate capability unless benefit, isolation, verification, and exit are recorded.
 
 ## 3. Selection Order
 

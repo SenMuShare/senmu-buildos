@@ -25,57 +25,57 @@ EXPECTED_SKILLS = {
 }
 
 REFERENCE_OWNERS = {
-    "项目实践指南.md": "senmu-build-project",
-    "任务执行与状态管理规范.md": "senmu-build-project",
-    "治理强度分级与门禁规范.md": "senmu-build-project",
-    "项目落地移交与场景路由规范.md": "senmu-build-project",
-    "项目目录与文档规范.md": "senmu-build-project",
-    "项目治理实例与演进规范.md": "senmu-build-project",
-    "项目规范发现与按需加载规范.md": "senmu-build-project",
-    "成熟项目接管治理专项规范.md": "senmu-build-project",
-    "需求与产品迭代管理规范.md": "senmu-build-product",
-    "界面文案与内容设计规范.md": "senmu-build-product",
-    "界面文案中文规范.md": "senmu-build-product",
-    "界面文案英文规范.md": "senmu-build-product",
-    "界面视觉与设计系统规范.md": "senmu-build-design",
-    "交互动效与可访问性规范.md": "senmu-build-design",
-    "原型探索与界面评审规范.md": "senmu-build-design",
-    "参考界面解析与还原规范.md": "senmu-build-design",
+    "project-lifecycle-guide.md": "senmu-build-project",
+    "task-execution-and-state-management.md": "senmu-build-project",
+    "governance-levels-and-gates.md": "senmu-build-project",
+    "project-adoption-handoff-and-scenario-routing.md": "senmu-build-project",
+    "project-directories-and-documentation.md": "senmu-build-project",
+    "project-governance-instances-and-evolution.md": "senmu-build-project",
+    "project-standard-discovery-and-on-demand-loading.md": "senmu-build-project",
+    "established-project-takeover-governance.md": "senmu-build-project",
+    "product-requirements-and-iteration.md": "senmu-build-product",
+    "interface-copy-and-content-design.md": "senmu-build-product",
+    "chinese-interface-copy.md": "senmu-build-product",
+    "english-interface-copy.md": "senmu-build-product",
+    "visual-systems-and-design-language.md": "senmu-build-design",
+    "interaction-motion-and-accessibility.md": "senmu-build-design",
+    "prototype-exploration-and-interface-review.md": "senmu-build-design",
+    "reference-interface-analysis-and-reconstruction.md": "senmu-build-design",
     "design-library/INDEX.md": "senmu-build-design",
-    "design-library/页面结构与视觉方向.md": "senmu-build-design",
-    "design-library/组件设计模式.md": "senmu-build-design",
-    "工作流、物料与交付物治理规范.md": "senmu-build-workflow",
-    "工作流运行状态与恢复协议.md": "senmu-build-workflow",
-    "reference附件治理.md": "senmu-build-workflow",
-    "Agent定义与系统提示词框架.md": "senmu-build-workflow",
-    "发布授权与生产事实协议.md": "senmu-build-delivery",
-    "独立审查与证据分级规范.md": "senmu-build-assurance",
-    "技术路线与组件选型.md": "senmu-build-engineering",
-    "实现经济性与过度工程治理规范.md": "senmu-build-engineering",
-    "架构约束与技术债治理规范.md": "senmu-build-engineering",
-    "源代码工程质量与AI协作规范.md": "senmu-build-engineering",
-    "软件测试与质量验证规范.md": "senmu-build-engineering",
-    "前端工程契约与验证规范.md": "senmu-build-engineering",
-    "后端服务与数据契约规范.md": "senmu-build-engineering",
-    "源码级重构与技术栈升级规范.md": "senmu-build-engineering",
-    "Python工程编码规范.md": "senmu-build-engineering",
-    "TypeScript工程编码规范.md": "senmu-build-engineering",
-    "Go工程编码规范.md": "senmu-build-engineering",
-    "Java工程编码规范.md": "senmu-build-engineering",
+    "design-library/page-structures-and-visual-directions.md": "senmu-build-design",
+    "design-library/component-design-patterns.md": "senmu-build-design",
+    "workflow-materials-and-deliverables.md": "senmu-build-workflow",
+    "workflow-run-state-and-recovery.md": "senmu-build-workflow",
+    "reference-attachment-governance.md": "senmu-build-workflow",
+    "agent-definition-and-system-prompt-framework.md": "senmu-build-workflow",
+    "release-authorization-and-production-truth.md": "senmu-build-delivery",
+    "independent-review-and-evidence-grading.md": "senmu-build-assurance",
+    "technology-and-component-selection.md": "senmu-build-engineering",
+    "implementation-economy-and-overengineering.md": "senmu-build-engineering",
+    "architecture-constraints-and-technical-debt.md": "senmu-build-engineering",
+    "source-code-quality-and-ai-collaboration.md": "senmu-build-engineering",
+    "software-testing-and-quality-verification.md": "senmu-build-engineering",
+    "frontend-engineering-contracts-and-validation.md": "senmu-build-engineering",
+    "backend-services-and-data-contracts.md": "senmu-build-engineering",
+    "source-modernization-and-stack-upgrades.md": "senmu-build-engineering",
+    "python-engineering-profile.md": "senmu-build-engineering",
+    "typescript-engineering-profile.md": "senmu-build-engineering",
+    "go-engineering-profile.md": "senmu-build-engineering",
+    "java-engineering-profile.md": "senmu-build-engineering",
     "frontend-ant-design-practice.md": "senmu-build-engineering",
     "frontend-html-daisyui-practice.md": "senmu-build-engineering",
-    "项目工程规范发现方法.md": "senmu-build-engineering",
-    "代码管理与合并规范.md": "senmu-build-delivery",
-    "多Agent变更单元与版本线收口规范.md": "senmu-build-delivery",
-    "仓库边界与发布单元治理规范.md": "senmu-build-delivery",
-    "协作日志与版本日志规范.md": "senmu-build-delivery",
-    "版本制品与发布规范.md": "senmu-build-delivery",
-    "部署测试与安全规范.md": "senmu-build-delivery",
-    "POC可复现实验治理规范.md": "senmu-build-assurance",
-    "AI复盘与治理闭环规范.md": "senmu-build-learning",
-    "BuildOS项目演进与反哺规范.md": "senmu-build-learning",
-    "反馈候选与集中审议规范.md": "senmu-build-learning",
-    "工程知识蒸馏与标准晋级规范.md": "senmu-build-learning",
+    "project-engineering-standard-discovery.md": "senmu-build-engineering",
+    "code-management-and-integration.md": "senmu-build-delivery",
+    "multi-agent-change-units-and-version-line-closeout.md": "senmu-build-delivery",
+    "repository-boundaries-and-release-units.md": "senmu-build-delivery",
+    "collaboration-and-version-logs.md": "senmu-build-delivery",
+    "version-artifacts-and-release.md": "senmu-build-delivery",
+    "deployment-testing-and-security.md": "senmu-build-delivery",
+    "reproducible-poc-governance.md": "senmu-build-assurance",
+    "organizational-learning-and-governance-closure.md": "senmu-build-learning",
+    "buildos-evolution-and-upstream-feedback.md": "senmu-build-learning",
+    "feedback-candidates-and-central-adjudication.md": "senmu-build-learning",
+    "engineering-knowledge-distillation-and-standard-promotion.md": "senmu-build-learning",
 }
 
 PUBLIC_TEXT_SUFFIXES = {".md", ".json", ".yaml", ".yml", ".py", ".js", ".sh", ".env"}
@@ -102,6 +102,9 @@ MAX_REFERENCE_CONTEXT_UNITS = 5_500
 MAX_SINGLE_REFERENCE_ROUTE_CONTEXT_UNITS = 6_500
 MAX_TWO_REFERENCE_ROUTE_CONTEXT_UNITS = 12_000
 MAX_REFERENCE_CHAIN_CONTEXT_UNITS = 12_000
+REFERENCE_PATH_PATTERN = re.compile(
+    r"^(?:[a-z0-9]+(?:-[a-z0-9]+)*/)*(?:[a-z0-9]+(?:-[a-z0-9]+)*|INDEX)\.md$"
+)
 
 
 def fail(message: str) -> None:
@@ -122,6 +125,11 @@ def estimate_context_units(text: str) -> int:
         or "\uac00" <= char <= "\ud7af"
     )
     return cjk + (len(text) - cjk + 3) // 4
+
+
+def is_valid_reference_path(relative: str) -> bool:
+    """Keep active runtime reference paths portable and language-consistent."""
+    return REFERENCE_PATH_PATTERN.fullmatch(relative) is not None
 
 
 def parse_skill_name(text: str) -> str:
@@ -378,13 +386,18 @@ def validate_skills() -> None:
         reference_units: list[tuple[int, Path]] = []
         context_units = {(skill_root / "SKILL.md").resolve(): entry_units}
         for reference in references:
+            relative = reference.relative_to(references_root).as_posix()
+            if not is_valid_reference_path(relative):
+                fail(
+                    f"{reference} must use ASCII kebab-case path segments; "
+                    "only the conventional INDEX.md filename may use capitals"
+                )
             reference_text = reference.read_text(encoding="utf-8")
             if len(reference_text) > MAX_REFERENCE_CHARS:
                 fail(f"{reference} exceeds {MAX_REFERENCE_CHARS} characters")
             units = estimate_context_units(reference_text)
             if units > MAX_REFERENCE_CONTEXT_UNITS:
                 fail(f"{reference} exceeds {MAX_REFERENCE_CONTEXT_UNITS} context units")
-            relative = reference.relative_to(references_root).as_posix()
             if reference.parent == references_root and f"references/{relative}" not in text:
                 fail(f"{reference} is not directly routed from its owner SKILL.md")
             if relative in seen_references:

@@ -9,8 +9,8 @@ Operate read-only by default. Freeze the subject, version, scope, and standard; 
 
 ## Route by Outcome
 
-- For a decision POC, blind test, controlled experiment, ledger, or reproduction, read [Reproducible POC Governance](references/POC可复现实验治理规范.md).
-- For a code, architecture, governance, delivery, or whole-project review, read [Independent Review and Evidence Grading](references/独立审查与证据分级规范.md). Use `exhaustive_source` only when the user explicitly requests every file, function, or existing comment.
+- For a decision POC, blind test, controlled experiment, ledger, or reproduction, read [Reproducible POC Governance](references/reproducible-poc-governance.md).
+- For a code, architecture, governance, delivery, or whole-project review, read [Independent Review and Evidence Grading](references/independent-review-and-evidence-grading.md). Use `exhaustive_source` only when the user explicitly requests every file, function, or existing comment.
 
 Routine consistency checks remain with the domain skill; G3-G4 alone does not activate Assurance. Read only the applicable Engineering reference when an engineering standard is needed.
 

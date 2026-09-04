@@ -14,6 +14,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 
 from validate_package import (  # noqa: E402
     REFERENCE_OWNERS,
+    is_valid_reference_path,
     largest_reference_chain,
     reachable_references,
     reference_graph,
@@ -21,11 +22,23 @@ from validate_package import (  # noqa: E402
 
 
 class PackageReferenceRoutingTest(unittest.TestCase):
+    def test_active_reference_paths_use_ascii_kebab_case(self) -> None:
+        for relative in REFERENCE_OWNERS:
+            self.assertTrue(is_valid_reference_path(relative), relative)
+
+        for invalid in (
+            "中文规范.md",
+            "mixed Name.md",
+            "MixedCase.md",
+            "design_library/example.md",
+        ):
+            self.assertFalse(is_valid_reference_path(invalid), invalid)
+
     def test_design_library_resources_have_explicit_owner(self) -> None:
         for relative in (
             "design-library/INDEX.md",
-            "design-library/页面结构与视觉方向.md",
-            "design-library/组件设计模式.md",
+            "design-library/page-structures-and-visual-directions.md",
+            "design-library/component-design-patterns.md",
         ):
             self.assertEqual(REFERENCE_OWNERS[relative], "senmu-build-design")
 

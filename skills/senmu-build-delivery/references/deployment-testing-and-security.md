@@ -18,7 +18,7 @@ After a partially failed deployment that may have replaced services, reconcile p
 
 ## 2. Resources and Artifacts
 
-[Version, Artifact, and Release](版本制品与发布规范.md) uniquely owns artifact identity, default retention, project overrides, local builder/production runtime/remote registry/Git closure. This page applies those rules to real environments to prevent unbounded disk, image, cache, and log growth.
+[Version, Artifact, and Release](version-artifacts-and-release.md) uniquely owns artifact identity, default retention, project overrides, local builder/production runtime/remote registry/Git closure. This page applies those rules to real environments to prevent unbounded disk, image, cache, and log growth.
 
 Confirm that every real resource surface has managed scope, retention, disk cap, dry-run, cleanup entrypoint, and receipt; do not invent nonexistent registries. Verify current and rollback objects before cleanup, using image digest/ID rather than movable tags. Delete old tarballs, images, uploads, and dangling objects only when precisely owned by this unit; never global-prune across projects. Logs/uploads need retention. On small servers, prefer local builds and uploaded artifacts over resource-heavy in-place builds.
 

@@ -57,7 +57,7 @@ Record work object, lifecycle intent, delivery model, and composition separately
 
 ## 5. Initialization Architecture Gate
 
-Before implementing a new project, independently released/delivered unit, material subsystem, durable harness, or technical-direction rewrite, apply `架构约束与技术债治理规范.md`. Confirm at least: clear boundaries, high module cohesion, necessary and explicit cross-module coupling, unique dependency direction and data/material ownership, and design complexity proportional to quality attributes.
+Before implementing a new project, independently released/delivered unit, material subsystem, durable harness, or technical-direction rewrite, apply `architecture-constraints-and-technical-debt.md`. Confirm at least: clear boundaries, high module cohesion, necessary and explicit cross-module coupling, unique dependency direction and data/material ownership, and design complexity proportional to quality attributes.
 
 The project-local technical design or architecture contract must record module table, allowed/forbidden dependencies, public interfaces, data ownership, side-effect boundaries, business invariants, runtime/release boundaries, key quality attributes, change triggers, check commands, and accepted debt.
 

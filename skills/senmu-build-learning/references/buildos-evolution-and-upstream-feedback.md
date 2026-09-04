@@ -26,7 +26,7 @@ Otherwise retain it in the application project's Work Log, Lessons Learned Regis
 
 Runtime value is not established by token counts, length, load frequency, or green tests alone. State which decision or artifact changes, which repeated implementation, wrong edit, invalid verification, or risk is prevented, why the result is correct, and the added costs. Tokens are a cost, not the optimization objective. A short rule with no observable behavior or necessary risk-control benefit does not qualify. Static behavior matrices freeze expectations; real candidate-environment tasks must still verify routing, implementation direction, and misleading effects.
 
-For public webpages, PDFs, books, repositories, third-party Skills, or team manuals that are not project-experience candidates, use [Engineering Knowledge Distillation and Standard Promotion](工程知识蒸馏与标准晋级规范.md). External reputation does not grant rule authority.
+For public webpages, PDFs, books, repositories, third-party Skills, or team manuals that are not project-experience candidates, use [Engineering Knowledge Distillation and Standard Promotion](engineering-knowledge-distillation-and-standard-promotion.md). External reputation does not grant rule authority.
 
 ## 3. Whole-Repository Impact Analysis
 

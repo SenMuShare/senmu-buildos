@@ -96,7 +96,7 @@ Ordinary implementation, bug fixes, code explanation, a single copy edit, local 
 | Open development batch, non-routine Git boundary, version, artifact, deployment, rollback, or production state | `senmu-build-delivery` | Ordinary implementation inside a governed batch does not trigger; keep unreleased unless release is explicit |
 | BuildOS feedback adjudication, formal retrospective, lesson promotion, or distillation of external guidance | `senmu-build-learning` | Ordinary user corrections and project business requirements do not enter the feedback inbox |
 
-When any scenario spans dependent steps, phases, agents, or sessions, follow [Task Execution, Planning, and State Management](任务执行与状态管理规范.md) using the project's declared Durable Task State Owner. Specialist documents own domain facts; task state owns current boundaries, progress, evidence links, and recovery. Neither replaces the other.
+When any scenario spans dependent steps, phases, agents, or sessions, follow [Task Execution, Planning, and State Management](task-execution-and-state-management.md) using the project's declared Durable Task State Owner. Specialist documents own domain facts; task state owns current boundaries, progress, evidence links, and recovery. Neither replaces the other.
 
 ## 6. Minimum Deliverables
 

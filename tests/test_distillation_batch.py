@@ -34,7 +34,7 @@ def valid_batch() -> dict:
                 "exceptions": "安全、数据、权限和明确退化仍然阻断。",
                 "verification": "评审输出标明严重程度、证据、影响和未验证盲区。",
                 "scope": "跨语言代码评审",
-                "suggested_owner": "skills/senmu-build-engineering/references/源代码工程质量与AI协作规范.md",
+                "suggested_owner": "skills/senmu-build-engineering/references/source-code-quality-and-ai-collaboration.md",
                 "disposition": "merge",
                 "existing_rule": "AI 与人工评审契约",
             }

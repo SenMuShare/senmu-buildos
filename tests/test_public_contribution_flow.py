@@ -13,7 +13,7 @@ DELIVERY = (
     / "skills"
     / "senmu-build-delivery"
     / "references"
-    / "仓库边界与发布单元治理规范.md"
+    / "repository-boundaries-and-release-units.md"
 )
 
 

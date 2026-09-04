@@ -9,10 +9,10 @@ Keep raw feedback, candidate lessons, project rules, and formal BuildOS rules in
 
 ## Route by Outcome
 
-- Submit or review feedback candidates: [Feedback Review](references/反馈候选与集中审议规范.md).
-- Retrospect, deduplicate, promote, or retire resolved lessons: [Organizational Learning](references/AI复盘与治理闭环规范.md).
-- Promote cross-project improvements into BuildOS: [BuildOS Evolution](references/BuildOS项目演进与反哺规范.md).
-- Absorb websites, books, repositories, third-party skills, or engineering manuals: [Knowledge Distillation](references/工程知识蒸馏与标准晋级规范.md).
+- Submit or review feedback candidates: [Feedback Review](references/feedback-candidates-and-central-adjudication.md).
+- Retrospect, deduplicate, promote, or retire resolved lessons: [Organizational Learning](references/organizational-learning-and-governance-closure.md).
+- Promote cross-project improvements into BuildOS: [BuildOS Evolution](references/buildos-evolution-and-upstream-feedback.md).
+- Absorb websites, books, repositories, third-party skills, or engineering manuals: [Knowledge Distillation](references/engineering-knowledge-distillation-and-standard-promotion.md).
 
 Run the project's validator when modifying formal Lessons Learned. Raw feedback does not need a Lessons ID.
 

@@ -9,7 +9,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/SenMuShare/senmu-buildos.git",
-        "ref": "v2.6.0"
+        "ref": "v2.6.1"
       },
       "policy": {
         "installation": "AVAILABLE",

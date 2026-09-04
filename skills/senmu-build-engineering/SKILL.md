@@ -9,16 +9,16 @@ Verify project entrypoints, code, configuration, tests, and commands. Return whe
 
 ## Route by Outcome
 
-- Quality, defects, AI collaboration, review: [Source Quality](references/源代码工程质量与AI协作规范.md).
-- Technology/framework/component choice: [Technology Selection](references/技术路线与组件选型.md).
-- Minimum correct implementation, reuse, overengineering: [Implementation Economy](references/实现经济性与过度工程治理规范.md).
-- Architecture, dependencies, change budgets, debt: [Architecture](references/架构约束与技术债治理规范.md).
-- Frontend state, navigation, forms, responsive/browser checks: [Frontend](references/前端工程契约与验证规范.md).
-- APIs, services, data, transactions, caches, queues, jobs: [Backend](references/后端服务与数据契约规范.md).
-- Test strategy, doubles, dependencies, data, flakiness: [Testing](references/软件测试与质量验证规范.md).
-- Source modernization or stack upgrades: [Modernization](references/源码级重构与技术栈升级规范.md).
-- Derive rules from an existing codebase: [Discovery](references/项目工程规范发现方法.md).
-- Only if local rules are absent/under review: [Python](references/Python工程编码规范.md), [TypeScript](references/TypeScript工程编码规范.md), [Go](references/Go工程编码规范.md), [Java](references/Java工程编码规范.md), [Ant Design](references/frontend-ant-design-practice.md), [HTML/daisyUI](references/frontend-html-daisyui-practice.md).
+- Quality, defects, AI collaboration, review: [Source Quality](references/source-code-quality-and-ai-collaboration.md).
+- Technology/framework/component choice: [Technology Selection](references/technology-and-component-selection.md).
+- Minimum correct implementation, reuse, overengineering: [Implementation Economy](references/implementation-economy-and-overengineering.md).
+- Architecture, dependencies, change budgets, debt: [Architecture](references/architecture-constraints-and-technical-debt.md).
+- Frontend state, navigation, forms, responsive/browser checks: [Frontend](references/frontend-engineering-contracts-and-validation.md).
+- APIs, services, data, transactions, caches, queues, jobs: [Backend](references/backend-services-and-data-contracts.md).
+- Test strategy, doubles, dependencies, data, flakiness: [Testing](references/software-testing-and-quality-verification.md).
+- Source modernization or stack upgrades: [Modernization](references/source-modernization-and-stack-upgrades.md).
+- Derive rules from an existing codebase: [Discovery](references/project-engineering-standard-discovery.md).
+- Only if local rules are absent/under review: [Python](references/python-engineering-profile.md), [TypeScript](references/typescript-engineering-profile.md), [Go](references/go-engineering-profile.md), [Java](references/java-engineering-profile.md), [Ant Design](references/frontend-ant-design-practice.md), [HTML/daisyUI](references/frontend-html-daisyui-practice.md).
 
 Read matched references only; one profile does not imply others. Frontend/backend are references, not child skills or job roles.
 

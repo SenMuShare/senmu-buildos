@@ -53,11 +53,11 @@ After assessment and authorization, evolve the original project. When requiremen
 
 Repair causes in requirements, responsibility, directories, interfaces, data ownership, defaults, and workflows; fill missing roles, merge duplicate owners, migrate immovable paths, and retain recovery points. Project entrypoints, policy, schema, tools, and evidence then own routine execution.
 
-For multi-domain audit, several remediation waves, cross-session recovery, and final review, use [Established Project Takeover](成熟项目接管治理专项规范.md). It maps the existing Durable Task State Owner and preserves fact-first assessment, separate authorization, and original-owner evolution.
+For multi-domain audit, several remediation waves, cross-session recovery, and final review, use [Established Project Takeover](established-project-takeover-governance.md). It maps the existing Durable Task State Owner and preserves fact-first assessment, separate authorization, and original-owner evolution.
 
 ## 4. State Owners
 
-Follow [Task Execution and State Management](任务执行与状态管理规范.md) for cross-stage/session state ownership and recovery. The instance only registers the chosen Durable Task State Owner.
+Follow [Task Execution and State Management](task-execution-and-state-management.md) for cross-stage/session state ownership and recovery. The instance only registers the chosen Durable Task State Owner.
 
 Task State stores cross-stage goal, boundary, progress, and recovery entrypoint. Run State stores one run's step, attempt, checkpoint, and output. Product, engineering, delivery, and review artifacts store their domain facts. Link by stable IDs; never copy bodies.
 

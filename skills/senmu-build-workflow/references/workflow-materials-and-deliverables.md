@@ -30,7 +30,7 @@ A durable or repeatable workflow defines:
 - target acceptance, final delivery location, and run receipt;
 - when legacy entrypoints, caches, and outputs become historical only.
 
-The workflow contract stores durable rules, never a run cursor. Put attempts, checkpoints, errors, and recovery actions in a Run Manifest or existing system under [Workflow Run State and Recovery](工作流运行状态与恢复协议.md). Chat cannot be the sole state source; an agent must recover progress from project entrypoints, state, and receipts.
+The workflow contract stores durable rules, never a run cursor. Put attempts, checkpoints, errors, and recovery actions in a Run Manifest or existing system under [Workflow Run State and Recovery](workflow-run-state-and-recovery.md). Chat cannot be the sole state source; an agent must recover progress from project entrypoints, state, and receipts.
 
 ### 2.1 Human-Operator Guide
 

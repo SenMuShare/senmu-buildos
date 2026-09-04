@@ -15,10 +15,10 @@ class DesignSkillTest(unittest.TestCase):
     def test_entry_routes_distinct_design_results(self):
         text = (DESIGN / "SKILL.md").read_text(encoding="utf-8")
         for reference in (
-            "界面视觉与设计系统规范.md",
-            "参考界面解析与还原规范.md",
-            "交互动效与可访问性规范.md",
-            "原型探索与界面评审规范.md",
+            "visual-systems-and-design-language.md",
+            "reference-interface-analysis-and-reconstruction.md",
+            "interaction-motion-and-accessibility.md",
+            "prototype-exploration-and-interface-review.md",
         ):
             self.assertIn(reference, text)
 
@@ -29,19 +29,19 @@ class DesignSkillTest(unittest.TestCase):
         self.assertIn("specialist skills for current APIs/methods only", text)
 
     def test_reference_analysis_routes_progressively_to_design_library(self):
-        analysis = (DESIGN / "references" / "参考界面解析与还原规范.md").read_text(
+        analysis = (DESIGN / "references" / "reference-interface-analysis-and-reconstruction.md").read_text(
             encoding="utf-8"
         )
         index = (
             DESIGN / "references" / "design-library" / "INDEX.md"
         ).read_text(encoding="utf-8")
         self.assertIn("design-library/INDEX.md", analysis)
-        self.assertIn("页面结构与视觉方向.md", index)
-        self.assertIn("组件设计模式.md", index)
+        self.assertIn("page-structures-and-visual-directions.md", index)
+        self.assertIn("component-design-patterns.md", index)
         self.assertIn("not project brand facts or frontend code", index)
 
     def test_reference_analysis_preserves_project_owner_and_unknowns(self):
-        analysis = (DESIGN / "references" / "参考界面解析与还原规范.md").read_text(
+        analysis = (DESIGN / "references" / "reference-interface-analysis-and-reconstruction.md").read_text(
             encoding="utf-8"
         )
         self.assertIn("observations, inferences, conflicts, unknowns", analysis)

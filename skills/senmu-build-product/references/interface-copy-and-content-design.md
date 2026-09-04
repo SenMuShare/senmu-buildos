@@ -58,7 +58,7 @@ Before delivery, check object names, action outcomes, state truth, error recover
 
 ## 6. Language and Platform Profiles
 
-For Chinese, read [Chinese Interface Copy](界面文案中文规范.md); for English, read [English Interface Copy](界面文案英文规范.md). Read each target profile separately for multilingual products. Localize intent and result rather than word order, capitalization, length, or fragments.
+For Chinese, read [Chinese Interface Copy](chinese-interface-copy.md); for English, read [English Interface Copy](english-interface-copy.md). Read each target profile separately for multilingual products. Localize intent and result rather than word order, capitalization, length, or fragments.
 
 Follow established mobile, web, and enterprise conventions unless they obscure action, consequence, or recovery. Component defaults are usable defaults, not automatic product standards.
 

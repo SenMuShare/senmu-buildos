@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## [2.6.1] - 2026-09-04
+
+### Changed
+
+- Renamed all active runtime reference Markdown files to descriptive ASCII kebab-case paths and updated every Skill entrypoint, nested index, cross-reference, validator owner map, and behavioral fixture to the same path identity.
+- Added a package gate that rejects non-ASCII, spaced, or non-kebab-case active reference paths while preserving the conventional `INDEX.md` filename.
+
 ## [2.6.0] - 2026-09-04
 
 ### Changed

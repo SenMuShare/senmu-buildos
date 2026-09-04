@@ -1,6 +1,6 @@
 # Version, Artifact, and Release
 
-Use this standard for version identity, Tags, independent artifacts, retention, and release closure. Read [Release Authorization and Production Truth](发布授权与生产事实协议.md) for authority/state and [Code Management and Integration](代码管理与合并规范.md) for Git/worktrees.
+Use this standard for version identity, Tags, independent artifacts, retention, and release closure. Read [Release Authorization and Production Truth](release-authorization-and-production-truth.md) for authority/state and [Code Management and Integration](code-management-and-integration.md) for Git/worktrees.
 
 ## 1. Release Units and Version Identity
 

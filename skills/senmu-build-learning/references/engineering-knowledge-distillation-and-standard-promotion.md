@@ -119,7 +119,7 @@ Run isolation probes first to prove the control lacks the candidate capability a
 
 Validate receipts with `scripts/validate_distillation_evaluation.py`. `accept` requires at least one improvement, evidence for all four roles, and no regression or contamination. All `unchanged` proves no net value and cannot justify promotion. A purely mechanical change that does not alter Skill behavior may omit this gate only when an existing observable check directly proves the result; “low risk” is not proof.
 
-Assurance's [Reproducible POC Governance](../../senmu-build-assurance/references/POC可复现实验治理规范.md) owns preregistration, full run ledgers, repetition, blinded human evaluation, and conclusion strength for formal controlled experiments. Learning does not duplicate experiment science or present self-review as independent assurance.
+Assurance's [Reproducible POC Governance](../../senmu-build-assurance/references/reproducible-poc-governance.md) owns preregistration, full run ledgers, repetition, blinded human evaluation, and conclusion strength for formal controlled experiments. Learning does not duplicate experiment science or present self-review as independent assurance.
 
 ## 7. Acceptance
 

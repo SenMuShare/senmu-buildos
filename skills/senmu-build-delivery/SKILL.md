@@ -9,13 +9,13 @@ Translate product intent into safe Git/release actions aligned with production f
 
 ## Route by Outcome
 
-- Batches, worktrees, hotfixes, merges, multi-agent Git: [Code/Merges](references/代码管理与合并规范.md).
-- Cross-session ownership or parallel lines: [Change Units](references/多Agent变更单元与版本线收口规范.md).
-- Repository topology, projections, release units: [Repositories](references/仓库边界与发布单元治理规范.md).
-- Work/version logs and handoffs: [Logs](references/协作日志与版本日志规范.md).
-- Versions, tags, archives, artifacts: [Artifacts](references/版本制品与发布规范.md).
-- Authorization, environments, production, rollback: [Authorization](references/发布授权与生产事实协议.md).
-- Deployment, secrets, security, post-release: [Security](references/部署测试与安全规范.md).
+- Batches, worktrees, hotfixes, merges, multi-agent Git: [Code/Merges](references/code-management-and-integration.md).
+- Cross-session ownership or parallel lines: [Change Units](references/multi-agent-change-units-and-version-line-closeout.md).
+- Repository topology, projections, release units: [Repositories](references/repository-boundaries-and-release-units.md).
+- Work/version logs and handoffs: [Logs](references/collaboration-and-version-logs.md).
+- Versions, tags, archives, artifacts: [Artifacts](references/version-artifacts-and-release.md).
+- Authorization, environments, production, rollback: [Authorization](references/release-authorization-and-production-truth.md).
+- Deployment, secrets, security, post-release: [Security](references/deployment-testing-and-security.md).
 
 Read-only advice never merges, tags, or deploys. A release entrypoint must be executable. Use Assurance only for disputes/hard gates.
 

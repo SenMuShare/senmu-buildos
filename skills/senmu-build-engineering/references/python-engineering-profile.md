@@ -1,6 +1,6 @@
 # Python Engineering Profile
 
-This profile adds Python-specific decisions only. [Source-Code Quality and AI Collaboration](源代码工程质量与AI协作规范.md) owns general responsibility, dependencies, errors, review, and AI collaboration; [Software Testing and Quality Verification](软件测试与质量验证规范.md) owns test scope/evidence; [Implementation Economy and Overengineering](实现经济性与过度工程治理规范.md) owns abstraction/platform/configuration justification.
+This profile adds Python-specific decisions only. [Source-Code Quality and AI Collaboration](source-code-quality-and-ai-collaboration.md) owns general responsibility, dependencies, errors, review, and AI collaboration; [Software Testing and Quality Verification](software-testing-and-quality-verification.md) owns test scope/evidence; [Implementation Economy and Overengineering](implementation-economy-and-overengineering.md) owns abstraction/platform/configuration justification.
 
 Load this profile for `.py`, `.pyi`, notebooks, Python dependencies, or `pyproject.toml` only when project rules are missing or standards review is explicit. Current project rules, minimum Python version, and tool configuration prevail.
 

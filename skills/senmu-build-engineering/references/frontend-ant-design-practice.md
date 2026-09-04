@@ -26,7 +26,7 @@ Built-in Confirm/Cancel labels, errors, and prompts are technical defaults. Cros
 - General UI: use existing Ant Design components and project wrappers.
 - AI interaction: evaluate a compatible Ant Design X only for concrete conversation, quick-intent, attachment, generation-state, or result-handoff needs.
 - Ordinary charts: evaluate Ant Design Charts first; use ECharts/custom graphics only for evidenced expressiveness, performance, or existing-asset needs.
-- Entry/exit, expansion, and feedback motion: prefer built-in behavior or CSS transitions. Reassess complex timelines, scroll-driven, or SVG motion through [Technology and Component Selection](技术路线与组件选型.md).
+- Entry/exit, expansion, and feedback motion: prefer built-in behavior or CSS transitions. Reassess complex timelines, scroll-driven, or SVG motion through [Technology and Component Selection](technology-and-component-selection.md).
 
 Before adding an ecosystem dependency, verify React/Ant Design compatibility, bundle cost, and maintenance. Do not add wrappers/tooling for “consistency” when current dependencies already solve one page.
 

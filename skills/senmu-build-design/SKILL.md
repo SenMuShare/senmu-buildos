@@ -9,10 +9,10 @@ Turn experience goals into implementable decisions. Start from the interface, be
 
 ## Route by Outcome
 
-- Pages, redesigns, visual systems, layout, type, color, responsive rules: [Visual Systems](references/界面视觉与设计系统规范.md).
-- Analyze/adapt a screenshot, URL, design, or interface: [Reference Analysis](references/参考界面解析与还原规范.md).
-- Interaction, motion, accessibility, feel: [Interaction](references/交互动效与可访问性规范.md).
-- Alternatives, prototypes, UI/UX review: [Prototypes](references/原型探索与界面评审规范.md).
+- Pages, redesigns, visual systems, layout, type, color, responsive rules: [Visual Systems](references/visual-systems-and-design-language.md).
+- Analyze/adapt a screenshot, URL, design, or interface: [Reference Analysis](references/reference-interface-analysis-and-reconstruction.md).
+- Interaction, motion, accessibility, feel: [Interaction](references/interaction-motion-and-accessibility.md).
+- Alternatives, prototypes, UI/UX review: [Prototypes](references/prototype-exploration-and-interface-review.md).
 
 Read only what is needed. Implement approved designs under project/Engineering rules; use specialist skills for current APIs/methods only.
 

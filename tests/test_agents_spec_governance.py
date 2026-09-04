@@ -14,7 +14,7 @@ class AgentsSpecGovernanceTests(unittest.TestCase):
     def test_source_first_principle_has_one_architecture_owner_and_public_routes(self) -> None:
         architecture = read("docs/architecture/system-overview.md")
         project_gate = read(
-            "skills/senmu-build-project/references/治理强度分级与门禁规范.md"
+            "skills/senmu-build-project/references/governance-levels-and-gates.md"
         )
         chinese = read("README.md")
 
@@ -25,7 +25,7 @@ class AgentsSpecGovernanceTests(unittest.TestCase):
 
     def test_project_rule_admission_and_index_semantics_remain_distinct(self) -> None:
         discovery = read(
-            "skills/senmu-build-project/references/项目规范发现与按需加载规范.md"
+            "skills/senmu-build-project/references/project-standard-discovery-and-on-demand-loading.md"
         )
 
         for phrase in (
