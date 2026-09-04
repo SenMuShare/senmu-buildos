@@ -1,55 +1,55 @@
-# Python 工程编码规范
+# Python Engineering Profile
 
-本页只补充 Python 特有的工程判断。通用的职责拆分、依赖治理、错误处理、评审和 AI 协作由[源代码工程质量与 AI 协作规范](源代码工程质量与AI协作规范.md)负责；测试范围与证据由[软件测试与质量验证规范](软件测试与质量验证规范.md)负责；是否值得增加抽象、平台或配置由[实现经济性与过度工程治理规范](实现经济性与过度工程治理规范.md)负责。
+This profile adds Python-specific decisions only. [Source-Code Quality and AI Collaboration](源代码工程质量与AI协作规范.md) owns general responsibility, dependencies, errors, review, and AI collaboration; [Software Testing and Quality Verification](软件测试与质量验证规范.md) owns test scope/evidence; [Implementation Economy and Overengineering](实现经济性与过度工程治理规范.md) owns abstraction/platform/configuration justification.
 
-涉及 `.py`、`.pyi`、Notebook、Python 依赖或 `pyproject.toml`，且项目缺少对应规则或任务明确要求规范审查时，再读取本页。项目现行规则、最低 Python 版本和已有工具配置优先。
+Load this profile for `.py`, `.pyi`, notebooks, Python dependencies, or `pyproject.toml` only when project rules are missing or standards review is explicit. Current project rules, minimum Python version, and tool configuration prevail.
 
-## 1. 版本、包与依赖边界
+## 1. Versions, Packages, and Dependencies
 
-- 从 `pyproject.toml`、镜像、CI 或项目权威文档确认最低 Python 版本；不要按当前 Agent 环境猜测，也不要写入超出最低版本的语法和标准库能力。
-- 升级 Python 时同步检查 CI、部署镜像、类型检查器、锁文件和框架兼容性，不能只改版本声明。
-- 可安装库或需要稳定导入边界的新项目优先评估 `src/` 布局；单文件工具、框架既定目录和历史应用保持更合适的现状。
-- 依赖与版本范围只在项目选定的清单中维护。不要让 `requirements*.txt`、锁文件和 `pyproject.toml` 分别声明互相冲突的事实。
-- 不建立长期堆放无关代码的 `utils.py`、`helpers.py` 或 `common.py`；模块名应表达领域或技术边界。
+- Determine minimum Python from `pyproject.toml`, images, CI, or authority—not the agent environment. Do not use newer syntax or standard-library APIs.
+- A Python upgrade synchronizes CI, deployment images, type checker, lockfiles, and framework compatibility, not just a version declaration.
+- Evaluate `src/` layout for new installable libraries or stable import boundaries; retain better layouts for one-file tools, framework conventions, and legacy apps.
+- Maintain dependencies/version ranges in the project's selected owner. Do not let `requirements*.txt`, lockfiles, and `pyproject.toml` conflict.
+- Avoid durable dumping grounds such as `utils.py`, `helpers.py`, or `common.py`; name modules for domain or technical boundaries.
 
-## 2. 格式、命名与导入
+## 2. Format, Naming, and Imports
 
-- 新项目默认可采用 Ruff formatter、Ruff linter；已有 Black、isort、Flake8、Pylint 或其他稳定组合时，不在无关任务中替换。
-- 行宽、目标版本和规则集写进项目配置，让格式化工具形成唯一结果；业务修改不要夹带全仓格式化。
-- 模块、函数、方法和变量使用 `snake_case`，类和异常使用 `PascalCase`，常量使用 `UPPER_CASE_WITH_UNDERSCORES`；异常类以 `Error` 结尾。
-- 内部接口用单前导下划线。布尔值和判断函数优先使用 `is_`、`has_`、`can_`、`should_` 等能够读成条件的名称。
-- 避免覆盖 `list`、`dict`、`str`、`id` 等内置名称，避免普通业务代码使用 `from module import *`。
-- 导入按标准库、第三方和本项目分组。局部导入只用于循环依赖、可选依赖或启动成本等真实原因，并说明边界。
-- 不用 `sys.path` 修改掩盖错误的包结构。模块导入不得顺带启动服务、访问网络或写文件；脚本动作进入 `main()`，并由 `if __name__ == "__main__"` 保护。
+- New projects may default to Ruff formatter/linter. Preserve stable Black, isort, Flake8, Pylint, or other combinations in existing projects unless migration is in scope.
+- Put width, target version, and rule set in project configuration so formatting has one result. Do not mix repository-wide formatting into a business change.
+- Use `snake_case` for modules/functions/methods/variables, `PascalCase` for classes/exceptions, `UPPER_CASE_WITH_UNDERSCORES` for constants, and suffix exception classes `Error`.
+- Use one leading underscore for internal APIs. Prefer predicate names such as `is_`, `has_`, `can_`, and `should_`.
+- Avoid shadowing built-ins such as `list`, `dict`, `str`, and `id`; avoid wildcard imports in ordinary business code.
+- Group standard-library, third-party, and project imports. Local imports require a real reason—cycle, optional dependency, startup cost—and a clear boundary.
+- Do not patch `sys.path` to conceal package defects. Importing a module must not start services, access networks, or write files; put script actions in `main()` behind `if __name__ == "__main__"`.
 
-## 3. Python 数据模型与抽象
+## 3. Data Model and Abstraction
 
-- 禁止 `items=[]` 这类可变默认参数；使用 `None` 后在函数内部创建对象。
-- 成组参数或固定返回结构优先使用有名称的数据对象。轻量值对象可用 `dataclass`；需要外部输入校验、序列化或框架边界时再评估 Pydantic。
-- 需要可替换能力时优先使用小型 `Protocol`、可调用对象或明确接口；只有共享实现和状态成立时才使用抽象基类。
-- 不机械移植 Interface/Impl、Factory、Manager 等仪式。元类、描述符、动态注入或猴子补丁只有在框架契约或可验证收益成立时使用，并隔离在明确边界。
-- 属性访问应廉价、可预测且无重要副作用；远程调用、昂贵计算和状态变更使用明确方法。
-- ORM 模型、API 模型、领域模型和第三方数据对象不应长期共用一个角色；当边界差异已经产生真实错误或维护成本时，建立显式转换。
+- Never use mutable defaults such as `items=[]`; default to `None` and create the object inside.
+- Prefer named data objects for grouped parameters/fixed returns. Use `dataclass` for lightweight values; consider Pydantic when external validation, serialization, or framework boundaries require it.
+- For substitutable behavior, prefer a small `Protocol`, callable, or explicit interface; use abstract base classes only when shared implementation/state exists.
+- Do not import Interface/Impl, Factory, or Manager ceremony mechanically. Metaclasses, descriptors, dynamic injection, and monkey patching require a framework contract or verified benefit and an isolated boundary.
+- Properties must be cheap, predictable, and free of material side effects. Use methods for remote calls, expensive work, and state mutation.
+- ORM, API, domain, and third-party models should not share one role indefinitely. Add explicit conversion when boundary differences create real errors or maintenance cost.
 
-## 4. 类型标注
+## 4. Types
 
-- 公共函数、数据模型和外部边界提供准确类型；历史项目优先覆盖新增代码和核心边界，再逐步收紧。
-- `Any` 只留在无法精确表达的动态或第三方适配层。`cast()`、`# type: ignore[...]` 和 `# noqa` 必须保持最小范围，带具体规则码和真实原因。
-- 类型语法必须兼容项目最低 Python 版本。
-- 区分“值可能为 `None`”与“参数缺失／使用默认值”，不要让 `None` 同时代表多个业务状态。
-- 有限状态优先使用 `Enum`、`Literal` 或受约束模型，减少散落的魔法字符串。
-- 类型检查默认可用 Pyright；项目已有 mypy 或框架插件时保持一致，不并行引入第二套工具制造重复噪声。
+- Type public functions, data models, and external boundaries accurately. In legacy work, cover new code and core boundaries first, then tighten incrementally.
+- Keep `Any` in irreducibly dynamic/third-party adapters. Scope `cast()`, `# type: ignore[...]`, and `# noqa` narrowly with a specific code and reason.
+- Type syntax must support the minimum Python version.
+- Distinguish nullable values from omitted/defaulted parameters; `None` must not represent several business states.
+- Prefer `Enum`, `Literal`, or constrained models for finite states over scattered strings.
+- Pyright is a reasonable default. Preserve an established mypy/tool-plugin owner; do not introduce a second checker for duplicate noise.
 
-类型只证明结构，不证明金额范围、权限、状态迁移或数据归属合法；这些仍由运行时契约负责。
+Types prove structure, not valid amounts, permissions, state transitions, or data ownership; runtime contracts own those.
 
-## 5. docstring 与中文约定
+## 5. Docstrings and Language
 
-内部项目默认使用英文标识符、简体中文业务注释和 docstring；国际开源、公共 SDK 或跨国协作项目按项目规则切换语言，不在同一模块随机混用。
+Internal projects default to English identifiers and Simplified Chinese business comments/docstrings. International open-source, public SDK, and multinational projects follow project language; never mix randomly within a module.
 
-- 公共模块、类、函数和方法写 docstring；私有且自解释的短函数不为形式补无价值文字。
-- 使用 `"""` 和项目统一风格。默认可采用 Google 风格的 `Args`、`Returns`、`Raises` 章节，内容说明业务语义、前置条件、副作用、幂等性和异常，不重复类型标注。
-- 注释解释复杂分支、兼容处理、事务、并发、重试、性能或安全取舍，不能只复述代码。
-- 实现变化时同步更新或删除注释，不保留注释掉的旧实现。
+- Document public modules, classes, functions, and methods. Do not add empty ceremonial prose to short self-explanatory private functions.
+- Use `"""` and one project style. Google-style `Args`, `Returns`, and `Raises` is an acceptable default. Explain business meaning, preconditions, side effects, idempotency, and errors without duplicating types.
+- Comments explain complex branching, compatibility, transactions, concurrency, retries, performance, or security tradeoffs—not line-by-line behavior.
+- Update or remove comments with implementation; do not retain commented-out old code.
 
 ```python
 def settle_order(order_id: str) -> SettlementResult:
@@ -69,27 +69,29 @@ def settle_order(order_id: str) -> SettlementResult:
     """
 ```
 
-## 6. Python 边界问题
+The Chinese example is retained deliberately to specify the default internal documentation language, not as a parallel runtime rule.
 
-- 捕获能够处理的具体异常。只在进程、任务、HTTP 等明确边界捕获宽泛 `Exception`；转换异常时用 `raise NewError(...) from exc` 保留原因链。
-- 文件、连接、事务、锁和会话使用 `with`、`async with` 或框架生命周期管理；`sys.exit()` 只出现在程序入口。
-- 不在 `async` 路径直接执行阻塞网络或文件操作；使用异步客户端、线程边界或任务队列，并保留超时、取消和回收策略。
-- 跨地区或持久化时间使用带时区对象；金额使用 `Decimal` 或整数最小货币单位，不用二进制浮点结算。
-- 路径优先使用 `pathlib`；用户输入路径必须经过目录穿越和权限边界检查。
-- 外部 JSON、消息、文件和数据库数据先在边界解析、校验并转换，不让任意 `dict` 贯穿领域逻辑。
-- 模块级可变状态、缓存和连接必须有明确 owner、生命周期、并发行为和测试重置方式。
+## 6. Python Boundary Conditions
 
-## 7. 测试与工具链落地
+- Catch specific exceptions you can handle. Catch broad `Exception` only at clear process, job, or HTTP boundaries; preserve causes with `raise NewError(...) from exc`.
+- Manage files, connections, transactions, locks, and sessions through `with`, `async with`, or framework lifecycles. Use `sys.exit()` only at program entry.
+- Do not run blocking network/file operations directly on async paths. Use async clients, a thread boundary, or a job queue with timeouts, cancellation, and cleanup.
+- Use timezone-aware values across regions/persistence. Use `Decimal` or integer minor units for money, never binary floating-point settlement.
+- Prefer `pathlib`; validate user paths for traversal and authorization boundaries.
+- Parse, validate, and convert external JSON, messages, files, and database rows at boundaries. Do not let arbitrary dictionaries permeate domain logic.
+- Module-level mutable state, caches, and connections require explicit owner, lifetime, concurrency semantics, and test reset.
 
-- 新项目默认可用 pytest；测试目录、命名、fixture 和 import mode 以项目现有配置为准。
-- `src/` 布局的新项目可评估 `--import-mode=importlib`；历史项目切换前先确认插件、相对导入和测试入口不会改变。
-- 单元测试不连接真实网络、生产数据库或付费服务；需要这些边界时使用项目规定的隔离环境和标记。
-- Python 工具链没有既定 owner 时，可从 Ruff formatter、Ruff linter、Pyright 和 pytest 起步；不要复制另一份完整配置到文档，实际参数统一写进 `pyproject.toml`。
-- 本地快速入口和 CI 应调用同一配置。常见检查形态是 `ruff format --check .`、`ruff check .`、`pyright` 和 `python -m pytest`，但项目命令优先。
+## 7. Tests and Tooling
 
-## 8. 旧项目迁移与维护
+- New projects may default to pytest; preserve project test layout, naming, fixtures, and import mode.
+- New `src/` projects may evaluate `--import-mode=importlib`; before changing legacy projects, verify plugins, relative imports, and test entrypoints.
+- Unit tests never call real networks, production databases, or paid services. Use project-defined isolated environments and markers for such boundaries.
+- Without an existing owner, Ruff formatter/linter, Pyright, and pytest are a reasonable start. Keep actual arguments in `pyproject.toml`, not a duplicated document configuration.
+- Local quick checks and CI use the same configuration. Common forms are `ruff format --check .`, `ruff check .`, `pyright`, and `python -m pytest`, but project commands prevail.
 
-- 先取得现状基线，再让新增或修改范围满足最低规则；全仓格式化、导入排序和大规模类型补全应与行为变更分开。
-- 对历史忽略项逐步收口，不为让 CI 变绿而全局关闭未知告警。例外要有原因、作用域和收口条件。
-- 具体 Python 版本能力、框架 API 和工具选项可能变化时，按需查询当前官方资料；本页不保存易过期的参数全集。
-- 框架专属且反复出现的规则进入项目或框架 owner，不继续膨胀 Python 通用 Profile。
+## 8. Legacy Migration
+
+- Establish a baseline, then apply minimum rules to new/changed scope. Separate repository-wide formatting, import sorting, and mass typing from behavior changes.
+- Retire historical suppressions incrementally; never globally disable unknown warnings merely for green CI. Exceptions need reason, scope, and closeout condition.
+- Query current official sources when Python, framework, or tool details may have changed; this profile does not freeze volatile option catalogs.
+- Repeated framework-specific rules belong in project/framework authority, not an ever-growing general Python profile.

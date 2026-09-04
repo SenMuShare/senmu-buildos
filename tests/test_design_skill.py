@@ -26,7 +26,7 @@ class DesignSkillTest(unittest.TestCase):
         text = (DESIGN / "SKILL.md").read_text(encoding="utf-8")
         for owner in ("Product", "Engineering", "Assurance", "Delivery"):
             self.assertIn(owner, text)
-        self.assertIn("Ant Design、shadcn、GSAP", text)
+        self.assertIn("specialist skills for current APIs/methods only", text)
 
     def test_reference_analysis_routes_progressively_to_design_library(self):
         analysis = (DESIGN / "references" / "参考界面解析与还原规范.md").read_text(
@@ -38,14 +38,14 @@ class DesignSkillTest(unittest.TestCase):
         self.assertIn("design-library/INDEX.md", analysis)
         self.assertIn("页面结构与视觉方向.md", index)
         self.assertIn("组件设计模式.md", index)
-        self.assertIn("不是前端组件代码包", index)
+        self.assertIn("not project brand facts or frontend code", index)
 
     def test_reference_analysis_preserves_project_owner_and_unknowns(self):
         analysis = (DESIGN / "references" / "参考界面解析与还原规范.md").read_text(
             encoding="utf-8"
         )
-        self.assertIn("已观察、推断、冲突和未知", analysis)
-        self.assertIn("不会自动成为项目设计 owner", analysis)
+        self.assertIn("observations, inferences, conflicts, unknowns", analysis)
+        self.assertIn("Reference analysis does not become the design owner", analysis)
 
     def test_runtime_guidance_does_not_embed_source_products(self):
         runtime = "\n".join(

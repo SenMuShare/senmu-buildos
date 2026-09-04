@@ -1,10 +1,10 @@
-# 设计资源库索引
+# Design Library Index
 
-设计资源库保存可按任务选择的设计经验，不保存项目品牌事实，也不是前端组件代码包。先遵守项目现有设计 owner 和 Design 通用规范；只有需要候选模式时再读取一个匹配资源包。
+This library contains task-selectable design experience, not project brand facts or frontend code. Apply the project's design owner and shared Design standards first; read one matching pack only when candidate patterns are needed.
 
-| 当前缺口 | 读取资源包 | 得到什么 |
+| Current gap | Read | Outcome |
 | --- | --- | --- |
-| 缺少整体视觉方向、页面叙事或宏观布局 | [页面结构与视觉方向](页面结构与视觉方向.md) | 适用界面、结构骨架、视觉重心与常见风险 |
-| 缺少承载具体任务的界面模式或完整状态 | [组件设计模式](组件设计模式.md) | 任务、组件关系、状态与选择条件 |
+| Overall direction, page narrative, or macro layout | [Page Structures and Visual Directions](页面结构与视觉方向.md) | suitable surfaces, structural skeleton, visual focus, common risks |
+| Task-bearing interface pattern or complete state model | [Component Design Patterns](组件设计模式.md) | task, component relationships, states, selection conditions |
 
-一次优先选择一个主方向，再从另一个包补当前任务真正需要的组件模式。示例是候选而非模板；不得为了新颖轮换主题、拼贴冲突语言，或让资源库覆盖项目已经确认的设计系统。字体、色彩、Token、动效和可访问性的通用裁决仍由相邻 Design 规范拥有，不在资源包重复维护。
+Choose one primary direction, then draw only necessary component patterns from the other pack. Examples are candidates, not templates. Do not rotate themes for novelty, combine conflicting languages, or override an approved project system. Adjacent Design standards remain the owners of typography, color, tokens, motion, and accessibility.

@@ -20,7 +20,7 @@ class AgentsSpecGovernanceTests(unittest.TestCase):
 
         self.assertIn("## 核心治理顺序：宜疏不宜堵", architecture)
         self.assertIn("先减少生产过程制造错误的机会", architecture)
-        self.assertIn("## 0. 宜疏不宜堵：源头治理优先，门禁兜底", project_gate)
+        self.assertIn("## 0. Govern at the Source; Use Gates as a Backstop", project_gate)
         self.assertIn("**宜疏不宜堵。**", chinese)
 
     def test_project_rule_admission_and_index_semantics_remain_distinct(self) -> None:
@@ -29,12 +29,12 @@ class AgentsSpecGovernanceTests(unittest.TestCase):
         )
 
         for phrase in (
-            "使用两种不同准入标准",
-            "现行工程约束只要当前有效、稳定、面向实现且可验证即可成立",
-            "不要求先有失败历史",
-            "同一权威正文可以有多个不同的适用信号或入口",
-            "不要求所有 Markdown 都进入索引",
-            "警告用于完全重复索引行",
+            "Apply two admission tests",
+            "Current engineering constraints need only be valid, stable, implementation-relevant, and verifiable",
+            "prior failure is unnecessary",
+            "Several triggers may point to one authority",
+            "neither require every Markdown file in the index",
+            "warnings for exact duplicate entries",
         ):
             self.assertIn(phrase, discovery)
 

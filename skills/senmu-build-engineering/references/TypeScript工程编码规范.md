@@ -1,25 +1,25 @@
-# TypeScript 工程编码规范
+# TypeScript Engineering Profile
 
-本页只保存 TypeScript 特有的类型、运行时边界、模块和工具链规则。职责、依赖、副作用、异常、测试和评审仍由《源代码工程质量与 AI 协作规范》统一定义；项目已有 formatter、lint、模块制式和框架约定时沿用并登记例外，不把本页变成第二套项目配置。
+This profile owns only TypeScript-specific rules for types, runtime boundaries, modules, and tooling. The general source-quality standard owns responsibility, dependencies, side effects, errors, testing, and review. Preserve registered project formatter, lint, module, and framework conventions; this profile is not a second project configuration.
 
-## 类型与运行时边界
+## Types and Runtime Boundaries
 
-- 新项目以 `strict` 为基线。旧项目先记录当前错误和支持版本，再按模块收紧；关闭某项严格检查时记录范围、原因、风险和恢复触发，不用全局放宽隐藏迁移成本。
-- 网络响应、JSON、环境变量、消息和第三方输入在运行时仍是不可信数据。先作为 `unknown` 验证并收窄，再进入领域逻辑；静态类型不能替代解析、schema 或边界测试。
-- 把 `any`、双重断言、非空断言和错误抑制限制在最小适配边界。必须使用时说明无法建模的原因、影响范围和移除条件；不通过 `@ts-ignore`、`@ts-nocheck` 或宽泛断言制造虚假绿色。
-- 类型推断已经清楚时不重复标注；公共边界、复杂返回值和会被错误推断的空集合／泛型显式声明。复杂映射与条件类型只有在确实降低重复且调用方仍能理解错误信息时使用。
+- Use `strict` as the new-project baseline. In legacy projects, record current errors and supported versions, then tighten by module. Any disabled strict check needs scope, reason, risk, and restoration trigger; never hide migration cost with a global relaxation.
+- Network responses, JSON, environment variables, messages, and third-party input remain untrusted at runtime. Accept them as `unknown`, validate and narrow them, then enter domain logic. Static types do not replace parsing, schemas, or boundary tests.
+- Confine `any`, double assertions, non-null assertions, and suppressions to the smallest adapter boundary. State why modeling is infeasible, impact scope, and removal condition. Do not manufacture false green results with `@ts-ignore`, `@ts-nocheck`, or broad assertions.
+- Avoid annotations when inference is clear. Explicitly type public boundaries, complex returns, and empty collections/generics likely to infer incorrectly. Use complex mapped/conditional types only when they reduce real duplication and callers can still understand errors.
 
-## 状态、模块与依赖
+## State, Modules, and Dependencies
 
-- 互斥业务状态使用带稳定判别字段的联合，避免多个布尔值组合出非法状态。关键 `switch` 用 `never` 或等价机制检查穷尽性；开放扩展协议保留并测试未知分支。
-- 使用项目选定的标准 ES module 策略；需要区分类型和值空间时使用 `import type`／`export type`。副作用加载必须显式，不能藏在看似纯类型的依赖中。
-- 不用 TypeScript `namespace`、全局补丁或非标准运行时特性代替清晰模块；兼容 CommonJS、旧声明或第三方全局对象时集中在受控适配层。
-- 类型只描述契约，不拥有业务事实。生成类型、API schema 和运行时验证应指向同一权威来源；出现漂移时修复生成或契约链，不手改多个副本。
+- Model mutually exclusive business states as discriminated unions with a stable discriminator, not boolean combinations that permit invalid states. Use `never` or equivalent for exhaustive critical switches; preserve and test unknown branches in open protocols.
+- Use the project's standard ES-module strategy and `import type`/`export type` when type and value spaces differ. Side-effect imports must be explicit, never hidden behind apparently type-only dependencies.
+- Do not use TypeScript `namespace`, global patching, or nonstandard runtime features instead of clear modules. Isolate CommonJS, legacy declarations, and third-party globals in controlled adapters.
+- Types describe contracts; they do not own business facts. Generated types, API schemas, and runtime validation must point to one authority. Repair the generation/contract chain on drift, not several copies manually.
 
-## 工具、测试与完成
+## Tools, Tests, and Completion
 
-- 项目统一声明 formatter、lint、`tsc`／构建和测试命令，本地与 CI 复用同一配置。编译器升级引入的新错误作为可见迁移处理，不静默关闭严格项。
-- 测试非法外部输入、空值、联合新增成员、异步拒绝、取消和副作用失败；类型测试不能替代运行时行为测试。
-- 修改旧文件时保持 diff 聚焦；与行为无关的大面积格式化、自动导入重排和类型机械迁移使用独立提交或治理任务。
+- Declare unified formatter, lint, `tsc`/build, and test commands, with local and CI using the same configuration. Treat new compiler errors as visible migration work; do not silently disable strictness.
+- Test invalid external input, nullability, new union members, async rejection, cancellation, and side-effect failure. Type tests do not replace runtime behavior tests.
+- Keep legacy-file diffs focused. Put behavior-neutral mass formatting, import sorting, or mechanical type migration in a separate commit or governance task.
 
-完成前确认：受影响 `tsconfig` 继承链和模块目标已核对；不可信输入经过运行时验证；新增状态可穷尽；类型抑制没有扩散；格式、lint、类型、测试和构建按项目契约运行，未运行项如实报告。
+Before completion, confirm the affected `tsconfig` inheritance and module target, runtime validation of untrusted input, exhaustive new state, contained suppressions, and project-contracted format, lint, type, test, and build checks. Report omissions truthfully.

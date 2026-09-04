@@ -1,82 +1,82 @@
-# 源代码工程质量与 AI 协作规范
+# Source-Code Quality and AI Collaboration
 
-本规范只保存跨语言、会改变工程决策的共同规则。项目现行代码、配置、质量命令和专业 owner 优先；语言／框架 reference 只在项目缺少对应规则或需要审查规范时读取。
+This standard owns only cross-language rules that change engineering decisions. Current code, configuration, quality commands, and specialist project owners prevail. Load language/framework references only when project rules are missing or standards review requires them.
 
-## 1. 质量模型与权威
+## 1. Quality Model and Authority
 
-代码质量不等于格式通过。它包括正确性、安全、局部可理解、变化局部性、唯一事实、显式副作用、可测试和可删除性。
+Quality is not format compliance. It includes correctness, security, local comprehensibility, locality of change, one source of truth, explicit side effects, testability, and deletability.
 
-适用顺序：安全与不可降低 Hard Gate > 项目现行规则和机器配置 > 命中的语言／框架规则 > 本通用规范 > 社区默认。
+Precedence: safety and non-reducible Hard Gates > current project rules/machine configuration > applicable language/framework rules > this standard > community defaults.
 
-项目 `AGENTS.md` 只保存差异、真实命令和路由；`CODE_QUALITY` 保存项目质量决策与例外；架构、技术债和测试分别回到其 owner。BuildOS 通用规则不复制进项目。项目规则过时、彼此冲突或试图降低安全、隐私、权限、支付、生产数据和发布门禁时，列出冲突交用户裁决。
+Project `AGENTS.md` contains deltas, real commands, and routing; `CODE_QUALITY` owns project quality decisions/exceptions; architecture, debt, and testing remain with their owners. Do not copy BuildOS prose into a project. Present conflicts for user decision when project rules are stale, inconsistent, or weaken safety, privacy, authorization, payments, production-data, or release gates.
 
-## 2. 跨语言原则
+## 2. Cross-Language Principles
 
-- 一个业务事实、状态、副作用和不变量只有一个 owner；缓存、派生 UI 或兼容层不能静默成为第二事实源。
-- 一个变化集中在拥有该知识的模块。小修改需要理解大量无关模块，是边界退化信号。
-- 函数和模块以可命名职责组织，不用固定行数裁决；业务规则、I/O、持久化和外部调用保持可区分。
-- 输入、输出、失败和副作用可发现；网络、数据库、文件和不可逆动作不得隐藏在看似纯计算的接口中。
-- 抽象服务已知变化、隔离或测试价值；相似代码和假设性未来不自动要求新层。
-- 新依赖先比较标准库、现有依赖和平台能力，并考虑维护、安全、部署和退出成本。
-- 临时兼容面记录消费者、退出条件和验证，不作为新实现样板。
-- 实现替代成组收口旧状态、入口、调用链、测试和文档，证明新入口唯一且旧入口不可达，或兼容边界已获批准。
-- 产品决定永久退役一项功能时，删除其前端入口、路由／API、后台任务／事件、服务分支、开关／配置、权限暴露、写入／读取路径及已失效测试和当前文档，证明界面、直接调用、自动触发和重启后的默认配置都不能恢复旧能力。禁止用 CSS 隐藏、未接线控件、默认关闭的 feature flag、返回固定失败或保留“以后可能再用”的实时后端代码冒充删除。只有当前需求批准的兼容、回滚、数据保留或法规边界可以保留，并记录 owner、消费者、非默认入口、退出条件和验证；历史数据销毁另行授权。
+- Each business fact, state, side effect, and invariant has one owner. Cache, derived UI, and compatibility layers never become silent second sources.
+- Keep a change in the module owning its knowledge. A small change requiring many unrelated modules signals boundary erosion.
+- Organize functions/modules by nameable responsibility, not line limits. Keep business rules, I/O, persistence, and external calls distinguishable.
+- Make inputs, outputs, failures, and side effects discoverable. Do not hide networks, databases, files, or irreversible actions behind apparently pure interfaces.
+- Abstract for known variation, isolation, or testing value; similarity and hypothetical futures do not require a layer.
+- Compare standard library, existing dependencies, and platform capability before adding a dependency, including maintenance, security, deployment, and exit cost.
+- Temporary compatibility surfaces record consumers, exit conditions, and verification; they are not templates for new work.
+- A replacement closes old state, entrypoints, call chains, tests, and docs as one unit, proving the new entrypoint is unique and the old one unreachable or explicitly approved as compatibility.
+- When Product permanently retires a capability, remove frontend entrypoints, routes/APIs, jobs/events, service branches, flags/configuration, permission exposure, read/write paths, invalid tests, and current docs. Prove UI, direct calls, automation, and restart defaults cannot restore it. CSS hiding, disconnected controls, disabled-by-default flags, fixed failures, and live backend code retained “for later” are not removal. Retain only approved compatibility, rollback, data-retention, or legal boundaries with owner, consumer, non-default entry, exit condition, and verification. Destruction of historical data requires separate authority.
 
-## 3. 错误、分布式调用与资源
+## 3. Errors, Distributed Calls, and Resources
 
-- 只捕获能够处理的具体错误；不能恢复时保留原因，在适当边界转换。不吞错、不用成功值伪装失败、不重复记录同一异常。
-- 外部调用设置覆盖连接、DNS／TLS、池等待、请求和响应读取的总期限；流式和离线任务也有取消、资源上限和停止条件。
-- 重试由一个层级在总次数／时间预算内负责，只处理已分类的可恢复失败，并使用封顶退避、抖动和必要配额，避免多层放大。
-- 有副作用的重试使用稳定意图键和原子结果关联；同键不同参数拒绝或显式裁决。结果未知时先查询、核账或人工恢复，不盲目重发。
-- 明确事务、取消、部分成功、重复和迟到语义，并关闭文件、连接、锁和会话。
+- Catch only errors that can be handled; preserve causes and convert at the proper boundary. Do not swallow failure, return a success-shaped value, or log the same exception repeatedly.
+- External calls need an end-to-end deadline covering connection, DNS/TLS, pool wait, request, and response read. Streaming/offline work also needs cancellation, resource caps, and stop conditions.
+- One layer owns retry within a total attempt/time budget, only for classified recoverable failures, with capped backoff, jitter, and quota where needed. Prevent retry multiplication.
+- Side-effect retries use a stable intent key atomically linked to the result. Reject or explicitly adjudicate different parameters under one key. For unknown outcomes, query, reconcile, or recover manually before resending.
+- Define transaction, cancellation, partial-success, duplicate, and late-result semantics, and close files, connections, locks, and sessions.
 
-### 外部接口能力与标识映射
+### External Capability and Identifier Mapping
 
-- 领域内稳定标识与外部服务、接口版本、模型或协议使用的代码保持分离；外部映射键包含真实调用目标及版本，保留区域、语种、能力层级等具有业务含义的差异，不凭相似名称合并。
-- 运行时只选择与本次真实外部端点匹配且已验证的能力记录；未知、未映射或不支持时失败关闭或进入显式产品策略，不猜测“最接近”的代码，也不复用另一接口的标识。
-- 对可能变化的外部能力记录来源、版本和核验时间；配置、实现、测试与运行证据必须指向同一映射身份。
+- Separate stable domain identifiers from external service, endpoint-version, model, or protocol codes. Mapping keys include the real target/version and preserve meaningful region, locale, and capability differences; similar names are not merge evidence.
+- Runtime selects only a verified capability record matching the actual endpoint. Unknown, unmapped, or unsupported values fail closed or enter explicit Product policy; never guess the nearest code or reuse another interface's identifier.
+- Record source, version, and verification time for changing capabilities. Configuration, implementation, tests, and runtime evidence must reference one mapping identity.
 
-## 4. 注释、工具与测试
+## 4. Comments, Tools, and Tests
 
-代码标识符遵循生态约定；项目无其他要求时，业务注释使用简体中文解释为什么、约束和不能怎样改，不逐行翻译代码。复杂业务规则、兼容、事务、幂等、并发、安全、性能和非显然副作用需要说明；过时注释、大段废弃代码和敏感信息必须移除。
+Identifiers follow ecosystem conventions. Unless project rules say otherwise, business comments use Simplified Chinese to explain rationale, constraints, and prohibited changes, not translate each line. Explain complex business rules, compatibility, transactions, idempotency, concurrency, security, performance, and non-obvious effects. Remove stale comments, large dead-code blocks, and sensitive information.
 
-正式代码项目声明格式化／自动修复、快速质量、完整质量、测试及真实／集成流程入口，并说明范围、成本和是否访问外部系统。本地与 CI 复用同一底层配置；忽略检查记录范围、原因和退出条件。
+Formal code projects declare format/autofix, fast quality, full quality, test, and real/integration entrypoints, with scope, cost, and external-system effects. Local and CI reuse configuration. Suppressions record scope, reason, and exit condition.
 
-测试观察业务契约而非私有实现。缺陷优先增加原始复现回归；覆盖关键成功、边界和有意义失败路径。远程调用按风险验证超时、预算、退避、调用放大、幂等、重复／迟到和未知结果核账。覆盖率数字不能代替资金、权限、数据和主流程风险。
+Tests observe business contracts, not private implementation. Add a regression for the original defect. Cover critical success, boundaries, and meaningful failures. For remote calls, test risk-relevant deadlines, budgets, backoff, amplification, idempotency, duplicates/late results, and reconciliation of unknown outcomes. Coverage percentages do not replace risk coverage for money, permissions, data, and core flows.
 
-## 5. AI 实现、调试与评审闭环
+## 5. AI Implementation, Debugging, and Review Loop
 
-1. 读取真实入口、需求／验收、调用链、配置、测试、同类实现和命中的 Task／TD／ADR 决策记录，固定原始现象并区分 `confirmed`、`likely_unreproduced`、`expected_behavior`、`duplicate` 和 `out_of_scope`；写入前按 Kernel 自动保护脏改动并获得本任务隔离面。看似反常、多余或像 Bug 的行为如果已有 Decision Rationale、Rejected Alternatives、Preserved Constraints 或 Revisit Trigger，先核对原条件是否仍成立：条件未变时不得静默恢复已拒绝方案，条件已变时以新证据回到原 owner 重新裁决并保留 supersession 链。明显安全缺陷不因历史决定免检。
-2. 沿“需求与职责 owner → 架构与依赖 → 调用、数据、状态和副作用链路 → 业务逻辑与不变量 → 局部实现”定位能够解释现象的最上游原因，优先在该 owner 消除同类问题，再处理残余局部缺陷。只随证据扩围；局部原因已经充分成立且没有上游异常信号时，不强制升级为架构审查。
-3. 说明行为变化、范围、风险、测试和需要同步的 owner，以最小端到端切片闭合权威输入、真实路径、可观察结果和匹配验证；不以提示词、清单或 validator 代替根因修复。
-4. 开放批次内只运行保持当前实现可信所需的目标检查并处理失败；不因单项完成启动完整质量门禁。复杂工作只在有意义阶段更新项目现有任务状态。
-5. 用户行为或验收变化回 Product；模块、公共接口、数据、依赖或长期路线变化回 TD／ADR；执行顺序变化回 Task。
-6. 只检查本次稳定改动及必要缝合点的复用、质量和效率；保持输出、错误、状态、副作用和顺序，不以删行或抽象数量为成绩。
-7. 审查完整 diff、变更函数和现有注释。自查不替代项目要求的职责分离批准。
-8. 范围清楚的阶段可以用本地 checkpoint commit 保存进度，但保持 Change Unit `in_progress`。确认提测／交接后冻结完整 diff，运行《软件测试与质量验证规范》规定的批次检查，再封口为稳定 commit；范围未完、检查失败、项目禁止或会混入他人改动时不得伪造封口，Engineering 只能声明 implemented。
+1. Read real entrypoints, requirements/acceptance, call chain, configuration, tests, analogous implementation, and applicable Task/TD/ADR decisions. Freeze the symptom and classify `confirmed`, `likely_unreproduced`, `expected_behavior`, `duplicate`, or `out_of_scope`; use Kernel protection for dirty work before writing. For surprising or apparently redundant behavior, check Decision Rationale, Rejected Alternatives, Preserved Constraints, and Revisit Trigger. Do not silently restore a rejected option while conditions remain; if conditions changed, return new evidence to the owner and preserve supersession. Historical decisions never exempt apparent safety defects.
+2. Trace the highest upstream cause that explains the symptom: requirement/responsibility owner -> architecture/dependencies -> call/data/state/side-effect chain -> business logic/invariants -> local implementation. Eliminate the class at that owner, then residual defects. Expand only with evidence; a sufficient local cause without upstream signals does not require architecture review.
+3. State behavior change, scope, risk, tests, and owners to synchronize. Close the smallest end-to-end slice from authoritative input through real path to observable result and matching verification. Prompts, checklists, and validators do not replace root-cause repair.
+4. During an open batch, run only targeted checks needed to keep implementation credible and address failures. Do not trigger every full gate after each item. Update durable task state only at meaningful phases.
+5. Route user behavior/acceptance changes to Product; module/public interface/data/dependency/durable direction to TD/ADR; execution-order changes to Task.
+6. Review reuse, quality, and efficiency only for stable changed scope and necessary seams. Preserve outputs, errors, state, side effects, and order; line deletion and abstraction count are not outcomes.
+7. Review the complete diff, changed functions, and existing comments. Self-review does not replace required separation-of-duty approval.
+8. A clear phase may use a local checkpoint commit while the Change Unit remains `in_progress`. After test/handoff confirmation, freeze the complete diff, run batch checks from the testing standard, and seal a stable commit. Do not fake closeout when scope is incomplete, checks fail, project rules prohibit it, or another contributor's changes would be mixed. Engineering may claim only `implemented`.
 
-### 故障调试
+### Fault Debugging
 
-先建立能稳定失败、足够短且能区分修复前后的反馈循环，再按“复现并缩小 → 对比正常路径 → 假设排序 → 单变量观测 → 修复 → 原路径回归 → 影响面回归 → 清理”推进。保存原始现象、关键依赖形态和可重复入口；把可能原因按现有证据和区分能力排序，每个假设写成可以被日志、断点、最小脚本、测试或配置对照证伪的判断。一次只增加一个观测点或改变一个变量，结果不支持就撤销该假设和临时改动，不叠加补丁。连续尝试没有产生新证据、只移动症状或不断扩围时，停止当前方案，重新检查 owner、接口假设、架构边界和最小下一步。最终先证明原失败路径恢复，再按真实影响面回归，并删除临时日志、调试开关、实验脚本和放宽的保护措施；无法形成稳定红灯时只声明当前证据强度，不假装根因已闭合。
+Create a short, stable failing loop that distinguishes before/after. Proceed: reproduce/narrow -> compare healthy path -> rank hypotheses -> observe one variable -> fix -> regress original path -> regress impact surface -> clean up. Preserve the original symptom, key dependency shape, and reproducible entrypoint. Make each hypothesis falsifiable by logs, debugger, minimal script, test, or configuration comparison. Change one observation/variable at a time; remove unsupported hypotheses and temporary edits. If repeated attempts add no evidence, only move symptoms, or continually expand scope, stop and reassess owner, interface assumptions, architecture boundary, and smallest next step. Prove the original path first, then impact scope, and remove debug logs, flags, scripts, and weakened protections. Without a stable red condition, report evidence strength rather than a closed root cause.
 
-### 实现者与审查者分工
+### Implementer and Reviewer Responsibilities
 
-普通低风险变更仍可由实现者做 evidence-based self-review；只有项目规则、风险或负责人要求职责分离时才启动以下协议，不固定 Agent 数量或评审轮次：
+Ordinary low-risk work may use evidence-based self-review. Invoke this protocol only when project rules, risk, or owner requires separation; it does not prescribe agent count or rounds:
 
-1. **实现任务包（Implementer Brief）**：引用当前需求／Task，给出 `Global Constraints`、`Interfaces`、允许写入范围、验收和输出契约；不附完整聊天或无关规范。
-2. **实现报告（Implementer Report）**：实现者报告实际行为变化、文件／接口、测试、与任务包的偏差、已知缺口和准确 head，不用“已完成”代替证据。
-3. **任务审查（Task Review）**：审查者先采用轻量 `Challenger Review` 立场，独立尝试证伪实现方向、关键假设、遗漏边界和更简单方案；发现异常时按上述生产链定位共同上游原因，不把同一根因的症状拆成多项局部补丁。随后分两轴给出结论：`Requirement／Spec` 轴核对批准需求、验收、范围、非目标和用户可见行为；`Engineering／Standards` 轴核对真实 diff 的正确性、安全、数据、兼容、完整退役、测试和维护成本。一个轴通过不能掩盖另一个轴失败；只有确实不适用时才写明理由。Finding 写明所属轴、位置、触发、影响、严重度和复核条件。Challenger 是审查方法，不是固定岗位或额外 Agent；同一实现者执行时仍标记 evidence-based self-review，需要独立结论时按 Assurance 身份与职责分离规则执行。
-4. **定向复审（Scoped Re-review）**：返修优先回到当前 Change Unit；复审原 Finding、修复差异及受影响链，不机械重跑无关清单。新问题单独登记，未关闭阻断项不能批准。
-5. **冻结结论（Final Review）**：最终结论分别汇总两轴状态，覆盖完整 `base..head`、已关闭 Finding、匹配测试和未验证盲区；新 commit 使旧结论失效。冻结 head 未变化时，Delivery 可复用该结论，不再重复首次语义审查。
+1. **Implementer Brief:** reference Task/requirement; include `Global Constraints`, `Interfaces`, writable scope, acceptance, and output contract—never full chat or unrelated standards.
+2. **Implementer Report:** actual behavior, files/interfaces, tests, deviations, known gaps, and exact head; “done” is not evidence.
+3. **Task Review:** begin with a lightweight Challenger Review that attempts to falsify direction, assumptions, omitted boundaries, and simpler alternatives. Trace shared upstream causes rather than fragmenting symptoms. Conclude on two independent axes: `Requirement/Spec` checks approved requirement, acceptance, scope, non-goals, and user-visible behavior; `Engineering/Standards` checks the real diff for correctness, safety, data, compatibility, full retirement, tests, and maintenance cost. One passing axis cannot hide another failure. A Finding names axis, location, trigger, impact, severity, and recheck condition. Challenger is a method, not a job or mandatory extra agent; same-executor review remains self-review. Use Assurance rules for an independent conclusion.
+4. **Scoped Re-review:** repair within the current Change Unit. Recheck the Finding, repair diff, and affected chain, not unrelated checklists. Register new problems separately; open blockers prevent approval.
+5. **Final Review:** summarize both axes over complete `base..head`, closed Findings, matching tests, and blind spots. Any new commit invalidates the conclusion. Delivery may reuse it while frozen head remains unchanged.
 
-内部性能、缓存、事务、队列、一致性或版本方案如果改变用户动作、可见状态、生效／持久化、撤销／恢复或验收，先比较保持已批准行为的工程替代并交 Product 决策；不得实现后再修改 PRD 自我授权。
+If an internal performance, cache, transaction, queue, consistency, or version design changes user actions, visible state, activation/persistence, undo/recovery, or acceptance, compare engineering alternatives that preserve approved behavior and return to Product. Never implement first and rewrite the PRD to self-authorize.
 
-## 6. 风险比例与旧项目
+## 6. Risk Proportion and Legacy Projects
 
-G1、本地可逆、单 owner 且保持产品／运行／交付契约的局部变更，只读相关代码和本地规则，不新增 Task、TD、ADR、PRD 或 Changelog；检查与批次收口时点统一由《软件测试与质量验证规范》负责。
+For G1 locally reversible, single-owner changes preserving product/runtime/delivery contracts, read only affected code and local rules; do not create Task, TD, ADR, PRD, or Changelog. The testing standard owns check and batch-close timing.
 
-G2-G4 逐步增加类型、测试、构建、架构、安全、数据、权限和真实主流程验证；治理等级只提高验证强度，不自动触发多个 Skill 或独立审查。
+G2-G4 progressively add types, tests, build, architecture, safety, data, authorization, and real-flow verification. A higher level increases evidence strength; it does not automatically invoke several Skills or independent review.
 
-旧项目从真实配置、代表性代码和高频变化中提炼规则，只把稳定、重复且可执行的项目差异写回原 owner。没有对应语言 Profile 时保持现有技术栈，使用项目配置和官方生态。
+In legacy projects, derive rules from real configuration, representative code, and frequent changes; write only stable, repeated, executable project differences to original owners. Without a language Profile, preserve the stack and use project configuration plus the official ecosystem.
 
-例外记录原因、范围、影响、owner 和退出条件。可复用规则只写入一个正确 owner，不在入口、语言 Profile、项目文档和经验台账复制正文。
+Every exception records reason, scope, impact, owner, and exit condition. A reusable rule has one owner and is not copied across entrypoint, language Profile, project docs, and lesson register.

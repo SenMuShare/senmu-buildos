@@ -1,26 +1,26 @@
-# Java 工程编码规范
+# Java Engineering Profile
 
-本页只保存 Java 特有的资源、异常和构建工具落地。跨语言职责、依赖、副作用、测试和评审仍由《源代码工程质量与 AI 协作规范》统一定义。格式、导入、列宽、命名和 Javadoc 布局由项目实际 formatter、Checkstyle／lint 和贡献规范裁决，不复制整套厂商 Style Guide。
+This profile owns Java-specific resource, exception, and build-tool application. The general source-quality standard owns cross-language responsibility, dependencies, side effects, tests, and review. Project formatter, Checkstyle/lint, imports, width, naming, and Javadoc conventions prevail; do not copy a vendor style guide here.
 
-## 资源与异常
+## Resources and Exceptions
 
-- 当前方法创建或接管的 `AutoCloseable`／`Closeable` 资源，默认在最小作用域使用 try-with-resources 管理；文件、流、JDBC 对象和客户端不能依赖 GC 回收。
-- 多资源按声明逆序关闭。主体操作和关闭同时失败时保留主体异常并检查 suppressed exceptions；不要用手写 `finally` 的关闭异常覆盖真正根因。
-- 资源由容器、连接池或调用方拥有时，不在当前方法擅自关闭，但所有权和生命周期必须从接口、框架配置或项目契约可发现。
-- 只捕获能够恢复、增加领域语义或跨边界转换的最具体异常；包装时传递原始 cause。不空 `catch`、不把失败变成 `null`／成功状态，也不在多个层级重复记录同一堆栈。
-- checked／unchecked 的选择遵循项目和公共 API 契约；不要为了消除编译错误把所有异常统一包成无语义的 `RuntimeException`。
+- Manage an `AutoCloseable`/`Closeable` created or taken over by the current method with try-with-resources in the smallest scope. Files, streams, JDBC objects, and clients must not rely on garbage collection.
+- Close several resources in reverse declaration order. When body and close both fail, preserve the body exception and inspect suppressed exceptions; handwritten `finally` must not overwrite the root cause.
+- Do not close resources owned by a container, pool, or caller, but make ownership and lifetime discoverable in interfaces, framework configuration, or project contracts.
+- Catch the most specific exception only when recovery, domain meaning, or boundary conversion is possible; preserve the original cause when wrapping. Never use empty catches, turn failure into `null`/success, or log the same stack at several layers.
+- Follow project and public-API contracts for checked versus unchecked exceptions. Do not eliminate compile errors by wrapping everything in a meaningless `RuntimeException`.
 
-## API 与结构
+## APIs and Structure
 
-- 包、类和方法围绕领域职责组织；新增公共接口前确认调用方、兼容责任、线程安全、可空性、集合可变性和资源所有权。
-- 项目已经选择 nullness 注解、`Optional` 或静态分析时保持一致；没有统一契约时不得仅凭个人偏好大面积迁移。外部 API 兼容差异集中在适配层。
-- 不把可变内部集合直接暴露给调用方；需要共享可变状态时明确同步、事务和生命周期，而不是依靠注释假设线程安全。
-- Javadoc 说明公共契约、前置条件、副作用、异常和非显然取舍，不重复类型签名。实现注释解释原因和限制。
+- Organize packages, classes, and methods by domain responsibility. Before adding a public API, establish callers, compatibility, thread safety, nullability, collection mutability, and resource ownership.
+- Preserve the project's nullness annotation, `Optional`, or static-analysis convention. Do not mass-migrate by preference when no unified contract exists. Isolate external API compatibility in adapters.
+- Do not expose mutable internal collections. Shared mutable state needs explicit synchronization, transaction, and lifetime semantics—not a comment that assumes safety.
+- Javadoc documents public contract, preconditions, side effects, exceptions, and non-obvious tradeoffs without repeating signatures. Implementation comments explain reasons and constraints.
 
-## 工具、测试与完成
+## Tools, Tests, and Completion
 
-- Maven／Gradle 或项目统一脚本提供格式、静态检查、编译、测试和构建入口；本地与 CI 使用同一底层配置。生成代码按生成器治理，不手工修补产物。
-- 资源代码覆盖成功、主体异常、关闭异常和多资源路径；异常测试核对类型、cause、suppressed exceptions、日志次数和对外错误契约。
-- 并发、事务、序列化或公共 API 变化继续遵守项目框架、JDK 版本和架构契约；本页不预设统一框架或全局数值门槛。
+- Maven/Gradle or the unified project script provides format, static analysis, compile, test, and build entrypoints, shared locally and in CI. Govern generated code through its generator; do not patch products manually.
+- Resource tests cover success, body failure, close failure, and multiple resources. Exception tests verify type, cause, suppressed exceptions, log count, and external error contract.
+- Concurrency, transaction, serialization, and public-API changes remain governed by the project framework, JDK, and architecture contract; this profile imposes no universal framework or numeric threshold.
 
-完成前确认：资源 owner 和关闭路径明确；异常原因链未丢失；公共 API 的兼容与线程语义已说明；formatter／静态检查、编译、测试和构建按项目契约运行，未运行项如实报告。
+Before completion, confirm resource ownership/closure, intact cause chains, public API compatibility/thread semantics, and project-contracted formatter/static checks, compile, tests, and build. Report omissions truthfully.

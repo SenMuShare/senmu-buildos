@@ -1,37 +1,32 @@
-# Reference 附件治理
+# Reference Attachment Governance
 
-用本规范决定项目或 Skill 应如何引用外部知识，避免把大型厂商文档、易过期快照和无关资料塞入上下文。
+Use this standard to decide how a project or skill references external knowledge without loading large vendor manuals, stale snapshots, or irrelevant material into context.
 
-## 1. 选择顺序
+## 1. Source Order
 
-1. 先使用项目内已确认、与当前版本匹配的权威规则。
-2. 官方提供 MCP、CLI、API 或结构化查询工具时，按需查询命中内容。
-3. 工具不足时读取官方网页或小型项目摘要。
-4. 只有离线、审计或固定版本复现需要时，才在具体项目或临时缓存保存带日期的快照。
+1. Use approved in-project rules that match the current version.
+2. When an official MCP, CLI, API, or structured query exists, retrieve the specific relevant content.
+3. If the tool is insufficient, read the official page or a small project summary.
+4. Save a dated snapshot in the project or a temporary cache only for offline use, audits, or fixed-version reproduction.
 
-## 2. Skill 包内边界
+## 2. Skill Package Boundary
 
-- 只保留执行工作流真正需要、且无法稳定即时获取的参考资料。
-- 把 reference 直接放在 `references/` 一层，并从 `SKILL.md` 直接链接；不要建立 `references/vendor/` 等二级知识树。
-- 不在通用 Skill 中保存完整 `llms-full.txt`、整站文档或“以后可能会用”的厂商资料。
-- 具体生态规则使用条件式 reference；项目未选择该生态时不加载。
-- 可执行代码放入 `scripts/`，输出模板和复用资源放入 `assets/`，不要用 reference 混装。
-- 不加入密钥、账号、真实用户数据、客户信息或项目私有路径。
+- Retain only material required to execute the workflow and unavailable reliably on demand.
+- Put references directly under `references/` and link them from `SKILL.md`; do not create nested vendor knowledge trees.
+- Do not package complete `llms-full.txt`, whole-site documentation, or vendor material that might be useful later.
+- Route ecosystem-specific rules conditionally and do not load them before the project selects that ecosystem.
+- Put executable code in `scripts/` and output templates/reusable resources in `assets/`; do not mix them into references.
+- Exclude secrets, accounts, real user data, customer information, and private project paths.
 
-## 3. 项目级快照
+## 3. Project Snapshots
 
-需要固定快照时记录：
+When a fixed snapshot is necessary, record source URL/title, acquisition date, applicable product/version and license, reason, refresh/expiry conditions, and relationship to the project's technical baseline or audit conclusion.
 
-- 来源 URL 和文档名称。
-- 获取日期、适用产品／版本和许可证。
-- 使用原因、刷新条件和过期判断。
-- 与项目技术基线或审计结论的对应关系。
+Keep large snapshots in the project or a disposable cache. A general skill retains the method for querying, validating, and refreshing—not the snapshot corpus.
 
-大型快照留在具体项目或可清理缓存中。通用 Skill 只保留“何时查询、如何验证、何时刷新”的方法。
+## 4. Reading and Verification
 
-## 4. 读取与验证
-
-- 只读取当前任务命中的 reference，不加载整套附件。
-- 具体 API、组件、配置和版本差异优先实时核对官方资料，不凭 Skill 中的旧示例推断。
-- 工具输出与项目锁定版本冲突时，以项目真实依赖和对应版本官方资料为准，并记录差异。
-- 项目反复使用同一知识且查询成本高时，沉淀小型项目摘要；不要把一次性查询自动升级为通用 Skill 内容。
+- Read only references matched to the task.
+- Verify current official material for specific APIs, components, configuration, and version differences; do not infer from stale examples.
+- If tool output conflicts with the project's locked version, use the real dependency and corresponding version's official material, and record the difference.
+- When the project repeatedly needs costly knowledge retrieval, maintain a small project summary; do not promote a one-off query automatically into a general skill.

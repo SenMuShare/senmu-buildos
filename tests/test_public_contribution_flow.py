@@ -21,18 +21,18 @@ class PublicContributionFlowTest(unittest.TestCase):
     def test_public_pr_is_imported_as_candidate_not_source_history(self) -> None:
         text = DELIVERY.read_text(encoding="utf-8")
         for signal in (
-            "公开 Pull Request 是入站候选",
-            "公开白名单路径导入新的内部 Change Unit",
-            "禁止把公开 `main` 直接 pull／merge 到私有主线",
-            "重新生成空暂存面的公开投影",
-            "保留作者归属和 PR 链接",
+            "a public PR is an inbound candidate",
+            "import only allowlisted paths into a new internal Change Unit",
+            "Never pull/merge public `main` into private main",
+            "Regenerate the public projection from that internal commit onto an empty staging surface",
+            "preserving author attribution/PR link",
         ):
             self.assertIn(signal, text)
 
     def test_public_ci_does_not_receive_private_credentials(self) -> None:
         text = DELIVERY.read_text(encoding="utf-8")
-        self.assertIn("公开 CI 只验证公开面，不持有私有仓凭据", text)
-        self.assertIn("接收贡献、内部合并和公开发布分别登记", text)
+        self.assertIn("Public CI validates public content and has no private credentials", text)
+        self.assertIn("Contribution intake, internal merge, and public release are separate records", text)
 
 
 if __name__ == "__main__":

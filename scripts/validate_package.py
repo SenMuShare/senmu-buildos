@@ -87,10 +87,13 @@ FORBIDDEN_ORIGIN_TERMS = (
     "b" + "mad",
     "super" + "powers",
 )
-MAX_SKILL_ENTRY_CHARS = 2_200
+# English expresses the same CJK instruction set with more characters but fewer
+# context units. Keep the language-neutral context-unit gates below as the real
+# runtime budgets; character limits only catch accidental file growth.
+MAX_SKILL_ENTRY_CHARS = 3_200
 MAX_SKILL_DESCRIPTION_CHARS = 400
 MAX_DESCRIPTION_CATALOG_CHARS = 2_400
-MAX_REFERENCE_CHARS = 10_000
+MAX_REFERENCE_CHARS = 16_000
 MAX_PROJECT_AGENTS_TEMPLATE_CHARS = 2_300
 MAX_SKILL_ENTRY_CONTEXT_UNITS = 1_050
 MAX_SKILL_DESCRIPTION_CONTEXT_UNITS = 90

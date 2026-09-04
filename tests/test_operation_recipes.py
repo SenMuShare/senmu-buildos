@@ -19,11 +19,11 @@ class OperationRecipeContractTest(unittest.TestCase):
         source = read(
             "skills/senmu-build-engineering/references/源代码工程质量与AI协作规范.md"
         )
-        for phrase in ("能稳定失败", "假设排序", "一次只增加一个观测点", "删除临时日志"):
+        for phrase in ("short, stable failing loop", "rank hypotheses", "Change one observation/variable at a time", "remove debug logs"):
             self.assertIn(phrase, source)
-        for axis in ("Requirement／Spec", "Engineering／Standards"):
+        for axis in ("Requirement/Spec", "Engineering/Standards"):
             self.assertIn(axis, source)
-        self.assertIn("Finding 写明所属轴", source)
+        self.assertIn("A Finding names axis", source)
 
     def test_test_first_is_conditional_not_mandatory(self):
         engineering_entry = read("skills/senmu-build-engineering/SKILL.md")
@@ -35,17 +35,17 @@ class OperationRecipeContractTest(unittest.TestCase):
         self.assertIn("implementation review", engineering_entry)
         self.assertIn("implementation review", read("skills/senmu-build-product/SKILL.md"))
         self.assertIn("prototype validation", read("skills/senmu-build-design/SKILL.md"))
-        self.assertIn("行为契约能在实现前清楚表达", testing)
-        self.assertIn("不强制测试先行", testing)
-        self.assertIn("不是所有修改的审批仪式", testing)
+        self.assertIn("When behavior is expressible before implementation", testing)
+        self.assertIn("Do not force test-first", testing)
+        self.assertIn("not an approval ritual", testing)
 
     def test_project_planning_keeps_vertical_value_and_honest_unknowns(self):
         tasks = read(
             "skills/senmu-build-project/references/任务执行与状态管理规范.md"
         )
-        self.assertIn("纵向价值切片", tasks)
+        self.assertIn("vertical value slices", tasks)
         self.assertIn("Not yet specified", tasks)
-        self.assertIn("不得为看起来完整而提前编造", tasks)
+        self.assertIn("Do not invent tasks", tasks)
 
     def test_architecture_and_poc_recipes_keep_safe_boundaries(self):
         architecture = read(
@@ -54,12 +54,12 @@ class OperationRecipeContractTest(unittest.TestCase):
         selection = read(
             "skills/senmu-build-engineering/references/技术路线与组件选型.md"
         )
-        self.assertIn("expand → migrate → contract", architecture)
-        for boundary in ("可部署", "可验证", "可恢复"):
+        self.assertIn("expand -> migrate -> contract", architecture)
+        for boundary in ("deployable", "verifiable", "recoverable"):
             self.assertIn(boundary, architecture)
-        for phrase in ("逻辑原型", "可执行 harness", "输入、状态、转换、输出、错误"):
+        for phrase in ("logic prototype", "executable harness", "inputs, state, transitions, outputs, errors"):
             self.assertIn(phrase, selection)
-        self.assertIn("由 Assurance 冻结 POC", selection)
+        self.assertIn("Assurance freezes", selection)
 
     def test_human_operator_wizard_protects_secrets_and_irreversible_actions(self):
         entry = read("skills/senmu-build-workflow/SKILL.md")
@@ -68,11 +68,11 @@ class OperationRecipeContractTest(unittest.TestCase):
         )
         self.assertIn("human-operator-guide", entry)
         self.assertIn("Not for executing workflows", entry)
-        self.assertIn("人机操作向导", workflow)
-        self.assertIn("不要求粘贴进聊天、日志、Git", workflow)
-        self.assertIn("重复执行必须幂等", workflow)
-        self.assertIn("不可逆动作前单独展示", workflow)
-        self.assertIn("不接管现有向导的日常执行", workflow)
+        self.assertIn("Human-Operator Guide", workflow)
+        self.assertIn("directly in trusted interfaces—not chat, logs, Git", workflow)
+        self.assertIn("retries must be idempotent", workflow)
+        self.assertIn("Before deletion, payment, review submission, notification, production switch", workflow)
+        self.assertIn("not routine execution", workflow)
 
     def test_skill_text_and_readme_expose_recipes_without_new_skills(self):
         boundaries = read("docs/architecture/skill-boundaries.md")
@@ -91,8 +91,8 @@ class OperationRecipeContractTest(unittest.TestCase):
         prototype = read(
             "skills/senmu-build-design/references/原型探索与界面评审规范.md"
         )
-        self.assertIn("通常提供二至三个候选", prototype)
-        self.assertIn("不能只换颜色、圆角和阴影假装多个方案", prototype)
+        self.assertIn("Offer two or three alternatives", prototype)
+        self.assertIn("not only color, radius, and shadow", prototype)
 
 
 if __name__ == "__main__":

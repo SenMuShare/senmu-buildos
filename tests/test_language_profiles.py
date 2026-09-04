@@ -10,9 +10,9 @@ COMMON = ENGINEERING / "references/源代码工程质量与AI协作规范.md"
 BEHAVIOR = ROOT / "tests/behavior/senmu-buildos-trigger-matrix.md"
 
 PROFILES = {
-    "TypeScript工程编码规范.md": ("strict", "unknown", "稳定判别字段", "import type"),
+    "TypeScript工程编码规范.md": ("strict", "unknown", "stable discriminator", "import type"),
     "Go工程编码规范.md": ("%w", "goroutine", "context.Context", "go test -race"),
-    "Java工程编码规范.md": ("AutoCloseable", "try-with-resources", "suppressed exceptions", "Maven／Gradle"),
+    "Java工程编码规范.md": ("AutoCloseable", "try-with-resources", "suppressed exceptions", "Maven/Gradle"),
 }
 
 
@@ -47,7 +47,7 @@ class LanguageProfileContractTests(unittest.TestCase):
     def test_language_and_retry_scenarios_are_behaviorally_discriminated(self) -> None:
         common = COMMON.read_text(encoding="utf-8")
         behavior = BEHAVIOR.read_text(encoding="utf-8")
-        for signal in ("重试由一个层级", "封顶退避", "稳定意图键", "同键不同参数"):
+        for signal in ("One layer owns retry", "capped backoff", "stable intent key", "different parameters under one key"):
             self.assertIn(signal, common)
         for scenario in ("TypeScript API", "goroutine 泄漏", "Java 服务", "五层服务链", "同一幂等键"):
             self.assertIn(scenario, behavior)

@@ -1,68 +1,68 @@
-# BuildOS 项目演进与反哺规范
+# BuildOS Evolution and Upstream Feedback
 
-本规范用于把不同项目中经过验证的共性经验，转化为 Senmu BuildOS 源码项目的可审查改进。反哺对象是完整的 BuildOS Git 项目，不是某一个已安装 Skill 的私有文件夹。
+Use this standard to convert validated cross-project learning into reviewable improvements to the Senmu BuildOS source project. The feedback target is the complete BuildOS Git project, not a private directory inside one installed Skill.
 
-## 1. 三个必须区分的对象
+## 1. Keep Three Objects Distinct
 
-| 对象 | 含义 | 权威边界 |
+| Object | Meaning | Authority boundary |
 | --- | --- | --- |
-| 应用项目 | 实际使用 BuildOS 的软件、工作流、内容、实验或复合项目 | 该项目自己的入口、事实、任务、经验和 Git／发布单元 |
-| BuildOS 源码项目 | 维护插件产品的独立 Git 仓库 | 仓库根、插件清单、Skills、Hooks、文档、脚本、测试、迁移与版本历史 |
-| BuildOS 安装实例 | Codex 为运行而安装或缓存的插件与 Skills | 可执行派生物；除非安装方式明确链接源码，否则不作为维护权威 |
+| Application project | Software, workflow, content, experiment, or composite project using BuildOS | Its own entrypoints, facts, tasks, lessons, Git, and release/delivery units |
+| BuildOS source project | Independent Git repository maintaining the plugin product | Repository root, manifests, Skills, Hooks, docs, scripts, tests, migrations, and version history |
+| Installed BuildOS instance | Plugin and Skills installed or cached for Codex execution | Executable derivative; not maintenance authority unless installation explicitly links source |
 
-应用项目的经验先在应用项目内闭环。本机意见箱中的原始候选不是规则；只有经集中审议分类为 `buildos_candidate` 的内容，才作为输入进入 BuildOS 源码项目。不能从应用项目直接改写安装实例，也不能把应用项目的 Git 历史和 BuildOS 的 Git 历史混为一体。
+Close application-project learning in that project first. Raw local-inbox items are not rules. Only items centrally adjudicated as `buildos_candidate` enter the BuildOS source project. Never edit an installed instance directly from an application project or merge the two projects' Git histories into a fictitious shared completion state.
 
-## 2. 什么情况下进入 BuildOS 项目
+## 2. Admission to the BuildOS Project
 
-候选至少满足以下条件：
+A candidate must satisfy all of the following:
 
-- 根因和有效处置已经有可复查证据，不只是聊天判断或单次偶然结果。
-- 在不同项目中复现，或者能够证明属于多种项目都会遇到的稳定机制问题。
-- 可以用项目无关语言表达，不泄漏客户、账号、密钥、个人路径或未公开业务事实。
-- 新规则会改变 Agent 的实际决策、产物或验证方式，而不是泛泛要求“更认真”。
-- 预期收益高于新增阅读、路由、执行、维护和 Token 成本。
+- Root cause and effective treatment have reviewable evidence, not just chat judgment or one accidental result.
+- The issue recurs across projects or is demonstrably a stable mechanism affecting several project forms.
+- It can be stated without customer data, accounts, secrets, personal paths, or unpublished business facts.
+- The rule changes an agent's actual decision, artifact, or verification—not merely asks for greater care.
+- Expected benefit exceeds added reading, routing, execution, maintenance, and context cost.
 
-不满足时，保留在应用项目自己的 Work Log、Lessons Learned Register 或专业规范中。
+Otherwise retain it in the application project's Work Log, Lessons Learned Register, or specialist standard.
 
-运行时功效不能只用 Token、字数、加载次数或测试绿灯判断。候选应说明它改变了什么决定或产物，避免了哪些重复实现、错误修改、无效验证或风险，结果为何正确，以及新增阅读、执行、维护和后续项目上下文成本。Token 是成本项，不是优化目标；没有可观察行为变化、质量收益或必要风险控制的规则，即使很短也不晋级。静态行为矩阵只能固定预期，仍需用候选环境中的真实任务复核路由、实施方向和误导风险。
+Runtime value is not established by token counts, length, load frequency, or green tests alone. State which decision or artifact changes, which repeated implementation, wrong edit, invalid verification, or risk is prevented, why the result is correct, and the added costs. Tokens are a cost, not the optimization objective. A short rule with no observable behavior or necessary risk-control benefit does not qualify. Static behavior matrices freeze expectations; real candidate-environment tasks must still verify routing, implementation direction, and misleading effects.
 
-公开网页、PDF、书、仓库、第三方 Skill 或团队手册不是项目经验候选时，按[工程知识蒸馏与标准晋级规范](工程知识蒸馏与标准晋级规范.md)处理。外部材料只提供待裁决知识，不因知名度或自称最佳实践直接获得 BuildOS 规则地位。
+For public webpages, PDFs, books, repositories, third-party Skills, or team manuals that are not project-experience candidates, use [Engineering Knowledge Distillation and Standard Promotion](工程知识蒸馏与标准晋级规范.md). External reputation does not grant rule authority.
 
-## 3. 整仓影响分析
+## 3. Whole-Repository Impact Analysis
 
-进入 BuildOS 源码项目后，先确认 Git 根、当前分支、基线、未提交变化和本次允许修改的范围，再搜索现有唯一 owner。至少检查以下影响面：
+On entry to the BuildOS source project, confirm Git root, branch, baseline, uncommitted changes, and authorized modification scope, then find the unique existing owner. Check at least:
 
-1. README 和产品定位是否需要变化。
-2. `docs/architecture/` 中的系统模型、Skill 边界、项目产物和 Harness 分工是否仍一致。
-3. 哪一个或哪几个 Skill 的 description、入口、reference 或 asset 是语义 owner。
-4. 项目初始化器、validator、Hook、插件元数据和行为测试是否消费了被修改的规则。
-5. Changelog、Roadmap、版本和发布说明是否需要同步。
+1. Whether README or product positioning changes.
+2. Whether system model, Skill boundaries, project artifacts, and Harness responsibilities under `docs/architecture/` remain consistent.
+3. Which Skill description, entrypoint, reference, or asset owns the meaning.
+4. Whether initializer, validator, Hook, plugin metadata, or behavior tests consume the changed rule.
+5. Whether Changelog, Roadmap, version, or release notes require synchronization.
 
-整仓视角不表示每次都要修改全部文件。最终可以只改一份 Markdown 或一个 Skill，但必须说明为什么其他潜在消费者不受影响；如果同一概念跨多个 owner，更新关系和路由，不复制完整规则。
+Whole-repository analysis does not require editing every file. A final change may touch one Markdown file or Skill, but must explain why other consumers are unaffected. When a concept crosses owners, update relationships and routing rather than duplicating the full rule.
 
-## 4. 实施顺序
+## 4. Implementation Order
 
-1. 冻结候选来源、问题、适用范围、证据和预期改变。
-2. 搜索 BuildOS 现有规则、相邻职责和历史迁移，判断是补充、修正、合并、替代还是拒绝。
-3. 确定唯一语义 owner；涉及 Skill 入口、结构或触发时使用 `$skill-creator` 校准。
-4. 优先修正产生问题的原则、职责、模板、脚本或默认生产路径；门禁只覆盖无法消除的重大剩余风险。
-5. 更新受影响的路由、文档、测试和迁移声明，保持源码项目内部一致。
-6. 运行 Skill、包、脚本和行为层的匹配验证，并记录未验证的运行时假设。
-7. 只有得到独立授权后，才执行提交、推送、版本、Tag、候选安装或公开发布。
+1. Freeze candidate source, problem, scope, evidence, and expected change.
+2. Search existing BuildOS rules, adjacent responsibilities, and migrations; classify as supplement, correction, merge, replacement, or rejection.
+3. Select one semantic owner. Use `$skill-creator` when Skill entry, structure, or triggering changes.
+4. Correct the principle, responsibility, template, script, or default production path that creates the problem. Gates cover only material residual risk that cannot be removed.
+5. Synchronize affected routes, docs, tests, and migration declarations.
+6. Run matching Skill, package, script, and behavior checks; record unverified runtime assumptions.
+7. Commit, push, version, tag, candidate-install, or publish only under separate explicit authority.
 
-## 5. 版本与 Git 规则
+## 5. Version and Git Rules
 
-- BuildOS 以整个 Git 仓库和插件包统一版本化；不为每个 Skill 建立彼此独立的产品版本。
-- 一次变更可以横跨多个 Skill、Hooks、文档和脚本，并应作为一个项目级变更接受 review 和验证。
-- 应用项目的修复提交与 BuildOS 的通用化提交分别发生在各自仓库；两者通过证据链接和候选说明关联，不共享虚假的同一完成状态。
-- 本地源码修改、候选包生成、本机安装和公开发布是不同状态，不能相互替代。
+- Version BuildOS as one Git repository and plugin package, not independent products per Skill.
+- One change may cross Skills, Hooks, docs, and scripts and receives project-level review and verification.
+- Application fixes and BuildOS generalization commits occur in their respective repositories; evidence links relate them without sharing a false completion state.
+- Local source changes, candidate package generation, local installation, and public release are distinct states.
 
-## 6. 反哺结果
+## 6. Feedback Result
 
-每次 BuildOS 反哺至少说明：
+Every BuildOS feedback result states:
 
-- 候选来自什么类型的项目证据，私有信息如何剥离。
-- 判定为项目特有还是跨项目通用的理由。
-- BuildOS 源码项目中修改了哪些 owner，为什么从整仓看已经收口。
-- 执行了哪些验证，哪些行为仍需候选环境测试。
-- 是否仅为源码变更，以及提交、安装、切换和发布分别处于什么状态。
+- the type of project evidence and how private facts were removed;
+- why the finding is project-specific or cross-project;
+- which source-project owners changed and why whole-repository closure is complete;
+- which checks ran and which behaviors still need candidate-environment verification;
+- whether this is source-only and the separate states of commit, install, activation, and publication.

@@ -1,184 +1,167 @@
-# 项目复盘与组织学习规范
+# Project Retrospectives and Organizational Learning
 
-本规范用于把已解决或有证据的项目经验转化为可复用知识。执行中发现 BuildOS 组件造成误导、返工、低效率或难以落地时，先按[反馈候选与集中审议规范](反馈候选与集中审议规范.md)由 Agent 提交到 BuildOS 收纳箱；普通用户纠正、业务需求和项目 Bug 不进入。原始候选不立即启动本页的正式复盘、日志、Lessons ID 或 validator。
+Use this standard to turn resolved or evidenced project experience into reusable knowledge. When BuildOS itself causes confusion, rework, inefficiency, or poor adoption, first submit an agent-generated candidate under [Feedback Candidates and Central Adjudication](反馈候选与集中审议规范.md). Ordinary user corrections, business requirements, and project bugs do not enter that inbox. A raw candidate does not trigger a formal retrospective, log, Lessons ID, or validator automatically.
 
-目标不是增加形式主义报告，而是让每次有效修正都能减少后续 AI 或研发人员重复犯错。
+The objective is not more ceremonial reports. Each effective correction should reduce repeated failure by later agents or developers.
 
-## 本页导航
+## Navigation
 
-1. 触发条件；2. 复盘顺序；3. 根因分类；4. 可执行契约；5. 经验提升；6. 经验检索与维护；7. 记录模板；8. 文档更新决策；9. 禁止事项；10. 最小执行标准。
+1. Triggers; 2. Order; 3. Root-cause classes; 4. Executable contracts; 5. Promotion to lessons; 6. Retrieval and maintenance; 7. Template; 8. Document routing; 9. Prohibitions; 10. Minimum standard.
 
-## 1. 触发条件
+## 1. Triggers
 
-以下情况在当前问题已解决、有可复查证据，或用户开始集中审议时，进入轻量复盘：
+Enter a lightweight retrospective after the issue is resolved, has reviewable evidence, or the user begins central adjudication when:
 
-- AI 自己发现实现方向、测试方式、发布方式或文档同步方式有问题，并已修正。
-- 项目负责人指出 AI 的做法有偏差，AI 随后修正。
-- 本地验证、线上验证、构建、部署、合并或回滚过程中出现踩坑。
-- 同类问题在同一项目中第二次出现。
-- 修复 Bug 后发现根因不只是代码错误，还涉及需求、技术设计、测试策略、发布门禁或协作留痕不清。
-- 多 AI 接力时，后续 AI 因前序记录不足、文档不清或分支状态不明而返工。
-- 同一流程多次出现“文档写了但执行又回到旧流程”、入口脚本和规范口径不一致、旧缓存或旧产物被误当成当前标准的情况。
-- 发现现有 Senmu BuildOS Skills 没有覆盖某类通用治理问题。
+- An agent finds and corrects a wrong implementation, test, release, or documentation-sync approach.
+- A project owner identifies a deviation and the agent corrects it.
+- Local/production verification, build, deployment, merge, or rollback exposes a failure.
+- The same class of problem occurs a second time in one project.
+- A bug's root cause extends beyond code into requirements, design, testing strategy, release gates, or collaboration evidence.
+- A later agent reworks because prior state, documentation, or branch status was insufficient.
+- A process repeatedly returns to an old path despite documentation, entry scripts disagree with standards, or old cache/artifacts are mistaken for current authority.
+- Existing Senmu BuildOS Skills omit a general governance problem.
 
-纯拼写、纯格式化、一次性命令输错且没有项目治理含义的问题，不进意见箱或正式复盘。
+Do not submit or formally review spelling, formatting, or a one-off command typo with no governance consequence.
 
-## 2. 复盘顺序
+## 2. Retrospective Order
 
-复盘不能代替止损、修复或 owner 决策。如果当前任务没有修复授权，先冻结事实和风险并移交 owner；已授权修复时，在必要验证完成后复盘。根因存在争议、影响重大或任务要求独立裁决时，由 `senmu-build-assurance` 提供证据化结论；普通项目学习不强制额外加载 Assurance。
+A retrospective does not replace containment, repair, or owner decisions. Without repair authority, freeze facts and risk and hand off to the owner. With authority, review after required verification. Use `senmu-build-assurance` for an evidence-based verdict when root cause is disputed, impact is material, or independence is requested; ordinary project learning does not require Assurance.
 
-本页只在候选需要核验、项目规则需要修正，或准备晋级时启动。默认顺序：
+Start this standard only when a candidate needs verification, a project rule needs correction, or promotion is being prepared:
 
-1. 先完成已授权的止损／修复，或明确记录尚未修复及其 owner。
-2. 已修复时验证原失败路径；未修复时保存可复核证据和风险边界。
-3. 写清楚发生了什么、为什么发生、如何发现、如何处置。
-4. 判断根因属于执行失误、项目个性化规范缺口、还是通用治理缺口。
-5. 根据分类更新对应文档或 skill。
-6. 只对已经发生的实质修复、决策或未解风险记录工作日志；达到复现和验证条件时，再提升为经验与防回退条目。
+1. Complete authorized containment/repair, or record the unresolved state and owner.
+2. If repaired, verify the original failure path; otherwise preserve reviewable evidence and risk boundaries.
+3. State what happened, why, how it was detected, and how it was handled.
+4. Classify the cause as execution error, project-specific rule gap, or general governance gap.
+5. Update the corresponding document or Skill according to classification.
+6. Log only substantive fixes, decisions, or unresolved risks. Promote to a lesson and anti-regression entry only after reproduction and verification conditions are met.
 
-如果当前任务很紧急，可以先执行已经获得授权的止血或发布动作，但必须在工作日志中留下复盘待办和触发条件；紧急性不创造发布、生产写入或破坏性操作权限。
+Urgency may justify executing already-authorized containment or release first, but record the retrospective follow-up and trigger in the Work Log. Urgency never creates release, production-write, or destructive authority.
 
-## 3. 根因分类
+## 3. Root-Cause Classification
 
-复盘时至少做三层判断。
+### 3.1 One-Off Execution Error
 
-### 3.1 一次性执行失误
+Signals: the current agent failed to read an existing file, omitted an existing script, misunderstood user direction, or used the wrong order; the project rule was already clear; no governance change is needed.
 
-特征：
+Treatment:
 
-- 问题来自本次 AI 没有充分阅读现有文件、漏跑已有脚本、理解用户指令偏差或操作顺序错误。
-- 项目已有清楚规范，只是这次没有遵守。
-- 后续不需要改项目制度，只需要在工作日志中记录事实、验证和提醒。
+- Record facts, verification, and reminder in the Work Log retrospective section.
+- Acknowledge the correction in the final report and state that the existing standard is now satisfied.
+- Do not hide a one-off mistake behind additional process.
 
-处理方式：
+### 3.2 Project-Specific Rule Gap
 
-- 记录到工作日志的「复盘」小节。
-- 最终回复中承认已修正，并说明已按现有规范补齐。
-- 不要为了掩盖一次性失误而新增多余流程。
+Signals: the issue depends on this project's business, deployment topology, data flow, customer process, channel rules, directories, or release method and may not generalize.
 
-### 3.2 项目个性化规范缺口
+Treatment:
 
-特征：
+- Update the matching project owner: PRD, TECHNICAL_DESIGN, DEPLOYMENT, TESTING_STRATEGY, BRANCHING_STRATEGY, VERSION_AND_RELEASE, WORKLOG, README, or equivalent.
+- Prefer the project's existing `governance/` or `docs/` structure.
+- Record that the rule is project-specific and why it is not abstracted into a general Skill.
 
-- 问题与该项目的特殊业务、部署拓扑、数据流、客户流程、渠道规则、目录结构或发布方式有关。
-- 换到其他项目不一定成立。
-- 需要让后续 AI 在这个项目中少踩坑。
+### 3.3 General Governance Gap
 
-处理方式：
+Signals: the issue is likely across projects—for example, omitting version/changelog after a fix, treating local verification as production proof, confusing release units, losing handoff state, rebuilding an existing component, or promoting a project preference as universal. BuildOS lacks a clear gate or uses wording too vague for reliable execution. A project-independent rule would improve other projects.
 
-- 更新项目内对应正式文档，例如 PRD、TECHNICAL_DESIGN、DEPLOYMENT、TESTING_STRATEGY、BRANCHING_STRATEGY、VERSION_AND_RELEASE、WORKLOG 或项目 README。
-- 如果项目已有 `governance/` 或 `docs/` 规范目录，应优先写入那里。
-- 工作日志记录「这是项目个性化规则」，并说明不抽象到通用 skill 的原因。
+Treatment:
 
-### 3.3 通用治理缺口
+- Fix the current project's owners first; a general change alone does not resolve the application project.
+- Create a BuildOS candidate only when recurrence is likely across projects, the rule is project-independent, and ordinary tasks do not inherit disproportionate burden.
+- Maintain the generalization as a separate task in the BuildOS source project under [BuildOS Evolution and Upstream Feedback](BuildOS项目演进与反哺规范.md), using whole-repository analysis. Use `$skill-creator` when Skill entry, structure, or triggering changes.
+- Source edits, Git commits, candidate installation, and public release are separate authorities and states; a valid project retrospective does not authorize them.
+- Report abstraction basis, candidate/update location, verification, and true boundaries of every state.
 
-特征：
+## 4. Converge on an Executable Contract
 
-- 问题跨项目高概率复现，例如 AI 修 Bug 后忘记版本/changelog、只本地验证不线上验证、没有区分发布单元、没有记录接力状态、重复手搓已有组件、把项目个性经验误抽象成通用规则。
-- 现有 Senmu BuildOS Skills 没有明确门禁，或表述太泛导致 AI 容易漏做。
-- 新规则可以用项目无关语言表达，并能提升其他项目协作质量。
+When a project repeatedly reverts after fixes, agents drift despite documentation, or legacy paths/artifacts become current defaults, do not merely add SOP prose or human review. Check for a missing executable contract.
 
-处理方式：
+An executable contract is the minimum set of project facts that later agents can discover, execute, and validate mechanically:
 
-- 先更新当前项目需要的文档，避免只改通用项目而不解决本项目。
-- 只有问题跨项目高概率复现、能用项目无关语言表达且不会增加普通任务负担时，才形成 BuildOS 改进候选。
-- 将通用化维护作为 Senmu BuildOS 源码项目中的独立任务，按 [BuildOS 项目演进与反哺规范](BuildOS项目演进与反哺规范.md) 做整仓影响分析；涉及 Skill 入口、结构或触发时使用 `$skill-creator` 校准。
-- 源码修改、Git 提交、候选安装和公开发布是不同授权与状态，不能因为项目内复盘成立就自动执行。
-- 最终回复说明抽象依据、候选或更新位置、验证结果和各状态的真实边界。
+- one public or explicitly routed entrypoint: command, script, server API, release pipeline, or task template;
+- machine-readable policy/config/schema, not only a long SOP;
+- policy ID, version ID, source ID, and state fields in ledgers, databases, manifests, render plans, release plans, or other intermediates;
+- a policy-bound validator/doctor checking entrypoint, configuration, script constants, artifact fields, and key files for consistency;
+- a legacy boundary identifying old artifacts as history, behavior/style reference, or rollback evidence—not templates for new work;
+- invalidation rules for caches and derivatives so updated source does not coexist with stale formal output.
 
-## 4. 可执行契约收敛
+Converge in this order:
 
-当一个项目反复出现“改完又回去”“文档里有但 AI 仍然跑偏”“旧流程或旧产物被误用为当前标准”时，不要只继续追加 SOP 或人工审查。应优先判断项目是否缺少可执行契约。
+1. Trace the real drift path: entrypoint, configuration, script constants, ledger fields, cache, old artifact, and validator inputs.
+2. Remove or quarantine old entrypoints that induce regression. If retained, label them legacy/demo in names, docs, and gates.
+3. Encode the current standard in machine-readable policy and make entry scripts write its policy/version ID.
+4. Validate consistency among documentation, machine policy, script behavior, ledger fields, and artifact provenance.
+5. Record root cause, legacy boundary, trigger, and future entrypoint in the Work Log and lesson/anti-regression register.
 
-可执行契约指项目内长期生产流程中，能被后续 AI 直接发现、执行和机器校验的一组最小事实：
+This is normally G3-G4 governance, but does not impose heavy gates on all small work. Apply it to formal production, release, migration, content-production, or repeatedly failing multi-agent chains.
 
-- 唯一或明确分流的公开入口，例如主命令、脚本、服务端 API、发布流水线或任务模板。
-- 机器可读的策略或配置，例如 policy/config/schema，不只依赖长文 SOP。
-- 台账、数据库、manifest、render plan、release plan 或其他中间产物中的策略 ID、版本 ID、来源 ID 和状态字段。
-- 与策略绑定的验证命令或 doctor 命令，能够检查入口、配置、脚本常量、产物字段和关键文件是否一致。
-- legacy 边界，明确哪些旧产物只作为历史事实、声音/视觉/行为参考或回滚依据，不能反向成为新流程样板。
-- 缓存和派生产物失效规则，避免源数据已经更新但旧缓存继续参与正式输出。
+## 5. Promote a Retrospective to a Durable Lesson
 
-收敛顺序：
+A Work Log is a timeline, not a durable rule index. When a conclusion is likely to recur, has a verified root cause, has a decidable action, and can be rechecked, use `senmu-build-learning` to create or update the project's Lessons Learned Register under its common schema. New default BuildOS projects use `governance/lessons/LESSONS_LEARNED.md` and IDs `LES-YYYYMMDD-NNN`. Synchronize stable business, architecture, implementation, workflow, or deployment rules into the matching specialist owner.
 
-1. 先找真实偏差链路：入口、配置、脚本常量、台账字段、缓存、旧产物、验证命令分别读什么。
-2. 删除或封存会诱导正式流程回退的旧入口；如果不能删除，必须在命名、文档和门禁中降级为 legacy 或 demo。
-3. 把当前标准落为机器可读策略，并让入口脚本写入策略 ID 或版本 ID。
-4. 让验证命令检查“文档口径、机器策略、脚本行为、台账字段、产物来源”是否一致。
-5. 在工作日志和经验与防回退台账中写明本次收敛的根因、legacy 边界、触发信号和后续入口。
+The second occurrence of the same failure forces governance escalation: create/update the lesson, find the production step repeatedly creating the defect, and determine why the old rule failed. Correct requirements, architecture, interfaces, defaults, implementation, public entrypoints, or operations first. Add the smallest automatic detection or gate only for material residual risk worth controlling. “Be careful next time” is not closure; neither is adding checks without correcting a confirmed defect source.
 
-这类收敛通常属于 G3-G4 治理事件；但规则本身不要求给所有小任务增加重门禁。只有正式生产链路、发布链路、数据迁移链路、内容生产链路或多 AI 反复返工链路才需要执行。
+## 6. Lesson Retrieval and Maintenance
 
-## 5. 从复盘提升为长期经验
+Lessons matter only when later tasks can find relevant, trustworthy entries:
 
-工作日志是时间线，不适合作为后续 AI 的长期规则索引。复盘结论满足“可能复现、根因已验证、动作可判定、
-检查可复验”时，由 `senmu-build-learning` 按统一 schema 新建或更新项目的 Lessons Learned Register；采用 BuildOS 新项目默认实例时写入 `governance/lessons/LESSONS_LEARNED.md` 并分配 `LES-YYYYMMDD-NNN`。对应专业 owner 同步稳定的业务、架构、实现、流程或部署规则。
+1. At task start, retrieve relevant `active` entries by module, release unit, process, environment, trigger, and keywords; never load all history by default.
+2. Before adding, deduplicate by symptom, cause, source owner, required/prohibited action, and tags. Update the existing entry or establish a supersession relationship when overlap is high.
+3. `candidate` is not a hard rule. Move it to `active` only after evidence; close long-unverified candidates or retain an explicit recheck condition.
+4. After code, architecture, process, or platform changes, evaluate related lessons as Keep, Update, Consolidate, Supersede, or Retire.
+5. After a stable rule moves to authority, retain only trigger, cause, evidence, and index in the lesson; do not copy the authoritative body.
+6. Large registers may split by stable domain with a short index, but the project retains one Lessons Learned owner—not private knowledge bases per agent or Skill.
 
-同类错误第二次发生时强制升级治理：创建或更新经验条目，分析缺陷在哪个生产环节被反复制造，以及旧规则为何失效。
-优先修正需求、架构、接口、默认值、实现、公开入口或操作流程；只有仍存在影响显著且值得控制的剩余风险时，才补最小自动检测或门禁。
-仅写“下次注意”不算闭环；只追加检查、却不修正已确认的缺陷来源，同样不算闭环。
+### 6.1 Mechanical Register Validation
 
-## 6. 经验检索与维护
-
-经验只有能够被后续任务准确找到且仍然可信时才有价值。维护统一遵循以下规则：
-
-1. 开工时按当前模块、发布单元、流程、环境、触发信号和关键词读取相关 `active` 条目，不默认把全部历史塞入上下文。
-2. 新增前按症状、根因、源头 owner、必须／禁止动作和标签查重；高重合时更新原条目或建立替代关系。
-3. `candidate` 不能作为硬规则；证据补足后才转为 `active`，长期未验证的候选应关闭或保留明确复核条件。
-4. 当代码、架构、流程或平台变化后，检查关联经验是否仍成立；根据证据执行 Keep、Update、Consolidate、Supersede 或 Retire。
-5. 稳定规则已经写回权威 owner 后，经验条目保留触发信号、根因、证据和索引，不复制权威正文。
-6. 经验量变大时可以按稳定领域拆分文件并建立短索引，但仍只有一个项目级 Lessons Learned owner，不按 Agent 或 Skill 建私有知识库。
-
-### 6.1 经验台账机械检查
-
-新增、修改、晋级、替代或退役经验后，运行项目治理 policy 声明的经验校验命令。BuildOS 默认实例使用：
+After adding, editing, promoting, superseding, or retiring a lesson, run the command declared by project governance policy. The default BuildOS instance uses:
 
 ```bash
 python3 .senmu-buildos/validate_lessons.py governance/lessons/LESSONS_LEARNED.md
 ```
 
-检查器可以阻断经验 ID 冲突、非法状态、`active` 缺少根因／适用范围／触发信号／源头动作／验证证据／权威落点，以及无效替代关系。疑似重复、信息过泛、个人绝对路径和疑似密钥只报告警告，由 Learning 复核；脚本不得自动合并、改写或晋级经验。
+The validator may block duplicate IDs, invalid status, active entries missing root cause/scope/trigger/source action/evidence/authority, and invalid supersession. Possible duplicates, overly broad information, personal absolute paths, and possible secrets are warnings for Learning review. The script never merges, rewrites, or promotes lessons automatically.
 
-机械校验通过只表示台账结构和关系可用，不证明根因正确、处置有效或经验具有跨项目通用性。语义判断仍以真实证据、项目 owner 和本规范的晋级条件为准。
+A passing validator proves register structure and relationships only—not root-cause correctness, treatment effectiveness, or cross-project applicability. Those remain semantic judgments grounded in evidence, project owners, and promotion criteria.
 
-## 7. 复盘记录模板
+## 7. Retrospective Template
 
-需要把复盘追加到项目既有 Work Log 时，按需使用 [Retrospective Entry Template](../assets/learning-governance/RETROSPECTIVE_ENTRY.template.md)。模板只保存字段结构；实际内容、是否形成经验 ID 和是否进入 BuildOS 反哺仍由本规范的证据与晋级条件决定。
+When appending a retrospective to an existing Work Log, use [Retrospective Entry Template](../assets/learning-governance/RETROSPECTIVE_ENTRY.template.md) as needed. It defines field structure only. Evidence and promotion criteria determine actual content, Lessons ID, and BuildOS feedback status.
 
-## 8. 文档更新决策表
+## 8. Document Routing
 
-| 发现的问题 | 首选更新位置 |
+| Finding | Preferred owner |
 | --- | --- |
-| 需求边界、用户流程、验收标准不清 | PRD 或需求文档 |
-| 架构、接口、数据模型、状态流转、第三方调用不清 | TECHNICAL_DESIGN 或技术方案 |
-| 本地启动、部署路径、环境变量、线上验证不清 | DEPLOYMENT 或部署文档 |
-| 测试命令、真实验收路径、mock 边界不清 | TESTING_STRATEGY 或测试说明 |
-| 分支、合并、多人/多 AI 接力不清 | BRANCHING_STRATEGY 或代码管理规范 |
-| 版本号、tag、制品、回滚点不清 | VERSION_AND_RELEASE、CHANGELOG 或发布规范 |
-| 某次工作做了什么、验证了什么、未完成什么 | WORKLOG 或协作日志 |
-| 已验证且可能重复的失败模式、触发信号和防回退门禁 | LESSONS_LEARNED 经验台账，并同步对应权威文档 |
-| 跨项目都会踩的治理问题 | Senmu BuildOS 源码项目中的对应 owner；先做整仓影响分析 |
+| Unclear requirement boundary, user flow, or acceptance | PRD or requirement owner |
+| Unclear architecture, interface, data model, state transition, or third-party call | TECHNICAL_DESIGN or technical owner |
+| Unclear startup, deployment, environment, or production verification | DEPLOYMENT |
+| Unclear test command, real acceptance path, or mock boundary | TESTING_STRATEGY |
+| Unclear branch, merge, or multi-person/agent handoff | BRANCHING_STRATEGY |
+| Unclear version, tag, artifact, or rollback point | VERSION_AND_RELEASE, CHANGELOG, or release owner |
+| What changed, what was verified, what remains | WORKLOG |
+| Verified recurring failure, trigger, and anti-regression gate | LESSONS_LEARNED plus the authoritative specialist owner |
+| Cross-project governance problem | Matching BuildOS source owner after whole-repository analysis |
 
-## 9. 禁止事项
+## 9. Prohibitions
 
-- 不要把所有问题都升级成通用 skill 规则；通用规则过多会让后续 AI 无法执行。
-- 不要把新增提示词、清单、validator 或审批层当作默认复盘结论；先修正产生缺陷的生产环节，再决定是否需要剩余风险控制。
-- 不要绕过 BuildOS 源码项目的整仓影响分析；涉及 Skill 时也不要绕过 `$skill-creator` 的抽象、结构和验证流程。
-- 不要只写“已复盘”而不写根因、分类和后续约束。
-- 不要把项目私有路径、客户隐私、密钥、未公开商业信息写进通用 skill。
-- 不要用复盘替代版本、changelog、发布验证或回滚记录。
-- 不要在没有验证的情况下把“猜测根因”沉淀为规则；只能标记为待验证经验。
-- 不要把时间先后或相关性直接写成已确认根因；区分 confirmed root cause、contributing factor、hypothesis 和 unresolved。
-- 不要把经验台账写成按时间重复粘贴的工作日志；相同失败模式更新同一条目或建立替代关系。
-- 不要把已安装的单个 Skill 当作 BuildOS 源码项目，也不要在应用项目中直接改写安装实例并称为框架已升级。
+- Do not promote every issue into a general Skill rule; excessive general rules become unexecutable.
+- Do not default to a prompt, checklist, validator, or approval layer. Fix the production step first, then control residual risk if justified.
+- Do not bypass whole-repository analysis in BuildOS source or `$skill-creator` abstraction/structure/verification for Skill changes.
+- Do not claim a retrospective without root cause, classification, and resulting constraint.
+- Do not put project paths, customer-private data, secrets, or unpublished business facts in general Skills.
+- Do not use retrospectives in place of version, changelog, release verification, or rollback records.
+- Do not encode a hypothesized root cause as a rule; retain it as a candidate.
+- Do not confuse chronology/correlation with causation. Distinguish `confirmed root cause`, `contributing factor`, `hypothesis`, and `unresolved`.
+- Do not turn the lesson register into a chronological duplicate of the Work Log; update or supersede the same failure mode.
+- Do not treat one installed Skill as the BuildOS source project or call a direct edit to an application install a framework upgrade.
 
-## 10. 最小执行标准
+## 10. Minimum Standard
 
-每次正式复盘时，AI 至少要完成：
+Every formal retrospective must:
 
-- 写明问题和根因。
-- 写明修复和验证。
-- 判断是项目个性化还是通用治理问题。
-- 更新一个最合适的项目文档或说明无需更新的原因。
-- 判断是否应建立／更新经验 ID；同类问题第二次发生时必须升级治理，但只有存在合理剩余风险时才补机器门禁。
-- 若属于通用治理缺口，先形成跨项目候选；进入 BuildOS 源码项目后按整仓影响分析完成抽象、分层、去重和验证，涉及 Skill 时使用 `$skill-creator`。项目私有事实仍只写回项目内规范。
+- state the problem and root cause;
+- state the fix and verification;
+- classify the issue as project-specific or general governance;
+- update the best project owner or explain why none changes;
+- decide whether to create/update a Lessons ID; the second occurrence forces governance escalation, but a machine gate requires material residual risk;
+- for a general gap, create a cross-project candidate first, then—inside the BuildOS source project—perform whole-repository abstraction, layering, deduplication, and verification, using `$skill-creator` for Skill changes. Project-private facts remain only in the project.

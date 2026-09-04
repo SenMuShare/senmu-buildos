@@ -5,23 +5,23 @@ description: Review BuildOS feedback, retrospectives, verified lessons, or exter
 
 # Organizational Learning
 
-把原始反馈、候选经验、项目规则和 BuildOS 正式规则保持为不同状态。普通纠正先解决当前请求；只有用户要求审议意见箱、正式复盘、经验晋级或知识蒸馏时才加载本 Skill。
+Keep raw feedback, candidate lessons, project rules, and formal BuildOS rules in distinct states. Resolve ordinary corrections in the current task. Load this skill only for inbox review, formal retrospectives, lesson promotion, or knowledge distillation.
 
-## 按结果读取
+## Route by Outcome
 
-- 投递或集中处理反馈候选：读取 [反馈候选与集中审议规范](references/反馈候选与集中审议规范.md)。
-- 已解决经验的复盘、查重、晋级或退役：读取 [项目复盘与组织学习规范](references/AI复盘与治理闭环规范.md)。
-- 将跨项目候选改进到 BuildOS：读取 [BuildOS 项目演进与反哺规范](references/BuildOS项目演进与反哺规范.md)。
-- 吸收网页、书、仓库、第三方 Skill 或工程手册：读取 [工程知识蒸馏与标准晋级规范](references/工程知识蒸馏与标准晋级规范.md)。
+- Submit or review feedback candidates: [Feedback Review](references/反馈候选与集中审议规范.md).
+- Retrospect, deduplicate, promote, or retire resolved lessons: [Organizational Learning](references/AI复盘与治理闭环规范.md).
+- Promote cross-project improvements into BuildOS: [BuildOS Evolution](references/BuildOS项目演进与反哺规范.md).
+- Absorb websites, books, repositories, third-party skills, or engineering manuals: [Knowledge Distillation](references/工程知识蒸馏与标准晋级规范.md).
 
-修改正式 Lessons Learned 时运行项目声明的校验命令；原始反馈候选不需要 Lessons ID。
+Run the project's validator when modifying formal Lessons Learned. Raw feedback does not need a Lessons ID.
 
-## 核心契约
+## Core Contract
 
-1. **捕获**：只有 Agent 在真实项目中使用 BuildOS 时，发现某个 Skill、reference、模板、脚本、Hook 或规则造成错误、误导、难以执行、内容空泛、额外工作或效率下降，才通过本机 CLI 写入 BuildOS 收纳箱。用户业务需求和一般纠正不自动收集。
-2. **审议**：按根因查重并分类为 `discard`、`project`、`buildos_candidate` 或 `needs_evidence`。
-3. **晋级**：项目私有规则回到项目 owner；跨项目规则只有在证据、适用范围、处置方式和权威 owner 明确后才进入 BuildOS。
+1. **Capture:** Use the local CLI only when BuildOS use in a real project shows that a skill, reference, template, script, hook, or rule caused error, misdirection, execution difficulty, empty guidance, unnecessary work, or inefficiency. Do not capture business requests or ordinary corrections automatically.
+2. **Review:** Deduplicate by root cause and classify as `discard`, `project`, `buildos_candidate`, or `needs_evidence`.
+3. **Promote:** Return project-specific rules to the project owner. Promote cross-project rules only with clear evidence, scope, disposition, and authoritative owner.
 
-提交候选时写清 BuildOS 组件、具体影响和可用证据或绕行；“不满意”可以成为候选，但不能只保存空泛评价。出现次数不是机械门槛。先修正制造问题的源头；不为单次失误默认新增提示词、validator 或审批，也不在多个 Skill 追加同义规则。意见箱、Work Log、Lessons Learned 和专业规则不得保存四份同义正文。
+Record the component, concrete impact, and evidence or workaround. Dissatisfaction can start a candidate but a vague opinion is insufficient; frequency is not a mechanical threshold. Correct the source first. Do not add prompts, validators, or approvals for every mistake or duplicate a rule across skills, inboxes, logs, and lessons.
 
-事实或根因存在争议时交 Assurance；客户需求先进入 Product。Learning 只裁决知识生命周期，不接管专业事实或 Git／发布授权。
+Handoff disputed facts or causes to Assurance and customer requirements to Product. Learning owns knowledge lifecycle, not domain facts or Git/release authorization.

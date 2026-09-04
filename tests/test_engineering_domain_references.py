@@ -16,7 +16,7 @@ class EngineeringDomainReferenceTest(unittest.TestCase):
         text = (ENGINEERING / "SKILL.md").read_text(encoding="utf-8")
         self.assertIn("前端工程契约与验证规范.md", text)
         self.assertIn("后端服务与数据契约规范.md", text)
-        self.assertIn("不是父子 Skill 或岗位映射", text)
+        self.assertIn("Frontend/backend are references, not child skills or job roles", text)
 
     def test_specialist_skills_remain_peer_capabilities(self):
         text = (ENGINEERING / "SKILL.md").read_text(encoding="utf-8")
@@ -25,7 +25,7 @@ class EngineeringDomainReferenceTest(unittest.TestCase):
         )
         for specialist in ("React", "Ant Design", "shadcn", "GSAP", "Postgres"):
             self.assertIn(specialist, architecture)
-        self.assertIn("保持平级", text)
+        self.assertIn("not child skills or job roles", text)
 
     def test_frontend_and_backend_keep_adjacent_owner_boundaries(self):
         frontend = (
@@ -34,9 +34,9 @@ class EngineeringDomainReferenceTest(unittest.TestCase):
         backend = (
             ENGINEERING / "references" / "后端服务与数据契约规范.md"
         ).read_text(encoding="utf-8")
-        self.assertIn("不重新决定产品功能、文案语义或视觉方向", frontend)
-        self.assertIn("前端隐藏", backend)
-        self.assertIn("生产数据修改、删除或不可逆迁移需要独立授权", backend)
+        self.assertIn("It does not redefine product capability, copy meaning, or visual direction", frontend)
+        self.assertIn("Hidden UI", backend)
+        self.assertIn("Production-data modification/deletion or irreversible migration requires separate authority", backend)
 
 
 if __name__ == "__main__":

@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## [2.6.0] - 2026-09-04
+
+### Changed
+
+- Rewrote all eight Skill entrypoints, their active runtime references, and Codex discovery metadata as native professional English specifications while preserving the existing owners, decision rules, authorization boundaries, safety gates, and progressive-disclosure routes.
+- Kept Chinese user prompts, multilingual output choices, and language-specific examples as supported interaction surfaces; English is now the sole normative runtime specification rather than a parallel translation.
+
 ## [2.5.0] - 2026-09-04
 
 ### Changed

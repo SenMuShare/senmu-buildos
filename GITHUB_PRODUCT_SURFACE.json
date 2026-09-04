@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "repository": "SenMuShare/senmu-buildos",
-  "reviewed_for_version": "2.5.0",
+  "reviewed_for_version": "2.6.0",
   "description": "AI-native BuildOS for Codex, Claude Code, Doubao, WorkBuddy and ZCode: product discovery, UI/UX design, software engineering, context-aware workflows, testing, Git and verifiable releases.",
   "topics": [
     "agent-skills",
@@ -27,13 +27,13 @@
   ],
   "readme_review": {
     "updated_sections": [
-      "why-buildos",
-      "install-update-remove"
+      "install-update-remove",
+      "runtime-language-contract"
     ],
     "summary": {
-      "zh": "明确 Agent 不应迎合用户或因问法变化无依据改口：先依据项目事实独立判断并说明实质分歧与利弊，再按不触碰安全红线的知情决定和授权行动。",
-      "en": "Make independent professional judgment explicit: agents assess proposals against project facts, explain material disagreements and tradeoffs, and then follow informed decisions and authorization unless a safety boundary blocks them.",
-      "ja": "独立した専門判断を明示しました。Agent は案をプロジェクト事実に照らして評価し、実質的な相違と利害を説明したうえで、安全境界に反しない知情後の決定と権限に従います。"
+      "zh": "八个 Skill 的运行时规则统一采用原生专业英文作为唯一正文，同时继续支持用户用中文或其他语言沟通与指定产物语言，避免后续迭代形成中英重复规范。",
+      "en": "Use native professional English as the single normative runtime specification for all eight Skills while preserving multilingual user interaction and output, preventing future iterations from creating duplicate bilingual rule owners.",
+      "ja": "8 つの Skill の実行規範を専門的な英語の単一正文に統一しつつ、多言語での依頼と成果物を維持し、今後の反復で日英中の重複規範が生じることを防ぎます。"
     }
   },
   "readmes": {

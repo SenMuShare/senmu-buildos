@@ -1,81 +1,71 @@
-# Ant Design 前端实践规范
+# Ant Design Frontend Profile
 
-本页只处理“是否采用、如何复用、何时自定义”这类会改变实现路线的 Ant Design 判断，不充当组件手册或设计教程。涉及 React/Web/SaaS/后台/工具型产品，且项目已使用或明确评估 Ant Design 时读取。
+This profile owns implementation-changing Ant Design decisions: whether to adopt it, how to reuse it, and when to customize. It is not a component manual or design tutorial. Load for React/Web/SaaS/admin/tooling work when Ant Design is installed or explicitly evaluated.
 
-规则优先级：明确产品需求和后端业务边界 > 项目设计系统、已安装版本、封装规则与既有实现 > 当前官方 Ant Design 资料 > 本页默认判断。不要为了套用本页替换项目已经稳定工作的组件体系。
+Precedence: explicit product requirements and backend business boundaries > project design system, installed version, wrappers, and implementation > current official Ant Design material > this profile. Never replace a stable component system merely to apply this profile.
 
-## 1. 先判断采用边界
+## 1. Adoption Boundary
 
-- 项目已经使用 Ant Design：优先沿用已安装主版本、主题、封装组件和页面骨架，不在普通功能中并行引入第二套基础 UI 系统。
-- 新的企业后台、运营工具、配置中心和数据工作台：可以优先评估 Ant Design；官网、营销页或高度品牌化界面只复用合适能力，不强行套后台视觉。
-- 普通表格、表单、筛选、弹窗、抽屉、分页、状态反馈和导航优先组合成熟组件，不从零重写底层控件。
-- 只有组件生态无法满足明确的业务交互、性能、可访问性、合规、安全或设计稿还原要求时，才增加局部自定义。
+- In an Ant Design project, preserve the installed major version, theme, wrappers, and page shell; do not add a second base UI system for an ordinary feature.
+- Evaluate Ant Design first for new enterprise admin, operations, configuration, and data workbenches. On marketing or highly branded surfaces, reuse only suitable capabilities rather than forcing admin aesthetics.
+- Compose mature components for standard tables, forms, filters, dialogs, drawers, pagination, feedback, and navigation.
+- Add local customization only for explicit business interaction, performance, accessibility, compliance, security, or design-fidelity needs the ecosystem cannot meet.
 
-项目版本是实现事实。写代码前读取 `package.json`、锁文件和既有用法；不要把某个固定 Ant Design 版本写成永久默认，也不要凭记忆使用 props、Token 或 DOM 结构。
+The installed version is implementation fact. Read `package.json`, lockfile, and current usage before coding. Do not freeze one Ant Design version or recall props, tokens, and DOM structure from memory.
 
-## 2. 组件库不拥有业务规则
+## 2. The Component Library Does Not Own Business Rules
 
-Ant Design 负责呈现和基础交互，不负责平台事实。以下判断必须由后端接口和业务 owner 决定：
+Backend and business owners decide identity, roles, permissions, resource/data ownership, orders, balances, limits, billing, approval, audit, upload/import/export/transcoding, async jobs, retry/idempotency, AI calls, rate limits, safety, and sensitive data.
 
-- 登录、角色、权限、资源和数据归属；
-- 订单、余额、额度、计费、审批和审计；
-- 上传、导入、导出、转码、异步任务、失败重试和幂等；
-- AI 调用、限流、安全和敏感数据处理。
+Hidden buttons, route redirects, and client validation improve experience but never replace server enforcement.
 
-按钮隐藏、路由跳转和前端表单校验只能改善体验，不能替代服务端校验。
+Built-in Confirm/Cancel labels, errors, and prompts are technical defaults. Cross-page nouns, actions, statuses, recovery, and tone come from Product content standards. This profile only chooses the component that carries them.
 
-组件自带的“确定／取消”、错误和提示只是技术默认值。跨页面对象名称、动作、状态、错误恢复和语气由项目产品内容标准或 Product owner 决定；本页只负责使用正确组件承载，不复制文案规则。
+## 3. Ecosystem Selection Order
 
-## 3. 生态能力的选择顺序
+- General UI: use existing Ant Design components and project wrappers.
+- AI interaction: evaluate a compatible Ant Design X only for concrete conversation, quick-intent, attachment, generation-state, or result-handoff needs.
+- Ordinary charts: evaluate Ant Design Charts first; use ECharts/custom graphics only for evidenced expressiveness, performance, or existing-asset needs.
+- Entry/exit, expansion, and feedback motion: prefer built-in behavior or CSS transitions. Reassess complex timelines, scroll-driven, or SVG motion through [Technology and Component Selection](技术路线与组件选型.md).
 
-- 通用界面：优先使用项目现有 Ant Design 组件及其封装。
-- AI 交互：项目需要会话、快捷意图、附件、生成状态或结果承接时，再评估与当前技术栈兼容的 Ant Design X。
-- 常规业务图表：优先评估 Ant Design Charts；只有表达能力、性能或既有资产要求成立时再使用 ECharts 或自定义图形。
-- 常规进入、退出、展开和状态反馈：优先组件内置能力或 CSS transition；复杂时间线、滚动驱动或 SVG 动效按[技术路线与组件选型](技术路线与组件选型.md)重新判断。
+Before adding an ecosystem dependency, verify React/Ant Design compatibility, bundle cost, and maintenance. Do not add wrappers/tooling for “consistency” when current dependencies already solve one page.
 
-新增生态依赖前确认当前 React／Ant Design 版本兼容性、包体和维护成本。一个页面能用现有依赖完成时，不为了“统一”再加一层组件包装或工具链。
+## 4. Stable Page Boundaries
 
-## 4. 页面实现的稳定边界
+- Extend the existing shell, navigation, toolbar, table, detail, dialog, and drawer patterns.
+- Start list-heavy business flows from mature tables with stable filter, pagination, batch action, and row action placement; cards are not the default table replacement.
+- Let the form system own errors, required indicators, help, save, and cancel states.
+- Show pending, processing, success, failure, and retry states for async actions; destructive operations require clear confirmation.
+- A chart answers a concrete trend, comparison, proportion, distribution, or relationship question. Metrics come from business authority, never frontend invention.
+- Wrap only stable repeated business compositions. Keep one-off styles local and theme/CSS overrides scoped.
 
-- 延续项目现有 Shell、导航、工具栏、表格、详情、弹窗和抽屉结构；新功能优先扩展现有骨架。
-- 列表型业务默认从成熟表格能力出发，保留稳定的筛选、分页、批量操作和行操作位置；卡片不是表格的默认替代品。
-- 表单错误、必填、帮助文本、保存和取消状态由表单体系承载，不另写一套状态机制。
-- 异步动作显示待处理、处理中、成功、失败和可重试状态；危险操作进入明确确认流程。
-- 图表必须回答趋势、对比、占比、分布或关系等具体问题，数据口径来自真实业务 owner，不在前端编造指标。
-- 自定义组件只封装重复且稳定的业务组合；一次性样式留在当前模块，CSS 和主题覆盖保持局部。
+## 5. AI Uses Hybrid Interaction
 
-## 5. AI 界面采用混合交互
+An AI feature is not automatically a universal chat box. First define its task—such as import, inspection, analysis, configuration, or pre-release checking—then decide whether Ant Design X is needed.
 
-AI 功能不等于增加一个万能聊天窗口。先确定它承担的具体任务，例如导入、检查、分析、配置或发布前检查，再决定是否需要 Ant Design X。
+- When intent is unclear, offer selectable tasks, context sources, and capability boundaries.
+- Make generation, failure, retry, and completion visible. Land results in actionable tables, forms, lists, citations, file cards, or navigable objects rather than text alone.
+- Put high-risk actions behind GUI confirmation; AI does not execute irreversible work directly.
+- Preserve the ordinary business flow when AI fails. Tasks suitable for standard forms, tables, or detail pages remain GUI operations.
 
-- 用户意图不清时提供可点选的任务入口、上下文来源和能力边界。
-- 生成中、失败、重试和完成状态必须可见；完成结果应尽量落到表格、表单、列表、引用、文件卡片或可跳转对象，而不是只留一段文本。
-- 高风险动作先进入 GUI 确认，AI 不直接执行不可逆操作。
-- AI 功能失败时，原有业务流程仍应可用；能由普通表单、表格或详情页完成的任务继续使用 GUI。
+Specific components such as `Welcome`, `Prompts`, `Sender`, and `Bubble` depend on current official APIs for the installed version; this profile does not maintain a catalog.
 
-是否使用 `Welcome`、`Prompts`、`Sender`、`Bubble` 等具体组件，以项目安装版本的当前官方 API 为准，本页不维护组件清单。
+## 6. When Customization Is Allowed
 
-## 6. 允许自定义的条件
+Customize locally or choose a specialist solution for high-density workspaces, editors, players, timelines, canvases, maps, and diagrams; explicit designs that components cannot reasonably compose; evidenced performance/accessibility/compliance/security gaps; or stable repeated business compositions whose extraction removes real duplication.
 
-以下情况可以定制局部组件或选择更专业的方案：
+Still compose existing primitives and preserve theme, typography, spacing, and interaction. Do not rely on private DOM, class names, or internals. A temporary bypass needs a version boundary and exit condition.
 
-- 高密度工作区、编辑器、播放器、时间轴、画布、地图、流程图等专用交互；
-- 明确设计稿要求且现有组件无法合理组合；
-- 已取得组件在性能、可访问性、合规或安全上的真实缺口；
-- 业务组合稳定、重复出现，抽取后能减少真实重复和分歧。
+## 7. Query Current Official Knowledge
 
-自定义仍应优先组合现有基础组件，保留项目主题、字体、间距和交互习惯。不要依赖 Ant Design 未公开的 DOM、私有类名或内部实现；确需临时绕过时，记录版本边界和退出条件。
+APIs, version differences, deprecations, tokens, semantic style hooks, and ecosystem capabilities change:
 
-## 7. 查询当前官方知识
+1. Prefer an available official Ant Design Skill, MCP, or CLI for components, examples, tokens, semantic structure, and changelog.
+2. Otherwise use current official docs and migration guides.
+3. Save a sourced/versioned temporary snapshot only to reproduce a specific old version when official access is insufficient; never copy the full external docs into BuildOS.
 
-组件 API、版本差异、废弃项、Design Token、语义化样式钩子或新生态能力具有时效性，必须按项目版本查询当前官方资料：
+Align all findings to the installed version. Tool names and commands may change; do not hard-code a command catalog or make optional tools a BuildOS runtime dependency.
 
-1. 当前环境有官方 Ant Design Skill、MCP 或 CLI 时，优先用它查询组件、示例、Token、语义化结构和 changelog。
-2. 没有专用工具时，查当前官方文档和迁移说明。
-3. 只有需要复现特定旧版本且官方入口不足时，才保存有来源和版本的临时快照；不要把外部文档全集长期复制进 BuildOS。
+## 8. Completion
 
-查询结果必须与项目已安装版本对齐。工具名称和命令可能变化，本页不硬编码完整命令目录，也不把可选工具声明为 BuildOS 的运行依赖。
-
-## 8. 完成判断
-
-收口时只检查会影响结果的边界：是否沿用了项目版本和封装、是否复用了成熟能力、是否把业务规则留在真实 owner、是否有足够理由增加自定义或依赖、AI 结果是否落回可操作界面。组件 API 与实现继续由本页和项目工程规则负责；视觉方向、设计系统、可访问性、响应式和交互质量需要建立或评审时交 `senmu-build-design`，不在 Ant Design 规范复制设计手册。
+Check only result-changing boundaries: project version/wrappers preserved, mature capability reused, business rules left with authority, customization/dependencies justified, and AI results returned to actionable UI. This profile and project Engineering own component implementation. Route creation/review of visual direction, design system, accessibility, responsive behavior, and interaction quality to `senmu-build-design`; do not duplicate its manual here.

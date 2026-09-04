@@ -1,4 +1,4 @@
 interface:
   display_name: "Senmu Build Delivery Management"
-  short_description: "Git、协作、版本、制品、部署与发布治理"
+  short_description: "Git, collaboration, versions, artifacts, deployments, and releases"
   default_prompt: "Use $senmu-build-delivery to align the repository, release unit, version, artifact, deployment evidence, production verification, and rollback path."

@@ -1,90 +1,87 @@
-# 多 Agent 变更单元与版本线收口规范
+# Multi-Agent Change Units and Version-Line Integration
 
-本规范处理没有固定 Team Leader、并发数量事前未知且新请求持续到达的 AI 编程协作。请求可以彼此独立，也可以分属不同版本线；职责绑定当前动作和持久证据，不绑定某个会话身份：收到实现任务的 Agent 是本变更单元写入者；收到合并／发布命令的 Agent 是本次集成收口者；执行合并门禁的 Agent 是本次审查者。会话结束或更换后，任何 Agent 都必须能从项目任务 owner 与 Git 恢复同一事实。
+Use this standard for AI development with no permanent team lead, unknown concurrency, and continuous requests across one or several version lines. Responsibility follows the current action and durable evidence, not session identity: the implementer writes a Change Unit; the agent receiving integration/release intent closes integration; the agent executing merge gates reviews. Any later agent must recover the same truth from project task authority and Git.
 
-## 1. 变更单元合同
+## 1. Change Unit Contract
 
-Change Unit 由验收、发布／回退边界和写入归属决定，不由用户消息数量决定。一个可独立交付的 Bug、功能切片或迁移步骤可以是一个单元；单一写入者连续处理同一开放版本批次且共同验收／发布／回退时，也可以保持一个 `in_progress` 单元。一个发布批次可以包含多个并行 Change Unit。写入者封口后必须在项目既有任务 owner 或交接记录中留下：
+Acceptance, release/rollback boundary, and write ownership define a Change Unit—not message count. An independently deliverable bug, feature slice, or migration step may be one unit. One writer may keep a shared-acceptance/release/rollback batch `in_progress`. One release may include several parallel units.
 
-- 目标发布单元与目标版本线、任务／需求 ID、基线 commit。
-- 分支／worktree、封口 commit、实际改动范围与受影响路径。
-- 匹配测试及结果、未运行项、依赖、冲突和残余风险。
-- 状态：`in_progress | sealed | integrated | excluded | superseded`。
+At closeout, record target release unit/line, task/requirement ID, baseline commit; branch/worktree, sealed commit, actual scope/paths; matching tests/results, omissions, dependencies, conflicts, residual risk; and `in_progress | sealed | integrated | excluded | superseded`.
 
-进行中交接只需稳定 Change Unit ID、下一动作和仍有效的授权边界；继任者用 `manage_change_unit.py resume` 从登记恢复 Git 身份，不靠自然语言重建分支。
+An in-progress handoff needs stable Change Unit ID, next action, and current authority. The successor uses `manage_change_unit.py resume`; it does not reconstruct a branch from prose.
 
-`sealed` 要求范围完成、匹配验证通过到声明上限、代码已本地 commit、工作区没有属于本单元的未提交源码。未提交改动只能是 `in_progress`，不能由发布者猜成完成；来源不明的脏文件既不能自动提交，也不能进入候选。已有 Durable Task State 时只写回该 owner，不新建第二套 Change Unit 台账；小项目没有任务系统时，以短分支、commit 和紧凑交接作为最小事实链。
+`sealed` requires completed scope, verification to the stated limit, local commit, and no unit-owned uncommitted source. Dirty work is `in_progress`; releasers never guess it complete, commit unknown files, or include them. Write to an existing Durable Task State Owner rather than adding a ledger. Without a task system, short branch, commit, and concise handoff are the minimum fact chain.
 
-`sealed` 同时关闭该分支的写入窗口。开放批次尚在接收需求时必须保持 `in_progress`，不得因单项完成提前 sealed；封口后即使仍在同一会话，也不能追加 commit。已经封口后发现返修，则建立新 Change Unit 并显式关联被修正的 head。
+Sealing closes that branch's write window. An open batch accepting requests remains `in_progress`; do not seal after one item. A later repair becomes a new Change Unit explicitly linked to the corrected head.
 
-## 2. 执行面自动选择
+## 2. Select an Execution Surface
 
-Codex 项目默认是 `parallel-capable`：用户可以在当前修改结束前随时开启第二个会话，因此“眼下没有观察到其他写入者”不能证明单写安全。先判断请求是否属于已有开放单元；属于时复用其分支与已登记执行面，不属于时才创建新任务分支。再判断是否存在覆盖整个修改窗口的独占写入保证，以决定复用当前目录还是增加 worktree：
+Codex projects are `parallel-capable`: future sessions may begin at any time, so absence of observed writers is not an exclusivity guarantee. Reuse the registered branch/surface for an existing open unit. Otherwise create a task branch, and add a worktree unless the entire modification window has guaranteed exclusive writing.
 
-| 现场 | 文案／小修 | 普通 Bug／功能 | 大型 POC／长期改造 |
+| Situation | Copy/small fix | Ordinary bug/feature | Large POC/long change |
 | --- | --- | --- | --- |
-| 默认 Codex 写入；未来会话数量未知 | 独立短分支 + worktree | 独立短分支 + worktree | 独立 POC／继任版本线 + worktree |
-| 项目／Harness 保证整个修改窗口独占写入，且工作区干净 | 当前目录任务短分支 | 当前目录任务短分支 | 独立短分支或专项版本线 worktree |
-| 已有其他写入会话，或主线存在他人／来源不明改动 | 独立短分支 + worktree | 独立短分支 + worktree | 独立 POC／继任版本线 + worktree |
-| 共享数据库、生成目录或生产资源不能隔离 | 串行或加锁 | 串行或加锁 | 分阶段执行，不能靠 Git 分支消除冲突 |
+| Default Codex, future writers unknown | Short branch + worktree | Short branch + worktree | POC/successor line + worktree |
+| Harness guarantees exclusive window and clean tree | Current-directory task branch | Current-directory task branch | Short/special line worktree |
+| Other writer exists or main has foreign/unknown changes | Short branch + worktree | Short branch + worktree | POC/successor line + worktree |
+| Shared DB/generated dir/production resource cannot isolate | Serialize/lock | Serialize/lock | Phase work; Git cannot isolate resources |
 
-集成线不作为日常编辑区；独占写入保证只允许在当前物理目录切到任务分支，不允许直接修改主线。首次独立源码写入即使只是一个标点也使用任务分支，但同一开放单元的后续补充不重复建分支；未知或真实并行再增加独立 worktree。分支隔离提交历史，worktree 隔离物理写入；并行写入必须同时具备二者。
+Integration lines are not editing areas. Exclusivity permits a task branch in the current directory, never direct main edits. The first independent source write—even punctuation—uses a task branch; additions to one open unit reuse it. Unknown/real concurrency adds a worktree. Branches isolate history; worktrees isolate physical writes; concurrent writers need both.
 
-写入者必须在首次文件编辑前取得项目写入预检的通过证据；项目没有等价入口时使用 `manage_change_unit.py prepare`／`verify`。发现当前目录不等于登记 worktree、分支已有未登记历史、单元身份不匹配或状态已封口时停止写入，不能先改文件再等待发布者协调迁移。
+Obtain passing project write-preflight evidence before the first edit, using an equivalent entrypoint or `manage_change_unit.py prepare`/`verify`. Stop if directory differs from registered worktree, branch has unregistered history, unit identity differs, or state is sealed. Do not edit first and ask integration to repair ownership later.
 
-POC 用于验证假设，不默认成为产品候选。接受后把可证明的产品化改动重做或整理成面向目标版本线的 Change Unit；实验脚手架、临时数据和未批准行为不得整分支倾倒进正式线。
+A POC proves a hypothesis and is not a product candidate by default. After acceptance, reconstruct or curate product changes into a Change Unit targeting the intended line. Do not dump experiment scaffolding, temporary data, or unapproved behavior into a formal line.
 
-### 2.1 运行中动态分组、分流与汇流
+### 2.1 Dynamic Grouping, Routing, and Convergence
 
-用户不是先给出完整项目计划再启动固定团队，而是在使用中不断发现问题。BuildOS 先判断新请求能否进入现有 `目标版本线 + 发布单元 + 开放 Change Unit`；共同验收和发布／回退边界一致时续作，只有边界变化或真实并行需要时才分组，不要求预先知道最终会有多少组：
+Route each arriving request to an existing `target line + release unit + open Change Unit` when acceptance and release/rollback boundaries match. Split only for changed boundaries or real parallelism; the final number of groups need not be known.
 
-1. 新会话出现：先识别它服务当前维护线、继任版本线、独立 POC 还是只读分析，再查找匹配的开放 Change Unit。同一单元续作使用已登记分支和执行面；只有新独立写入单元才从对应版本线的已确认基线创建短分支和 worktree，不切换或占用其他组目录。
-2. 多个小组可同时服务同一 `current_line`，例如 current-A、current-B；每组独立封口，按依赖进入下一次维护线接收窗口。一个长期大改可在任何时点形成 `successor_line` 组，与新增维护线修复继续并行。
-3. 每个进入 `current_line` 的修复同时判断对 `successor_line` 的适用性并登记 `not_applicable | queued | integrated | verified | superseded`。这是一条跨组传播义务，不要求继任线组停下等待，也不把整条维护分支反复盲合进去。
-4. 继任线发布收口时，以冻结截止点为界汇总所有适用且 `sealed` 的维护线 Change Unit：尚未吸收的逐项前向集成，被继任实现替代的给出 `superseded` 证据，仍在进行但属于本次必需范围的项 blocked。全部适用项闭环后才生成继任候选。
-5. 继任版本经真实生产验证后，临时任务组、短分支和 worktree 才按无独有事实原则收口；保留 commit、Tag、Release Record 和回滚历史。原 `current_line` 转为 EOL／历史线，而不是删除历史或把所有组的文件直接清空。
-6. 单个任务本身也可能改变：若仍服务同一用户结果且一起回退，只更新当前 Change Unit 的范围、风险和测试；若成为可独立发布的工作或实验假设，则拆成有依赖的子单元或独立 POC 组。
-7. 共享数据库、生成目录、端口或生产资源后来发生冲突：源码组仍可并行，但冲突步骤切换为串行、加锁或独立沙箱；Git 分支不能冒充资源隔离。
+1. For a new session, classify current line, successor line, independent POC, or read-only analysis; find a matching open unit. New independent writes branch/worktree from the registered line baseline, never another group's directory.
+2. Several groups may serve `current_line`; each seals independently and enters the next intake window by dependency. A long `successor_line` continues while maintenance fixes arrive.
+3. Every current-line fix records successor applicability as `not_applicable | queued | integrated | verified | superseded`. This is propagation duty, not a requirement to pause or blindly merge the whole maintenance branch.
+4. At successor release cutoff, collect every applicable sealed maintenance unit. Forward-integrate missing units, prove supersession, and block required units still in progress. Create the successor candidate only after closure.
+5. After production verification, close temporary groups/branches/worktrees only when they contain no unique facts. Preserve commits, Tags, Release Records, and rollback history. Mark the old line EOL/history; do not erase it.
+6. If one task remains one user result and rollback unit, update scope/risk/tests in the unit. If it becomes independently releasable or an experiment, split into dependent units or a POC.
+7. When shared DBs, generated paths, ports, or production resources conflict, source branches may continue but conflicting steps serialize, lock, or use sandboxes. Git is not resource isolation.
 
-动态分组不等于动态串联分支。新单元默认从已登记集成线建立；不得为了“带上上一个修复”直接从上一个任务分支分叉。先将前一 sealed unit 纳入集成线，再从新的集成线 head 开始后续工作。只有无法独立验证的真实依赖才使用显式 stacked unit，并把父单元、基线和集成顺序写入交接。
+New units start from the registered integration line, not the preceding task branch. Integrate a prerequisite sealed unit first, then branch from the new line head. Use an explicit stacked unit only for a genuinely inseparable dependency, recording parent, baseline, and integration order.
 
-当前目录任务分支后来遇到第二个写入组时，立即停止共享目录写入。当前改动若范围完整且归属明确，先验证并封口 commit；否则把可归属 patch 转移到独立 worktree。不得为搬家自动 stash、reset 或提交混合脏改动；无法拆分时标记 blocked 并做一次 owner 对账。
+If a current-directory task later meets a second writer, stop sharing. Seal a complete attributable change after verification, or transfer an attributable patch to a worktree. Never automatically stash, reset, or commit mixed dirty work; if it cannot be separated, mark blocked and reconcile ownership once.
 
-## 3. 无固定 Leader 的集成收口
+## 3. Integration Without a Permanent Leader
 
-写入 Agent 提交、验证、封口后可以结束，不等待其他 Agent，也不抢占主线。项目持续把 `sealed` 且尚无最终 disposition 的单元显示为待接收。收到“这批做完了”“收进当前版本”“合并这批改动”或“发布最新版本”的当前 Agent 自动成为本次集成收口者：
+An implementer may end after commit, verification, and seal. Sealed units without final disposition remain visible for intake. The agent receiving “finish this batch,” “integrate into current version,” “merge this work,” or “release latest” becomes the integration closer.
 
-普通单项目、单发布源的工作到此为止，不新增协调角色。只有一次正式发布真实跨越多个 Agent、多个仓库或多个生产单元时，当前集成收口者在本次发布窗口内兼任临时发布协调者：用 Release Control 冻结接收矩阵和候选身份，把已有用户授权绑定到候选、范围、环境和回滚边界，各执行者只回传证据。候选和授权边界不变时不重复确认；新 commit、扩围、额外费用、破坏性动作或新增生产影响使原授权失效。发布完成、回滚或取消后该职责结束，不形成常驻角色或第二套台账。
+Ordinary single-project/single-source work adds no coordinator. Only a formal release crossing agents, repositories, or production units creates a temporary release coordinator for that window. Release Control freezes the intake matrix/candidate and binds authority to candidate, scope, environment, and rollback. Unchanged boundaries need no repeat confirmation. New commits, scope, cost, destructive action, or production effects invalidate authority. The temporary role ends on release, rollback, or cancellation and creates no second ledger.
 
-1. 冻结接收截止时点和目标版本线；把当前版本需求与缺陷清单作为接收范围，再读取项目任务 owner、当前 Harness 可见任务、Git 分支／worktree／status／log 及项目分支登记，一次形成接收矩阵。截止时点前已经 `sealed` 的单元进入候选盘点；仍在进行的单元默认继续工作并排除，本次发布明确依赖它时才 blocked，不为赶发布强迫半成品提交。
-2. 每项标记 `include | exclude | blocked`。只有目标线匹配、状态 `sealed`、有稳定 commit、验证与范围可追踪的单元可以 include；历史、POC、未完成、已替代和无关项 exclude；潜在属于本次范围但仍脏、缺证据或冲突未裁决的项 blocked。
-3. 按共享基础、依赖和冲突顺序集成，不按会话完成时间机械合并。项目已有 merge／rebase／cherry-pick 策略时沿用；没有时优先保持可追踪祖先关系，等价重做必须保留来源映射。
-4. 对每个冻结 `base..head` 审查实际 diff、用户行为、接口／数据／副作用、注释和匹配测试。低风险可由当前收口者做 evidence-based self-review；项目要求职责分离或 G3-G4 时再使用独立审查者，身份仍不固定。
-5. 每次集成后运行冲突影响测试；全部纳入后在唯一干净 `release_source_root` 运行完整候选门禁。新 commit 使旧审查与候选失效，只复核新增差异及受影响链。
-6. 接收矩阵写入本次 Release Control：`version item／task -> source commit -> tests -> disposition -> integration commit`。所有本版本清单项和潜在 Change Unit 必须有 disposition；“本地分支数量为零”不能替代闭环。
+1. Freeze intake cutoff and target line. Reconcile version requirements/defects, task owner, Harness-visible tasks, Git branches/worktrees/status/log, and branch register into one intake matrix. Include sealed units before cutoff; exclude continuing units unless required, in which case block. Never force partial commits for schedule.
+2. Mark each `include | exclude | blocked`. Include only line-matching sealed units with stable commit, evidence, and traceable scope. Exclude history, POCs, incomplete, superseded, unrelated. Block possibly in-scope dirty, unproven, or unresolved-conflict units.
+3. Integrate by shared foundations, dependencies, and conflicts—not session finish order. Preserve project merge/rebase/cherry-pick policy; otherwise retain traceable ancestry. An equivalent rewrite records source mapping.
+4. Review each frozen `base..head`: actual diff, user behavior, interfaces/data/effects, comments, tests. Low risk may use evidence-based self-review; use independent review only when project rules or G3-G4 require it.
+5. After each integration, run conflict-impact tests. After all inclusion, run full candidate gates in the one clean `release_source_root`. A new commit invalidates old review/candidate; review new diff and affected chains.
+6. Release Control records `version item/task -> source commit -> tests -> disposition -> integration commit`. Every version item and plausible unit needs disposition; zero local branches does not prove closure.
 
-收口开始后选定唯一可变 `release_source_root`。它可以是目标集成线本身，也可以是一条临时 release train，但不能两者同时前进。截止点之后出现的无关并行分支不使候选失效，也不需要向候选追加“排除登记”commit。只有发布根内容、已冻结接收范围或共享生产资源变化时才重开候选。
+Once integration begins, select one mutable `release_source_root`: either the target line or a temporary release train, never both. Unrelated branches after cutoff do not invalidate or require exclusion commits. Reopen only for release-root content, frozen scope, or shared production-resource change.
 
-这样防漏依赖三重对账：版本清单与任务承诺、Git 事实、发布候选 diff。任意一层不一致就停止收口；不得用“把所有分支都合并”伪造完整性。
+Prevent omissions through three-way reconciliation: version/task commitments, Git facts, and candidate diff. Stop on any mismatch; merging all branches is not completeness.
 
-## 4. 当前维护线与继任版本线
+## 4. Current and Successor Lines
 
-当线上版本继续维护、另一个确定会替换它的版本需要长期开发时，建立两个显式角色而不是两个项目：
+When production continues on one line while a confirmed replacement develops, define roles:
 
-- `current_line`：当前生产／维护线，例如 `main`、`maint/<series>` 或项目登记的渠道；Hotfix 从线上 Tag／commit 的受控基线开始，验证后进入该线。
-- `successor_line`：确定将替换当前线的继任线，例如 `next/<series>`、`future` 或项目登记的候选渠道；继任功能 Change Unit 只集成到该线，不反向进入当前维护线。
+- `current_line`: production/maintenance line; hotfixes start from a controlled production Tag/commit and enter it after verification.
+- `successor_line`: confirmed future replacement; successor features enter only this line, never flow backward.
 
-每个当前线 Hotfix 都必须判断对继任线的适用性并维持一个状态：`not_applicable | queued | integrated | verified | superseded`。安全、权限、数据、支付和共享契约修复立即前向传播；普通修复在登记检查点传播；继任候选冻结前所有适用项必须为 `verified` 或有明确替代证据。不能把整条当前线在最后一次性盲合到继任线，也不能让每个低风险 Hotfix 都打断继任线当前切片。
+Every current hotfix gets successor status `not_applicable | queued | integrated | verified | superseded`. Propagate security, authorization, data, payment, and shared-contract fixes immediately; ordinary fixes at registered checkpoints. Before successor freeze, all applicable fixes are `verified` or have supersession evidence. Never blind-merge current at the end or interrupt every successor slice for a low-risk fix.
 
-继任线晋升前冻结两条线，核对适用 Hotfix 清零、迁移／兼容、完整测试、版本／制品和回滚。验证继任版本生产事实后，把继任线晋升为唯一当前主线；旧线标为 EOL／只读历史并保留不可变 Tag、必要分支和回滚证据，不删除 Git 历史，也不再把新主线反向合入旧线。
+Before promotion, freeze both lines and reconcile applicable hotfixes, migration/compatibility, full tests, version/artifact, and rollback. After verified successor production truth, promote it to sole current main; mark old line EOL/read-only history with immutable Tags, necessary branch, and rollback evidence. Never delete history or merge new main backward.
 
-版本角色不由数字推断。项目可以使用 SemVer 的任意主／次版本、`0.x`、CalVer、构建号、渠道名或无数字分支；只有项目版本 owner 声明“将替换当前线”时才建立 `successor_line`。普通下一补丁仍属于 `current_line`，不是继任线。
+Roles do not follow version numbers. Use any SemVer, CalVer, build, channel, or nonnumeric branch. Establish `successor_line` only when the version owner declares replacement; the next patch remains current.
 
-## 5. 不变量
+## 5. Invariants
 
-- 会话可以随机；开放 Change Unit 的恢复 ID、Release Control、冻结候选和 Release Record 不能只存在于聊天。
-- 项目必须声明主线是 `integration` 或 `release_ready`；未声明时不得自动集成，任何模式都不允许把未完成半成品或未经产品决定的行为写入主线。
-- `main` 上的未提交代码不是快捷交付，而是无法可靠归属的风险；发布前必须封口成 commit、交还 owner 或明确排除。
-- 合并成功、测试通过、Tag 存在、部署命令成功和生产发布完成是不同证据。
-- 审查在合并入口完成，但不为低风险变更固定一个长期 Team Leader；高风险才按项目要求职责分离。
-- 发布后清理临时分支／worktree 只能在无独有事实、已集成或已明确排除且有恢复引用时进行。
+- Sessions may be random; open-unit recovery IDs, Release Control, frozen candidates, and Release Records must survive chat.
+- The project declares main as `integration` or `release_ready`. Without it, do not auto-integrate. No mode permits unfinished work or unapproved product behavior on main.
+- Uncommitted code on main is unattributable risk, not fast delivery; before release, seal, return to owner, or exclude it.
+- Merge, tests, Tag, deployment command, and production release are different evidence.
+- Review occurs at integration without a permanent team lead; separate duties only by risk/project rule.
+- Delete temporary branches/worktrees after release only when no unique facts remain and work is integrated or explicitly excluded with recovery reference.

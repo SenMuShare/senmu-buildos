@@ -1,64 +1,50 @@
-# 轻量 HTML 与 daisyUI 前端实践
+# Lightweight HTML and daisyUI Frontend Profile
 
-本 Profile 面向可以由原生 HTML、少量 JavaScript 和一个统一 UI 系统完成的轻量 H5、活动页、说明页、内部小工具和静态交付。它只负责技术路线与实现；视觉方向、设计系统、响应式体验或交互质量需要建立／评审时交 `senmu-build-design`。它不是所有前端项目的默认方案；已有 React、Vue、Ant Design 或其他稳定技术栈时，先遵守项目现状。
+Use this profile for lightweight H5 pages, campaigns, documentation pages, small internal tools, and static deliverables that need only native HTML, limited JavaScript, and one UI system. It owns technical route and implementation only. Route creation/review of visual direction, design system, responsive experience, or interaction quality to `senmu-build-design`. This is not the default for all frontend work; preserve an established React, Vue, Ant Design, or other stable stack.
 
-## 1. 适用判断
+## 1. Applicability
 
-适合 HTML-first 的条件：
+HTML-first fits when the page opens directly or is statically hosted with simple build/runtime boundaries; routes, shared state, and complex interaction are limited; no large component state, SSR, complex data layer, or long-lived multi-person SPA architecture is needed; and value comes mainly from content, forms, presentation, or local interaction.
 
-- 目标是直接打开或静态托管的页面，构建和运行边界简单。
-- 页面数量、路由、共享状态和复杂交互有限。
-- 不需要大型组件状态、SSR、复杂数据层或长期多人 SPA 架构。
-- 交付价值主要来自内容、表单、展示或局部交互。
+Retain the project framework for complex routing, real-time collaboration, extensive shared state, a durable component platform, or an existing framework baseline. Do not rewrite a mature system to appear lightweight.
 
-出现复杂路由、实时协作、大量共享状态、长期组件平台或现有框架基线时，继续使用项目框架，不为“轻量”重写成熟系统。
+## 2. Technology Route
 
-## 2. 技术路线
+1. Reuse current HTML, CSS, JavaScript, and build entrypoints.
+2. For a new lightweight page, prefer semantic HTML and small modular JavaScript.
+3. Evaluate Tailwind CSS plus daisyUI when consistent component presentation is needed.
+4. Adopt a framework only after real reuse, state, or routing pressure appears.
 
-默认顺序：
+daisyUI supports installation as a Tailwind plugin and through CDN. Tailwind documents Play CDN for development rather than production. Formal delivery should prefer locked project versions and reproducible CSS builds. See [daisyUI install](https://daisyui.com/docs/install/), [daisyUI CDN](https://daisyui.com/docs/cdn/), and [Tailwind Play CDN](https://tailwindcss.com/docs/installation/play-cdn).
 
-1. 复用项目已有 HTML、CSS、JavaScript 和构建入口。
-2. 新建轻量页面时优先语义化 HTML + 少量模块化 JavaScript。
-3. 需要统一组件外观时评估 Tailwind CSS + daisyUI。
-4. 只有复用、状态和路由压力真实出现时再升级框架。
+Do not freeze versions in this general profile. Inspect dependencies, lockfiles, build method, and current official documentation before implementation.
 
-daisyUI 官方支持作为 Tailwind 插件安装，也提供 CDN 使用方式。Tailwind 官方明确 Play CDN 面向开发试用，不应作为生产默认；正式交付优先使用项目锁定版本和可重复 CSS 构建。[daisyUI 安装](https://daisyui.com/docs/install/)、[daisyUI CDN](https://daisyui.com/docs/cdn/)、[Tailwind Play CDN](https://tailwindcss.com/docs/installation/play-cdn)
+## 3. Page and Components
 
-不要在通用规则中永久固定版本。实现前检查项目依赖、锁文件、构建方式和官方当前文档。
+- Use semantic `header`, `nav`, `main`, `section`, `form`, and `button`; do not build everything from meaningless `div`s.
+- Reuse daisyUI component classes/theme variables instead of rebuilding buttons, cards, dialogs, and forms in CSS.
+- Preserve approved hierarchy, spacing, color roles, and design tokens. Custom CSS expresses only real uncovered differences.
+- Organize JavaScript by behavior with discoverable event entrypoints, state, I/O, and errors; avoid one monolithic inline script.
+- For approved simple state motion, prefer component capability or CSS transitions with the project's reduced-motion path. Complex motion follows Design decisions and the matching technical specialist.
 
-## 3. 页面结构与组件
+## 4. Responsive and Accessible Behavior
 
-- 使用 `header`、`nav`、`main`、`section`、`form`、`button` 等语义元素，不用无意义 `div` 堆叠一切。
-- 优先复用 daisyUI 已有组件类和主题变量，避免为按钮、卡片、弹窗、表单重复写一套 CSS。
-- 沿用项目已批准的视觉层级、间距、颜色角色和设计 Token；自定义样式只表达已有系统未覆盖的真实差异。
-- JavaScript 按功能组织，事件入口、状态、I/O 和错误反馈可发现；不要把全部逻辑塞入一个内联脚本。
-- 已批准的简单状态动效优先组件能力或 CSS transition，并实现项目规定的 reduced-motion 路径；复杂动效使用 Design 决定和匹配技术专项。
+- Start from the narrow-screen core flow; define mobile breakpoints, touch sizes, wrapping, and horizontal overflow.
+- Associate form controls with labels and errors and make them keyboard reachable.
+- Dialogs, menus, and drawers manage focus, Escape, close behavior, and background scroll.
+- Color is not the only state signal; verify contrast plus loading, empty, error, and disabled states.
+- Images declare dimensions, alternative text, and loading strategy to avoid layout shift and unnecessary size.
 
-## 4. 响应式与可访问性
+## 5. Data, Security, and Runtime
 
-- 从窄屏主流程开始，明确移动端断点、触控尺寸、文本换行和横向溢出。
-- 表单控件具有关联 label、错误信息和键盘可达性。
-- 弹窗、菜单和抽屉处理焦点、Esc、关闭和背景滚动。
-- 颜色不是唯一状态表达；检查对比度、加载、空状态、错误和禁用状态。
-- 图片声明尺寸、替代文本和加载策略，避免布局跳动和无意义大图。
+- Never embed secrets, production credentials, or server-only business rules in HTML/client JavaScript.
+- Escape and validate external input for its context; never concatenate untrusted HTML.
+- Network requests handle timeouts, errors, duplicate submission, and recoverable user feedback.
+- Record provenance, privacy, availability, and offline effects of CDNs, fonts, analytics, and third-party assets.
+- A static page gains no backend authority; authentication, payments, data ownership, and sensitive operations remain server contracts.
 
-## 5. 数据、安全与运行边界
+## 6. Delivery and Verification
 
-- 不在 HTML 或前端 JavaScript 中嵌入密钥、生产凭据和只能由服务端执行的业务规则。
-- 对外部输入做上下文正确的转义和校验，不直接拼接不可信 HTML。
-- 网络请求处理超时、错误、重复提交和用户可恢复反馈。
-- CDN、字体、分析脚本和第三方资源记录来源、隐私、可用性和离线影响。
-- 静态页面不自动获得后端权限；认证、支付、数据归属和敏感操作仍由服务端契约负责。
+By risk, verify direct/static-host entrypoints and assets; mobile/desktop layouts; keyboard, focus, labels, and key accessibility; console, network failure, empty states, and duplicate submission; reproducible build, locked dependencies, asset size, and caching; and project lint, HTML validation, browser tests, or visual acceptance.
 
-## 6. 交付与验证
-
-根据项目风险检查：
-
-- 直接打开／静态托管入口和资源路径。
-- 目标移动端和桌面端布局。
-- 键盘、焦点、表单标签和关键可访问性。
-- 浏览器控制台、网络失败、空状态和重复提交。
-- 构建可重复性、锁定依赖、资源大小和缓存策略。
-- 项目已有 lint、HTML 校验、浏览器测试或视觉验收。
-
-CDN 原型升级为正式页面时，明确是否转为本地锁定依赖和构建产物；不能把“本机能打开”直接当作生产交付完成。
+When promoting a CDN prototype to a formal page, decide whether dependencies/build artifacts must become local and locked. “Opens locally” is not production completion.
