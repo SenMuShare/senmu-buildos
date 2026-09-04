@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "repository": "SenMuShare/senmu-buildos",
-  "reviewed_for_version": "2.4.0",
+  "reviewed_for_version": "2.5.0",
   "description": "AI-native BuildOS for Codex, Claude Code, Doubao, WorkBuddy and ZCode: product discovery, UI/UX design, software engineering, context-aware workflows, testing, Git and verifiable releases.",
   "topics": [
     "agent-skills",
@@ -27,13 +27,13 @@
   ],
   "readme_review": {
     "updated_sections": [
-      "quick-start",
+      "why-buildos",
       "install-update-remove"
     ],
     "summary": {
-      "zh": "新增 ZCode 适配：插件市场安装（SessionStart 内核注入）与脚本安装（可选引导内核），并把安装、更新、卸载说明同步到三语 README 的快速开始与适配器列表。",
-      "en": "Add the ZCode adapter: plugin-marketplace install with SessionStart kernel injection plus a script install with an optional bootstrap kernel, and sync install, update, and remove guidance across the trilingual quick-start and adapter lists.",
-      "ja": "ZCode アダプターを追加しました：SessionStart カーネル注入ありのプラグインマーケットプレイス導入と、任意ブートストラップカーネル付きのスクリプト導入。三言語 README のクイックスタートとアダプター一覧に導入・更新・削除の手順を同期しています。"
+      "zh": "明确 Agent 不应迎合用户或因问法变化无依据改口：先依据项目事实独立判断并说明实质分歧与利弊，再按不触碰安全红线的知情决定和授权行动。",
+      "en": "Make independent professional judgment explicit: agents assess proposals against project facts, explain material disagreements and tradeoffs, and then follow informed decisions and authorization unless a safety boundary blocks them.",
+      "ja": "独立した専門判断を明示しました。Agent は案をプロジェクト事実に照らして評価し、実質的な相違と利害を説明したうえで、安全境界に反しない知情後の決定と権限に従います。"
     }
   },
   "readmes": {

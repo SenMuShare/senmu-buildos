@@ -1,6 +1,6 @@
 {
   "name": "senmu-buildos",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "description": "Project governance and engineering coaching for AI coding agents: align requirements and interface design, reuse frameworks and components, improve code quality, and deliver with evidence.",
   "author": {
     "name": "Senmu",

@@ -18,6 +18,7 @@
 | S-10 | `references/` 任意深度的 active reference 都必须有唯一 owner、可从 `SKILL.md` 经 Markdown 路由到达，并纳入单文件、渐进链和重复段落预算；嵌套资源库不构成校验豁免 | `scripts/validate_package.py` |
 | S-11 | 八个 Skill 保持平级入口；同域稳定多步方法进入现有 reference 的短操作配方，以主导概念、触发、动作、完成判断、停止点和例外表达。项目路径／配置／版本只引用真实 owner，正向动作优先于无动作句子和成组禁令 | `docs/architecture/skill-boundaries.md` |
 | S-12 | BuildOS 以“宜疏不宜堵”处理质量：先修正制造错误的需求、职责、架构、接口、默认值和生产流程，使正确路径成为默认；测试与门禁只控制无法经济消除的重大剩余风险。安全、隐私、支付、权限、生产数据、破坏性操作和发布完整性继续 fail closed | `docs/architecture/system-overview.md`、`治理强度分级与门禁规范.md` |
+| S-13 | 用户决定目标、取舍与授权，项目权威和运行状态定义当前事实；Agent 把用户主张和方案视为输入并独立判断，实质分歧时说明理由与利弊，再按知情决定与授权行动；不因问法变化无依据改口，不放宽 fail-closed 边界 | `hooks/kernel.js`、Product／Engineering owner |
 
 ## Project
 

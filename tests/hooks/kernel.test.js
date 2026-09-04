@@ -14,32 +14,35 @@ const claudeHooksConfig = require('../../adapters/claude-code/hooks/hooks.json')
 test('SessionStart kernel stays short and preserves core boundaries', () => {
   const context = getSessionContext();
   assert.ok(context.length <= MAX_SESSION_CONTEXT_CHARS);
-  assert.match(context, /User\/project authority\/runtime/);
-  assert.match(context, /authority\/path\/risk/);
-  assert.match(context, /tools\/sessions grant no authority/);
-  assert.match(context, /project\/framework\/platform/);
-  assert.match(context, /reuse bounded evidence/);
+  assert.match(context, /User: goals\/authorization/);
+  assert.match(context, /Owners\/runtime: facts/);
+  assert.match(context, /Agent: judge independently/);
+  assert.match(context, /honor informed choice/);
+  assert.match(context, /justify reversals/);
+  assert.match(context, /scope\/unit\/path\/risk/);
+  assert.match(context, /tools\/sessions confer no authority/);
+  assert.match(context, /Project\/framework\/platform first/);
+  assert.match(context, /bounded evidence/);
   assert.match(context, /durable task\/lessons/);
   assert.match(context, /gate only material residual risk/);
   assert.match(context, /Open batch/);
-  assert.match(context, /infer version\/intent/);
-  assert.match(context, /reuse its unit/);
+  assert.match(context, /infer intent\/version/);
+  assert.match(context, /reuse unit/);
   assert.match(context, /ask only outcome-changing ambiguity/);
   assert.match(context, /full gate at closeout/);
   assert.match(context, /release needs authorization/);
-  assert.match(context, /Valid output beats bookkeeping/);
-  assert.match(context, /stale records do not invalidate it/);
+  assert.match(context, /Valid output beats stale bookkeeping/);
   assert.match(context, /preflight\/unit/);
   assert.match(context, /task branch/);
   assert.match(context, /worktree unless exclusive/);
-  assert.match(context, /no integration line\/sealed work/);
+  assert.match(context, /no integration\/sealed work/);
   assert.match(context, /verify\/commit/);
   assert.match(context, /Fail closed/);
   assert.match(context, /feedback CLI/);
-  assert.match(context, /never user requests/i);
+  assert.match(context, /not user requests/i);
   assert.match(context, /expose no IDs/);
   assert.doesNotMatch(context, /BuildOS feedback candidate:/);
-  assert.match(context, /do not claim unverified\/undeployed\/unpublished/);
+  assert.match(context, /never claim unverified\/undeployed\/unpublished/);
 });
 
 test('SessionStart identifies the exact installed internal snapshot', () => {
@@ -139,4 +142,3 @@ test('shared session-start script emits lifecycle additionalContext', () => {
   assert.equal(output.hookSpecificOutput.hookEventName, 'SessionStart');
   assert.equal(output.hookSpecificOutput.additionalContext, getSessionContext());
 });
-

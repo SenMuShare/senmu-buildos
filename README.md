@@ -8,7 +8,7 @@
   <a href="README.md">简体中文</a> · <a href="README.en.md">English</a> · <a href="README.ja.md">日本語</a>
 </p>
 
-<!-- product-surface-review: 2.4.0 -->
+<!-- product-surface-review: 2.5.0 -->
 
 <p align="center">
   <a href="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml"><img src="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml/badge.svg" alt="Validate Senmu BuildOS"></a>
@@ -35,6 +35,7 @@ AI 编程真正难的，往往不是这一轮能不能写出代码，而是项�
 | AI 编程常见问题 | BuildOS 的工作方式 |
 | --- | --- |
 | 会话变长后注意力衰减，换 Agent 又从头猜规则和决定 | 用短项目入口路由到当前事实、需求、技术决定、任务状态和发布证据；只按任务读取，不把整套规范塞进上下文 |
+| 用户提出一个看似确定的方案，Agent 为了顺从直接赞同，换一种问法又改口 | 把用户主张和方案当作输入，依据项目事实独立判断；说明实质分歧与利弊，再按不触碰安全红线的知情决定和授权行动 |
 | 需求还没说清就开写，顺手增加一堆没有要求的功能 | 用范围、非目标和可验证验收约束实现；未批准想法留在需求候选，不进入本次代码 |
 | 不看旧代码就新建目录、服务和第二套状态 | 先识别项目入口、现有代码、调用链和唯一数据来源，优先扩展已有能力 |
 | 框架一个参数能解决，Agent 却手搓组件、监听 DOM、复制状态 | 先检查当前版本的公开 API 和组件能力；只有证据证明不满足时才做最小适配 |
@@ -220,7 +221,7 @@ BuildOS 不承诺固定比例。它通过减少不必要的功能、重复代码
 
 ## 安装、更新与卸载
 
-Senmu BuildOS 当前正式版本为 `v2.4.0`，支持 Codex、Claude Code、豆包、WorkBuddy 和 ZCode 适配。安装的是整个插件，不需要逐个下载八个 Skill。
+Senmu BuildOS 当前正式版本为 `v2.5.0`，支持 Codex、Claude Code、豆包、WorkBuddy 和 ZCode 适配。安装的是整个插件，不需要逐个下载八个 Skill。
 
 ### 更新 Codex
 

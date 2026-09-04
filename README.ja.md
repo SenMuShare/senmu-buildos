@@ -8,7 +8,7 @@
   <a href="README.md">简体中文</a> · <a href="README.en.md">English</a> · <a href="README.ja.md">日本語</a>
 </p>
 
-<!-- product-surface-review: 2.4.0 -->
+<!-- product-surface-review: 2.5.0 -->
 
 <p align="center">
   <a href="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml"><img src="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml/badge.svg" alt="Validate Senmu BuildOS"></a>
@@ -35,6 +35,7 @@ Prompt を長くするだけでは解決せず、読解コストを次の会話�
 | AI コーディングで起きがちな問題 | BuildOS の動作 |
 | --- | --- |
 | 長い会話で注意が薄れ、Agent が替わるたびに規則と判断を再構築する | 短いプロジェクト入口から現行事実、要件、技術判断、タスク状態、リリース証拠へ案内し、今回必要なものだけ読む |
+| ユーザーの確信的な案に Agent が迎合して賛成し、聞き方が変わると根拠なく反転する | ユーザーの主張と案を入力として扱い、プロジェクト事実から独立判断する。実質的な相違と利害を説明し、安全境界に反しない知情後の決定と権限に従って行動する |
 | スコープが曖昧なまま実装し、要求されていない機能まで増やす | 承認済み範囲、非目標、観測可能な受入条件で実装を制約し、未承認案は候補に留める |
 | 既存コードを読まず、新しいディレクトリ、サービス、第二の状態管理を作る | 実際のルート、既存コード、呼び出し経路、信頼できるデータ源を確認し、既存能力を拡張する |
 | フレームワークの 1 設定で済むのに、コンポーネントを自作し内部 DOM を監視する | 現在のバージョンの公開 API を先に確認し、実際の不足が証明された時だけ最小アダプターを追加する |
@@ -212,7 +213,7 @@ BuildOS は固定割合を約束しません。不要な機能、重複コード
 
 ## インストール、更新、削除
 
-Senmu BuildOS の現行正式リリースは `v2.4.0` です。Codex、Claude Code、豆包アダプター、WorkBuddy アダプター、ZCode アダプターをサポートします。8 Skill は個別ではなく、1 つのプラグインとしてインストールします。
+Senmu BuildOS の現行正式リリースは `v2.5.0` です。Codex、Claude Code、豆包アダプター、WorkBuddy アダプター、ZCode アダプターをサポートします。8 Skill は個別ではなく、1 つのプラグインとしてインストールします。
 
 ### Codex の更新
 

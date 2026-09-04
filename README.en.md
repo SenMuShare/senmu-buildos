@@ -8,7 +8,7 @@
   <a href="README.md">简体中文</a> · <a href="README.en.md">English</a> · <a href="README.ja.md">日本語</a>
 </p>
 
-<!-- product-surface-review: 2.4.0 -->
+<!-- product-surface-review: 2.5.0 -->
 
 <p align="center">
   <a href="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml"><img src="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml/badge.svg" alt="Validate Senmu BuildOS"></a>
@@ -35,6 +35,7 @@ Making the prompt longer does not solve that problem; it moves the reading cost 
 | Common AI coding failure | BuildOS behavior |
 | --- | --- |
 | Attention fades in a long session, and a new agent has to reconstruct rules and decisions | A short project entrypoint routes to current facts, requirements, technical decisions, task state, and release evidence; load only what the task needs |
+| A user proposes a confident-sounding solution, the agent agrees to be agreeable, then reverses when the question is rephrased | Treat user claims and solutions as input, judge them independently against project facts, explain material tradeoffs, then act on the informed decision and authorization unless a safety boundary blocks it |
 | Coding starts before scope is clear, and unrequested features appear | Approved scope, non-goals, and observable acceptance constrain implementation; unapproved ideas remain candidates |
 | An agent creates new folders, services, or a second source of state without reading the project | Inspect the real root, existing code, call paths, and source of truth before extending what is already there |
 | One framework option would solve the problem, but the agent hand-rolls a component or watches internal DOM | Check public APIs for the installed version first; add a minimal adapter only when evidence shows a real gap |
@@ -212,7 +213,7 @@ BuildOS does not promise a fixed percentage. It reduces avoidable cost by preven
 
 ## Install, update, and remove
 
-The current formal release is Senmu BuildOS `v2.4.0`. It supports Codex, Claude Code, a Doubao adapter, a WorkBuddy adapter, and a ZCode adapter. Install the plugin as one unit; the eight Skills do not need separate downloads.
+The current formal release is Senmu BuildOS `v2.5.0`. It supports Codex, Claude Code, a Doubao adapter, a WorkBuddy adapter, and a ZCode adapter. Install the plugin as one unit; the eight Skills do not need separate downloads.
 
 ### Update Codex
 
