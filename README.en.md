@@ -26,6 +26,18 @@ It focuses on two outcomes:
 
 > BuildOS optimizes for less but correct code—not the fewest lines or the lowest token count. Security, accessibility, business semantics, testing, and maintainability are not removed to save tokens.
 
+## Update highlight: aligned with GPT-6 Astra best practices
+
+**Help GPT-6 Astra put more of its capabilities to work in real projects.** BuildOS has incorporated the five areas of [OpenAI’s official prompting guidance](https://developers.openai.com/api/docs/guides/latest-model?model=gpt-6-astra#prompting-best-practices) into its operating rules, Skills, and approach to `AGENTS.md`:
+
+- **Initiative and follow-through**: continue within existing authorization and reduce unnecessary confirmation loops.
+- **Instruction following**: clarify the priority of user instructions and Skill guidance, and trim redundant or conflicting rules.
+- **Personality and writing style**: lead with the main point, write coherent prose, reduce stock phrases, and respect the requested language and format.
+- **Subagent delegation**: split independent work when the host allows it and delegation can save time or improve quality.
+- **Testing and verification**: choose checks according to the impact and risk of the change, supporting reliable delivery.
+
+These refinements aim to reduce collaboration friction and wasted context, leaving more attention for understanding problems, implementation, and delivery.
+
 ## Why BuildOS
 
 The hard part of AI coding is often not whether one session can produce code. It is whether the project still remembers why it looks this way after dozens of changes. Sessions end, attention thins as context grows, and requirements, constraints, commands, and decisions get scattered across chats, READMEs, issues, comments, and agent-specific files. The next agent is then forced to guess again.
