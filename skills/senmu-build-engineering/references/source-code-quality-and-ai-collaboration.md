@@ -8,7 +8,7 @@ Quality is not format compliance. It includes correctness, security, local compr
 
 Precedence: safety and non-reducible Hard Gates > current project rules/machine configuration > applicable language/framework rules > this standard > community defaults.
 
-Project `AGENTS.md` contains deltas, real commands, and routing; `CODE_QUALITY` owns project quality decisions/exceptions; architecture, debt, and testing remain with their owners. Do not copy BuildOS prose into a project. Present conflicts for user decision when project rules are stale, inconsistent, or weaken safety, privacy, authorization, payments, production-data, or release gates.
+Project `AGENTS.md` contains deltas, real commands, and routing; `CODE_QUALITY` owns project quality decisions/exceptions; architecture, debt, and testing remain with their owners. Do not copy BuildOS prose into a project. Resolve stale or inconsistent guidance from current owners and explicit superseding user decisions first. Ask only for an unresolved outcome-changing choice or missing authority; preserve safety, privacy, authorization, payments, production-data, and release boundaries.
 
 ## 2. Cross-Language Principles
 

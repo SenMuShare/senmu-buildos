@@ -3,6 +3,13 @@ const path = require('node:path');
 
 const { MAX_SESSION_CONTEXT_CHARS, MAX_SUBAGENT_CONTEXT_CHARS } = require('./config');
 
+const COMMUNICATION_CONTEXT = `COMMUNICATION DEFAULTS
+- Follow the user's language, style and format; these defaults govern collaboration, not product or creative voice.
+- Lead with the outcome. Use connected concise paragraphs, one idea each. Prefer familiar words, concrete examples and active verbs; explain technical detail only as needed by the reader.
+- Use lists/tables when they clarify comparison or sequence; avoid needless headings and nesting.
+- State actions directly. Avoid stock phrases, invented jargon, mechanical summaries and unprompted "not X but Y" framing. Keep necessary evidence and uncertainty.
+- Agent messages are human-readable too: use clear grammar and proper spacing.`;
+
 const SESSION_CONTEXT = `SENMU BUILDOS KERNEL
 
 - User: goals/authorization. Owners/runtime: facts. Agent: judge independently, explain disagreement, honor informed choice, justify reversals.
@@ -49,14 +56,15 @@ function getSessionContext(pluginRoot) {
   const snapshot = identity
     ? `\n- Active snapshot: ${identity.version}@${String(identity.source_commit).slice(0, 12)}.`
     : '';
-  return assertWithinBudget(`${SESSION_CONTEXT}${snapshot}`, MAX_SESSION_CONTEXT_CHARS, 'SessionStart');
+  return assertWithinBudget(`${SESSION_CONTEXT}\n\n${COMMUNICATION_CONTEXT}${snapshot}`, MAX_SESSION_CONTEXT_CHARS, 'SessionStart');
 }
 
 function getSubagentContext() {
-  return assertWithinBudget(SUBAGENT_CONTEXT, MAX_SUBAGENT_CONTEXT_CHARS, 'SubagentStart');
+  return assertWithinBudget(`${SUBAGENT_CONTEXT}\n\n${COMMUNICATION_CONTEXT}`, MAX_SUBAGENT_CONTEXT_CHARS, 'SubagentStart');
 }
 
 module.exports = {
+  COMMUNICATION_CONTEXT,
   getSessionContext,
   getSubagentContext,
   readInstallIdentity,

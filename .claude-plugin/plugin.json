@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "senmu-buildos",
   "displayName": "Senmu BuildOS",
-  "version": "2.6.2",
+  "version": "2.6.3",
   "description": "Project governance and engineering coaching for AI coding agents: align requirements and interface design, reuse frameworks and components, improve code quality, and deliver with evidence.",
   "author": {
     "name": "Senmu"

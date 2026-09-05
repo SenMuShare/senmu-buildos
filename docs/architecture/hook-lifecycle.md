@@ -17,6 +17,8 @@ Skill 手册：根据当前正在做的工作，按需拿取的一本专业指�
 
 在宿主支持的 startup、resume、clear、compact 场景注入固定短通用底线：项目事实优先、范围和风险校准、现有能力优先、有效证据复用、有界取得规则／源码／输出、源头治理、必要高风险门禁、可恢复执行、验证与真实完成状态。
 
+固定协作表达默认值同时进入主代理与子代理上下文：清晰直接、自然段优先、减少套话、服从用户指定格式。它不替代项目内容风格；规则 owner 与适配关系见 `codex-harness-boundary.md`。
+
 插件使用 Codex 原生 `PLUGIN_ROOT` 定位脚本，并通过 `additionalContextLimit` 与脚本内字符预算双重限制输出。Codex 已自动发现 `AGENTS.md`，因此 Hook 不读取或复制其正文。
 
 ## SubagentStart

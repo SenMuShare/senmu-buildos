@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "repository": "SenMuShare/senmu-buildos",
-  "reviewed_for_version": "2.6.2",
+  "reviewed_for_version": "2.6.3",
   "description": "AI-native BuildOS for Codex, Claude Code, Doubao, WorkBuddy and ZCode: product discovery, UI/UX design, software engineering, context-aware workflows, testing, Git and verifiable releases.",
   "topics": [
     "agent-skills",
@@ -27,14 +27,14 @@
   ],
   "readme_review": {
     "updated_sections": [
-      "authorization-and-follow-through",
-      "project-agents-delta-layer",
+      "communication-defaults",
+      "delegation-and-verification",
       "install-update-remove"
     ],
     "summary": {
-      "zh": "明确已授权目标内的持续推进、必要澄清和安全门禁边界，并让项目 AGENTS.md 只维护项目事实与差异规则，减少重复确认和跨层冲突。",
-      "en": "Clarify continued execution within authorized outcomes, material clarification and safety gates, while keeping project AGENTS.md files focused on project facts and delta rules to reduce redundant confirmations and cross-layer conflicts.",
-      "ja": "承認済みの目的内での継続実行、必要な確認、安全ゲートの境界を明確にし、プロジェクトの AGENTS.md を固有事実と差分規則に絞ることで、重複確認と階層間の競合を減らします。"
+      "zh": "补齐协作表达与有效委派，保留用户格式、已有授权和风险相称的验证。",
+      "en": "Add consistent communication defaults and useful delegation while respecting user formats, existing authority, and proportional verification.",
+      "ja": "協働表現と有効な委任を補強し、ユーザー指定形式、既存の権限、リスクに応じた検証を尊重します。"
     }
   },
   "readmes": {

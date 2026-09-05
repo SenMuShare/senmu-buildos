@@ -31,6 +31,20 @@ Senmu BuildOS 使用 Codex 已有的发现、上下文和生命周期能力，�
 - BuildOS 不注册 UserPromptSubmit 反馈 Hook。只有 Agent 在真实项目中使用 BuildOS，能指出具体 BuildOS 组件及其误导、阻塞、空泛、额外工作、效率或产物影响时，才通过 Learning 和本地 CLI 写入 `~/.senmu-buildos/feedback/`（或显式数据目录）；业务需求和一般用户纠正不收集。
 - Hook 不自动读取任务记录。安装或更新插件后仍需通过 Codex 的 Hook trust review；源码存在和单元测试通过不等于本机运行时已经启用。
 
+## 模型与指令适配
+
+依据 [GPT-6 Astra 官方指南](https://developers.openai.com/api/docs/guides/latest-model?model=gpt-6-astra)（2026-09-05 核验）：项目入口按需读取，Skill 默认建议服从用户当前意图和已有授权，验证强度随实际风险变化。具体规则归 Project 的标准发现与 Engineering 的测试 reference，不重复注入 Hook。
+
+异步工具、途中用户补充、子代理调度、模型与推理参数由宿主提供。仅在宿主允许且有独立、有益的子任务时委派；不会为提高 Astra 使用率强制创建代理、指定固定轮数或改业务 API 模型。用户补充要求沿既有任务继续，已完成工作和授权范围由原任务 owner 恢复。
+
+源码、安装快照与活跃会话分别核验；提示词精简只证明输入负担变化，性能提升需要相同任务、模型配置与可比较结果的运行证据。
+
+## 协作表达默认值
+
+通用写作风格由 `hooks/kernel.js` 的 `COMMUNICATION_CONTEXT` 主写：先说结果、连贯简洁的段落、读者适配的技术细节、必要才用列表/表格、减少套话和自造术语，代理间消息也保持易读。用户指定的语言、格式和文风优先；这些规则不擅自改写项目品牌、创作文案或结构化输出合同。
+
+SessionStart 与 SubagentStart 使用同一段固定英文规则；无 Hook 的三种引导 Skill 承载等价安装文本，由一致性回归校验，项目 AGENTS 不复制。为使规则真正到达执行上下文，输出上限从 1000/500 调整为 1700/1200 字符；原治理底线不删减，无新增动态项目读取或审批流程。
+
 ## 引入新治理文件前的检查
 
 1. Codex Harness 是否已经可靠拥有该状态或生命周期能力。

@@ -5,7 +5,7 @@ const path = require('node:path');
 const test = require('node:test');
 
 const { MAX_SESSION_CONTEXT_CHARS, MAX_SUBAGENT_CONTEXT_CHARS } = require('../../hooks/config');
-const { getSessionContext, getSubagentContext } = require('../../hooks/kernel');
+const { COMMUNICATION_CONTEXT, getSessionContext, getSubagentContext } = require('../../hooks/kernel');
 const { buildCodexOutput } = require('../../adapters/codex/hooks/runtime');
 const { buildClaudeCodeOutput } = require('../../adapters/claude-code/hooks/runtime');
 const codexHooksConfig = require('../../hooks/hooks.json');
@@ -142,4 +142,19 @@ test('shared session-start script emits lifecycle additionalContext', () => {
   assert.deepEqual(Object.keys(output), ['hookSpecificOutput']);
   assert.equal(output.hookSpecificOutput.hookEventName, 'SessionStart');
   assert.equal(output.hookSpecificOutput.additionalContext, getSessionContext());
+});
+
+
+test('communication defaults reach both lifecycle events and bootstrap installers', () => {
+  for (const context of [getSessionContext(), getSubagentContext()]) {
+    assert.equal(context.split(COMMUNICATION_CONTEXT).length - 1, 1);
+  }
+  for (const adapter of ['doubao', 'workbuddy', 'zcode']) {
+    const source = fs.readFileSync(path.join(__dirname, '../../adapters', adapter, 'kernel/SKILL.md'), 'utf8');
+    const start = '<!-- communication-defaults:start -->';
+    const end = '<!-- communication-defaults:end -->';
+    assert.equal(source.split(start).length, 2);
+    assert.equal(source.split(end).length, 2);
+    assert.equal(source.split(start)[1].split(end)[0].trim(), COMMUNICATION_CONTEXT);
+  }
 });

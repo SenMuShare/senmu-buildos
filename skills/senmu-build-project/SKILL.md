@@ -24,7 +24,7 @@ Use [init_project_governance.py](scripts/init_project_governance.py) for new pro
 
 ## Core Contract
 
-- Establish authoritative root, Git/subproject/release-unit boundaries, entrypoints, owners, authorization, and non-goals.
+- Establish authoritative root, Git/subproject/release-unit boundaries, entrypoints, owners, authorization, and non-goals. User intent/authority outranks Skill defaults; host permissions apply.
 - For one placement question, give the preferred owner/path and reason; do not write unless requested.
 - Run `init_project_governance.py --mode plan-new` before explicitly authorized `initialize-new`.
 - Inventory established projects read-only, then confirm owners semantically. Never overwrite them with defaults or create parallel truth.
@@ -33,4 +33,4 @@ Use [init_project_governance.py](scripts/init_project_governance.py) for new pro
 - Use one Durable Task State Owner across stages. Continuing an existing task does not reactivate Project.
 - Authorize initialization, migration, and remediation separately. Plans, script output, and static checks are not execution facts.
 
-Handoff only when ownership changes, carrying scope, entrypoints, facts, evidence, unknowns, and authorization. Finish with no parallel owner and with validation, risk, and recovery information.
+Handoff on ownership change with scope, facts, evidence, gaps, authority, and recovery. Leave no parallel owner.

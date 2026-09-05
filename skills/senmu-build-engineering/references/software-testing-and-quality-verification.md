@@ -6,6 +6,8 @@ This standard defines cross-language testing and quality verification. It prescr
 
 Before creating/changing strategy, establish requirements, invariants, and observable acceptance; affected current user docs/examples and Product-declared documentation acceptance paths; modules, public interfaces, data ownership, dependencies; database/file/network/message/payment/authorization/external effects; runtime, supported versions, compatibility, release/rollback; failure impact, probability, detectability, and recovery cost; and existing tests, CI, real environments, and defect history.
 
+For reversible, low-impact changes, do not add tests that merely mirror implementation or assert instruction wording. Run required checks once; broaden or repeat only for new changes, failures, or unresolved risk. Instruction audits additionally use the Project routing behavior check; shorter text and passing link checks do not prove model performance.
+
 Choose layers by risk. A pure function may need only unit/property tests; a cross-service transaction, authorization boundary, or data migration needs contract, integration, rollback, and real-path evidence.
 
 Version `TEST_CASES.md` derives directly from that PRD's pages/features/capabilities, product behavior, interaction, errors, boundaries, and acceptance and mirrors its content structure. Shared version/sections provide linkage; do not create a traceability matrix. Retain an existing test-management owner. Templates are adaptable outlines: a low-risk change keeps only matching cases.

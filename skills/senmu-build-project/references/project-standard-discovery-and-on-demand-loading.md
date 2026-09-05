@@ -54,7 +54,11 @@ Reserve validator errors for deterministic structural defects and warnings for e
 3. Project `AGENTS.md` may contain project triggers/routes, not a catalog of every installed skill or a generic handoff process. Handoff to Workflow only when a real business agent, process contract, or run state is the subject.
 4. Stop when active project standards answer the task. Read the necessary reference from one domain skill only for a gap, conflict, governance evolution, or explicit BuildOS request.
 5. A `candidate` prompts investigation, never a gate; `legacy` supports compatibility, migration, or history only.
-6. Resolve freshness and apparent conflicts through current owners, runtime evidence, and explicit superseding user decisions before asking. Project overrides beat generic defaults; factual checks such as confirming a Git root are agent verification, not approval requests. Continue covered work and ask only for an unresolved outcome-changing choice or uncovered authority. Preserve explicit access, cost, production, destructive-action, and independent-review gates.
+6. User instructions take precedence over Skill defaults within host permissions. Resolve freshness and apparent conflicts through current owners, runtime evidence, and explicit superseding user decisions before asking. Project overrides beat generic defaults; factual checks such as confirming a Git root are agent verification, not approval requests. Continue covered work and ask only for an unresolved outcome-changing choice or uncovered authority. Preserve explicit access, cost, production, destructive-action, and independent-review gates.
+
+Do not turn an audit-only request into implementation. An explicit audit-and-optimize request authorizes the scoped fixes after assessment; it does not require a second generic approval. Before requesting missing authority, finish independent authorized work and present the concrete remaining action. If a Skill instruction actually blocks or redirects requested work, link the exact SKILL.md/reference, quote that instruction, and distinguish its requirement from interpretation.
+
+Audit effective nested AGENTS/overrides and active worktree entrypoints, not just the top-level file. Exclude historical, third-party and generated copies from automatic rewriting; reconcile stale routes against registered owners. Do not assume changing directories hot-loads another repository's instructions: read its entrypoint when entering it.
 
 ## 6. Verify Routing
 

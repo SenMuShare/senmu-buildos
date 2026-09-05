@@ -8,7 +8,7 @@
   <a href="README.md">简体中文</a> · <a href="README.en.md">English</a> · <a href="README.ja.md">日本語</a>
 </p>
 
-<!-- product-surface-review: 2.6.2 -->
+<!-- product-surface-review: 2.6.3 -->
 
 <p align="center">
   <a href="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml"><img src="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml/badge.svg" alt="Validate Senmu BuildOS"></a>
@@ -221,7 +221,7 @@ BuildOS 不承诺固定比例。它通过减少不必要的功能、重复代码
 
 ## 安装、更新与卸载
 
-Senmu BuildOS 当前正式版本为 `v2.6.2`，支持 Codex、Claude Code、豆包、WorkBuddy 和 ZCode 适配。安装的是整个插件，不需要逐个下载八个 Skill。运行时规范正文与 active Reference 路径统一使用专业英文；用户仍可直接使用中文或其他语言提出需求并获得对应语言的产物。此版本进一步收敛授权、澄清与完成规则：Agent 会在已经授权的目标内持续推进，只在缺少会改变结果的决定、需要新增权限或触发明确安全门禁时暂停询问；项目 `AGENTS.md` 只需维护项目事实和差异规则。
+Senmu BuildOS 当前正式版本为 `v2.6.3`，支持 Codex、Claude Code、豆包、WorkBuddy 和 ZCode 适配。安装的是整个插件，不需要逐个下载八个 Skill。运行时规范正文与 active Reference 路径统一使用专业英文；用户仍可直接使用中文或其他语言提出需求并获得对应语言的产物。此版本进一步收敛授权、澄清与完成规则：Agent 会在已经授权的目标内持续推进，只在缺少会改变结果的决定、需要新增权限或触发明确安全门禁时暂停询问；项目 `AGENTS.md` 只需维护项目事实和差异规则。 本次更新补齐 Astra 协作表达默认值：先讲重点、连贯段落、减少套话并保留用户指定格式；主代理、子代理与引导适配器保持一致，委派和测试按实际收益与风险执行。
 
 ### 更新 Codex
 

@@ -8,7 +8,7 @@
   <a href="README.md">简体中文</a> · <a href="README.en.md">English</a> · <a href="README.ja.md">日本語</a>
 </p>
 
-<!-- product-surface-review: 2.6.2 -->
+<!-- product-surface-review: 2.6.3 -->
 
 <p align="center">
   <a href="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml"><img src="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml/badge.svg" alt="Validate Senmu BuildOS"></a>
@@ -213,7 +213,7 @@ BuildOS は固定割合を約束しません。不要な機能、重複コード
 
 ## インストール、更新、削除
 
-Senmu BuildOS の現行正式リリースは `v2.6.2` です。Codex、Claude Code、豆包アダプター、WorkBuddy アダプター、ZCode アダプターをサポートします。8 Skill は個別ではなく、1 つのプラグインとしてインストールします。実行規範本文と active Reference パスは専門的な英語に統一し、ユーザーは引き続き中国語や希望する言語で依頼し、その言語の成果物を受け取れます。このリリースでは承認、確認、完了の規則も整理され、Agent は承認済みの目的の範囲で作業を継続し、結果を変える未決事項、新しい権限、または明示的な安全ゲートがある場合にのみ確認します。プロジェクトの `AGENTS.md` はプロジェクト固有の事実と差分規則だけを保持できます。
+Senmu BuildOS の現行正式リリースは `v2.6.3` です。Codex、Claude Code、豆包アダプター、WorkBuddy アダプター、ZCode アダプターをサポートします。8 Skill は個別ではなく、1 つのプラグインとしてインストールします。実行規範本文と active Reference パスは専門的な英語に統一し、ユーザーは引き続き中国語や希望する言語で依頼し、その言語の成果物を受け取れます。このリリースでは承認、確認、完了の規則も整理され、Agent は承認済みの目的の範囲で作業を継続し、結果を変える未決事項、新しい権限、または明示的な安全ゲートがある場合にのみ確認します。プロジェクトの `AGENTS.md` はプロジェクト固有の事実と差分規則だけを保持できます。 今回は Astra の協働表現を補強し、結論を先に伝え、段落のつながりを保ち、定型句を減らし、指定された形式を尊重します。親・子エージェントとブートストラップで規則を統一し、委任と検証は効果とリスクに応じて選びます。
 
 ### Codex の更新
 

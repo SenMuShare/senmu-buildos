@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+## [2.6.3] - 2026-09-05
+
+### Changed
+
+- Added shared communication defaults across session/subagent hooks and bootstrap adapters: outcome-first prose, reader-appropriate detail, restrained formatting, and respect for user-requested language, style, and output contracts.
+- Clarified user authority over Skill defaults, concrete explanations for instruction-driven pauses, active nested-entrypoint audits, and risk-proportional testing.
+- Refined delegation around independent work and coordination cost within host permissions; added lifecycle delivery and adapter-parity checks for communication defaults.
+
 ## [2.6.2] - 2026-09-05
 
 ### Changed

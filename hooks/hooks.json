@@ -7,7 +7,7 @@
             "type": "command",
             "command": "node -e \"var r=['${PLUGIN_ROOT}',process.env.PLUGIN_ROOT,process.env.CLAUDE_PLUGIN_ROOT,process.env.ZCODE_PLUGIN_ROOT].filter(function(v){return v&&v.charCodeAt(0)!==36})[0];if(r){require(r+'/hooks/session-start.js')}\"",
             "timeout": 5,
-            "additionalContextLimit": 1000,
+            "additionalContextLimit": 1700,
             "statusMessage": "Restoring Senmu BuildOS governance kernel..."
           }
         ]
@@ -20,7 +20,7 @@
             "type": "command",
             "command": "node -e \"var r=['${PLUGIN_ROOT}',process.env.PLUGIN_ROOT,process.env.CLAUDE_PLUGIN_ROOT,process.env.ZCODE_PLUGIN_ROOT].filter(function(v){return v&&v.charCodeAt(0)!==36})[0];if(r){require(r+'/hooks/subagent-start.js')}\"",
             "timeout": 5,
-            "additionalContextLimit": 500,
+            "additionalContextLimit": 1200,
             "statusMessage": "Restoring Senmu BuildOS subagent boundaries..."
           }
         ]

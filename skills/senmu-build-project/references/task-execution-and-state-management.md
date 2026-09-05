@@ -56,6 +56,8 @@ A key decision record must let a later agent distinguish a defect from an intent
 - Express requirements, fixes, workflow changes, media delivery, POCs, and governance tasks in their natural form; do not force them into user stories.
 - Do not create fixed Setup, Foundation, or Polish phases, and do not put scaffolding, generic platforms, or gate construction ahead of the value loop.
 
+When the host permits delegation, delegate independent bounded work if it can save time or improve quality after coordination cost. Otherwise continue locally; do not create agents or review rounds for their own sake. Agent messages must be readable by people, with clear grammar and proper spacing.
+
 Describe parallel boundaries only when work will actually be assigned to several executors. First define each result, shared state, overlapping write scope, and integration owner. Apply Delivery isolation within the authorized task; tool availability or delegation does not expand its scope.
 
 ### 4.1 Minimum Package for Actual Delegation
