@@ -23,7 +23,7 @@ Read only what is needed. Implement approved designs under project/Engineering r
 - Reuse project systems, brand, and components. Govern cross-page gaps only; keep one-offs with implementation.
 - Make frequent actions direct/predictable. Motion must explain feedback, state, space, or change, with reduced-motion/non-hover paths.
 - Design accessibility, responsiveness, and loading/empty/error/disabled states from the start; never rely on one sensory cue.
-- Review real rendering at target viewports/states. Code or static checks do not establish visual/interaction quality.
+- Deliver direction analysis with observed evidence, implementable decisions, and limits. To claim implemented visual/interaction quality, verify real rendering at affected viewports/states; code or static checks alone are insufficient.
 - Design-library content is optional inspiration, not project fact or a default.
 - Exploration is not a product decision. Write selected rules to the owner; isolate alternatives.
 

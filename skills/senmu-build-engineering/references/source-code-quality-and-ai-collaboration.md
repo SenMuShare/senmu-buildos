@@ -42,7 +42,7 @@ Identifiers follow ecosystem conventions. Unless project rules say otherwise, bu
 
 Formal code projects declare format/autofix, fast quality, full quality, test, and real/integration entrypoints, with scope, cost, and external-system effects. Local and CI reuse configuration. Suppressions record scope, reason, and exit condition.
 
-Tests observe business contracts, not private implementation. Add a regression for the original defect. Cover critical success, boundaries, and meaningful failures. For remote calls, test risk-relevant deadlines, budgets, backoff, amplification, idempotency, duplicates/late results, and reconciliation of unknown outcomes. Coverage percentages do not replace risk coverage for money, permissions, data, and core flows.
+Tests observe business contracts, not private implementation. Reuse a regression covering the original defect; add one only when existing coverage or alternate repeatable evidence is insufficient. Cover critical success, boundaries, and meaningful failures. For remote calls, test risk-relevant deadlines, budgets, backoff, amplification, idempotency, duplicates/late results, and reconciliation of unknown outcomes. Coverage percentages do not replace risk coverage for money, permissions, data, and core flows.
 
 ## 5. AI Implementation, Debugging, and Review Loop
 

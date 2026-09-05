@@ -48,7 +48,7 @@ Whole-repository analysis does not require editing every file. A final change ma
 4. Correct the principle, responsibility, template, script, or default production path that creates the problem. Gates cover only material residual risk that cannot be removed.
 5. Synchronize affected routes, docs, tests, and migration declarations.
 6. Run matching Skill, package, script, and behavior checks; record unverified runtime assumptions.
-7. Commit, push, version, tag, candidate-install, or publish only under separate explicit authority.
+7. Complete source changes, matching checks, and scoped local commits within the authorized BuildOS improvement task. Push, version, tag, candidate-install, and publication follow their own applicable authority; feedback intake alone authorizes none of them.
 
 ## 5. Version and Git Rules
 

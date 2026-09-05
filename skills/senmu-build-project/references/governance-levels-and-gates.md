@@ -37,8 +37,8 @@ Determine the governance level when entering a task. Escalate when investigation
 | G0 Lightweight inquiry/read | Explain code or process, organize ideas, no file changes | State the basis; no work log unless a project decision results |
 | G1 Contract-preserving local change | Local implementation or content adjustment that preserves product, runtime, and delivery contracts | Check contract and impact scope; run an available targeted quality check or disclose what was not verified |
 | G2 Ordinary engineering task | Small feature, ordinary bug, local refactor, read-only engineering governance review, documentation completion | Read relevant references; run formatting, lint, applicable type checks, and matching tests; for architecture review, report evidence without automatically expanding into refactoring; write a work log when needed |
-| G3 Release or structural task | Hotfix, formal release, cross-module architecture change, public contract or data-structure change, deployment, versioning, rollback, production verification | Explain architecture impact first; pass full project quality, architecture, test, build, and CI checks; a release also requires version, changelog, work log, tag, artifact, production verification, and rollback gates |
-| G4 High-risk or organizational-learning task | Security, payments, permissions, data migration, production incident, repeated failure, cross-agent rework | Retrospective required; update project standards when necessary; create a whole-repository BuildOS feedback candidate only when eligible |
+| G3 Release or structural task | Hotfix, formal release, cross-module architecture change, public contract or data-structure change, deployment, versioning, rollback, production verification | Explain relevant architecture impact; run matching checks and project-required gates. For an authorized release, satisfy the applicable version, log, Tag, artifact, production-verification, and rollback contract |
+| G4 High-risk or organizational-learning task | Security, payments, permissions, data migration, production incident, repeated failure, cross-agent rework | Verify the actual high-risk path. Retrospect on an incident, material rework, or explicit review request; update standards and submit BuildOS feedback only when eligible |
 
 Use the highest applicable level.
 
@@ -52,7 +52,7 @@ Completion cannot be claimed unless the gate passes or the project owner explici
 
 Typical Hard Gates:
 
-- A formal release requires a version, changelog, tag, production verification, and rollback basis.
+- A formal release satisfies the project-declared version, changelog, Tag/channel, target verification, and rollback contract; enable only applicable delivery layers.
 - A hotfix requires confirmation of release unit, current version, rollback point, and the boundary of unreleased changes.
 - Production data, payments, authorization, deletion, export, and upload require backend validation and verification evidence.
 - Real secrets, user-private information, and production data must not enter Git or public logs.
@@ -62,7 +62,7 @@ Typical Hard Gates:
 - Formal release requires an authoritative-document impact decision: update changed bodies, confirm the applicable version when unchanged, and preserve historical snapshots at their original version.
 - When G3-G4 work uses branches, worktrees, clones, or migration staging, source, runtime assets, ledgers, deliverables, and verification must return to each formal owner registered by the responsible owner. Completion in a temporary directory is insufficient. A project-level POC root may remain separate from product release source; POC closeout clears its own residue, while ordinary product release checks candidate and shared-resource effects.
 - Requirement and technical check items are review aids, not fixed gates for every task. They block transition only when a G3-G4 change actually concerns that area, enters formal review, or the owner explicitly requires it and blocking findings remain. Tailor G0-G2 coverage to risk and record omissions instead of adding ceremonial process.
-- Before deleting a POC that affects a technical or product decision, preserve a stable experiment ledger, structured manifest, and reproduction protocol sufficient to reconstruct the experiment. Do not claim a final conclusion before human evaluation is complete.
+- Before deleting a POC that affects a technical or product decision, preserve a stable experiment ledger, structured manifest, and reproduction protocol sufficient to reconstruct the experiment. When human evaluation is part of the declared acceptance, complete it before that conclusion; otherwise use the applicable objective evidence.
 
 ### Soft Gate
 
@@ -94,8 +94,8 @@ Prefer these practices, but adapt them to project stage, technology, or owner di
 | G0 | As the question requires | Usually none | No | No | No | No |
 | G1 | Relevant code/docs | Targeted checks | Usually no | No | Only after a notable failure | Usually no |
 | G2 | Relevant references | Format, lint, applicable types, matching tests; evidence-based structural review | Usually yes | For user-visible change or release | After rework/failure | By impact scope |
-| G3 | Architecture or release/log/deployment/branch standards required | Full quality, architecture, tests, build, and CI | Yes | Required for release | For material issues | Required for release or risky path |
-| G4 | Risk-related and retrospective standards required | G3 plus security, data, authorization, or real-path review | Yes | By release ownership | Yes | By risk path |
+| G3 | Affected architecture or delivery standards | Impact-based checks and project-required gates | By material work | For authorized release | For material incidents/rework or explicit request | For applicable release target or risky path |
+| G4 | Relevant risk standards; retrospective when triggered | G3 plus affected security, data, authorization, or real-path review | By material work | By release ownership | For material incidents/rework or explicit request | By risk path |
 
 ## 4. Noise Reduction
 

@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+## [2.6.2] - 2026-09-05
+
+### Changed
+
+- Consolidated instruction reconciliation and phase continuation in Project, read-only logging boundaries in Delivery, and product-AI confirmation scope in Engineering; project entrypoints route to these owners without duplicating approval rules.
+
+- Clarified existing task authorization, candidate re-review, and release permission so authorized preparation and read-only diagnosis can continue without redundant approval.
+- Aligned completion, design assessment, risk-based verification, operator guides, and adapter kernels with the requested outcome; retained required checks and external-action boundaries.
+
 ## [2.6.1] - 2026-09-04
 
 ### Changed

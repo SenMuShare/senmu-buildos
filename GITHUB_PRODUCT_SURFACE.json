@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "repository": "SenMuShare/senmu-buildos",
-  "reviewed_for_version": "2.6.1",
+  "reviewed_for_version": "2.6.2",
   "description": "AI-native BuildOS for Codex, Claude Code, Doubao, WorkBuddy and ZCode: product discovery, UI/UX design, software engineering, context-aware workflows, testing, Git and verifiable releases.",
   "topics": [
     "agent-skills",
@@ -27,14 +27,14 @@
   ],
   "readme_review": {
     "updated_sections": [
-      "install-update-remove",
-      "runtime-language-contract",
-      "runtime-reference-paths"
+      "authorization-and-follow-through",
+      "project-agents-delta-layer",
+      "install-update-remove"
     ],
     "summary": {
-      "zh": "八个 Skill 的运行时规范正文与 active Reference 路径均统一为专业英文；用户仍可使用中文或其他语言沟通，路径门禁会阻止后续重新引入中英混杂文件名。",
-      "en": "Use professional English for both the normative runtime specifications and all active Reference paths while preserving multilingual user interaction; a path gate prevents mixed-language filenames from returning.",
-      "ja": "8 つの Skill の実行規範と active Reference パスを専門的な英語に統一し、多言語での依頼を維持しながら、パス検証で混在言語のファイル名が再導入されることを防ぎます。"
+      "zh": "明确已授权目标内的持续推进、必要澄清和安全门禁边界，并让项目 AGENTS.md 只维护项目事实与差异规则，减少重复确认和跨层冲突。",
+      "en": "Clarify continued execution within authorized outcomes, material clarification and safety gates, while keeping project AGENTS.md files focused on project facts and delta rules to reduce redundant confirmations and cross-layer conflicts.",
+      "ja": "承認済みの目的内での継続実行、必要な確認、安全ゲートの境界を明確にし、プロジェクトの AGENTS.md を固有事実と差分規則に絞ることで、重複確認と階層間の競合を減らします。"
     }
   },
   "readmes": {

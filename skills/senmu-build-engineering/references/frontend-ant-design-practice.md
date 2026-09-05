@@ -45,7 +45,7 @@ An AI feature is not automatically a universal chat box. First define its taskâ€
 
 - When intent is unclear, offer selectable tasks, context sources, and capability boundaries.
 - Make generation, failure, retry, and completion visible. Land results in actionable tables, forms, lists, citations, file cards, or navigable objects rather than text alone.
-- Put high-risk actions behind GUI confirmation; AI does not execute irreversible work directly.
+- In product AI features, route high-risk business actions through the product-defined confirmation flow. This UI rule does not impose GUI execution on development or operations agents; their task authority, host permissions, and release protocol govern execution.
 - Preserve the ordinary business flow when AI fails. Tasks suitable for standard forms, tables, or detail pages remain GUI operations.
 
 Specific components such as `Welcome`, `Prompts`, `Sender`, and `Bubble` depend on current official APIs for the installed version; this profile does not maintain a catalog.

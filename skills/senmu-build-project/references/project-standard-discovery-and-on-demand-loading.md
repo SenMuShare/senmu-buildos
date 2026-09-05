@@ -35,7 +35,7 @@ Skip full discovery when an ordinary task can already find clear rules from proj
 7. After write authority, update the original domain owner. Select the closest existing document/configuration only when no owner exists; do not default to a new directory.
 8. Add a short index route. Never present an unconfirmed candidate as mandatory.
 
-For established `AGENTS.md`, decide per instruction: project facts, actual commands, authority paths, explicit overrides -> `retain`; project-specific text already owned elsewhere -> `compress_to_route`; BuildOS-generic duplicates -> `remove_duplicate`; conflict/staleness -> `conflict_for_user_decision`. Never layer a BuildOS template over the old entrypoint first.
+For established `AGENTS.md`, decide per instruction: project facts, actual commands, authority paths, explicit overrides -> `retain`; project-specific text already owned elsewhere -> `compress_to_route`; BuildOS-generic duplicates -> `remove_duplicate`; conflict/staleness -> `reconcile_from_authority`; use `conflict_for_user_decision` only for a material decision that current evidence and existing authority cannot resolve. Never layer a BuildOS template over the old entrypoint first.
 
 Engineering's project-standard discovery reference owns code-evidence methods. Product, Workflow, Delivery, and Learning decide their own domain rules.
 
@@ -54,7 +54,7 @@ Reserve validator errors for deterministic structural defects and warnings for e
 3. Project `AGENTS.md` may contain project triggers/routes, not a catalog of every installed skill or a generic handoff process. Handoff to Workflow only when a real business agent, process contract, or run state is the subject.
 4. Stop when active project standards answer the task. Read the necessary reference from one domain skill only for a gap, conflict, governance evolution, or explicit BuildOS request.
 5. A `candidate` prompts investigation, never a gate; `legacy` supports compatibility, migration, or history only.
-6. Base conflicts on current project owners and runtime evidence; explicit project overrides beat generic defaults. Ask the user with evidence/impact when freshness is unknown, project owners conflict, or a change may weaken a non-negotiable Hard Gate.
+6. Resolve freshness and apparent conflicts through current owners, runtime evidence, and explicit superseding user decisions before asking. Project overrides beat generic defaults; factual checks such as confirming a Git root are agent verification, not approval requests. Continue covered work and ask only for an unresolved outcome-changing choice or uncovered authority. Preserve explicit access, cost, production, destructive-action, and independent-review gates.
 
 ## 6. Verify Routing
 
@@ -69,3 +69,5 @@ Without this independent behavior check, report at most `structural_routing_prep
 ## 7. Completion
 
 Discovery is complete only when evidence/scope are clear; each full rule is in one domain owner or remains an explicit candidate; the short index routes future agents; duplicate, stale, and legacy entrypoints are labeled; and no external example, preference, or one-off state masquerades as a durable standard.
+
+When multiple installed copies expose the same skill, identify the host-selected source and revision before claiming a rule update is active. Source commits, installed snapshots, and already-running sessions are separate states. Repair the owning source; use its authorized install lifecycle rather than editing caches or silently removing another host's installation.

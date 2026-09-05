@@ -80,8 +80,8 @@ Framework and product names are examples, never universal rules. Ecosystem-speci
 
 - G0-G1: preserve basis, impact scope, and targeted verification; avoid unrelated process.
 - G2: synchronize affected documents, run matching quality/architecture/test checks, and write a work log when needed.
-- G3: include architecture impact, full verification, version, change record, artifact, production confirmation, and rollback basis.
-- G4: add real risk-path coverage, audit evidence, retrospective, and rule updates.
+- G3: include relevant architecture impact and project-required verification; version, artifact, target confirmation, and rollback apply to the authorized release scope.
+- G4: add affected risk-path coverage and evidence; retrospective and rule updates follow material incidents, rework, or explicit review scope.
 
 Do not claim completion with an unmet Hard Gate. Explain omitted Soft Gates. Adapt Guidance to project facts.
 

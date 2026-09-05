@@ -100,7 +100,7 @@ When the user provides material for absorption, execute this loop without reopen
 6. Compare common load, duplication, and decision coverage before and after. More rules are not success.
 7. Run Skill Creator, package, script, behavior, and project-bootstrap checks. Test real decisions, not keyword presence.
 8. Review Skill integrity: product position, boundaries, description routing, progressive disclosure, unique ownership, duplicate/conflict status, common load, Harness compatibility, and authority. Return defects to original owners, rerun failed paths, and re-review; correctness of one batch does not replace whole-repository analysis.
-9. Remove temporary source/candidate files and record absorbed, rejected, unresolved, review identity, conclusion, and verification. Commit, install, and publication still require separate authority.
+9. Remove temporary source/candidate files and record absorbed, rejected, unresolved, review identity, conclusion, and verification. Source changes and scoped local commits use the existing improvement authority; installation and publication retain their own authorization boundaries.
 
 Center a batch on one closable topic, such as cross-language review, Python typing/errors, or distributed retries. Do not compile a large library into every domain at once.
 

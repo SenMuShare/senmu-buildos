@@ -105,8 +105,8 @@ When any scenario spans dependent steps, phases, agents, or sessions, follow [Ta
 | G0 | Basis, key assumptions, and suggested next step |
 | G1 | Change, impact scope, and verification or disclosure of omissions |
 | G2 | Change, matching tests, necessary document sync, necessary work log |
-| G3 | Version, changelog, release/deployment record, production verification, rollback point |
-| G4 | Risk treatment, verification evidence, retrospective, and rule update or reason not to update |
+| G3 | Relevant architecture impact and required validation; delivery records and target verification only for the authorized release scope |
+| G4 | Risk treatment and verification evidence; retrospective and rule updates when incident/rework evidence or explicit scope calls for them |
 
 ## 7. Project Rule Precedence
 
@@ -114,7 +114,7 @@ When project rules and Senmu BuildOS differ:
 
 - Real runtime/delivery evidence and active specialist owners determine project facts; explicit project overrides beat BuildOS defaults.
 - Semantically identical rules are not conflicts. Remove the project copy and retain the BuildOS baseline; the project entrypoint may retain authoritative paths or real commands.
-- If a project rule appears stale, project owners conflict, or an override weakens a non-negotiable BuildOS Hard Gate, do not guess. Present the specific conflict, evidence, impact, and recommendation to the user for decision.
+- Reconcile stale or conflicting rules through [Standards Discovery](project-standard-discovery-and-on-demand-loading.md#5-conditional-loading); that owner defines when evidence resolves the conflict and when a user decision is still needed.
 - After decision, update one project specialist owner and retain only necessary navigation or override in the delta layer. Never maintain synonymous bodies in several files.
 
 ## 8. Executable-Contract Handoff

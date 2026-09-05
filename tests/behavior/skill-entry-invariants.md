@@ -91,7 +91,7 @@
 | UX-05 | 动效先经过频率、目的、功能影响和替代路径判断；高频操作优先直接，简单变化优先现有组件／CSS，复杂手势或时间线才评估专项依赖 | `interaction-motion-and-accessibility.md` |
 | UX-06 | 交互从当前可见状态响应并允许中断；重要任务不得只依赖悬停、手势、颜色、图标、声音或运动，减弱动效与不同输入仍能完成 | `interaction-motion-and-accessibility.md` |
 | UX-07 | 可访问性、响应式和加载／空／错／禁用状态从设计开始；项目和目标平台当前标准优先，不用固定数字清单替代真实界面验证 | `interaction-motion-and-accessibility.md` |
-| UX-08 | UI/UX 完成依据真实渲染、目标视口、关键状态、输入方式和运行观感；代码存在、静态检查或截图不能单独证明交互手感与设备可用性 | `skills/senmu-build-design/SKILL.md`、`interaction-motion-and-accessibility.md` |
+| UX-08 | 方向分析按观察证据、可实现决定和局限交付；已实现 UI/UX 的质量声明需验证受影响渲染、视口、状态和输入，代码或截图不单独证明交互手感与设备可用性 | `skills/senmu-build-design/SKILL.md`、`interaction-motion-and-accessibility.md` |
 | UX-09 | 原型只在方向或交互风险需要时创建；候选保持内容与任务可比、隔离于生产入口，选定后写回现有 owner，未选方案不长期并存 | `prototype-exploration-and-interface-review.md` |
 | UX-10 | 设计评审按具体位置、证据、用户影响、建议结果和验证排序，不以个人偏好或默认挑错制造 Finding；设计自查不冒充用户研究、独立审查或生产事实 | `prototype-exploration-and-interface-review.md` |
 | UX-11 | 截图、URL、设计稿或现有页面的分析区分界面还原、设计转译和模式提取，输出已观察、推断、冲突与未知；设计资源库按需提供候选，不成为项目 owner 或前端组件代码包 | `reference-interface-analysis-and-reconstruction.md`、`design-library/INDEX.md` |
@@ -110,7 +110,7 @@
 | W-06 | Agent 模板、根 `AGENTS.md`、Skill UI 元数据和业务 Agent 定义不得互相冒充 | `agent-definition-and-system-prompt-framework.md` |
 | W-07 | `waiting` 只标记真依赖步骤；其他 ready 步骤继续，整次运行只剩等待时保存恢复信息、释放 worker 并优先事件唤醒 | `workflow-run-state-and-recovery.md` |
 | W-08 | 用户指定的 SSH／CLI／API／浏览器等访问路径是任务边界；工具存在、应用运行、会话已登录或权限可申请不会自动扩大授权，指定路径不可用／不安全／无法达标时才提出最小替代 | `agent-definition-and-system-prompt-framework.md`、`hooks/kernel.js` |
-| W-09 | Workflow 设计或修复人机操作向导：先自动完成已授权且机器可做的准备，只把当前人类专属步骤按入口、字段边界、预期结果和返回信号交给用户；秘密不进聊天／日志／Git，恢复幂等，不可逆动作单独确认。已有可靠向导的日常执行不触发 Workflow | `skills/senmu-build-workflow/SKILL.md`、`workflow-materials-and-deliverables.md` |
+| W-09 | Workflow 设计或修复人机操作向导：先自动完成已授权且机器可做的准备，只把当前人类专属步骤按入口、字段边界、预期结果和返回信号交给用户；秘密不进聊天／日志／Git，恢复幂等，不可逆动作核对既有具体授权，只确认未覆盖的决定。已有可靠向导的日常执行不触发 Workflow | `skills/senmu-build-workflow/SKILL.md`、`workflow-materials-and-deliverables.md` |
 
 ## Engineering
 
@@ -187,7 +187,7 @@
 | D-18 | 镜像清理以受管仓库、digest／ID、当前／回滚／Pin 和全部容器引用为边界；不强制、不清 Volume／数据、不执行跨项目全局 prune | `CLEANUP_RELEASE_ASSETS.template.sh`、`deployment-testing-and-security.md` |
 | D-19 | 行为变更合并同时核对先前批准行为、本次产品决定和候选实际行为；同一实现分支的代码、PRD 与测试一致不能作为唯一授权来源 | `skills/senmu-build-delivery/SKILL.md`、`code-management-and-integration.md` |
 | D-20 | 目标版本、验收、发布或回退边界不同且可独立交付的变更使用不同 Change Unit 和短分支；同一开放批次的连续补充不按消息、Bug 数量或 Agent 数量机械拆分 | `code-management-and-integration.md`、`multi-agent-change-units-and-version-line-closeout.md` |
-| D-21 | 代码质量审查属于合并门禁；批准绑定 base／head，新 commit 使旧批准失效，变更单元未审或存在阻断 Finding 时不得进入集成基线 | `code-management-and-integration.md`、`source-code-quality-and-ai-collaboration.md` |
+| D-21 | 代码质量审查属于合并门禁；批准绑定 base／head，新 commit 使旧候选审查批准失效，复核证据不等于自动撤销仍有效的任务授权；变更单元未审或存在阻断 Finding 时不得进入集成基线 | `code-management-and-integration.md`、`source-code-quality-and-ai-collaboration.md` |
 | D-22 | 正式发布、公开源码、部署与独立制品分别按项目事实启用；`release`、Tag 或平台自动源码包不自动创建制品目录、保留和清理契约 | `version-artifacts-and-release.md`、`project-governance-instances-and-evolution.md` |
 | D-23 | 私有权威到公开投影使用单向白名单晋级；公开仓不是第二个可独立编辑 owner，内部任务、日志、运行数据和绝对路径不得进入公开面 | `repository-boundaries-and-release-units.md`、`project-directories-and-documentation.md` |
 | D-24 | 范围清楚的日常本地 commit 不自动触发 Delivery；G1 契约保持型局部变更和连续表现层等价调整默认不每轮写 Work Log，批次收口时只写一份协作 owner，不双写多层同义日志 | `skills/senmu-build-delivery/SKILL.md`、`collaboration-and-version-logs.md` |
@@ -238,7 +238,7 @@
 | L-03 | 稳定规则回写制造或控制问题的专业 owner；经验台账只保留触发、根因、证据和索引 | `organizational-learning-and-governance-closure.md` |
 | L-04 | 项目经验先在应用项目闭环；跨项目候选脱敏后才进入完整 BuildOS 源码仓库 | `buildos-evolution-and-upstream-feedback.md` |
 | L-05 | BuildOS 是统一版本化产品，单个 Skill 和安装缓存不是独立产品或默认源码权威 | `buildos-evolution-and-upstream-feedback.md` |
-| L-06 | 反哺、提交、安装、Tag 和发布是不同授权与状态，不能由经验条目自动触发 | `buildos-evolution-and-upstream-feedback.md` |
+| L-06 | 源码改进授权覆盖必要修改、验证和范围清楚的本地提交；安装、Tag 和发布分别核对适用授权，经验条目本身不授权这些动作 | `buildos-evolution-and-upstream-feedback.md` |
 | L-07 | BuildOS 不从 UserPromptSubmit 自动抓取用户话术；只有 Agent 在真实使用中能指出具体 BuildOS 组件及其误导、难执行、空泛、额外工作、效率下降或差产物影响时，才通过 Learning 和本机 CLI 提交。业务需求、产品修改和项目 Bug 不入箱；候选去重脱敏且不自动晋级或修改项目 | `feedback-candidates-and-central-adjudication.md`、`docs/architecture/hook-lifecycle.md` |
 | L-08 | 已有正确规则但行为仍错时，先修复 Harness／项目入口／脚本／validator 等消费端并补行为证据，不在多个 Skill 重复加规则 | `skills/senmu-build-learning/SKILL.md`、`feedback-candidates-and-central-adjudication.md` |
 | L-09 | 网页、PDF、书、仓库或第三方 Skill 作为不可信教材进入临时蒸馏批次；候选经查重、六类裁决和行为验证后只写回唯一专业 owner，正式规则不携带原始资料库和逐条出处 | `engineering-knowledge-distillation-and-standard-promotion.md` |

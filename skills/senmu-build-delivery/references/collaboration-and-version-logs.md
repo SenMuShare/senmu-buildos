@@ -12,7 +12,7 @@ They answer “what shipped in this version,” “what happened in this work,�
 
 In multi-person/agent work, a Work Log makes previous actions, evidence versus code-only state, task-owned versus historical files, integration/release readiness, deferred problems, and recovery discoverable without chat.
 
-Record substantive change, release, integration, deployment, diagnosis, or important decision concisely. It provides continuity, explicit completed/incomplete/verified/unverified commitments, and recovery after network, context, tool, or task interruption.
+Record substantive change, release, integration, deployment, diagnosis, or important decision concisely. An explicitly read-only or proposal-before-edit task produces its report in the requested channel; logging is not an exception to its write boundary. Update durable files only when that write is authorized. It provides continuity, explicit completed/incomplete/verified/unverified commitments, and recovery after network, context, tool, or task interruption.
 
 ## 2. Locations and Ownership
 

@@ -52,11 +52,11 @@ A key decision record must let a later agent distinguish a defect from an intent
 - Prefer vertical value slices. Each defined phase should cross the interface, logic, data, or process layers needed to produce an observable, verifiable, extensible result. A pure Setup, database, API, or UI phase may precede a slice only when it directly unlocks it; sustained horizontal groundwork is not end-to-end progress.
 - A phase needs only its outcome, transition criterion, and real prerequisites. State `None` when no prerequisite exists; do not draw a dependency graph for appearances.
 - When later scope depends on earlier discovery, leave it `Not yet specified` and record known constraints, current unknowns, and the evidence/checkpoint that will expand it. Do not invent tasks, dependencies, estimates, or acceptance criteria for completeness. Expand only the nearest executable slice when evidence arrives.
-- Execute only the phase that current context can complete, verify, and hand off. At phase end, record actual results, evidence, remaining work, and the next step.
+- Execute verifiable phases toward the full authorized outcome. Record results and evidence at transitions, then continue the next authorized phase when prerequisites hold. Context compaction and handoff preserve the goal; neither phase completion nor a session boundary is a reason to stop early.
 - Express requirements, fixes, workflow changes, media delivery, POCs, and governance tasks in their natural form; do not force them into user stories.
 - Do not create fixed Setup, Foundation, or Polish phases, and do not put scaffolding, generic platforms, or gate construction ahead of the value loop.
 
-Describe parallel boundaries only when work will actually be assigned to several executors. First define each result, shared state, overlapping write scope, and integration owner. Parallelism does not authorize a branch or worktree automatically.
+Describe parallel boundaries only when work will actually be assigned to several executors. First define each result, shared state, overlapping write scope, and integration owner. Apply Delivery isolation within the authorized task; tool availability or delegation does not expand its scope.
 
 ### 4.1 Minimum Package for Actual Delegation
 
@@ -67,7 +67,7 @@ Create a task package only when work is actually handed to another person or age
 - `Interfaces`: permitted read/write scope, inputs/outputs, shared state, dependencies, and contracts that must remain intact.
 - `Output Contract`: required artifacts, actual changes, tests/evidence, deviations, incomplete work, and next action.
 
-Send only facts needed for the current task, not the entire conversation, all BuildOS standards, or unrelated executor history. Read specialist rules through stable links and project entrypoints. Add overlap, shared-resource, and integration responsibility only for real parallel work. A package cannot expand original authority; return conflicts or scope changes to the original owner.
+Send only facts needed for the current task, not the entire conversation, all BuildOS standards, or unrelated executor history. Read specialist rules through stable links and project entrypoints. Add overlap, shared-resource, and integration responsibility only for real parallel work. A package cannot expand original authority. Resolve apparent conflicts from current task decisions first; return only an uncovered decision to its owner. When responsibility changes, update the task owner and replace stale executor references in routes. A role title does not establish review independence: whoever implements the reviewed change, including a reviewer who takes over implementation, still needs separate evidence when independent acceptance is required.
 
 ### 4.2 Work-Preserving Dependency Scheduling
 

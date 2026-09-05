@@ -72,7 +72,7 @@ A local quick run cannot become a production-capacity conclusion. Record environ
 
 Derive impact from diff, call chain, public contracts, data, and configuration. Check direct behavior, callers/consumers, shared state/effects, compatibility/migration/rollback, and analogous implementations/history.
 
-For small changes, run targeted tests/checks. For cross-module, public interface, schema, dependency, or release-unit changes, run full quality and relevant real paths. One new test does not prove old behavior unaffected.
+For small changes, run targeted tests/checks. Cross-module, public interface, schema, dependency, or release-unit changes require impact-based checks and relevant real paths, plus any full gate required by the project. Once matching and required checks pass, expand or repeat only for new changes, failures, or unresolved concerns. One new test does not prove old behavior unaffected.
 
 First answer whether the original issue is fixed: close root cause with an original-path or production-shaped test that fails before and passes after. Then run impacted regressions, and run complete project gates only on a frozen candidate. Many generic regressions cannot replace the key dependency shape/current main path; a passing key path cannot replace its impacted regressions.
 

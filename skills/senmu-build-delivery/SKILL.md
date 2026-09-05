@@ -24,10 +24,10 @@ Read-only advice never merges, tags, or deploys. A release entrypoint must be ex
 - Recover authority, lines, batch, release unit, authorization, and recovery from owners/Git. Ask only about outcome-changing ambiguity.
 - Reuse `in_progress` for shared version/acceptance/release/rollback. Isolate real parallel work. Never write integration, reopen sealed work, or chain branches.
 - Agent/session changes do not change the Change Unit. Resume it; use recoverable Release Control.
-- One item does not complete a batch. Freeze after test/closeout intent; build, deploy, verify, and tag only after release authorization.
+- One item does not complete a batch. Freeze after test/closeout intent; perform authorized local builds/checks; distribute, deploy, verify production changes, and tag under release authority.
 - Require `main` as `integration` or `release_ready`; stack only on sealed parents.
 - Keep one mutable release source; verify identity before tags/artifacts.
 - Separate candidate, build, deployment, production verification, and version. Tag established facts; preserve rollback.
-- No release intent means no release; “do not release yet” persists. Behavior changes require Product; new commits invalidate approval.
+- No release intent means no release; “do not release yet” persists. Behavior changes require Product; new commits require candidate re-review, not automatic renewal of unchanged task authority.
 
 Handoff implementation to Engineering, scope to Product, and state defects to Workflow.

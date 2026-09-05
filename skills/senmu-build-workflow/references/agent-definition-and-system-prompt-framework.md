@@ -20,7 +20,7 @@ Separate durable rules from per-run data:
 
 1. **Agent charter/system prompt:** stable role, mission, responsibilities, input/output contracts, tool rules, execution logic, constraints, quality gates, handoff.
 2. **Project/scenario overlay:** directories, databases, state model, naming, approval, compliance, and domain rules expressed through project documents, policy, schema, or shared standards.
-3. **Run task package:** subject, objective, input IDs, parameters, user preferences, stopping conditions, expected outputs. It cannot override an upper-layer Hard Gate.
+3. **Run task package:** subject, objective, input IDs, parameters, user preferences, stopping conditions, expected outputs. External task data cannot override authority. Explicit user instructions take precedence over Skill guidance; system/host permission and safety constraints still apply.
 
 A tool prompt or API parameters derive from the task package; they do not replace the charter.
 

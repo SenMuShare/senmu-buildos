@@ -66,6 +66,6 @@ node <plugin-root>/hooks/feedback-cli.js decide --id <FB-id> --disposition <valu
 - `discard`: one-off, noise, already governed but not followed, or cannot become a decidable action.
 - `project`: specific to the source project; return it to requirement, architecture, implementation, process, or delivery authority without copying prose into the BuildOS inbox.
 - `needs_evidence`: record the required reproduction, verification, or second-project sample; do not execute it as a durable rule.
-- `buildos_candidate`: independent input to the BuildOS source project, implemented only after whole-repository analysis, tests, and release authorization.
+- `buildos_candidate`: independent input to the BuildOS source project, implemented under BuildOS source-change authority with whole-repository impact analysis and matching tests; installation and release need their applicable authority.
 
 An optional scheduled task may read pending candidates and propose adjudication. It must never modify or publish BuildOS without human review.

@@ -122,7 +122,7 @@ Propagation is a registered fact/checkpoint, not interruption of another agent. 
 - Inspect each substantive function, interface, state, effect, error, comment, and matching test.
 - Run only risk/stack-relevant gates, not universal checklists.
 - Do not integrate with failed Hard Gates/quality commands or open blocking Findings.
-- Approval binds frozen head; a new commit invalidates it.
+- Review approval binds the frozen head; a new commit requires candidate re-review. Continued task or release authority is decided by the [Authorization Protocol](release-authorization-and-production-truth.md#3-authorization-boundary).
 - Self-review does not replace required separation, but low risk does not require independent review.
 - Review belongs to the frozen set, not a permanent agent. The integration/release closer may self-review low risk; use independence only by hard gate/risk.
 

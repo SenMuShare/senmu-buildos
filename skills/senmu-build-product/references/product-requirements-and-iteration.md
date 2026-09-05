@@ -33,7 +33,7 @@ Public README, website, store listing, and repository description are current pr
 
 ## 2. Template Use
 
-After choosing to create an artifact, copy its template and:
+After choosing to create an artifact, follow the user's requested format. For a complete template, retain sections and mark genuinely irrelevant content N/A; missing facts remain unknown. Otherwise copy its template and apply these defaults:
 
 1. retain enough required content to identify the artifact, scope, and result; required does not mean every task needs the artifact;
 2. retain optional content only when the product, change, ambiguity, or risk needs it;
@@ -67,7 +67,7 @@ Each version in development has one PRD that removes material ambiguity for Prod
 
 Maintain one version requirement/defect list in the PRD or equivalent owner, not one per item, agent, or branch. Each entry needs type, target/acceptance, result state, and implementation/verification evidence or disposition. Use project states, or concise states distinguishing pending, analyzed, implementing, implemented-unverified, verified, and excluded. Execution steps remain in the task owner.
 
-A field, copy, or local behavior change may need only version, change, and acceptance. Expand template areas only for actual workflow, state, permission, billing, data, compliance, or release-unit risk. A fix that restores the current specification changes code/tests, not the PRD.
+A field, copy, or local behavior change may need only version, change, and acceptance. By default expand template areas for actual workflow, state, permission, billing, data, compliance, or release-unit risk. A fix that restores the current specification changes code/tests, not the PRD.
 
 When the owner says a feature is no longer wanted, should be deleted, cancelled, or permanently removed, default to **permanent retirement**: no user, system, or external caller can trigger it. Acceptance states replacement behavior and historical-data read/migration/compliance boundaries. Treat hiding, pausing, gradual disablement, or retained rollback/compatibility as the goal only when explicitly requested, with scope and exit conditions. Permanent retirement does not authorize destruction of business data, audit records, or rollback evidence.
 

@@ -42,7 +42,7 @@ Keep existing numbered Chinese paths, `inputs`, `staging`, `outputs`, or `receip
 - `governance/PROJECT_MAP.md` or equivalent: routes owners, state sources, commands, release units, legacy boundaries without copied bodies or current mutable state.
 - Project agents get a register and sole definition only when actually enabled. Skill `agents/openai.yaml` is not a business agent.
 
-Runtime evidence and the nearest active domain owner determine project facts. Explicit project overrides beat BuildOS defaults. Ask the user when freshness is unknown, several owners conflict, or an override would weaken a non-negotiable Hard Gate.
+Resolve project facts, precedence, freshness, and unresolved decisions through [Standards Discovery](project-standard-discovery-and-on-demand-loading.md#5-conditional-loading). Keep this map a route to the current owner rather than a copy of its decisions.
 
 ## 4. Domain Owners
 

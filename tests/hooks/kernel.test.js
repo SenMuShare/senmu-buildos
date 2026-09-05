@@ -42,7 +42,8 @@ test('SessionStart kernel stays short and preserves core boundaries', () => {
   assert.match(context, /not user requests/i);
   assert.match(context, /expose no IDs/);
   assert.doesNotMatch(context, /BuildOS feedback candidate:/);
-  assert.match(context, /never claim unverified\/undeployed\/unpublished/);
+  assert.match(context, /Close requested scope/);
+  assert.match(context, /report only proven success/);
 });
 
 test('SessionStart identifies the exact installed internal snapshot', () => {

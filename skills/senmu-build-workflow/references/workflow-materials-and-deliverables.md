@@ -40,7 +40,7 @@ For login, secrets, codes, payment, approval, account ownership, or human-only i
 - Present only the current human step: where to open, field to identify, valid input boundary, expected result, return signal, and failure stop.
 - Users enter secrets, passwords, cookies, codes, and payment data directly in trusted interfaces—not chat, logs, Git, screenshots, or client code. The agent checks redacted state and outcomes.
 - Save verifiable checkpoints. On recovery, read actual state first; retries must be idempotent or disclose new side effects.
-- Before deletion, payment, review submission, notification, production switch, or another irreversible action, show object, impact, and final confirmation. Preparation is not execution authority.
+- Before deletion, payment, review submission, notification, production switch, or another irreversible action, verify that existing authority covers its object, content, impact, and scope. If it does, proceed through the authorized entrypoint; ask only for an uncovered decision after preparing a concrete result. Preparation alone is not execution authority; required host permissions and human-only steps still apply.
 - Reuse an existing native guide, CLI, or platform process and fill only missing boundaries; do not create a second durable owner.
 
 This section owns guide design, not routine execution. To follow an existing reliable setup once, use its project entrypoint. Load Workflow only to repair missing entrypoints, unrecoverable steps, unclear secret handling, or irreversible confirmation gaps.

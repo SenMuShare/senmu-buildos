@@ -45,6 +45,6 @@ Read [Design Library Index](design-library/INDEX.md) only when the reference is 
 
 ## 5. Verification and Ownership
 
-Compare the implementation at target viewports with real content and key states. Check hierarchy, proportions, wrapping, density, crop, responsiveness, and interaction feedback. Static code, one screenshot, or component presence does not establish completion.
+For implemented reconstruction, compare affected target viewports with real content and key states: hierarchy, proportions, wrapping, density, crop, responsiveness, and interaction feedback. Static code, one screenshot, or component presence cannot establish interactive behavior. Direction-only analysis may finish with observed evidence, implementable decisions, and explicit limits; it does not require building a prototype.
 
 Reference analysis does not become the design owner. Keep one-off results in the task. Write only approved, stable cross-page rules into the existing design system, tokens, component standard, or registered owner. Create a minimum design baseline only when no owner exists and durable need is confirmed.
