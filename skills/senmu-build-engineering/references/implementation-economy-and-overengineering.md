@@ -14,10 +14,12 @@ Understand the real requirement, call path, data, and failure semantics, then fi
 
 Semantic fit and risk gates precede cost at every level. Existing availability alone does not qualify a candidate.
 
+Before coding, identify the approved outcome, existing owner, and real variation/reuse pressure. Usually this is a brief inspection and implementation decision, not another architecture document. Shared business behavior across pages should have one owner for state transitions, requests, and recovery; extracting JSX alone does not remove duplicated orchestration. An approved second provider is sufficient evidence for a small application-owned contract and provider adapters. Prefer the provider's supported SDK inside its adapter; normalize only required inputs, outputs, errors, and cancellation. Do not build speculative plugin infrastructure.
+
 ## 2. Smallest Correct Implementation
 
 - Optimize for the smallest correct change satisfying approved requirements and quality attributes—not fewest lines, tests, or files.
-- Prefer deleting obsolete branches, merging duplicate owners, shortening call chains, and extending current responsibilities. Before deletion, close behavior, consumers, data, and compatibility boundaries.
+- Prefer deleting obsolete branches, merging duplicate owners, shortening call chains, and extending current responsibilities. Trace consumers, behavior, data and compatibility before deletion; remove superseded code and its unused wiring in the same change when verified safe. If a consumer remains uncertain, record the concrete dependency in the existing debt owner rather than leave an unexplained competing path.
 - Fix the source that manufactures a bug and inspect equivalent call paths; do not wrap symptoms in another patch or copy a “new version.”
 - Quality words such as perfect, long-term, general, or must not affect anything constrain results but do not expand scope. Without an approved roadmap, real consumer/second use case, proven bottleneck, or explicit replacement/isolation/reuse/test pressure, do not add a platform, abstraction, plugin/rule system, general DSL, configuration surface, compatibility mode, placeholder module, or unplanned feature. Judge one-implementation interfaces, one-product factories, forwarding wrappers, and dynamic frameworks for static configuration by the same evidence.
 - If the user says a proposal is excessive or too heavy, stop expanding and return to the minimum approved result. Remove unauthorized parts while retaining protections required for security, privacy, permissions, payments, data, law, irreversible actions, release integrity, and approved compatibility; do not defend the abandoned design.

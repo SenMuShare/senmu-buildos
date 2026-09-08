@@ -119,20 +119,11 @@ When project rules and Senmu BuildOS differ:
 
 ## 8. Executable-Contract Handoff
 
-Durable repetitive production, release, data-processing, content-generation, or material-processing chains need more than a human-readable SOP. After repeated agent rework or owner correction on the same chain, hand project rules over as an executable contract.
+Use executable contracts for repeatable, deterministic boundaries that benefit from enforcement: data ownership, external effects, artifact identity, compatibility, and recoverable production state. Repeated rework first calls for a cause/owner check; it does not automatically justify another schema, validator, approval, or CI stage.
 
-Apply the same principle to source quality and architecture boundaries: use a short AI entrypoint to route to authority; express machine facts through architecture contracts, debt registers, ecosystem-standard configuration, and one quality command; reuse that contract locally, before commit, and in CI.
+Reuse the project's existing command, configuration and evidence owner. Add only missing elements required by the actual chain: an entrypoint, authoritative inputs, side-effect boundaries, observable result, and recovery when needed. A code-quality or design decision may be better served by a working shared implementation, a representative example, and one focused behavior check. Do not require ordinary component reuse or local refactoring to acquire a machine-readable policy.
 
-The minimum handoff includes:
-
-- one public entrypoint or clear project-type routing entrypoint;
-- one machine-readable policy/config/schema recording the current standard and version;
-- entry scripts, database/ledger, intermediate manifest, or release plan carrying that policy/config/schema ID;
-- one doctor or validator command checking consistency among entrypoint, configuration, scripts, ledgers, and artifact fields;
-- for POCs, the policy also registers one `POC_ROOT`, `tracking_mode`, retention level, backup strategy, and forbidden destinations; the validator tests physical ownership from an external-worktree counterexample and scans historical residue;
-- one legacy rule stating when old scripts, caches, artifacts, demos, and releases are historical-only and cannot seed new work by default.
-
-Only with these elements has a rule moved from chat/document memory into a project capability that later agents can execute reliably.
+For formal release, Delivery owns the frozen candidate and resumable release driver; for business production, Workflow owns task/run contracts. Project checks that those owners are discoverable and non-conflicting. A POC uses the existing declared experiment/recovery boundary, not a new universal document kit. Legacy entrypoints receive a concrete retirement or compatibility disposition at their owner.
 
 ## 9. Anti-Bloat Maintenance
 

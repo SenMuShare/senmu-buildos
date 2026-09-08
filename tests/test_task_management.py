@@ -678,6 +678,42 @@ class ProjectGovernanceScaffoldTests(unittest.TestCase):
             self.assertEqual(runtime_validation["maximum_unverified_claim"], "structural_routing_prepared")
             self.assertEqual(len(runtime_validation["scenarios"]), 3)
 
+    def test_assessor_finds_nested_overrides_and_reports_coverage_without_writes(self):
+        with tempfile.TemporaryDirectory() as temporary_root:
+            root = Path(temporary_root)
+            fixtures = {
+                "AGENTS.md": "root", "frontend/AGENTS.md": "frontend",
+                "frontend/AGENTS.override.md": "override",
+                "frontend/deep/AGENTS.md": "beyond depth",
+                "node_modules/pkg/AGENTS.md": "third party",
+                "archive/AGENTS.md": "historical",
+                ".worktrees/active/AGENTS.md": "separate root",
+            }
+            for name, body in fixtures.items():
+                path = root / name
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text(body)
+            before = {p.relative_to(root).as_posix(): p.read_bytes() for p in root.rglob("*") if p.is_file()}
+            def scan():
+                result = subprocess.run(
+                    ["python3", str(ASSESS), "--root", str(root), "--max-depth", "1"],
+                    capture_output=True, text=True, check=True,
+                )
+                return json.loads(result.stdout)
+            report = scan()
+            review = report["instruction_layering_review"]
+            self.assertEqual(set(review["entrypoints"]), {"AGENTS.md", "frontend/AGENTS.md", "frontend/AGENTS.override.md"})
+            self.assertEqual(review["coverage"]["depth_limited_directories"], ["frontend/deep/"])
+            self.assertEqual(report["write_operations"], [])
+            self.assertEqual(before, {p.relative_to(root).as_posix(): p.read_bytes() for p in root.rglob("*") if p.is_file()})
+            original = {item["path"]: item for item in review["inventory"]}
+            self.assertEqual(original["frontend/AGENTS.override.md"]["scope"], "frontend")
+            self.assertEqual(original["frontend/AGENTS.override.md"]["kind"], "override")
+            (root / "frontend/AGENTS.md").write_text("changed instruction")
+            updated = {item["path"]: item for item in scan()["instruction_layering_review"]["inventory"]}
+            self.assertNotEqual(original["frontend/AGENTS.md"]["sha256"], updated["frontend/AGENTS.md"]["sha256"])
+            self.assertEqual(original["AGENTS.md"], updated["AGENTS.md"])
+
     def test_initializer_can_resume_its_own_draft(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_root:
             target = Path(temporary_root) / "draft"

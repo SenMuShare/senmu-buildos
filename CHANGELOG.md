@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## [2.6.4] - 2026-09-08
+
+### Changed
+
+- Calibrated external Skill and engineering-knowledge intake against current model and host guidance. BuildOS now preserves useful domain techniques while rejecting obsolete prompting rituals, redundant confirmation, fixed multi-agent routines, and unsupported model-wide performance claims.
+- Clarified verification evidence reuse across Engineering and Delivery. Valid results now carry forward when their covered inputs remain equivalent; later stages run only checks invalidated by changes plus independent artifact, environment, runtime, and rollback obligations.
+
 ## [2.6.3] - 2026-09-05
 
 ### Changed

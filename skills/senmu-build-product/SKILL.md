@@ -20,7 +20,7 @@ Read a [User Requirements](assets/product-governance/USER_REQUIREMENTS.template.
 - Assign work to the current version, a successor, or an optional backlog. Infer when facts suffice; ask only if placement changes scope or timing. Never infer line roles from version numbers.
 - Product owns cross-page language. Store terminology, voice, and platform differences in an existing product/design owner. One-off wording that preserves meaning stays with implementation.
 - Templates structure chosen artifacts only; remove inapplicable optional sections and avoid empty ledgers.
-- Backlogs are optional. Version PRDs define development/acceptance; product specifications store current facts. Keep status with requirements.
+- Version PRDs own approved scope/acceptance; implementation choices preserve them. Reconcile material deviations before changing behavior. Mid-task feedback steers the open scope unless the user replaces it; retain unfinished requirements in the existing task owner. Backlogs are optional.
 - For high investment, weak evidence, or uncertainty, compare doing nothing, reuse/buy, and the smallest solution. Avoid full discovery for cheap reversible changes.
 - Record activation, persistence, failure, exit, switching, draft, and recovery only when acceptance changes. Presentation-only changes do not alter the PRD.
 - Keep requirement lifecycle, iteration commitment, implementation completion, acceptance, and release distinct.

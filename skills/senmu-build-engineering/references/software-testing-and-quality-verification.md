@@ -78,9 +78,17 @@ For small changes, run targeted tests/checks. Cross-module, public interface, sc
 
 First answer whether the original issue is fixed: close root cause with an original-path or production-shaped test that fails before and passes after. Then run impacted regressions, and run complete project gates only on a frozen candidate. Many generic regressions cannot replace the key dependency shape/current main path; a passing key path cannot replace its impacted regressions.
 
-Test timing follows the development batch, not user-message boundaries. During an open batch, after each item run only low-cost checks needed for credibility and early direct-regression detection—not full gates. When the owner confirms test/closeout or scope freezes, run matching builds, impacted regressions, and declared full gates once over the complete change. Reuse evidence at release while the candidate is unchanged. After code/config/schema/behavior changes, rerun affected checks and any full gate required by project entrypoints.
+Test timing follows the development batch, not user-message boundaries. During an open batch, after each item run only low-cost checks needed for credibility and early direct-regression detection—not full gates. When the owner confirms test/closeout or scope freezes, run matching builds, impacted regressions, and declared full gates once over the complete change. At closeout and release, reconcile existing evidence under the reuse contract below; a new stage, session or commit does not by itself require rerunning every check. Honor currently required project entrypoints; when they duplicate proven work, repair the owning strategy/entrypoint under change authority rather than silently skipping it.
 
 Safety, data, authorization, billing, production, and irreversible boundaries receive checks with the first affected slice, not first at batch end. Presentation-equivalent edits may form one interaction batch; once semantics, hierarchy, operation, state, accessibility, or acceptance changes, reassess impact and batch.
+
+### Evidence Reuse and Handoff
+
+Engineering owns what a check proves and when its evidence expires. Before repeating it, compare its covered behavior and relevant inputs: source and test code, resolved dependencies/toolchain, configuration, commands/options, fixtures/data and execution environment. A passing receipt is reusable only when those inputs remain equivalent, the result is available, and no unresolved failure or external-state drift undermines it. A matching commit alone does not prove equivalence; a different commit alone does not invalidate unrelated evidence.
+
+After a change, rerun checks for changed inputs and dependent behavior; retain unaffected results. Unknown impact warrants enough checking to resolve that uncertainty, not an automatic whole-suite rerun. External service health and other time-sensitive evidence need current observation. Reuse a build only when its relevant inputs and retained output integrity match; local and container builds are not interchangeable merely because both invoke the same command. Missing, altered or untraceable output requires rebuilding the affected artifact.
+
+Use the existing task/CI receipt to identify checked scope, input identity, environment, result, remaining gaps and reuse rationale. Do not require a new ledger, universal fingerprint framework or cache implementation. Delivery receives these facts, maps valid evidence to the current candidate, and checks only unmet release obligations. Renew the candidate-level conclusion after changes without pretending old runs executed on the new commit. Report reused and newly run checks separately; test totals do not establish requirements or visual acceptance.
 
 ## 8. Flaky, Skipped, and Failed Tests
 
@@ -112,3 +120,6 @@ The final report records exact commands, results, failures/skips, environment, g
 3. Add regressions by defect frequency, change frequency, and failure impact.
 4. Consolidate duplicate entrypoints, excessive mocks, and long-lived skips.
 5. Put strategy, commands, and real capabilities in project authority—not CI or chat alone.
+
+
+Acceptance evidence follows approved outcomes through the real entrypoint, including meaningful missing-input and failure states. Test counts and source-string assertions do not prove business acceptance or visual quality. Prefer behavior/contract tests that survive internal refactoring; inspect the rendered affected UI for visual changes. Close the batch against the existing requirement owner, explicitly identifying omissions or changed behavior. Do not silently redefine acceptance to match the implementation. A recurring defect is a signal to investigate the shared cause and missing coverage, not an automatic reason to repeat every test after every edit. A later scheduled regression can supplement focused checks, but work awaiting it remains unverified and release obligations still apply.

@@ -13,7 +13,7 @@ Own the governance instance, authority structure, and cross-domain ownership bou
 - Staged established-project takeover: [Project Takeover](references/established-project-takeover-governance.md).
 - Lifecycle, capability composition, done: [Project Practice](references/project-lifecycle-guide.md).
 - Roots, layout, document ownership, maps: [Directories](references/project-directories-and-documentation.md).
-- Discover real standards/on-demand index: [Standards Discovery](references/project-standard-discovery-and-on-demand-loading.md).
+- Discover/maintain effective AGENTS and on-demand standards: [Standards Discovery](references/project-standard-discovery-and-on-demand-loading.md).
 - Create/select/repair cross-stage task state: [Task State](references/task-execution-and-state-management.md).
 - Project situations, handoffs, skill boundaries: [Adoption and Routing](references/project-adoption-handoff-and-scenario-routing.md).
 - Read [Governance Levels](references/governance-levels-and-gates.md) only for an actual G0-G4/gate decision.

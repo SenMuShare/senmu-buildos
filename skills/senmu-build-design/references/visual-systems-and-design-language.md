@@ -49,7 +49,7 @@ Tokens represent roles; do not scatter context-free values through components. D
 
 - Local design: current state, target, concrete changes, verification.
 - New/redesigned page: recommended direction, hierarchy/layout, components, tokens, assets, responsive behavior, key states, prohibited outcomes.
-- Cross-page system: update the existing design owner and state migration scope, compatibility, and verification entrypoint.
+- Cross-page system: update the existing design owner and identify the actual theme/token entrypoint, representative composition, affected states/viewports, migration scope and verification. Engineering owns the implementation; token compliance alone does not establish rendered quality.
 - Another implementer: provide a self-contained specification without copying conversations, external libraries, or hidden intent.
 
 Derive the stack from project facts. Do not prescribe React, Tailwind, a component library, or animation library for visual preference. State the actual capability gap and let Engineering judge compatibility and maintenance.

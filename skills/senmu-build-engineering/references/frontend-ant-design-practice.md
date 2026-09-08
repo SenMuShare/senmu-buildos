@@ -37,7 +37,9 @@ Before adding an ecosystem dependency, verify React/Ant Design compatibility, bu
 - Let the form system own errors, required indicators, help, save, and cancel states.
 - Show pending, processing, success, failure, and retry states for async actions; destructive operations require clear confirmation.
 - A chart answers a concrete trend, comparison, proportion, distribution, or relationship question. Metrics come from business authority, never frontend invention.
-- Wrap only stable repeated business compositions. Keep one-off styles local and theme/CSS overrides scoped.
+- Reuse stable business compositions and their state/request owner; do not duplicate orchestration behind shared-looking dialogs.
+- Find the existing ConfigProvider/theme entrypoint and a representative component before implementation. Use semantic theme tokens and component tokens for shared visual roles; reuse the project token bridge for custom surfaces. Keep one-off layout and legitimate media/chart/brand colors local. Do not create per-page copies of global colors or use a hardcoded-color ban as a substitute for semantic review.
+- Keep overrides scoped and verify the affected rendered states, including supported theme variants when touched. Token adoption alone does not prove good layout or interaction.
 
 ## 5. AI Uses Hybrid Interaction
 

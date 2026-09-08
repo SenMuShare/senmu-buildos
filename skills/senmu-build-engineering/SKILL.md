@@ -5,7 +5,7 @@ description: Govern architecture, engineering contracts, implementation review, 
 
 # Software Engineering
 
-Verify project entrypoints, code, configuration, tests, and commands. Return when project rules suffice; continue for missing, conflicting, changing, or explicitly reviewed engineering contracts.
+Use project rules first; continue for missing, conflicting, changing, or explicitly reviewed engineering contracts.
 
 ## Route by Outcome
 
@@ -28,7 +28,7 @@ Engineering alone handles a reversible, contract-preserving G1 change with one o
 
 ## Core Contract
 
-- Preserve the symptom and call chain; search owners and existing capabilities before expanding scope or building replacements.
+- Preserve approved behavior and the symptom/call chain; locate the existing owner and reuse/variation boundary before coding. Share repeated behavior, use supported frameworks/SDKs, and remove verified obsolete wiring.
 - Implement small changes directly. Create TD/ADR/POC only for durable public-contract, data, infrastructure, or release-boundary changes. Return behavior/acceptance changes to Product.
 - Rerun the original path, then impact-based regressions. Report partial verification if the symptom was not covered. Never weaken types, tests, or security to pass.
 

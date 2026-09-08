@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import re
@@ -323,6 +324,7 @@ def assess_capability_signals(paths: list[Path], root: Path) -> dict[str, Any]:
 def assess(root: Path, max_depth: int, verbose: bool) -> dict[str, Any]:
     excluded: dict[str, list[str]] = defaultdict(list)
     scanned_files: list[Path] = []
+    depth_limited: list[str] = []
     release_roots: set[Path] = {root}
 
     for current, dirnames, filenames in os.walk(root):
@@ -346,6 +348,8 @@ def assess(root: Path, max_depth: int, verbose: bool) -> dict[str, Any]:
                 excluded[reason].append(relative)
             elif depth < max_depth:
                 kept_dirs.append(dirname)
+            else:
+                depth_limited.append(relative)
         dirnames[:] = kept_dirs
 
         for filename in filenames:
@@ -467,11 +471,21 @@ def assess(root: Path, max_depth: int, verbose: bool) -> dict[str, Any]:
     if len(candidates.get("run_state", [])) > 1:
         migration_risks.append("存在多个数据库或运行清单候选；需确认当前库、投影、备份库和各发布单元 owner。")
 
-    agent_entrypoints = sorted({path for path in authority_entrypoints if path.endswith("AGENTS.md")})
+    instruction_files = sorted(
+        (path for path in scanned_files if path.name in {"AGENTS.md", "AGENTS.override.md"}
+         and not path.is_symlink()), key=lambda path: path.as_posix()
+    )
+    agent_entrypoints = [path.relative_to(root).as_posix() for path in instruction_files]
+    instruction_inventory = [{
+        "path": path.relative_to(root).as_posix(),
+        "scope": path.parent.relative_to(root).as_posix(),
+        "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+        "kind": "override" if path.name == "AGENTS.override.md" else "instructions",
+    } for path in instruction_files]
     if agent_entrypoints:
         migration_risks.append(
             "现有 AGENTS.md 必须先做语义去重：保留项目事实、真实命令、权威路径和明确覆盖；"
-            "把已有专业正文压缩为路由；删除与 BuildOS 相同的通用方法；冲突或时效不明项交用户裁决。"
+            "把已有专业正文压缩为路由；删除与 BuildOS 相同的通用方法；冲突或过期项先按现行权威核对；只有未决且影响结果的选择才交用户裁决。"
         )
 
     result: dict[str, Any] = {
@@ -496,6 +510,14 @@ def assess(root: Path, max_depth: int, verbose: bool) -> dict[str, Any]:
         "instruction_layering_review": {
             "status": "semantic_review_required" if agent_entrypoints else "no_agents_entrypoint_found",
             "entrypoints": agent_entrypoints,
+            "inventory": instruction_inventory,
+            "coverage": {
+                "max_depth": max_depth,
+                "depth_limited_directories": sorted(depth_limited),
+                "external_ancestor_and_host_instructions": "not_scanned",
+                "registered_worktrees": "assess_selected_active_root_separately",
+                "selection": "candidate_scopes_require_host_and_authority_confirmation",
+            },
             "baseline": "senmu-buildos_if_adopted",
             "required_actions": [
                 "retain_project_fact_command_path_or_explicit_override",
@@ -503,7 +525,7 @@ def assess(root: Path, max_depth: int, verbose: bool) -> dict[str, Any]:
                 "remove_buildos_duplicate",
                 "replace_unconditional_cross_domain_preload_with_signal_routing",
                 "remove_generic_skill_catalog_from_project_delta",
-                "escalate_conflict_or_staleness_for_user_decision",
+                "reconcile_from_current_authority_then_escalate_unresolved_material_choice",
             ],
             "write_default_agents_template": False,
             "runtime_validation": {

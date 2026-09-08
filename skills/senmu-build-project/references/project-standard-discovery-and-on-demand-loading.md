@@ -75,3 +75,28 @@ Without this independent behavior check, report at most `structural_routing_prep
 Discovery is complete only when evidence/scope are clear; each full rule is in one domain owner or remains an explicit candidate; the short index routes future agents; duplicate, stale, and legacy entrypoints are labeled; and no external example, preference, or one-off state masquerades as a durable standard.
 
 When multiple installed copies expose the same skill, identify the host-selected source and revision before claiming a rule update is active. Source commits, installed snapshots, and already-running sessions are separate states. Repair the owning source; use its authorized install lifecycle rather than editing caches or silently removing another host's installation.
+
+
+## 8. Ongoing Instruction Maintenance
+
+BuildOS owns the method; each project owns its effective instructions and standards. Review on initial adoption, an instruction-affecting BuildOS upgrade, a baseline/worktree promotion that changes instructions, or a demonstrated routing defect. Ordinary implementation reads its applicable entrypoint and continues; it does not trigger a project-wide governance audit.
+
+Run `assess_project_governance.py --root <project>` for a read-only inventory of root/nested AGENTS and overrides, scope, and content fingerprints. Inspect coverage limits and separately assess the registered active worktree; excluded copies are not current authority. Compare changed paths/fingerprints with the prior assessment or Git revision in the existing task owner. A hash change locates review work; it does not establish a defect or effective host precedence. Inspect host/ancestor instructions and referenced policy/standard owners as needed.
+
+Reconcile affected instructions in place: remove stale dynamic state, route to its owner, preserve business constraints and explicit overrides, and eliminate conflicting test/permission defaults in referenced policies as well as AGENTS. For an upgrade with no relevant instruction changes, record no migration needed; never rewrite every project to match a template. During merge/promotion, review instruction diffs against the receiving baseline so an older branch cannot silently restore retired rules.
+
+Use one model-neutral contract for scope, autonomy, reuse, and evidence across supported models. Keep model-specific runtime settings in the host adapter; official prompt examples are tunable guidance, not an instruction to copy every example into every project. Record source/installed revision, affected owners, verification and unresolved behavior in the existing task/log. Do not create a second governance ledger, mandatory nightly job, or universal CI gate. Recheck the three routing scenarios when routing behavior changes; source edits alone do not prove a running session adopted them.
+
+
+### Specialist Coordination and Task Evidence
+
+Project repairs routing and ownership; it does not require every specialist to approve every task. On an affected governance change, resolve only the relevant boundary:
+
+| Owner | Concrete contribution | Project checks |
+| --- | --- | --- |
+| Product | Approved behavior, acceptance, unfinished scope | Implementation choices cannot silently supersede these facts |
+| Engineering | Existing component/service owner, shared state/request logic, SDK/adapter boundary, focused tests | The route reaches actual code/configuration, not only a prose instruction to reuse |
+| Design | Project theme/token entrypoint, representative composition, affected viewport/state expectations | Correct token use and good rendered UI are separate claims |
+| Delivery | Receiving baseline, open batch, candidate identity, reusable verification and release boundary | Instruction changes survive integration; local checks do not invent deployment facts |
+
+Validate with a bounded real project task: trace its entrypoint to the actual implementation and existing acceptance, execute the smallest relevant available check, and record what was read/run, the observable result, and uncovered boundaries. A hypothetical plan is a routing probe, not an executed task. To claim reduced reading, testing, time or cost, compare equivalent task/scope evidence; otherwise report only the observed execution footprint. Keep this evidence in the current task owner, not a permanent per-action scorecard. Source behavior, rendered quality and production success each require their own relevant evidence.

@@ -26,7 +26,9 @@ Document artifact naming/location, retention policy/source (or BuildOS rollback 
 
 ## 3. Testing and Acceptance
 
-Reference impact-matched Engineering evidence and distinguish:
+Accept impact-matched Engineering evidence under its [Evidence Reuse and Handoff](../../senmu-build-engineering/references/software-testing-and-quality-verification.md#evidence-reuse-and-handoff) contract. At preflight, integration, artifact preparation and deployment, map still-valid results to current obligations; changing stages does not reset verification. Run missing or invalidated checks and record gaps in the existing receipt. Artifact contents/platform, target configuration, runtime identity, health and rollback are distinct obligations that development tests cannot discharge. A preflight build may supply artifact preparation only when its inputs and retained outputs satisfy that contract; packaging still verifies the resulting package/image. Do not add caching machinery merely to express this policy.
+
+Distinguish:
 
 - unit/component tests for functions, components, boundary states;
 - API/business tests for authorization, billing, isolation, failures;

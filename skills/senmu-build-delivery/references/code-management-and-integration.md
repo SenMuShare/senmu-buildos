@@ -47,6 +47,7 @@ One independent Change Unit uses one short branch; it belongs to the unit, not a
 
 - Inspect branch, short status, recent commits first.
 - Preserve merge strategy; explain divergence/conflict instead of forcing.
+- When receiving changes to AGENTS, overrides or referenced policies, compare them with the receiving baseline and preserve current instruction ownership. Reconcile stale rules through Project only where needed; an ordinary code merge does not trigger a full Markdown audit.
 - Repair authority excludes merge, Tag, push, release.
 - User-visible behavior must trace to approved prior behavior, current Product decision, and candidate reality. PRD/code/tests agreeing on one branch does not self-authorize change.
 - The implementer develops/checkpoints during an open batch, freezes and verifies on test/closeout request, and the agent receiving explicit release intent closes that release. No permanent agent role.
