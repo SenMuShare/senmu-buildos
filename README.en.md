@@ -8,7 +8,7 @@
   <a href="README.md">简体中文</a> · <a href="README.en.md">English</a> · <a href="README.ja.md">日本語</a>
 </p>
 
-<!-- product-surface-review: 2.6.4 -->
+<!-- product-surface-review: 2.7.0 -->
 
 <p align="center">
   <a href="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml"><img src="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml/badge.svg" alt="Validate Senmu BuildOS"></a>
@@ -225,7 +225,9 @@ BuildOS does not promise a fixed percentage. It reduces avoidable cost by preven
 
 ## Install, update, and remove
 
-The current formal release is Senmu BuildOS `v2.6.4`. It supports Codex, Claude Code, a Doubao adapter, a WorkBuddy adapter, and a ZCode adapter. Install the plugin as one unit; the eight Skills do not need separate downloads. Professional English is used for both the normative runtime specifications and all active Reference paths, while users can continue to work in Chinese or any other requested output language. When comparing external Skills, BuildOS calibrates them to the current model and host, retaining useful domain methods without copying obsolete process. Development and Delivery reuse verification evidence that remains valid, then add only checks invalidated by a change and independent artifact, environment, or runtime facts.
+The current formal release is Senmu BuildOS `v2.7.0`. It supports Codex, Claude Code, a Doubao adapter, a WorkBuddy adapter, and a ZCode adapter. Install the plugin as one unit; the eight Skills do not need separate downloads. Professional English is used for both the normative runtime specifications and all active Reference paths, while users can continue to work in Chinese or any other requested output language. When comparing external Skills, BuildOS calibrates them to the current model and host, retaining useful domain methods without copying obsolete process. Development and Delivery reuse verification evidence that remains valid, then add only checks invalidated by a change and independent artifact, environment, or runtime facts.
+
+This release consolidates authorization, task continuity, technical baselines and repair routing, and adds bounded cleanup planning with a macOS Trash adapter. Native recovery and model behavior remain unverified; the new cleanup helper does not support Windows execution. See [release notes](RELEASE_NOTES.md).
 
 ### Update Codex
 

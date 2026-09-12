@@ -2,6 +2,22 @@
 
 ## Unreleased
 
+## [2.7.0] - 2026-09-12
+
+### Added
+
+- Added a bounded local cleanup planner and macOS native Trash adapter with descendant protection, metadata revalidation and per-item partial-outcome receipts. Unsupported platforms fail closed without permanent-delete fallback.
+
+### Changed
+
+- Consolidated authorized task continuation, instruction ownership, technical baselines, read-only learning and project instruction maintenance.
+- Clarified resource retention at task boundaries, open/sealed/integrated repair routing, existing evidence reuse and public distribution checks.
+- Kept hook and bootstrap adapter contracts aligned within existing context budgets.
+
+### Validation scope
+
+- Package, Python, Hook and publication checks pass. Native Trash recovery and model behavior evaluation remain pending; Windows execution is not supported by the new cleanup helper.
+
 ## [2.6.4] - 2026-09-08
 
 ### Changed

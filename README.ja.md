@@ -8,7 +8,7 @@
   <a href="README.md">简体中文</a> · <a href="README.en.md">English</a> · <a href="README.ja.md">日本語</a>
 </p>
 
-<!-- product-surface-review: 2.6.4 -->
+<!-- product-surface-review: 2.7.0 -->
 
 <p align="center">
   <a href="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml"><img src="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml/badge.svg" alt="Validate Senmu BuildOS"></a>
@@ -225,7 +225,9 @@ BuildOS は固定割合を約束しません。不要な機能、重複コード
 
 ## インストール、更新、削除
 
-Senmu BuildOS の現行正式リリースは `v2.6.4` です。Codex、Claude Code、豆包アダプター、WorkBuddy アダプター、ZCode アダプターをサポートします。8 Skill は個別ではなく、1 つのプラグインとしてインストールします。実行規範本文と active Reference パスは専門的な英語に統一し、ユーザーは引き続き中国語や希望する言語で依頼し、その言語の成果物を受け取れます。外部 Skill を対比する際は現行のモデルとホストに合わせて有用な領域手法を採用し、古い手順はそのまま持ち込みません。開発とデリバリーでは有効な検証証拠を再利用し、変更で無効になった確認と、成果物、環境、実行状態など独立した事実だけを追加で確認します。
+Senmu BuildOS の現行正式リリースは `v2.7.0` です。Codex、Claude Code、豆包アダプター、WorkBuddy アダプター、ZCode アダプターをサポートします。8 Skill は個別ではなく、1 つのプラグインとしてインストールします。実行規範本文と active Reference パスは専門的な英語に統一し、ユーザーは引き続き中国語や希望する言語で依頼し、その言語の成果物を受け取れます。外部 Skill を対比する際は現行のモデルとホストに合わせて有用な領域手法を採用し、古い手順はそのまま持ち込みません。開発とデリバリーでは有効な検証証拠を再利用し、変更で無効になった確認と、成果物、環境、実行状態など独立した事実だけを追加で確認します。
+
+本版では権限、タスク継続、技術基準、修正作業面の規則を統一し、範囲を限定した清理計画と macOS のゴミ箱連携を追加しました。実機での復元とモデル動作は未検証で、新しい清理ツールは Windows での実行に対応していません。[更新履歴](RELEASE_NOTES.md)をご覧ください。
 
 ### Codex の更新
 
