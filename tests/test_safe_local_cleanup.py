@@ -1,6 +1,7 @@
 import importlib.util
 from pathlib import Path
 import tempfile
+import subprocess
 import unittest
 from unittest.mock import patch
 
@@ -163,3 +164,60 @@ class CleanupTests(unittest.TestCase):
         self.assertIn('NSURLVolumeIsLocalKey', m.JXA)
         self.assertNotIn('removeItem', m.JXA)
         self.assertNotIn('unlink', FILE.read_text().split('def native_trash')[1].split('def execute')[0].replace('remove/unlink/purge', ''))
+
+    def init_git(self, path, bare=False):
+        subprocess.run(['git', 'init', '-q'] + (['--bare'] if bare else []) + [str(path)], check=True)
+
+    def test_bare_storage_target_ancestor_and_descendant_rejected(self):
+        repo = self.root / 'cache' / 'repository'
+        self.init_git(repo, bare=True)
+        for target in (repo, repo.parent, repo / 'objects'):
+            with self.subTest(target=target), self.assertRaises(m.Rejected):
+                m.execute(self.plan(target), True, self.move)
+        # Choosing a subdirectory inside metadata as the project root cannot bypass protection.
+        with self.assertRaises(m.Rejected):
+            m.make_plan(str(repo / 'objects'), [str(repo / 'objects' / 'info')], 'fixture')
+        self.assertEqual(self.calls, [])
+
+    def test_normal_cache_in_current_git_worktree_and_head_file_allowed(self):
+        self.init_git(self.root)
+        f = self.file('cache/HEAD')
+        self.assertTrue(m.execute(self.plan(f.parent), True, self.move)['complete'])
+
+    def test_git_file_worktree_target_and_parent_rejected(self):
+        repository = self.base / 'source'
+        self.init_git(repository)
+        subprocess.run(['git', '-C', str(repository), '-c', 'user.name=Fixture',
+                        '-c', 'user.email=fixture@example.invalid', 'commit', '--allow-empty', '-qm', 'fixture'], check=True)
+        target = self.root / 'cache' / 'linked'
+        subprocess.run(['git', '-C', str(repository), 'worktree', 'add', '--detach', str(target)], check=True, capture_output=True)
+        for p in (target, target.parent, target / '.git'):
+            with self.assertRaises(m.Rejected):
+                m.execute(self.plan(p), True, self.move)
+        self.assertEqual(self.calls, [])
+
+    def test_plan_then_create_bare_repository_calls_no_backend(self):
+        f = self.file()
+        plan = self.plan(f.parent)
+        self.init_git(f.parent / 'new-bare', bare=True)
+        with self.assertRaises(m.Rejected):
+            m.execute(plan, True, self.move)
+        self.assertEqual(self.calls, [])
+
+    def test_git_probe_failure_or_timeout_fails_closed(self):
+        repo = self.root / 'bare'
+        self.init_git(repo, bare=True)
+        for error in (FileNotFoundError(), subprocess.TimeoutExpired('git', 2)):
+            with patch.object(m.subprocess, 'run', side_effect=error), self.assertRaises(m.Rejected):
+                m.execute(self.plan(repo), True, self.move)
+        self.assertEqual(self.calls, [])
+
+    def test_damaged_git_storage_is_retained(self):
+        repo = self.root / 'damaged'
+        repo.mkdir()
+        (repo / 'HEAD').write_text('not a valid git head')
+        (repo / 'objects').mkdir()
+        (repo / 'refs').mkdir()
+        with self.assertRaises(m.Rejected):
+            self.plan(repo)
+        self.assertEqual(self.calls, [])

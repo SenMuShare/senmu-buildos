@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "repository": "SenMuShare/senmu-buildos",
-  "reviewed_for_version": "2.7.0",
+  "reviewed_for_version": "2.7.1",
   "description": "AI-native BuildOS for Codex, Claude Code, Doubao, WorkBuddy and ZCode: product discovery, UI/UX design, software engineering, context-aware workflows, testing, Git and verifiable releases.",
   "topics": [
     "agent-skills",
@@ -27,12 +27,13 @@
   ],
   "readme_review": {
     "updated_sections": [
-      "install-update-remove"
+      "install-update-remove",
+      "cleanup-safety-and-quality-defaults"
     ],
     "summary": {
-      "zh": "本版统一授权与任务衔接、技术基线和返修工作面规则，新增有界本地清理盘点及 macOS 垃圾桶入口。真实回收恢复和模型行为仍待验证；新清理工具不支持 Windows 执行。详见 [用户更新日志](RELEASE_NOTES.md)。",
-      "en": "This release consolidates authorization, task continuity, technical baselines and repair routing, and adds bounded cleanup planning with a macOS Trash adapter. Native recovery and model behavior remain unverified; the new cleanup helper does not support Windows execution. See [release notes](RELEASE_NOTES.md).",
-      "ja": "本版では権限、タスク継続、技術基準、修正作業面の規則を統一し、範囲を限定した清理計画と macOS のゴミ箱連携を追加しました。実機での復元とモデル動作は未検証で、新しい清理ツールは Windows での実行に対応していません。[更新履歴](RELEASE_NOTES.md)をご覧ください。"
+      "zh": "本版补齐裸 Git 仓库的本地清理保护，并统一工程路由与新项目质量检查默认。真实回收恢复和模型行为仍待验证；新清理工具不支持 Windows 执行。详见 [用户更新日志](RELEASE_NOTES.md)。",
+      "en": "This release closes bare-Git protection in local cleanup planning and aligns engineering routing with generated quality defaults. Native recovery and model behavior remain unverified; the cleanup helper does not support Windows execution. See [release notes](RELEASE_NOTES.md).",
+      "ja": "本版ではローカル清理計画で裸 Git リポジトリを保護し、Engineering のルーティングと生成される品質既定を整合させました。実機での復元とモデル動作は未検証で、清理ツールは Windows での実行に対応していません。[更新履歴](RELEASE_NOTES.md)をご覧ください。"
     }
   },
   "readmes": {

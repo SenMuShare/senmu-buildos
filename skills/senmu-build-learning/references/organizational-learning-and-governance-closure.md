@@ -72,7 +72,7 @@ Project's [Instruction Maintenance](../../senmu-build-project/references/project
 
 When a project repeatedly reverts after fixes, agents drift despite documentation, or legacy paths/artifacts become current defaults, do not merely add SOP prose or human review. Check for a missing executable contract.
 
-An executable contract is the minimum set of project facts that later agents can discover, execute, and validate mechanically:
+Use this method only for a real deterministic runtime contract with material residual risk that existing tools/state owners cannot adequately carry. Ordinary repeated component implementation first needs its shared implementation, discovery route or example repaired. Reuse existing owners and add only missing, necessary elements from the following options, not a mandatory bundle:
 
 - one public or explicitly routed entrypoint: command, script, server API, release pipeline, or task template;
 - machine-readable policy/config/schema, not only a long SOP;
@@ -81,7 +81,7 @@ An executable contract is the minimum set of project facts that later agents can
 - a legacy boundary identifying old artifacts as history, behavior/style reference, or rollback evidence—not templates for new work;
 - invalidation rules for caches and derivatives so updated source does not coexist with stale formal output.
 
-Converge in this order:
+For the elements justified above, converge in this order; skip already satisfied or inapplicable steps:
 
 1. Trace the real drift path: entrypoint, configuration, script constants, ledger fields, cache, old artifact, and validator inputs.
 2. Remove or quarantine old entrypoints that induce regression. If retained, label them legacy/demo in names, docs, and gates.

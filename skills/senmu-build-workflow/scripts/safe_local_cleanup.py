@@ -34,6 +34,42 @@ def checked_path(value):
     return p
 
 
+def git_storage(path, deadline):
+    """Identify Git storage itself, not membership in an enclosing worktree.
+
+    HEAD alone is ordinary data. Probe plausible storage using Git's explicit
+    path resolver, never upward repository discovery or executable config.
+    """
+    if not stat.S_ISDIR(path.lstat().st_mode):
+        return False
+    markers = {}
+    for name in ('HEAD', 'objects', 'refs', 'commondir'):
+        try:
+            markers[name] = (path / name).lstat()
+        except FileNotFoundError:
+            markers[name] = None
+    plausible = markers['HEAD'] and ((markers['objects'] and markers['refs']) or markers['commondir'])
+    if not plausible:
+        return False
+    if any(value and stat.S_ISLNK(value.st_mode) for value in markers.values()):
+        raise Rejected('redirected Git storage marker')
+    remaining = deadline - time.monotonic()
+    if remaining <= 0:
+        raise Rejected('incomplete repository inspection')
+    try:
+        result = subprocess.run(
+            ['git', 'rev-parse', '--resolve-git-dir', str(path)],
+            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+            timeout=min(remaining, 2), check=False,
+            env={k: v for k, v in os.environ.items() if not k.startswith('GIT_')})
+    except (OSError, subprocess.TimeoutExpired) as error:
+        raise Rejected('repository inspection unavailable') from error
+    if result.returncode != 0:
+        # A partial/damaged metadata layout is not proven disposable either.
+        raise Rejected('unresolved repository-like storage')
+    return True
+
+
 def snapshot(path):
     """No contents read. Any uninspectable descendant rejects the entire target."""
     rows, total = [], 0
@@ -45,7 +81,7 @@ def snapshot(path):
         if len(rows) >= MAX_ITEMS or depth > MAX_DEPTH or time.monotonic() - started > MAX_SECONDS:
             raise Rejected('incomplete bounded scan')
         s = p.lstat()
-        if p.name == '.git' or s.st_dev != device or os.path.ismount(p):
+        if p.name == '.git' or s.st_dev != device or os.path.ismount(p) or git_storage(p, started + MAX_SECONDS):
             raise Rejected('repository or mount boundary')
         if stat.S_ISLNK(s.st_mode) or getattr(s, 'st_file_attributes', 0) & 1024:
             raise Rejected('link/reparse descendant')
@@ -72,6 +108,10 @@ def snapshot(path):
 
 def make_plan(root, targets, authorization):
     root = checked_path(root)
+    deadline = time.monotonic() + MAX_SECONDS
+    for ancestor in (root, *root.parents):
+        if ancestor.name == '.git' or git_storage(ancestor, deadline):
+            raise Rejected('project root is inside protected Git storage')
     if root == Path('/') or root == Path.home() or not root.is_dir():
         raise Rejected('unsafe project root')
     if not authorization.strip() or not 0 < len(targets) <= MAX_TARGETS:
@@ -85,7 +125,7 @@ def make_plan(root, targets, authorization):
         for ancestor in p.parents:
             if ancestor == root:
                 break
-            if (ancestor / '.git').exists() or (ancestor / '.git').is_symlink() or os.path.ismount(ancestor):
+            if (ancestor / '.git').exists() or (ancestor / '.git').is_symlink() or os.path.ismount(ancestor) or git_storage(ancestor, deadline):
                 raise Rejected('nested repository or mount ancestor')
         if p.lstat().st_dev != root.lstat().st_dev:
             raise Rejected('cross-volume target')

@@ -23,6 +23,25 @@ class ProjectGovernanceScaffoldTests(unittest.TestCase):
             "--profile", profile, *extra,
         )
 
+    def test_generated_quality_policy_preserves_phase_and_explicit_review_scope(self):
+        with tempfile.TemporaryDirectory() as temp:
+            target = Path(temp) / 'project'
+            result = self.initialize(target, 'software')
+            self.assertEqual(result.returncode, 0, result.stderr or result.stdout)
+            owner = target / 'engineering/CODE_QUALITY.md'
+            text = owner.read_text()
+            self.assertIn('开发切片先做影响分析', text)
+            self.assertIn('在集成／发布收口运行项目声明的完整质量', text)
+            self.assertIn('首个受影响切片验证', text)
+            self.assertIn('每个准备进入集成基线的代码变更集', text)
+            self.assertIn('项目明确批准的更严格政策继续执行', text)
+            self.assertNotIn('G3：运行完整质量命令、测试和构建，CI 必须通过。', text)
+            # Reinitialization must not downgrade an established strict project owner.
+            strict = text + '\n项目明确政策：所有集成必须经独立人工复核及完整 CI。\n'
+            owner.write_text(strict)
+            self.initialize(target, 'software')
+            self.assertEqual(owner.read_text(), strict)
+
     def test_new_project_requires_explicit_classification_and_profile(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_root:
             target = Path(temporary_root) / "project"

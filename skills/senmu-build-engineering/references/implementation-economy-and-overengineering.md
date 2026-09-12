@@ -43,7 +43,7 @@ A `presentation-equivalent change` is a subset: styling, wording, or local layou
 
 The fast path also requires one known owner/release unit and excludes security, privacy, authorization, payments/billing, production data, paid external effects, destructive operations, and formal release. Any exclusion exits the path.
 
-- Engineering is the sole primary BuildOS Skill. User visibility, future commit intent, or steps in code do not automatically compose Product, Delivery, or Workflow.
+- With clear project rules, implement through the project entrypoint without loading a BuildOS Skill. If an engineering contract gap, conflict, change or explicit review correctly triggered Engineering, it remains the sole primary Skill for this lightweight decision. User visibility, future commit intent, or steps in code do not automatically compose Product, Delivery, or Workflow.
 - Read affected code, project-local rules, and nearest matching tests only. Do not load unrelated references, the full product system, or release standards merely to restate local contracts.
 - Modify only implementation and the nearest valuable test. Do not create Task, TD, ADR, PRD, Changelog, or release records; G1 normally has no Work Log.
 

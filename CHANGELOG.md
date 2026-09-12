@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## [2.7.1] - 2026-09-12
+
+### Fixed
+
+- Reject bare Git storage and repository-like metadata during ordinary local cleanup planning while allowing ordinary caches inside a worktree and unrelated `HEAD` files.
+- Align Engineering's lightweight local-change routing, generated quality defaults, review expectations, and resource/lesson lifecycle wording with the current proportional-verification policy.
+
 ## [2.7.0] - 2026-09-12
 
 ### Added

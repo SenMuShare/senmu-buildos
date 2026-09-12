@@ -38,8 +38,8 @@ Assess architecture when adding modules, services, shared packages, jobs, public
 | --- | --- | --- |
 | Read-only engineering health review | G2 | Read real code/governance, run read-only checks, report evidence; no business-code edits |
 | Single-module calibration/local refactor | G2 | Update architecture contract, matching tests, dependency and full-diff verification |
-| Cross-module/public API/database/release-unit change | G3 | Impact statement or ADR first; full quality/architecture gates and independent recheck |
-| Payments, authorization, production data, security, major migration | G4 | G3 plus real risk-path evidence, rollback basis, retrospective |
+| Cross-module/public API/database/release-unit change | G3 | Impact statement or ADR first; risk-path and affected architecture checks during development; declared full quality/CI at integration or release; independent recheck only when actual risk, separation of duties or explicit project policy requires it |
+| Payments, authorization, production data, security, major migration | G4 | Phase-appropriate G3 checks plus early real risk-path evidence and recovery basis; independent review when required by risk/duties/policy; retrospective for incidents, material rework or explicit requests |
 
 ## 4. Current-System Technical Specification
 

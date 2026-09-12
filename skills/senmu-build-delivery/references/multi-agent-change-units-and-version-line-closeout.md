@@ -84,7 +84,7 @@ Roles do not follow version numbers. Use any SemVer, CalVer, build, channel, or 
 - Uncommitted code on main is unattributable risk, not fast delivery; before release, seal, return to owner, or exclude it.
 - Merge, tests, Tag, deployment command, and production release are different evidence.
 - Review occurs at integration without a permanent team lead; separate duties only by risk/project rule.
-- Delete temporary branches/worktrees after release only when no unique facts remain and work is integrated or explicitly excluded with recovery reference.
+- Retire local branches/worktrees under [Local Worktree Retirement](code-management-and-integration.md#7-local-worktree-retirement); non-release units follow their own lifecycle. Formal release resources retain the artifact owner’s current/rollback/pinned set.
 
 ## 7. Review Repair Routing
 
