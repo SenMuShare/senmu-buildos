@@ -4,16 +4,16 @@ Use this standard to take over an established project with confused historical c
 
 Project coordinates root, scope, task state, owner mapping, and authorization checkpoints. Product, Workflow, Engineering, and Delivery repair their own facts; Assurance freezes reviews, findings, and re-review. Do not create a governance architecture that copies domain standards.
 
-## 1. Activation and Separate Authorization
+## 1. Activation and Authorization Scope
 
 Activate when the user requests takeover, governance, reorganization, system audit, or staged remediation of an established project across stages, sessions, or domains. Do not activate for ordinary bugs, one refactor, a placement question, or read-only Q&A.
 
 Separate:
 
 1. **Audit authorization:** permits read-only inventory, non-mutating checks, baselines, and remediation candidates. Candidates do not become project facts.
-2. **Implementation authorization:** after the user sees baseline, findings, target map, waves, impact, and recovery, only approved scope may change. It does not authorize later expansion, release, deletion, data migration, or production work.
+2. **Implementation authorization:** after assessment, change only the scope covered by existing implementation authority. A compound audit-and-repair request does not require a second generic approval. It does not authorize later expansion, release, deletion, data migration, or production work.
 
-If initial authority already includes safe audit and remediation, still surface decisions affecting behavior, data, permissions, release boundaries, or recoverability after the baseline. Broad wording does not settle material tradeoffs.
+If initial authority includes safe audit and remediation, continue through both phases. Ask only when an unresolved choice materially changes the result or the next action lacks authority; sensitive categories require coverage checks, not automatic repeated approval.
 
 ## 2. One State Owner and Workspace
 

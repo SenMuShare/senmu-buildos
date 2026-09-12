@@ -30,9 +30,9 @@ class OperationRecipeContractTest(unittest.TestCase):
         testing = read(
             "skills/senmu-build-engineering/references/software-testing-and-quality-verification.md"
         )
-        self.assertIn("Not for routine fixes", engineering_entry)
-        self.assertIn("visual or interaction direction or prototype validation", engineering_entry)
-        self.assertIn("implementation review", engineering_entry)
+        self.assertIn("Not for routine implementation", engineering_entry)
+        self.assertIn("visual design", engineering_entry)
+        self.assertIn("under review", engineering_entry)
         self.assertIn("implementation review", read("skills/senmu-build-product/SKILL.md"))
         self.assertIn("prototype validation", read("skills/senmu-build-design/SKILL.md"))
         self.assertIn("When behavior is expressible before implementation", testing)

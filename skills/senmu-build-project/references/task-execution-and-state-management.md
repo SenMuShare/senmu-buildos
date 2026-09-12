@@ -66,8 +66,8 @@ Create a task package only when work is actually handed to another person or age
 
 - `Current Task`: the one required outcome, completion test, and explicit exclusions.
 - `Global Constraints`: still-valid user authority, prohibitions, risk gates, and stop conditions.
-- `Interfaces`: permitted read/write scope, inputs/outputs, shared state, dependencies, and contracts that must remain intact.
-- `Output Contract`: required artifacts, actual changes, tests/evidence, deviations, incomplete work, and next action.
+- `Interfaces`: permitted read/write scope, inputs/outputs, shared state, dependencies, and contracts that must remain intact. Identify the accepted baseline and existing capability/API owners so handoffs do not mistake an old implementation or an unconnected consumer for a missing contract.
+- `Output Contract`: slice completion, artifacts, actual changes, development/closeout checks and integrator-owned checks, evidence, deviations, remaining work, repair owner, temporary-resource disposition, and next action.
 
 Send only facts needed for the current task, not the entire conversation, all BuildOS standards, or unrelated executor history. Read specialist rules through stable links and project entrypoints. Add overlap, shared-resource, and integration responsibility only for real parallel work. A package cannot expand original authority. Resolve apparent conflicts from current task decisions first; return only an uncovered decision to its owner. When responsibility changes, update the task owner and replace stale executor references in routes. A role title does not establish review independence: whoever implements the reviewed change, including a reviewer who takes over implementation, still needs separate evidence when independent acceptance is required.
 
@@ -76,7 +76,7 @@ Send only facts needed for the current task, not the entire conversation, all Bu
 - When another agent, CI, human acceptance, or external system is incomplete, identify the exact downstream step blocked and whether it competes for the same branch, file, database, port, deployment directory, or production object. “Someone else is not done” is not a dependency description.
 - Preserve productive work by default. Exhaust independently executable development, documentation, static checks, builds, and preparation within current authority; mark only steps that truly require the external result as waiting. Pause related work only when that result changes the solution, shared resources conflict, or the next action is irreversible.
 - A temporarily absent user, unanswered progress message, or lack of real-time supervision does not revoke existing authority. Continue work within the original scope when no new decision is needed. Stop only for an explicit pause or new authority concerning scope, permission, cost, release, production, or deletion.
-- When all independent work is complete, record the checkpoint, stable identity of the awaited result, wakeup entrypoint, timeout/escalation condition, and next action in the task owner, then release the idle execution chain. Prefer event/message wakeup. Keep waiting only for short bounded tool calls or high-risk operations requiring live supervision. Do not repeatedly poll unchanged state or send repeated “still waiting” updates.
+- When all independent work is complete, use the host’s supported bounded wait for the specific pending result. A wait timeout is not task completion: reassess available work and resume waiting without repeated unchanged updates. End the execution chain only for a real blocker or a confirmed automatic wakeup mechanism; writing a recovery entrypoint or sending an asynchronous message does not establish that mechanism. Record the checkpoint, awaited result, recovery action, and any actual blocker in the task owner. Do not invent a background continuation or create a scheduler without user authorization.
 
 ## 5. Session Plans and Authoritative Facts
 
@@ -99,7 +99,7 @@ Keep ordinary discussion, research, decision, and verification summaries in the 
 
 Use these statuses: `planned`, `active`, `blocked`, `verifying`, `completed`, `cancelled`, `archived`.
 
-Use `blocked` only when no meaningful work remains within current scope and execution must await a user decision, new authority, or changed external fact. If one phase or runtime step is waiting, the task may stay `active`, but the plan must identify parallel work and the wakeup condition. Idle sessions are not progress.
+Use `blocked` only when no meaningful work remains within current scope and execution must await a user decision, new authority, or changed external fact. If one phase or runtime step is waiting, the task may stay `active`, but the plan must identify parallel work and the wakeup condition. Idle sessions are not progress. A progress question or incoming executor receipt updates the active task; answer the user’s question and then continue authorized work. An executor’s status message does not replace the user’s request.
 
 Update the task plan and Task Register when the task is created; scope, authority, or completion definition changes; a meaningful phase or review round completes; a POC reaches a phase conclusion; delegation, pause, or session transfer occurs; or status changes to verifying, completed, cancelled, or archived. Do not refresh the register for every small file edit.
 
@@ -113,7 +113,7 @@ Route newly discovered facts as follows:
 | Execution order, current phase, delegation, pause, or recovery point | Numbered task plan or established task system |
 | Local implementation detail that preserves all above contracts | Code, tests, and necessary comments |
 
-A Work Log records what happened; a numbered task plan records the current effective plan and state. Neither replaces the other.
+A Work Log records what happened; a numbered task plan records the current effective plan and state. Replace superseded current status and next actions instead of prepending another “latest” paragraph; preserve decision rationale and link historical evidence in its existing owner or Git history. Neither replaces the other.
 
 ## 7. Closeout and Archive
 
@@ -134,3 +134,9 @@ Hooks do not inject a complete task plan or turn chat inference into durable rul
 When a mature project already has a trusted task system, register its owner, object ID, status semantics, and recovery method; do not create a second `governance/tasks/`. Chat cannot be the only source of task state.
 
 A mature-project takeover task must also link the frozen baseline, assurance Finding, user decision, remediation task/change identity, re-review evidence, and disposition of temporary content. The mature-project takeover standard owns those semantics; do not duplicate its schema here.
+
+### Valid Work and Stale Bookkeeping
+
+A missing or stale progress note, hash or receipt alone does not invalidate an otherwise verified result. Repair the existing task record within authorization. Missing evidence blocks only the claim or action for which it establishes identity, authorization, security, external side effects or release truth; never manufacture that evidence or use bookkeeping to abandon independent authorized work.
+
+At predictable task switches, handoff or meaningful stage closeout, update only changed recovery facts in the existing task owner: completed/remaining scope, branch/worktree/head, dirt location, decisions/Findings, checks/gaps, temporary resources and next action. Read-only work returns this in its report or authorized host task system instead of editing the reviewed project. After an unexpected crash, verify actual state and label unknowns; never invent a saved checkpoint.

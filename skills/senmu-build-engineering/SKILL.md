@@ -1,11 +1,11 @@
 ---
 name: senmu-build-engineering
-description: Govern architecture, engineering contracts, implementation review, testing strategy, technical debt, or refactoring when project rules are missing or changing. Not for routine fixes, visual or interaction direction or prototype validation, or ordinary implementation under clear project rules.
+description: Review architecture, technical baselines, contracts, tests or modernization when guidance is missing, conflicting or under review. Not for routine implementation or visual design.
 ---
 
 # Software Engineering
 
-Use project rules first; continue for missing, conflicting, changing, or explicitly reviewed engineering contracts.
+Use project rules first; continue for contract gaps, conflicts, changes or review.
 
 ## Route by Outcome
 
@@ -20,11 +20,11 @@ Use project rules first; continue for missing, conflicting, changing, or explici
 - Derive rules from an existing codebase: [Discovery](references/project-engineering-standard-discovery.md).
 - Only if local rules are absent/under review: [Python](references/python-engineering-profile.md), [TypeScript](references/typescript-engineering-profile.md), [Go](references/go-engineering-profile.md), [Java](references/java-engineering-profile.md), [Ant Design](references/frontend-ant-design-practice.md), [HTML/daisyUI](references/frontend-html-daisyui-practice.md).
 
-Read matched references only; one profile does not imply others. Frontend/backend are references, not child skills or job roles.
+Profiles guide selected stacks, not a language allowlist. Unlisted stacks use project rules and official guidance. Read matched references only. Frontend/backend are references, not child skills or job roles.
 
 ## Fast Path
 
-Engineering alone handles a reversible, contract-preserving G1 change with one owner. Add no skills, PRD, ADR, or changelog. Follow Kernel isolation, proportional verification, and local commit. Check open-batch items narrowly; consolidate after test intent. Exclude security, privacy, permissions, payments, production data, paid/destructive actions, and releases.
+Once triggered for a contract decision/review, handle a reversible G1 change with one owner; clear local implementation needs no Skill. Add no skills, PRD, ADR, or changelog. Follow Kernel isolation, proportional verification, and local commit. Check open-batch items narrowly; consolidate after test intent. Exclude security, privacy, permissions, payments, production data, paid/destructive actions, and releases.
 
 ## Core Contract
 
@@ -32,4 +32,4 @@ Engineering alone handles a reversible, contract-preserving G1 change with one o
 - Implement small changes directly. Create TD/ADR/POC only for durable public-contract, data, infrastructure, or release-boundary changes. Return behavior/acceptance changes to Product.
 - Rerun the original path, then impact-based regressions. Report partial verification if the symptom was not covered. Never weaken types, tests, or security to pass.
 
-Handoff only on real responsibility change, carrying facts, scope, evidence, unknowns, and authorization.
+Handoff real responsibility changes with scope, evidence, unknowns and authority.

@@ -38,7 +38,7 @@
 | P-12 | 目标路径不同于脚本预设时按确认地图实施，不为使用初始化器而扭曲目录 | `project-governance-instances-and-evolution.md` |
 | P-13 | 治理建议先区分现场事实、判定、方案、替代和授权；普通问题不生成重型模板或平行状态系统 | `skills/senmu-build-project/SKILL.md`、`project-governance-instances-and-evolution.md` |
 | P-14 | 成熟项目长期接管由 Project 统筹唯一持久任务入口，专业事实和整改仍回到原 owner，不增加第九个编排 Skill 或第二份项目台账 | `established-project-takeover-governance.md` |
-| P-15 | 接管专项先只读冻结基线和 Finding，整改需用户明确裁决与授权；实施者完成不等于 Finding 已复核 | `established-project-takeover-governance.md`、`independent-review-and-evidence-grading.md` |
+| P-15 | 接管专项先只读冻结基线和 Finding，整改沿用已明确覆盖的授权；只读请求不得整改，未决结果变化才裁决；实施者完成不等于 Finding 已复核 | `established-project-takeover-governance.md`、`independent-review-and-evidence-grading.md` |
 | P-16 | 专项 completed 需冻结基线、Finding 决定／变更／验证／复核链、最终复核和临时内容去留决定同时收口；未决定时不自动删除 | `established-project-takeover-governance.md`、`validate_mature_project_governance.py` |
 | P-17 | 任务等待外部结果时只暂停真依赖步骤，先完成已授权无冲突工作；只剩等待时持久化 checkpoint 并释放空转执行链，用户不在不撤销原授权 | `task-execution-and-state-management.md` |
 | P-18 | 成熟项目 assessor 默认输出有界摘要；只有正式接管结果需要完整候选与排除登记时才使用 `--verbose`，普通 Bug、分支或单域文档工作不借此扩大治理范围 | `skills/senmu-build-project/SKILL.md`、`project-governance-instances-and-evolution.md` |
@@ -133,7 +133,7 @@
 | E-16 | 分布式调用有覆盖真实阶段的期限；重试由单一 owner 按预算、退避和抖动控制；副作用通过稳定意图键、核账和重复／迟到测试证明安全 | `source-code-quality-and-ai-collaboration.md` |
 | E-15 | 技术设计只记录需求或风险实际需要的质量属性；每项绑定业务影响、范围、可观察目标、验证、owner、约束／依赖和取舍，不以厂商示例数字制造通用门禁 | `architecture-constraints-and-technical-debt.md`、`TECHNICAL_DESIGN.template.md` |
 | E-17 | 日常代码审查以准备合并的完整变更集为单位，逐个核账变更函数和注释；自查不代替需要职责分离的批准 | `source-code-quality-and-ai-collaboration.md` |
-| E-18 | G1／本地可逆单 owner 的契约保持型局部变更由 Engineering 单独主责，只读相关代码与本地规则，不新增 Task／TD／ADR／PRD／Changelog；开放批次中只做当前变更所需的最小检查，不在每项完成时运行完整门禁 | `skills/senmu-build-engineering/SKILL.md`、`governance-levels-and-gates.md`、`software-testing-and-quality-verification.md` |
+| E-18 | 清晰本地规则下的普通实现直接走项目入口；Engineering 因工程合同决定或评审触发后，G1／本地可逆单 owner 变更走 Fast Path，只读相关代码与本地规则，不新增 Task／TD／ADR／PRD／Changelog；开放批次中只做当前变更所需的最小检查，不在每项完成时运行完整门禁 | `skills/senmu-build-engineering/SKILL.md`、`governance-levels-and-gates.md`、`software-testing-and-quality-verification.md` |
 | E-19 | 普通 Bug／文案修复即使不加载 Delivery 也遵守 Kernel 写入合同；完成项可以形成范围清楚的检查点 commit，但开放批次保持 `in_progress`，不冒充批次已提测或封口 | `skills/senmu-build-engineering/SKILL.md`、`source-code-quality-and-ai-collaboration.md`、`hooks/kernel.js` |
 | E-20 | 领域标识与外部接口代码分离；运行时映射绑定真实外部端点及版本并保留有业务意义的差异，未知或不支持时不猜测或跨接口复用 | `source-code-quality-and-ai-collaboration.md` |
 | E-21 | 同一候选后续通过不能覆盖先前未解释失败；聚合结论保持不稳定，直到根因修复或测试按 owner、风险和退出条件隔离 | `software-testing-and-quality-verification.md` |

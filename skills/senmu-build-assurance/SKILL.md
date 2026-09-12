@@ -21,6 +21,6 @@ Routine consistency checks remain with the domain skill; G3-G4 alone does not ac
 - Evidence supports only what it observes. Static analysis, tests, production facts, and independent review are not interchangeable.
 - Seek counterevidence before assigning status, P0-P3, impact, minimum remediation, and re-review conditions.
 - Keep `not_assessed`, `inconclusive`, `resolved_unverified`, and `verified_resolved` distinct.
-- Review authority does not permit modification, release, deletion, or production changes. Return remediation to its domain owner.
+- Review authority does not permit modification, release, deletion, or production changes. Return remediation to its domain owner. When the same request already authorizes repair, continue there after findings without another generic approval; review-only requests remain read-only.
 
 Use the project's durable task owner for multi-stage reviews. Handoffs carry findings, evidence, scope, target outcomes, and re-review conditions, not copied standards.

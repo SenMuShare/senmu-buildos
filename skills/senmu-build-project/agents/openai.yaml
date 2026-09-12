@@ -1,4 +1,4 @@
 interface:
   display_name: "Senmu Build Project Governance"
-  short_description: "Project structure, authority mapping, durable state, and lifecycle governance"
+  short_description: "Project instruction routing, authority, structure, and task state"
   default_prompt: "Use $senmu-build-project to recommend placement, plan or initialize a structure, assess or evolve this project's governance instance, map authority and directory ownership, and preserve durable task state and cross-lifecycle continuity."

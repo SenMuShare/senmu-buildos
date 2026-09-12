@@ -57,7 +57,7 @@ Cleanup affects only managed paths/registries of the current unit:
 - Resolve current, rollback, pins, and all container references by digest/ID first.
 - Never delete commits, formal Tags, changelog, Release Records, databases, volumes, other-project resources, or global caches.
 - Never run cross-project global prune; force deletion needs separate authority.
-- `dry-run` is not closure; apply only after production verification and release authority.
+- For formal release resources, `dry-run` is not cleanup completion; apply only after production verification and covered release authority. Non-release local resources follow their task lifecycle and existing cleanup authorization, not a production gate.
 
 Register local builder, production runtime, remote registry/artifact store, and current Git surface separately. Host cleanup does not close remote registry or Git.
 
@@ -68,3 +68,9 @@ Build formal artifacts only from the unit's authoritative directory and frozen c
 At the target, verify actual object/image identity; version endpoint/equivalent; health/readiness; affected user core flow; and required migration, permissions, safety, and rollback availability.
 
 The completion report includes unit, version, commit/Tag, artifact, environment, verification, rollback point, retained set, and residual risk. Engineering chooses technology; Delivery closes compatibility, migration, build, deployment, and rollback effects.
+
+## 6. Native Resource and Distribution Checks
+
+For container/image cleanup, resolve native IDs/digests and inspect all references, including stopped containers, current/rollback versions, pins, unique writable-layer data and shared builder usage. Use the existing scoped native resource entrypoint; never remove backend disk files or run global prune. Preserve uncertain/shared resources. Resource groups and retention facts belong in the existing Task/Run owner under Workflow closeout; report logical removal separately from measured disk space reclaimed.
+
+Inspect actual package, image, archive and install staging contents with the existing allowlist/exclusions. `.gitignore` is insufficient. Exclude credentials, private configuration, personal material, local databases, user uploads and temporary caches unless the contract defines a safe necessary form. Assess absolute paths for privacy and portability rather than banning all paths. Use synthetic canaries in tests, never real secrets.

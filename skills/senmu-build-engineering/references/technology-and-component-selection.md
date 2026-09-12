@@ -61,6 +61,10 @@ Do not build a large matrix for lightweight work. G1-G2 may use a short judgment
 
 ## 5. Baseline and Incremental Extension
 
+BuildOS owns the selection method; optional private user/organization preferences break ties; the project's technical owner records the selected baseline. Private preferences never become public vendor defaults.
+
+Before sustained implementation, record the minimum applicable language/runtime, frontend/backend framework, component system, routing/state/request ownership, data storage, build/test/delivery/observation entrypoints, custom boundaries and revisit conditions in the existing technical specification, TD or ADR. Bounded prototypes and one-off tools may use a provisional baseline with explicit limits. Within an authorized choose-and-implement task, make a supported recommendation and proceed; ask only for unresolved material outcome/ownership/cost choices or uncovered authority.
+
 Once the main framework, component system, storage, or runtime platform is approved and documented, treat it as a stable architecture baseline.
 
 - Reuse baseline capability first.
@@ -95,3 +99,17 @@ For uncertainty in algorithms, state machines, business process, or data transfo
 Record the result in local technical design, stack documentation, or ADR with problem/constraints/quality attributes; current capability and candidates; choice, rationale, rejected options, and evidence; module/dependency/data/side-effect ownership; custom boundary and prohibited duplicate capability; pinned/compatible versions and upgrade/exit conditions; verification, runtime observation, migration, and rollback; owner and latest calibration.
 
 Ecosystem APIs, component patterns, and version rules belong in project specialist docs or conditional references, not this general method.
+
+## 9. Runtime Boundaries and Revisit Conditions
+
+Choose runtimes using actual needs, representative latency/throughput, CPU/memory/startup/concurrency, safety, ecosystem, debugging, maintainability and total lifecycle cost. Generic language slogans and model familiarity are not evidence. Record accepted limitations, observable thresholds, measurement methods and replacement/recovery boundaries. A resource bottleneck prompts measurement and comparison with reasonable optimization before replacement.
+
+| Shape | Applicable verification and recovery |
+| --- | --- |
+| Native platform module (Swift/Kotlin) | Module owner, interface, tests and version compatibility; recover with the application release, not a fictional independent deployment |
+| In-process extension / FFI | ABI/FFI, memory/thread safety, packaging, compatibility, failure containment and disable/replace path |
+| Independent service | Protocol/data owner, independent build, deploy, observation, scaling and rollback; benefit above distributed complexity |
+| Replacement migration | Consumer/data compatibility window, staged cutover, original-path exit, verification and rollback |
+| Offline/build tool | Repeatable build, I/O contract, distribution environment and failure recovery; no mandatory production deployment |
+
+A new language must solve a real need with a clear owner, interface, toolchain, verification and recovery matching the actual delivery unit. Profiles are implementation guidance after selection, not a language allowlist. Do not add languages or second primary frameworks solely because a profile or model favors them.

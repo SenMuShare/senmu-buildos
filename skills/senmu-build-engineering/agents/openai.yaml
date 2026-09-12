@@ -1,4 +1,4 @@
 interface:
   display_name: "Senmu Build Software Engineering"
-  short_description: "Engineering standards, architecture, code, testing, and modernization"
-  default_prompt: "Use $senmu-build-engineering to discover or apply evidence-based engineering standards and make technical or implementation decisions using the project's real architecture, code, tests, configuration, and ecosystem."
+  short_description: "Architecture, technical baselines, contract review, and test strategy"
+  default_prompt: "Use $senmu-build-engineering to review or resolve missing, conflicting, or changing engineering contracts and technical baselines using the project's real architecture, code, tests, configuration, and ecosystem."

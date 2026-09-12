@@ -32,45 +32,41 @@ Start this standard only when a candidate needs verification, a project rule nee
 1. Complete authorized containment/repair, or record the unresolved state and owner.
 2. If repaired, verify the original failure path; otherwise preserve reviewable evidence and risk boundaries.
 3. State what happened, why, how it was detected, and how it was handled.
-4. Classify the cause as execution error, project-specific rule gap, or general governance gap.
-5. Update the corresponding document or Skill according to classification.
+4. Classify using the orthogonal dimensions in section 3.
+5. Update the corresponding owner only within current write authority; otherwise record the proposed action.
 6. Log only substantive fixes, decisions, or unresolved risks. Promote to a lesson and anti-regression entry only after reproduction and verification conditions are met.
 
 Urgency may justify executing already-authorized containment or release first, but record the retrospective follow-up and trigger in the Work Log. Urgency never creates release, production-write, or destructive authority.
 
 ## 3. Root-Cause Classification
 
-### 3.1 One-Off Execution Error
+After verified rework, repeated failure or an owner correction, first finish the current requested result within its authority. A read-only retrospective or review records evidence, impact and recommendations; it does not repair the reviewed object, AGENTS or formal domain owners. Correcting the report itself grants no project-write authority.
 
-Signals: the current agent failed to read an existing file, omitted an existing script, misunderstood user direction, or used the wrong order; the project rule was already clear; no governance change is needed.
+Use one primary owner and orthogonal judgment fields, mapped into the existing Task, Lessons, Feedback or review owner only when a governance record is needed:
 
-Treatment:
+| Field | Values |
+| --- | --- |
+| primary_owner | project, product, design, engineering, workflow, delivery, assurance, learning |
+| cause_type | execution, domain_rule_gap, instruction_routing_gap, capability_or_default_path_gap, buildos_component_gap, unknown |
+| contributing_causes | Optional additional causes from the same cause vocabulary |
+| evidence_state | hypothesis, supported, verified |
+| recurrence | first_occurrence, repeated, catastrophic_first_occurrence |
+| scope | project_specific, potentially_cross_project, cross_project_verified |
+| actions | fix_current_result, no_durable_change, update_domain_owner, update_agents_route, improve_default_path_or_shared_capability, update_lesson, submit_buildos_feedback_candidate, collect_more_evidence |
 
-- Record facts, verification, and reminder in the Work Log retrospective section.
-- Acknowledge the correction in the final report and state that the existing standard is now satisfied.
-- Do not hide a one-off mistake behind additional process.
+These are judgment dimensions, not a new mandatory schema or ledger. Do not batch-migrate historical records, add required forms to ordinary tasks, or combine contradictory actions. A supporting cause does not create a second primary owner.
 
-### 3.2 Project-Specific Rule Gap
+| Finding | Action within current authorization |
+| --- | --- |
+| One-off execution error with clear rules and routes | Correct the result; no durable rule change; log only if useful |
+| Missing or wrong domain rule | Update its specialist owner |
+| Existing rule cannot be discovered | Project repairs the shortest effective instruction route |
+| Correct default path is hard to use or absent | Improve shared capability, component, example or command |
+| Verified repeated cause, or first catastrophic stable gap | Index a lesson and correct the actual source owner |
+| Specific BuildOS component caused reviewable harm | Submit a feedback candidate; cross-project reproduction is not required at intake |
+| Unverified cause | Retain a hypothesis and recheck condition, not a hard rule |
 
-Signals: the issue depends on this project's business, deployment topology, data flow, customer process, channel rules, directories, or release method and may not generalize.
-
-Treatment:
-
-- Update the matching project owner: PRD, TECHNICAL_DESIGN, DEPLOYMENT, TESTING_STRATEGY, BRANCHING_STRATEGY, VERSION_AND_RELEASE, WORKLOG, README, or equivalent.
-- Prefer the project's existing `governance/` or `docs/` structure.
-- Record that the rule is project-specific and why it is not abstracted into a general Skill.
-
-### 3.3 General Governance Gap
-
-Signals: the issue is likely across projects—for example, omitting version/changelog after a fix, treating local verification as production proof, confusing release units, losing handoff state, rebuilding an existing component, or promoting a project preference as universal. BuildOS lacks a clear gate or uses wording too vague for reliable execution. A project-independent rule would improve other projects.
-
-Treatment:
-
-- Fix the current project's owners first; a general change alone does not resolve the application project.
-- Create a BuildOS candidate only when recurrence is likely across projects, the rule is project-independent, and ordinary tasks do not inherit disproportionate burden.
-- Maintain the generalization as a separate task in the BuildOS source project under [BuildOS Evolution and Upstream Feedback](buildos-evolution-and-upstream-feedback.md), using whole-repository analysis. Use `$skill-creator` when Skill entry, structure, or triggering changes.
-- Source edits, Git commits, candidate installation, and public release are separate authorities and states; a valid project retrospective does not authorize them.
-- Report abstraction basis, candidate/update location, verification, and true boundaries of every state.
+Project's [Instruction Maintenance](../../senmu-build-project/references/project-standard-discovery-and-on-demand-loading.md#8-project-instruction-maintenance) owns AGENTS scope and editing methods. Learning owns classification, evidence and lesson lifecycle; specialists own the formal rules. Only promotion to a general BuildOS rule needs cross-project evidence or a demonstrated stable mechanism affecting multiple project types, with benefit above maintenance/context cost. Follow the existing feedback and BuildOS evolution entrypoints; classification alone grants no source, install or release authority.
 
 ## 4. Converge on an Executable Contract
 
@@ -99,7 +95,7 @@ This is normally G3-G4 governance, but does not impose heavy gates on all small 
 
 A Work Log is a timeline, not a durable rule index. When a conclusion is likely to recur, has a verified root cause, has a decidable action, and can be rechecked, use `senmu-build-learning` to create or update the project's Lessons Learned Register under its common schema. New default BuildOS projects use `governance/lessons/LESSONS_LEARNED.md` and IDs `LES-YYYYMMDD-NNN`. Synchronize stable business, architecture, implementation, workflow, or deployment rules into the matching specialist owner.
 
-The second occurrence of the same failure forces governance escalation: create/update the lesson, find the production step repeatedly creating the defect, and determine why the old rule failed. Correct requirements, architecture, interfaces, defaults, implementation, public entrypoints, or operations first. Add the smallest automatic detection or gate only for material residual risk worth controlling. “Be careful next time” is not closure; neither is adding checks without correcting a confirmed defect source.
+A repeated verified root cause requires governance review (two unrelated slips do not prove recurrence): create/update the lesson, find the production step repeatedly creating the defect, and determine why the old rule failed. Correct requirements, architecture, interfaces, defaults, implementation, public entrypoints, or operations first. Add the smallest automatic detection or gate only for material residual risk worth controlling. “Be careful next time” is not closure; neither is adding checks without correcting a confirmed defect source.
 
 ## 6. Lesson Retrieval and Maintenance
 
@@ -163,5 +159,5 @@ Every formal retrospective must:
 - state the fix and verification;
 - classify the issue as project-specific or general governance;
 - update the best project owner or explain why none changes;
-- decide whether to create/update a Lessons ID; the second occurrence forces governance escalation, but a machine gate requires material residual risk;
+- decide whether to create/update a Lessons ID; a repeated verified root cause requires governance review within authorization, but a machine gate requires material residual risk;
 - for a general gap, create a cross-project candidate first, then—inside the BuildOS source project—perform whole-repository abstraction, layering, deduplication, and verification, using `$skill-creator` for Skill changes. Project-private facts remain only in the project.

@@ -70,9 +70,9 @@ Locate old route
 
 “Line by line” means inspect every line for business meaning, not mechanically translate languages. Every old method, condition, API call, and user action is classified as migrated, merged, deferred, or retirement-pending-confirmation.
 
-## 6. Ant Design Pro Admin Upgrades
+## 6. Frontend Stack Migration
 
-For React/Web/admin systems, prefer Ant Design for base UI; Ant Design Pro for layout and common admin templates; ProComponents for ProLayout, ProTable, ProForm, PageContainer; Ant Design Charts/AntV for ordinary business charts; and Ant Design X for assistant/chat/intelligent input/streaming UI.
+Preserve the selected primary framework, component system, design tokens, routing, state and request layer unless replacement is explicitly in scope and justified by the technology-selection standard. For projects already using or explicitly selecting Ant Design, load [Ant Design Practice](frontend-ant-design-practice.md); the following Ant-specific guidance applies only there. Other ecosystems follow their project owner and current official guidance.
 
 - Compose available Pro/ProComponents rather than custom-building generic admin primitives.
 - Prefer ProTable or Table for tables; ProForm or Form for forms; ProLayout/PageContainer for shell, breadcrumbs, menus, header.
@@ -96,7 +96,7 @@ New capability is allowed but managed separately:
 - Do not change old-function acceptance.
 - For AI, charts, reports, or automation, state business objects read, permission boundaries, and safety limits.
 
-For example, an AI assistant absent from the old system is new. Migrate old functions from source, build the assistant shell with Ant Design X, then implement intelligence later under API, permission, and audit contracts.
+For example, an AI assistant absent from the old system is new. Migrate old functions from source, build the assistant shell with the project-selected component system (Ant Design X only when selected), then implement intelligence later under API, permission, and audit contracts.
 
 ## 9. Acceptance
 

@@ -10,7 +10,7 @@ Maintain one truth chain across optional requirements, version PRDs, current pro
 ## Route by Outcome
 
 - Requirements, versions, document transitions, freezing, reconciliation: [Product Iteration](references/product-requirements-and-iteration.md).
-- Cross-page buttons, states, errors, terms, generated content: [Interface Content](references/interface-copy-and-content-design.md), then only [Chinese](references/chinese-interface-copy.md) or [English](references/english-interface-copy.md). Fill gaps in existing standards.
+- Cross-page labels, user-facing state copy, error messages, terminology, generated content: [Interface Content](references/interface-copy-and-content-design.md), then only [Chinese](references/chinese-interface-copy.md) or [English](references/english-interface-copy.md). Fill gaps in existing standards.
 
 Read a [User Requirements](assets/product-governance/USER_REQUIREMENTS.template.md), [Version PRD](assets/product-governance/PRD.template.md), or [Product Specification](assets/product-governance/PRODUCT_SPECIFICATION.template.md) template only when creating it. Decide low-risk discussions directly.
 

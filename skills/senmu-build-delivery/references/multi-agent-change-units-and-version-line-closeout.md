@@ -49,7 +49,7 @@ If a current-directory task later meets a second writer, stop sharing. Seal a co
 
 ## 3. Integration Without a Permanent Leader
 
-An implementer may end after commit, verification, and seal. Sealed units without final disposition remain visible for intake. The agent receiving “finish this batch,” “integrate into current version,” “merge this work,” or “release latest” becomes the integration closer.
+An implementer may hand off its completed authorized slice after verification and commit, sealing only when the batch is closed; the overall goal owner still reconciles remaining commitments. Sealed units without final disposition remain visible for intake. The agent receiving “finish this batch,” “integrate into current version,” “merge this work,” or “release latest” becomes the integration closer.
 
 Ordinary single-project/single-source work adds no coordinator. Only a formal release crossing agents, repositories, or production units creates a temporary release coordinator for that window. Release Control freezes the intake matrix/candidate and binds authority to candidate, scope, environment, and rollback. Unchanged boundaries need no repeat confirmation. New commits require refreshed candidate evidence; the [authorization protocol](release-authorization-and-production-truth.md) determines whether the existing scope still covers execution. Effects outside that authority require confirmation. The temporary role ends on release, rollback, or cancellation and creates no second ledger.
 
@@ -85,3 +85,18 @@ Roles do not follow version numbers. Use any SemVer, CalVer, build, channel, or 
 - Merge, tests, Tag, deployment command, and production release are different evidence.
 - Review occurs at integration without a permanent team lead; separate duties only by risk/project rule.
 - Delete temporary branches/worktrees after release only when no unique facts remain and work is integrated or explicitly excluded with recovery reference.
+
+## 7. Review Repair Routing
+
+Prefer the original implementer for a Finding in an open unit. Do not interrupt an independent implementer's task merely to move ordinary review findings. Review a frozen commit while the unit remains open; do not seal just to request review, or introduce mandatory review where none is required.
+
+| Actual state | Repair surface |
+| --- | --- |
+| Open, not integrated | Original registered unit/worktree and its writer |
+| Original writer exited, unit open | Establish exit/handoff and no concurrent writers, then existing `resume`/`verify` |
+| Sealed, not integrated | New linked repair unit; use existing explicit stacked dependency on corrected head when target lacks parent changes, with integration order |
+| Integrated | New repair from the current receiving target line; reference original Finding, never revive stale branch history |
+
+`resume`/`verify` does not prove writer exit. Require host-confirmed termination/exit or explicit release of write ownership with related background writes stopped. Silence, timeout, clean Git and changed registration are insufficient. If unproven, preserve the surface and continue independent authorized work. No global Agent scheduler is introduced.
+
+Before switching implementation context, preserve pending commitments and write boundaries. Never auto-stash/reset/checkout or move mixed dirt to make room. Escalate repeated unsuccessful repair by narrowing falsifiable evidence or clarifying the contract/capability, not an unbounded retry loop or random reassignment. Shared-layer or urgent incident work may explicitly change responsibility/priority without silently cancelling the original task.

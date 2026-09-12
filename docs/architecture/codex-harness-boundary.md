@@ -54,3 +54,5 @@ SessionStart 与 SubagentStart 使用同一段固定英文规则；无 Hook 的�
 5. 能否通过链接现有 owner 解决，而不是建立同步副本。
 
 只有宿主没有提供持久项目事实，且项目确实需要审计、协作或恢复时，才增加项目本地治理产物。
+
+Kernel Core 的当前语义由 hooks/kernel.js 拥有；bootstrap Adapter 的 kernel-contract 区块通过输出一致性测试消费同一合同。开放批次和门禁时机由 Delivery／Engineering 拥有，有效成果与过时记账的处理由 Project Task State 拥有；迁移不代表这些保护退出。

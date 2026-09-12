@@ -53,7 +53,7 @@ After assessment and authorization, evolve the original project. When requiremen
 
 Repair causes in requirements, responsibility, directories, interfaces, data ownership, defaults, and workflows; fill missing roles, merge duplicate owners, migrate immovable paths, and retain recovery points. Project entrypoints, policy, schema, tools, and evidence then own routine execution.
 
-For multi-domain audit, several remediation waves, cross-session recovery, and final review, use [Established Project Takeover](established-project-takeover-governance.md). It maps the existing Durable Task State Owner and preserves fact-first assessment, separate authorization, and original-owner evolution.
+For multi-domain audit, several remediation waves, cross-session recovery, and final review, use [Established Project Takeover](established-project-takeover-governance.md). It maps the existing Durable Task State Owner and preserves fact-first assessment, existing authorization boundaries, and original-owner evolution. A compound audit-and-repair request covers its scoped phases without another generic approval.
 
 ## 4. State Owners
 

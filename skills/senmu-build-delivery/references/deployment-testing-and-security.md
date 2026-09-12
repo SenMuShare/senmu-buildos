@@ -53,3 +53,5 @@ Identity, permissions, payments, upload, deletion, export, and administrator act
 Inspect server boundaries for login/registration/password reset; admin actions; payments/orders/refunds/balances; upload/download/export/delete; tenant/user isolation; third-party secrets; AI calls and cost accounting; and public static-file access.
 
 If any relies only on hidden UI, client validation, or mock data, stop the candidate and return it to Engineering. Delivery does not patch business code during deployment unless repair is also authorized.
+
+Resource retention, actual distribution contents and truthful disk-space reporting use [Artifacts and Release](version-artifacts-and-release.md); ordinary material recovery uses Workflow’s material owner. Do not duplicate or weaken those cleanup contracts here.

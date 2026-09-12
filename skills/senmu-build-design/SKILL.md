@@ -14,7 +14,7 @@ Turn experience goals into implementable decisions. Start from the interface, be
 - Interaction, motion, accessibility, feel: [Interaction](references/interaction-motion-and-accessibility.md).
 - Alternatives, prototypes, UI/UX review: [Prototypes](references/prototype-exploration-and-interface-review.md).
 
-Read only what is needed. Implement approved designs under project/Engineering rules; use specialist skills for current APIs/methods only.
+Read only what is needed. Implement the selected or already-authorized direction under project/Engineering rules; use specialist skills for current APIs/methods only.
 
 ## Core Contract
 

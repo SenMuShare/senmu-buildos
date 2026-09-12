@@ -6,7 +6,7 @@ Use this standard when direction is uncertain, interaction risk is high, or the 
 
 Prototype when alternatives materially change hierarchy or interaction; gesture, motion, or spatial relationships cannot be judged statically; a costly implementation needs task-path validation; or the user explicitly requests prototypes. Direction-only alternatives can use observed evidence and specifications without building a prototype.
 
-Implement and verify local styling, an approved design, routine composition of mature components, or a cheap reversible change directly. Do not prototype merely to demonstrate process.
+Implement and verify local styling, a selected or already-authorized design, routine composition of mature components, or a cheap reversible change directly. Do not prototype merely to demonstrate process.
 
 ## 2. Materially Different Alternatives
 

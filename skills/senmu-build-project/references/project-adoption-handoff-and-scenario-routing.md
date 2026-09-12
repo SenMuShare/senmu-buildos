@@ -12,7 +12,7 @@ Choose the entrypoint from the current situation; do not create four separate Sk
 
 | Situation | Correct entry | Prohibited behavior |
 | --- | --- | --- |
-| New project not started | Confirm objective, form, and real delivery method; generate a zero-write initialization candidate; create minimum owners after user approval | Generating a full directory/document/branch/release system before scope confirmation |
+| New project not started | Confirm objective, form, and real delivery method; generate a zero-write initialization candidate; create minimum owners within existing initialization authority | Generating a full directory/document/branch/release system before scope confirmation |
 | New project in normal development | Read adopted requirement, code, quality, and delivery entrypoints; invoke one matching specialist owner for the task | Reinitializing or rereading all BuildOS material for every requirement |
 | Existing project continuing development | Inherit existing facts, current development version, and registered task/branch; complete incremental work directly when rules suffice | Rebuilding directories, Git, documents, or governance merely because the project is old |
 | Existing project receiving whole-project governance | First inventory authority, structure, quality, and delivery facts read-only; evolve original owners only within approved scope; use mature-project takeover governance for multi-stage work | Overwriting reality with defaults or mixing governance and ordinary feature work into an unbounded rewrite |
@@ -136,3 +136,5 @@ When maintaining Senmu BuildOS:
 - Keep deep technology/vendor documentation as conditional attachments, outside the entry flow.
 - Prefer official tools for ecosystems with an official MCP/CLI, such as Ant Design. Keep vendor material for ECharts, players, or editors as small summaries, metadata, or out-of-project snapshots. If a topic warrants a durable frontend/admin specialist Skill, Engineering should retain only principles and routing.
 - After each version update, check whether entrypoints grew heavier, rules were duplicated, or governance levels still constrain trigger scope.
+
+For actual media/build/multiple-worktree needs, reuse material, build and task owners to declare temporary paths, retention conditions and verified cleanup commands. Unknown disk/time budgets remain pending facts, not invented defaults or empty ledgers. Audit an established project's real scripts/resources first; repair only the current missing lifecycle/ownership entrypoint. A BuildOS update does not authorize changing every user project. Add only real local differences and verified links/commands to existing scoped `AGENTS.md`; global files remain read-only unless authorized.

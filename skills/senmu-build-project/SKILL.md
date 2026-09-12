@@ -1,11 +1,11 @@
 ---
 name: senmu-build-project
-description: Create or repair project governance, authority mapping, structure, and durable cross-stage state. Not for routine work under an established project system.
+description: Audit or establish project governance, project-instruction routing, authority mapping, structure, or project-level task state. Not for routine work under clear project rules.
 ---
 
 # Project Governance
 
-Own the governance instance, authority structure, and cross-domain ownership boundaries; this is not a parent skill. Return ordinary work when project entrypoints suffice. Continue only for missing/conflicting governance, structural evolution, state-owner repair, or explicit governance work.
+Own the governance instance, authority structure, and cross-domain ownership boundaries; this is not a parent skill. Use project entrypoints for ordinary work. Continue only for missing/conflicting governance, structural evolution, state-owner repair, or explicit governance work.
 
 ## Route by Outcome
 
@@ -31,6 +31,6 @@ Use [init_project_governance.py](scripts/init_project_governance.py) for new pro
 - Shape structure around actual capabilities, lifecycle, and release units; project types do not replace facts or justify speculative modules.
 - Maps navigate owners, entrypoints, state, and boundaries. Root `AGENTS.md` holds project differences, real commands, and overrides only.
 - Use one Durable Task State Owner across stages. Continuing an existing task does not reactivate Project.
-- Authorize initialization, migration, and remediation separately. Plans, script output, and static checks are not execution facts.
+- Plan or audit first. A request to plan and initialize or audit and repair already covers scoped follow-through; preserve read-only requests. Plans, script output, and static checks are not execution facts.
 
 Handoff on ownership change with scope, facts, evidence, gaps, authority, and recovery. Leave no parallel owner.

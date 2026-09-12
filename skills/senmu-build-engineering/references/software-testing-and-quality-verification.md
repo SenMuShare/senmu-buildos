@@ -8,7 +8,7 @@ Before creating/changing strategy, establish requirements, invariants, and obser
 
 For reversible, low-impact changes, do not add tests that merely mirror implementation or assert instruction wording. Run required checks once; broaden or repeat only for new changes, failures, or unresolved risk. Instruction audits additionally use the Project routing behavior check; shorter text and passing link checks do not prove model performance.
 
-Choose layers by risk. A pure function may need only unit/property tests; a cross-service transaction, authorization boundary, or data migration needs contract, integration, rollback, and real-path evidence.
+Choose layers by risk. A pure function may need only unit/property tests. Transactions and authorization need evidence at their actual trust and persistence boundaries. Distinguish transaction atomicity, forward data migration, and release rollback: a migration checks existing-data transformation, order, constraints, rerun safety, and resulting state; it does not automatically require a release rollback drill. Follow the approved recovery strategy and current phase. Add failure probes only for a concrete unresolved invariant or defect; do not enumerate every write point by default.
 
 Version `TEST_CASES.md` derives directly from that PRD's pages/features/capabilities, product behavior, interaction, errors, boundaries, and acceptance and mirrors its content structure. Shared version/sections provide linkage; do not create a traceability matrix. Retain an existing test-management owner. Templates are adaptable outlines: a low-risk change keeps only matching cases.
 

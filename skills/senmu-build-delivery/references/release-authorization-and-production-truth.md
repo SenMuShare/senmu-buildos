@@ -96,3 +96,7 @@ Local tests, candidate docs, Git Tag, green CI, successful upload, one health en
 ## 9. Closeout
 
 Ensure state does not exceed evidence/authority; revision, version, Tag, artifact, config, and environment correspond; the Release Record reconstructs every external action, check, failure, and rollback; target identity and affected flow are verified; and unreleased, unverified, failed, and rolled back remain distinct.
+
+## Existing Remote Push Scope
+
+An explicit push request can cover an existing destination of known visibility, including a public remote. Verify destination, content and configured CI/deployment side effects against that authority. New public targets, visibility changes, force pushes or production side effects need a concrete decision only when uncovered. Preserve the project's internal-source → redacted public-projection entrypoint; push authority never bypasses that boundary or permits publishing private source directly.

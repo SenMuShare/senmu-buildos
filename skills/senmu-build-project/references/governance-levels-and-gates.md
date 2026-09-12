@@ -40,7 +40,7 @@ Determine the governance level when entering a task. Escalate when investigation
 | G3 Release or structural task | Hotfix, formal release, cross-module architecture change, public contract or data-structure change, deployment, versioning, rollback, production verification | Explain relevant architecture impact; run matching checks and project-required gates. For an authorized release, satisfy the applicable version, log, Tag, artifact, production-verification, and rollback contract |
 | G4 High-risk or organizational-learning task | Security, payments, permissions, data migration, production incident, repeated failure, cross-agent rework | Verify the actual high-risk path. Retrospect on an incident, material rework, or explicit review request; update standards and submit BuildOS feedback only when eligible |
 
-Use the highest applicable level.
+Use the highest applicable level. Risk selects evidence depth; the development, acceptance, or release phase selects when that evidence is due. A structural change does not by itself turn an open development slice into a release candidate or require deployment/rollback exercises.
 
 ## 2. Gate Types
 

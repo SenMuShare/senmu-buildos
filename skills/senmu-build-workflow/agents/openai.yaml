@@ -1,4 +1,4 @@
 interface:
   display_name: "Senmu Build Workflow Governance"
-  short_description: "Workflow, agent, data, material, and deliverable governance"
-  default_prompt: "Use $senmu-build-workflow to define the executable workflow, input and output contracts, state, recovery, material roles, evidence, and delivery boundaries."
+  short_description: "Workflow, material, recovery and cleanup-contract governance"
+  default_prompt: "Use $senmu-build-workflow to define the executable workflow, input and output contracts, state, recovery, material roles, missing cleanup/retention contracts, evidence, and delivery boundaries."

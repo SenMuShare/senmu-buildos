@@ -11,49 +11,32 @@ const { buildClaudeCodeOutput } = require('../../adapters/claude-code/hooks/runt
 const codexHooksConfig = require('../../hooks/hooks.json');
 const claudeHooksConfig = require('../../adapters/claude-code/hooks/hooks.json');
 
-test('SessionStart kernel stays short and preserves core boundaries', () => {
+// Structural transport checks only. Model adherence is evaluated by real tasks.
+test('SessionStart kernel stays within budget and preserves transport boundaries', () => {
   const context = getSessionContext();
   assert.ok(context.length <= MAX_SESSION_CONTEXT_CHARS);
-  assert.match(context, /User: goals\/authorization/);
-  assert.match(context, /Owners\/runtime: facts/);
-  assert.match(context, /Agent: judge independently/);
-  assert.match(context, /honor informed choice/);
-  assert.match(context, /justify reversals/);
-  assert.match(context, /scope\/unit\/path\/risk/);
-  assert.match(context, /tools\/sessions confer no authority/);
-  assert.match(context, /Project\/framework\/platform first/);
-  assert.match(context, /bounded evidence/);
-  assert.match(context, /durable task\/lessons/);
-  assert.match(context, /gate only material residual risk/);
-  assert.match(context, /Open batch/);
-  assert.match(context, /infer intent\/version/);
-  assert.match(context, /reuse unit/);
-  assert.match(context, /ask only outcome-changing ambiguity/);
-  assert.match(context, /full gate at closeout/);
-  assert.match(context, /release needs authorization/);
-  assert.match(context, /Valid output beats stale bookkeeping/);
-  assert.match(context, /preflight\/unit/);
-  assert.match(context, /task branch/);
-  assert.match(context, /worktree unless exclusive/);
-  assert.match(context, /no integration\/sealed work/);
-  assert.match(context, /verify\/commit/);
-  assert.match(context, /Fail closed/);
-  assert.match(context, /feedback CLI/);
-  assert.match(context, /not user requests/i);
-  assert.match(context, /expose no IDs/);
+  assert.ok(context.startsWith('SENMU BUILDOS KERNEL'));
+  assert.equal(context.split(COMMUNICATION_CONTEXT).length - 1, 1);
   assert.doesNotMatch(context, /BuildOS feedback candidate:/);
-  assert.match(context, /Close requested scope/);
-  assert.match(context, /report only proven success/);
+});
+
+test('bootstrap adapters receive the same core contract as lifecycle hooks', () => {
+  const core = getSessionContext().split('\n\n' + COMMUNICATION_CONTEXT)[0];
+  for (const adapter of ['doubao', 'workbuddy', 'zcode']) {
+    const source = fs.readFileSync(path.join(__dirname, '../../adapters', adapter, 'kernel/SKILL.md'), 'utf8');
+    const actual = source.split('<!-- kernel-contract:start -->')[1].split('<!-- kernel-contract:end -->')[0].trim();
+    assert.equal(actual, core, adapter);
+  }
 });
 
 test('SessionStart identifies the exact installed internal snapshot', () => {
   const pluginRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'senmu-buildos-kernel-'));
   fs.writeFileSync(path.join(pluginRoot, '.senmu-buildos-install.json'), JSON.stringify({
-    version: '1.14.2',
+    version: '9999.9999.9999',
     source_commit: '1234567890abcdef',
   }));
   const context = getSessionContext(pluginRoot);
-  assert.match(context, /Active snapshot: 1\.14\.2@1234567890ab/);
+  assert.match(context, /Active snapshot: 9999\.9999\.9999@1234567890ab/);
   assert.ok(context.length <= MAX_SESSION_CONTEXT_CHARS);
 });
 

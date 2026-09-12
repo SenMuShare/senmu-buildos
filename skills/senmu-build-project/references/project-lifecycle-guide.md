@@ -103,7 +103,7 @@ python3 <senmu-build-project>/scripts/init_project_governance.py \
   --profile <core|standard|release>
 ```
 
-After the candidate structure is approved, reuse the full command and the same explicit parameter set, changing `--mode plan-new` to `--mode initialize-new`. Add `--with-agents` or `--commit-baseline` only when the corresponding need exists.
+When the candidate structure is selected within existing initialization authority, reuse the full command and the same explicit parameter set, changing `--mode plan-new` to `--mode initialize-new`. Add `--with-agents` or `--commit-baseline` only when the corresponding need exists.
 
 Project type and profile are required. Without `--modules`, recommended modules for that type apply; an explicit list wins, while `--modules` alone creates a base instance without specialist modules. `initialize-new` refuses to generate default directories inside a mature project with existing content. For an existing project, run the zero-write `assess_project_governance.py --root <project-root>` first, then evolve original owners under authorization using the project-governance instance standard.
 
@@ -138,4 +138,8 @@ Before delivery, confirm:
 - No unexplained conflict exists among input, rules, implementation/runtime, state, verification, and deliverables in enabled modules.
 - Risk-proportional verification ran, with actual results, omissions, and residual risk recorded.
 - Formal delivery/release has a traceable delivery ID or version, result, acceptance/production verification, and executable recovery basis.
-- Project-specific learning updates project standards only. Only a cross-project, abstractable rule that does not impose broad burden becomes a BuildOS source-project feedback candidate through `senmu-build-learning`.
+- Project-specific learning updates project standards only. A concrete BuildOS component and reviewable harm suffice for feedback intake through `senmu-build-learning`; promotion to a general rule requires cross-project evidence or a stable mechanism affecting multiple project types, without disproportionate burden.
+
+## Minimum Technology Baseline
+
+Before sustained software implementation without a current baseline, route the technical decision to Engineering's [Technology Selection](../../senmu-build-engineering/references/technology-and-component-selection.md#5-baseline-and-incremental-extension). Project records the owner and route, not a competing technical decision. An explicit plan-and-initialize request continues after the zero-write plan unless an unresolved outcome-changing choice or uncovered authority remains. One-off scripts and bounded prototypes use a provisional minimum baseline with limits and revisit triggers; do not create speculative architecture modules.

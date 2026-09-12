@@ -92,7 +92,7 @@ Projects may serialize when worktrees are prohibited/costly, baseline is unclear
 
 Record purpose, baseline, integration target, shared resources, and exit. Business ledgers, databases, POC state, media, and receipts remain with their unique owners and are not copied with source worktrees. Stop if authority root is unclear or two active owners appear.
 
-One writer owns one open unit; a single writer may accept same-batch additions, while multiple writers isolate. On test/handoff, freeze, verify, commit, then:
+One writer owns one open unit; a single writer may accept same-batch additions, while multiple writers isolate. For review, freeze and verify a stable commit in the open unit; review alone does not seal it. After the authorized batch is complete, verification and any required review/repair are closed, and the tree is clean, seal:
 
 ```bash
 python3 skills/senmu-build-delivery/scripts/manage_change_unit.py seal \
@@ -175,3 +175,7 @@ One release has one mutable integration root. If `release/*` worktree is used, c
 - Version/changelog/candidate state may be mutable release-train preparation before full preflight; only a passing head freezes.
 - Fix preflight failures in the same root, invalidating the old candidate; rerun affected checks and full preflight before freezing.
 - Before candidate/artifact, run `verify_release_identity.py` to establish `reviewed_commit = tested_commit = release_source_head = artifact_source_commit`. A formal Tag is not candidate input. After target verification, the promotion entrypoint verifies the exact commit receipt before creating/pushing the Tag.
+
+## 7. Local Worktree Retirement
+
+Retire only after integration or explicit exclusion/supersession with recovery evidence and covered authorization. Check tracked dirt, untracked/ignored files, nested repos, unique commits/materials and active writers/processes. Preserve needed review/repair/handoff resources first; clean Git alone is insufficient. Use `git worktree remove <registered-path>`, never directory deletion or `--force`. Retire branches through governed Git; squash ancestry alone is not disposal proof. Local retirement excludes remote deletion, history changes and release. Pending retention does not block unrelated delivery.
