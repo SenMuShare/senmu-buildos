@@ -32,11 +32,13 @@ Record evidence for each candidate:
 
 | Class | Meaning | Treatment |
 | --- | --- | --- |
-| Formal rule | Authoritative document/machine config matches production implementation | Preserve owner and add a short index route |
+| Formal rule | An approved, applicable and not superseded project contract; current implementation may conform or violate it | Preserve its authority, record conformance separately, and route implementation deviations to the authorized repair owner |
 | Stable practice | Repeated consistently and supported by tests, tools, or history | Confirm, then write to the nearest engineering owner |
 | Candidate | Signals exist but rationale, exceptions, or validity are unclear | Keep `candidate`; do not constrain implementation |
 | Engineering defect | Duplicated, coupled, stale, or contrary to quality goals | Enter debt or authorized repair; never present as a standard |
 | Legacy | Retained only for compatibility, rollback, or migration | Mark boundary and replacement; do not use as a template |
+
+Source, configuration and runtime evidence describe observed behavior. They do not automatically override an approved target, and a document does not prove its implementation. If the intended behavior is unresolved, retain an explicit candidate and avoid silently changing business meaning.
 
 One file, occurrence frequency, or commit chronology never proves a standard alone.
 

@@ -127,6 +127,61 @@ class ProjectGovernanceScaffoldTests(unittest.TestCase):
             for directory in ("product", "engineering", "delivery", "workflows", "experiments", "agents"):
                 self.assertFalse((target / directory).exists())
 
+    def test_navigation_pointer_matches_the_generated_profile(self):
+        for profile in PROFILES:
+            with self.subTest(profile=profile), tempfile.TemporaryDirectory() as temp:
+                target = Path(temp) / "project"
+                result = self.initialize(target, "software", profile)
+                self.assertEqual(result.returncode, 0, result.stderr or result.stdout)
+                text = (target / "AGENTS.md").read_text(encoding="utf-8")
+                expected = "README.md" if profile == "core" else "governance/PROJECT_MAP.md"
+                self.assertNotIn("{{NAVIGATION_ENTRY}}", text)
+                self.assertIn(f"`{expected}`", text)
+                self.assertTrue((target / expected).is_file())
+                if profile == "core":
+                    self.assertFalse((target / "governance/PROJECT_MAP.md").exists())
+                else:
+                    nav = (target / expected).read_text(encoding="utf-8")
+                    for field in ("实现入口", "规则／合同入口", "验证入口"):
+                        self.assertIn(field, nav)
+                policy = json.loads((target / ".senmu-buildos/config.json").read_text())
+                self.assertEqual(policy["initialization_status"], "draft")
+
+    def test_navigation_changes_do_not_overwrite_existing_owners(self):
+        with tempfile.TemporaryDirectory() as temp:
+            target = Path(temp) / "project"
+            result = self.initialize(target, "software")
+            self.assertEqual(result.returncode, 0, result.stderr or result.stdout)
+            agents = target / "AGENTS.md"
+            nav = target / "governance/PROJECT_MAP.md"
+            agents.write_text("项目原有入口：使用 docs/project-guide.md。\n", encoding="utf-8")
+            nav.write_text("项目原有导航，不得被初始化覆盖。\n", encoding="utf-8")
+            before = (agents.read_bytes(), nav.read_bytes())
+            # The initializer may refuse or resume its own draft; neither may replace these owners.
+            self.initialize(target, "software")
+            self.assertEqual((agents.read_bytes(), nav.read_bytes()), before)
+
+    def test_generated_quality_baseline_has_applicable_contracts(self):
+        with tempfile.TemporaryDirectory() as temp:
+            target = Path(temp) / "project"
+            result = self.initialize(target, "software")
+            self.assertEqual(result.returncode, 0, result.stderr or result.stdout)
+            quality = (target / "engineering/CODE_QUALITY.md").read_text(encoding="utf-8")
+            agents = (target / "AGENTS.md").read_text(encoding="utf-8")
+            for contract in (
+                "关键业务参数与结果使用准确类型",
+                "互斥阶段",
+                "外部结果未知",
+                "原子提交／回滚",
+                "React 客户端 render／memo",
+            ):
+                self.assertIn(contract, quality)
+            self.assertNotIn("语言专项规则位于：`engineering/languages/`", quality)
+            self.assertNotIn("框架专项规则位于：`engineering/frameworks/`", quality)
+            self.assertIn("知道代码位置只免去找路", agents)
+            policy = json.loads((target / ".senmu-buildos/config.json").read_text(encoding="utf-8"))
+            self.assertEqual(policy["initialization_status"], "draft")
+
     def test_all_project_types_and_profiles_generate_valid_layouts(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_root:
             base = Path(temporary_root)

@@ -22,7 +22,7 @@ After a partially failed deployment that may have replaced services, reconcile p
 
 Confirm that every real resource surface has managed scope, retention, disk cap, dry-run, cleanup entrypoint, and receipt; do not invent nonexistent registries. Verify current and rollback objects before cleanup, using image digest/ID rather than movable tags. Delete old tarballs, images, uploads, and dangling objects only when precisely owned by this unit; never global-prune across projects. Logs/uploads need retention. On small servers, prefer local builds and uploaded artifacts over resource-heavy in-place builds.
 
-Document artifact naming/location, retention policy/source (or BuildOS rollback default), cleanup, rollback retrieval, and whether server-side builds are allowed.
+Document artifact naming/location, retention policy/source (or BuildOS rollback default), cleanup, rollback retrieval, and whether server-side builds are allowed. For adoption or a release-driver change, verify the cleanup call in the actual driver after target verification and exercise its success/failure receipt with a disposable fixture. A generated config, an enabled flag or a dry-run is not evidence that production, local Docker or another surface ran cleanup. Ordinary releases reuse the configured driver; do not repeat project-wide governance.
 
 ## 3. Testing and Acceptance
 

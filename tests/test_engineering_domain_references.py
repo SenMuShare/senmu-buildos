@@ -36,7 +36,14 @@ class EngineeringDomainReferenceTest(unittest.TestCase):
         ).read_text(encoding="utf-8")
         self.assertIn("It does not redefine product capability, copy meaning, or visual direction", frontend)
         self.assertIn("Hidden UI", backend)
-        self.assertIn("Production-data modification/deletion or irreversible migration requires separate authority", backend)
+        self.assertIn(
+            "Production-data changes, deletion and irreversible migration require authority and evidence for those exact effects",
+            backend,
+        )
+        self.assertIn(
+            "an ordinary implementation request or a successful check does not grant that authority",
+            backend,
+        )
 
 
 if __name__ == "__main__":

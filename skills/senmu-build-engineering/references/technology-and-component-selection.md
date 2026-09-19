@@ -70,7 +70,7 @@ Once the main framework, component system, storage, or runtime platform is appro
 - Reuse baseline capability first.
 - Add one bounded compatible specialist capability for a real gap.
 - Do not let several libraries jointly own theme, state, routing, persistence, or authorization.
-- Record each dependency's purpose, version policy, license, replacement condition, verification, and maintainer.
+- Reuse dependency manifests, lockfiles and existing ownership/security tooling for inventory and versions. Record the purpose, material license/security constraints, ownership, verification and exit rationale for a new or materially changed dependency when that decision needs explanation. Do not hand-author a card for every transitive dependency or duplicate machine-maintained fields.
 - Baseline replacement documents drivers, affected contracts, migration, dual-run period, data treatment, tests, and rollback.
 - Familiarity, novelty, or AI preference does not replace a stable baseline.
 
@@ -88,7 +88,7 @@ For repetitive production, also establish component source, parameter contract, 
 
 ## 7. POC and Owner Confirmation
 
-Require a POC or owner decision when a candidate materially changes product form, architecture, deployment, cost, or durable ownership; critical quality cannot be determined from docs/evidence/benchmarks; migration is hard to reverse, locks data, or crosses release units; or written comparison cannot distinguish candidates.
+Use a focused POC when a material uncertainty about fit, failure, performance or migration cannot be resolved from sufficient existing evidence. Material change calls for impact and authorization checks, not automatically a new experiment or renewed approval. Within an already authorized choose-and-implement scope, make the supported decision and continue; ask only for an uncovered action or an unresolved choice that materially changes outcome, cost, risk or ownership.
 
 Use the same representative scenario and acceptance across candidates. Record variables, failures, measurements, human evaluation, conclusion state, and reconstruction. An experiment conclusion is not production approval.
 

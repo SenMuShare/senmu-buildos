@@ -22,7 +22,7 @@ Read-only advice never merges, tags, or deploys. A release entrypoint must be ex
 ## Core Contract
 
 - Recover authority, lines, batch, release unit, authorization, and recovery from owners/Git. Ask only about outcome-changing ambiguity.
-- Reuse `in_progress` for shared version/acceptance/release/rollback. Isolate real parallel work. Never write integration, reopen sealed work, or chain branches.
+- Reuse `in_progress` for shared version/acceptance/release/rollback. Isolate real parallel work. Never edit an integration line or reopen sealed work. Unrelated tasks do not chain from another task branch; an inseparable dependency may use a registered sealed-parent stack with explicit baseline and integration order under [Change Units](references/multi-agent-change-units-and-version-line-closeout.md#21-dynamic-grouping-routing-and-convergence).
 - Agent/session changes do not change the Change Unit. Resume it; use recoverable Release Control.
 - One item does not complete a batch. Freeze after test/closeout intent; perform authorized local builds/checks; distribute, deploy, verify production changes, and tag under release authority.
 - Require `main` as `integration` or `release_ready`; stack only on sealed parents.

@@ -2,6 +2,75 @@
 
 ## Unreleased
 
+## [2.10.0] - 2026-09-19
+
+### Added
+
+- Host-aware project instruction inventory covers Claude entries, scoped rules and import locators while keeping effective loading explicitly unverified. Add an on-demand Claude compatibility guide without a second rule body.
+- Feedback queries distinguish first-decision intake from follow-up work and can link new decisions to their existing issue/task. Preserve original candidates and decisions.
+
+### Fixed
+
+- Release cleanup separates planned, disabled, no-candidate, completed and failed results; validates full inventories before deletion, identifies the actual Docker engine, and preserves rollback, pins, repository metadata and shared/container references.
+- Release templates require actual driver wiring and per-resource receipts, not merely generated scripts. Plans and logical removals no longer claim measured disk reclamation.
+- Read-only subagents return findings rather than inheriting an unconditional commit obligation.
+- Author-side public delivery verifies complete candidate trees, resumes existing PR/tag stages, preserves unpushed work and rejects draft releases or stale validation evidence.
+
+
+## [2.9.0] - 2026-09-18
+
+### Changed
+
+- Separate the distributable product from author-private state. Product files are independently testable; selected feedback becomes source improvements without shipping raw records.
+- Resolve maintenance paths from workspace configuration and identify a source subtree with its actual repository commit and tree. Publication uses an explicit independent checkout rather than a permanent duplicate source directory.
+
+### Fixed
+
+- Keep installation, source identity and public-release evidence distinct after workspace relocation; preserve existing safety and recovery checks.
+- Ensure spaced-user-path test fixtures do not embed a blocked literal in the public source, and use the same path coverage during standalone public checks.
+- Resolve the WorkBuddy skills directory from the data root that actually exists instead of hardcoding the pre-rename `.workbuddy` name, and report the resolved path. Installing into a root the running app does not enumerate reported success while the skills were never loaded.
+- Keep the public-surface check effective after the product/maintainer split: treat `maintainer/` as a forbidden owner in a distributable tree and recognize the maintenance policy file as a private-root marker. Both checks had silently stopped matching the current layout.
+
+## [2.8.1] - 2026-09-18
+
+### Fixed
+
+- Build internal installation payloads from an explicit runtime allowlist instead of copying private tasks, evidence, frozen Skills and project configuration. Reject selected symlinks and private user paths; preserve the previous managed snapshot and leave unknown destinations untouched.
+- Align six UI short descriptions with the authoring bounds without changing Skill trigger descriptions. Reconcile scoped project constraints, Engineering fast-path documentation and Delivery sealed-parent exceptions.
+- Start frontend/backend investigation from the affected entrypoint and expand on evidence instead of reading a universal checklist.
+- Correct governance-validator interface attribution, stale task status and context-size estimates. Heuristic limits are not model Token measurements.
+
+### Maintenance
+
+- Private GitHub is the daily source-maintenance location; installation and public publication remain separate. The private workspace runs the existing package, Python, lifecycle-fixture and Hook checks.
+- This source version does not assert public release, local activation, native Trash recovery or measured model performance.
+
+## [2.8.0] - 2026-09-17
+
+### Added
+
+- Added a capability-level project navigation contract: every governed capability routes to its real implementation entrypoint, applicable rule/contract and verification entrypoint. Generated maps stay drafts until calibrated against real code, and planned capabilities are not reported as implemented routes.
+- Added claim-matched verification for BuildOS source corrections: a concrete component defect may enter the existing candidate path with one project's counterexample or fixture, without a universal A/B, multi-model or proof-of-cure prerequisite.
+- Added explicit async-lifecycle, transaction-ownership, unknown-outcome and recovery-failure rules for client rendering, external effects and rollback/compensation.
+- Added truthful-progress governance: an authorized remediation may legitimately have no changes yet, pending or failed verification stays visible, and resource disposition may be retained under existing policy without inventing a new approver.
+
+### Changed
+
+- Replaced renewed-approval wording with scoped existing authority across Project, Delivery, Learning and Engineering; workflow state now describes progress and evidence without granting or revoking permission.
+- Narrowed over-broad rules: per-dependency cards, Python data-model and ABC guidance, absolute retention/deletion bans, React client-side purity, and repetition-driven governance escalation.
+- Clarified that removing duplicated prose must preserve an adopted project contract and a usable consumer path, and that framework-specific reusable technique is not automatically project-only.
+- Aligned generated project entrypoints with the artifact each profile actually produces, and limited ordinary execution to the navigation it needs.
+- Re-tuned the packaging character ceilings to the current English-first corpus; the context-unit ceilings remained unchanged. Clarified in 2.8.1: these are heuristic size proxies, not tokenizer counts or host-enforced runtime budgets.
+
+### Fixed
+
+- Fixed governance validation treating a decision to remediate as proof of completion, and reporting retention as physical cleanup.
+- Fixed routing expectations that forced Engineering for contract-preserving consecutive UI adjustments.
+
+### Validation scope
+
+- Package, Python (243), Hook (16) and publication checks pass. Two assertions that pinned only sentences this release replaces now assert the replacement wording; the generated-artifact tests run the real initializer. A text walkthrough confirmed all eleven required scenario judgements have governing wording in the upgraded references. Navigation semantics, actual model routing and Token effects remain unverified.
+
 ## [2.7.1] - 2026-09-12
 
 ### Fixed

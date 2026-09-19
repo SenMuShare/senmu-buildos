@@ -24,7 +24,7 @@ Profiles guide selected stacks, not a language allowlist. Unlisted stacks use pr
 
 ## Fast Path
 
-Once triggered for a contract decision/review, handle a reversible G1 change with one owner; clear local implementation needs no Skill. Add no skills, PRD, ADR, or changelog. Follow Kernel isolation, proportional verification, and local commit. Check open-batch items narrowly; consolidate after test intent. Exclude security, privacy, permissions, payments, production data, paid/destructive actions, and releases.
+Once triggered for a contract decision/review, handle a reversible G1 change with one owner; clear local implementation needs no Skill. Do not create unrelated governance artifacts. Requested corrections to an existing document or navigation affected by the change remain in scope under [Implementation Economy](references/implementation-economy-and-overengineering.md#31-g1-contract-preserving-fast-path). Follow Kernel isolation, proportional verification, and authorized local commit. Check open-batch items narrowly; consolidate after test intent. Exclude security, privacy, permissions, payments, production data, paid/destructive actions, and releases.
 
 ## Core Contract
 

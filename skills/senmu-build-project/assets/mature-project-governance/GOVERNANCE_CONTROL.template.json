@@ -70,6 +70,8 @@
     "location": null,
     "approved_by": null,
     "approved_at": null,
-    "evidence_refs": []
+    "evidence_refs": [],
+    "reason": null,
+    "revisit_condition": null
   }
 }

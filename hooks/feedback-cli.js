@@ -17,14 +17,25 @@ function usage() {
   senmu-feedback path
   senmu-feedback pending [--summary | --json [--limit <n>] [--offset <n>]]
   senmu-feedback all [--summary | --json [--limit <n>] [--offset <n>]]
+  senmu-feedback followup [--summary | --json [--limit <n>] [--offset <n>]]
   senmu-feedback submit --component <BuildOS component> --summary <problem> --impact <effect> [--project-root <path>] [--evidence <text>] [--workaround <text>] [--quiet]
-  senmu-feedback decide --id <FB-id> --disposition <discard|project|buildos_candidate|needs_evidence> [--note <text>]`;
+  senmu-feedback decide --id <FB-id> --disposition <discard|project|buildos_candidate|needs_evidence> [--note <text>] [--tracking-ref <existing-issue-or-task>]
+
+pending (alias: unreviewed) means no first decision, not unresolved work.
+followup returns classified items whose actual status must be read from their
+existing issue/task; it does not query owners or assert that they remain open.`;
 }
 
 function nonNegativeIntegerOption(args, name, fallback) {
   const raw = option(args, name, String(fallback));
   if (!/^\d+$/.test(raw)) throw new Error(`${name} must be a non-negative integer`);
   return Number(raw);
+}
+
+function queueSemantics(view) {
+  if (view === 'pending' || view === 'unreviewed') return 'awaiting_first_decision';
+  if (view === 'followup') return 'owner_status_not_queried';
+  return 'all_captured_events_not_a_resolution_count';
 }
 
 function summarizeCandidates(candidates, view) {
@@ -37,7 +48,9 @@ function summarizeCandidates(candidates, view) {
   return {
     schema_version: 1,
     view,
+    queue_semantics: queueSemantics(view),
     count: candidates.length,
+    by_disposition: counts((candidate) => candidate.decision ? candidate.decision.disposition : 'unreviewed'),
     by_signal_kind: counts((candidate) => candidate.signal && candidate.signal.kind),
     by_source_host: counts((candidate) => candidate.source && candidate.source.host),
     by_source_project: counts((candidate) => candidate.source && candidate.source.project_root),
@@ -94,10 +107,13 @@ function main(args = process.argv.slice(2)) {
     process.stdout.write(`${feedbackPaths().root}\n`);
     return;
   }
-  if (command === 'pending' || command === 'all') {
+  if (['pending', 'unreviewed', 'all', 'followup'].includes(command)) {
     const limit = args.includes('--limit') ? nonNegativeIntegerOption(args, '--limit', 0) : null;
     const offset = nonNegativeIntegerOption(args, '--offset', 0);
-    printCandidates(listCandidates(process.env, command === 'all'), {
+    let candidates = listCandidates(process.env, command === 'all' || command === 'followup');
+    if (command === 'followup') candidates = candidates.filter((candidate) =>
+      candidate.decision && ['project', 'buildos_candidate', 'needs_evidence'].includes(candidate.decision.disposition));
+    printCandidates(candidates, {
       json: args.includes('--json'),
       summary: args.includes('--summary'),
       limit,
@@ -138,7 +154,7 @@ function main(args = process.argv.slice(2)) {
     const id = option(args, '--id');
     const disposition = option(args, '--disposition');
     if (!id || !disposition) throw new Error('--id and --disposition are required');
-    const result = decideCandidate(id, disposition, option(args, '--note'));
+    const result = decideCandidate(id, disposition, option(args, '--note'), process.env, { trackingRef: option(args, '--tracking-ref') });
     process.stdout.write(`${result.candidate_id} -> ${result.disposition}\n`);
     return;
   }

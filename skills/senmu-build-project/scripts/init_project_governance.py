@@ -189,6 +189,12 @@ def render(
         "{{WORKSPACE_ROOT}}": ".." if root != workspace_root else ".",
         "{{LAYOUT}}": layout,
         "{{PROFILE}}": profile,
+
+        "{{NAVIGATION_ENTRY}}": (
+            "governance/PROJECT_MAP.md"
+            if profile in {"standard", "release"}
+            else "README.md"
+        ),
         "{{PROJECT_TYPE}}": project_type,
         "{{LIFECYCLE_INTENT}}": classification["lifecycle_intent"],
         "{{DELIVERY_MODEL}}": classification["delivery_model"],
@@ -667,6 +673,9 @@ def main() -> None:
                 "cleanup_script": "operations/scripts/cleanup-release-assets.sh",
                 "contract_test": "operations/scripts/test-release-retention.sh",
                 "default_keep": ["current", "previous"],
+                "activation_status": "requires_project_calibration_and_driver_wiring",
+                "coverage": "one_configured_resource_surface_per_invocation",
+                "identity_source": "verified_release_artifact_facts_not_template_defaults",
             } if artifact_kinds else None,
         }
         policy_target.write_text(json.dumps(policy, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

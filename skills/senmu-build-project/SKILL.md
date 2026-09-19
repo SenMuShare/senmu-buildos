@@ -29,7 +29,7 @@ Use [init_project_governance.py](scripts/init_project_governance.py) for new pro
 - Run `init_project_governance.py --mode plan-new` before explicitly authorized `initialize-new`.
 - Inventory established projects read-only, then confirm owners semantically. Never overwrite them with defaults or create parallel truth.
 - Shape structure around actual capabilities, lifecycle, and release units; project types do not replace facts or justify speculative modules.
-- Maps navigate owners, entrypoints, state, and boundaries. Root `AGENTS.md` holds project differences, real commands, and overrides only.
+- Maps route real capabilities to implementation, applicable rules and verification under [Index Contract](references/project-standard-discovery-and-on-demand-loading.md#4-index-contract). Root `AGENTS.md` carries actual project routes, concise adopted working constraints and explicit overrides, not a copy of the full method.
 - Use one Durable Task State Owner across stages. Continuing an existing task does not reactivate Project.
 - Plan or audit first. A request to plan and initialize or audit and repair already covers scoped follow-through; preserve read-only requests. Plans, script output, and static checks are not execution facts.
 

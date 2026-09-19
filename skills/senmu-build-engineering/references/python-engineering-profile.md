@@ -25,8 +25,8 @@ Load this profile for `.py`, `.pyi`, notebooks, Python dependencies, or `pyproje
 ## 3. Data Model and Abstraction
 
 - Never use mutable defaults such as `items=[]`; default to `None` and create the object inside.
-- Prefer named data objects for grouped parameters/fixed returns. Use `dataclass` for lightweight values; consider Pydantic when external validation, serialization, or framework boundaries require it.
-- For substitutable behavior, prefer a small `Protocol`, callable, or explicit interface; use abstract base classes only when shared implementation/state exists.
+- Model stable business parameters and results explicitly using existing project types. A lightweight dataclass or TypedDict may describe a fixed structure; genuine dynamic mappings may remain typed mappings. Use runtime parsing/validation at trust boundaries, with Pydantic or equivalent only when the selected framework or contract calls for it. Type annotations and TypedDict do not validate incoming data at runtime. Do not hide required business fields or incompatible state payloads in an unstructured dictionary, but do not wrap every local mapping in a new model class.
+- Prefer a small Protocol, callable or explicit interface for structural substitution. An abstract base class is also appropriate for a required nominal/framework contract, abstract-member instantiation enforcement, or shared implementation/state. Choose the existing ecosystem mechanism for the actual boundary, not an Interface/Impl ceremony or a fixed count of implementations.
 - Do not import Interface/Impl, Factory, or Manager ceremony mechanically. Metaclasses, descriptors, dynamic injection, and monkey patching require a framework contract or verified benefit and an isolated boundary.
 - Properties must be cheap, predictable, and free of material side effects. Use methods for remote calls, expensive work, and state mutation.
 - ORM, API, domain, and third-party models should not share one role indefinitely. Add explicit conversion when boundary differences create real errors or maintenance cost.

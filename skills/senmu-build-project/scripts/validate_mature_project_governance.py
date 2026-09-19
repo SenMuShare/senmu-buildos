@@ -27,7 +27,7 @@ AUTHORIZATION_STATUSES = {"pending", "approved", "declined", "not_required"}
 REVIEW_STATUSES = {"pending", "passed", "failed"}
 REVIEW_IDENTITIES = {"independent", "peer", "evidence_based_self_review"}
 RECOVERY_STATUSES = {"pending", "verified", "not_applicable"}
-CLEANUP_STATUSES = {"pending_user_decision", "retain", "archive", "delete_authorized"}
+CLEANUP_STATUSES = {"pending_user_decision", "retain", "archive", "delete_authorized", "not_applicable"}
 FINAL_FINDING_STATUSES = {"accepted_risk", "verified_resolved", "false_positive", "superseded"}
 ID_PATTERN = re.compile(r"^[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+$")
 
@@ -91,31 +91,53 @@ def validate_finding(finding: Any, completed: bool, errors: list[str]) -> None:
 
     remediation = finding.get("remediation")
     verification = finding.get("verification")
+    changes = remediation.get("change_refs") if isinstance(remediation, dict) else None
+    has_changes = string_list(changes) and bool(changes)
+    verification_passed = isinstance(verification, dict) and verification.get("status") == "passed"
+
+    # 决定整改不等于整改完成；但任何 passed 声明都必须有证据。
+    if verification is not None:
+        if not isinstance(verification, dict):
+            errors.append(f"{label} verification must be an object")
+        else:
+            if verification.get("status") not in REVIEW_STATUSES:
+                errors.append(f"{label} verification has invalid status")
+            if not string_list(verification.get("evidence_refs")):
+                errors.append(f"{label} verification evidence_refs must be a string list")
+            elif verification_passed and not verification.get("evidence_refs"):
+                errors.append(f"{label} verification has no evidence_refs")
+
     if decision_status == "remediate":
         if not isinstance(remediation, dict):
             errors.append(f"{label} remediation must be an object")
         else:
             if not nonempty(remediation.get("task_id")):
                 errors.append(f"{label} remediation has no task_id")
-            if not string_list(remediation.get("change_refs")) or not remediation.get("change_refs"):
+            if not string_list(changes):
+                errors.append(f"{label} remediation change_refs must be a string list")
+        if not isinstance(verification, dict):
+            errors.append(f"{label} remediation verification must be an object")
+
+        # 空修改和 pending/failed 在进行中合法；单项完成同样要检查，不能只看顶层。
+        if completed or status in {"resolved_unverified", "verified_resolved"}:
+            if not has_changes:
                 errors.append(f"{label} remediation has no change_refs")
-        if not isinstance(verification, dict) or verification.get("status") != "passed":
-            errors.append(f"{label} remediation has not passed verification")
-        elif not string_list(verification.get("evidence_refs")) or not verification.get("evidence_refs"):
-            errors.append(f"{label} verification has no evidence_refs")
+        if completed or status == "verified_resolved":
+            if not verification_passed:
+                errors.append(f"{label} remediation has not passed verification")
         if completed and status != "verified_resolved":
             errors.append(f"{label} remediated finding is not verified_resolved")
     elif decision_status in {"accept_risk", "defer"}:
         if completed and status != "accepted_risk":
             errors.append(f"{label} accepted or deferred finding is not accepted_risk")
     elif decision_status == "false_positive":
-        if not isinstance(verification, dict) or verification.get("status") != "passed":
+        if not verification_passed:
             errors.append(f"{label} false-positive decision lacks passed verification")
-        elif not string_list(verification.get("evidence_refs")) or not verification.get("evidence_refs"):
-            errors.append(f"{label} false-positive verification has no evidence_refs")
         if completed and status != "false_positive":
             errors.append(f"{label} false-positive decision has inconsistent status")
 
+    if status in {"resolved_unverified", "verified_resolved"} and decision_status != "remediate":
+        errors.append(f"{label} resolved status requires a remediate decision")
     if completed:
         if decision_status == "pending":
             errors.append(f"{label} has no user or owner decision")
@@ -123,6 +145,7 @@ def validate_finding(finding: Any, completed: bool, errors: list[str]) -> None:
             errors.append(f"{label} is not closed or accepted")
         if status == "resolved_unverified":
             errors.append(f"{label} is resolved but not re-reviewed")
+
 
 
 def validate_record(record: dict[str, Any]) -> list[str]:
@@ -239,13 +262,27 @@ def validate_record(record: dict[str, Any]) -> list[str]:
         if completed and wave.get("status") not in {"completed", "not_applicable"}:
             errors.append(f"completed governance has unfinished remediation wave: {wave['id']}")
 
-    if any(
+    has_remediation = any(
         isinstance(finding, dict)
-        and isinstance(finding.get("decision"), dict)
-        and finding["decision"].get("status") == "remediate"
+        and (
+            (
+                isinstance(finding.get("decision"), dict)
+                and finding["decision"].get("status") == "remediate"
+            )
+            or (
+                isinstance(finding.get("remediation"), dict)
+                and bool(finding["remediation"].get("change_refs"))
+            )
+            or finding.get("status") in {"resolved_unverified", "verified_resolved"}
+        )
         for finding in findings
-    ) and authorization.get("status") != "approved":
+    )
+    if has_remediation and authorization.get("status") != "approved":
         errors.append("remediation exists without approved implementation authorization")
+    if has_remediation and (
+        not string_list(authorization.get("scope")) or not authorization.get("scope")
+    ):
+        errors.append("remediation requires a nonempty implementation authorization scope")
 
     final_review = require_object(record, "final_review", errors)
     if final_review.get("status") not in REVIEW_STATUSES:
@@ -277,13 +314,35 @@ def validate_record(record: dict[str, Any]) -> list[str]:
         errors.append("verified recovery requires evidence_refs")
 
     cleanup = require_object(record, "cleanup", errors)
-    if cleanup.get("status") not in CLEANUP_STATUSES:
+    cleanup_status = cleanup.get("status")
+    if cleanup_status not in CLEANUP_STATUSES:
         errors.append("cleanup.status is invalid")
-    if completed and cleanup.get("status") == "pending_user_decision":
+    if completed and cleanup_status == "pending_user_decision":
         errors.append("completed governance cannot leave cleanup pending user decision")
-    if cleanup.get("status") in {"retain", "archive", "delete_authorized"} and not approval_complete(cleanup):
-        errors.append("terminal cleanup decision lacks approver or time")
+    if "evidence_refs" in cleanup and not string_list(cleanup["evidence_refs"]):
+        errors.append("cleanup.evidence_refs must be a string list")
+
+    if cleanup_status == "retain":
+        # 保留旧批准记录；另允许可追溯的既有政策支持保留，不伪造新批准。
+        policy_retention = (
+            nonempty(cleanup.get("location"))
+            and string_list(cleanup.get("evidence_refs"))
+            and bool(cleanup.get("evidence_refs"))
+            and nonempty(cleanup.get("reason"))
+            and nonempty(cleanup.get("revisit_condition"))
+        )
+        if not approval_complete(cleanup) and not policy_retention:
+            errors.append("retain requires approval or policy evidence, location, reason and revisit_condition")
+    elif cleanup_status in {"archive", "delete_authorized"}:
+        if not approval_complete(cleanup):
+            errors.append("terminal cleanup decision lacks approver or time")
+    elif cleanup_status == "not_applicable":
+        if not nonempty(cleanup.get("reason")):
+            errors.append("not_applicable cleanup requires a reason")
+        if cleanup.get("location") is not None and cleanup.get("location") != "":
+            errors.append("not_applicable cleanup must not identify a resource location")
     return errors
+
 
 
 def load_record(path: Path) -> dict[str, Any]:

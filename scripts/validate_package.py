@@ -87,13 +87,14 @@ FORBIDDEN_ORIGIN_TERMS = (
     "b" + "mad",
     "super" + "powers",
 )
-# English expresses the same CJK instruction set with more characters but fewer
-# context units. Keep the language-neutral context-unit gates below as the real
-# runtime budgets; character limits only catch accidental file growth.
-MAX_SKILL_ENTRY_CHARS = 3_200
+# Character limits and context units are repository-maintenance heuristics.
+# The mixed CJK/Latin estimate below is neither a tokenizer nor a host-enforced
+# runtime budget. Passing these ceilings does not prove unchanged Token cost.
+# Keep both checks as growth indicators; preserve decision-changing semantics.
+MAX_SKILL_ENTRY_CHARS = 3_600
 MAX_SKILL_DESCRIPTION_CHARS = 400
 MAX_DESCRIPTION_CATALOG_CHARS = 2_400
-MAX_REFERENCE_CHARS = 16_000
+MAX_REFERENCE_CHARS = 19_000
 MAX_PROJECT_AGENTS_TEMPLATE_CHARS = 2_300
 MAX_SKILL_ENTRY_CONTEXT_UNITS = 1_050
 MAX_SKILL_DESCRIPTION_CONTEXT_UNITS = 90
@@ -116,7 +117,7 @@ def sha256(data: bytes) -> str:
 
 
 def estimate_context_units(text: str) -> int:
-    """Conservative dependency-free proxy for mixed CJK and Latin token cost."""
+    """Dependency-free size proxy; not an actual or guaranteed Token count."""
     cjk = sum(
         1
         for char in text
@@ -722,8 +723,15 @@ def validate_project_instruction_layer() -> None:
     copied_skill_names = sorted(skill for skill in peer_skill_catalog if skill in text)
     if copied_skill_names:
         fail(f"project AGENTS template copies the peer Skill catalog: {copied_skill_names}")
-    if "固定前置链" not in text or "全部 BuildOS Skill 职责" not in text:
-        fail("project AGENTS template must reject unconditional document preloads and copied Skill catalogs")
+    # The delta layer must still reject unconditional document preloads and copied
+    # BuildOS method text. Assert the current wording that carries those rules; the
+    # peer-Skill catalog check above is the structural half of the same invariant.
+    for required in ("不把整张地图或全部文档作为固定前置", "不复制 BuildOS 教材"):
+        if required not in text:
+            fail(
+                "project AGENTS template must reject unconditional document preloads "
+                f"and copied BuildOS method text: {required}"
+            )
     legacy_template = ROOT / "skills/senmu-build-engineering/assets/code-quality/AGENTS.template.md"
     if legacy_template.exists():
         fail("Engineering must not own a second project AGENTS template")

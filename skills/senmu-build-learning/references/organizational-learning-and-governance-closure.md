@@ -31,7 +31,7 @@ Start this standard only when a candidate needs verification, a project rule nee
 
 1. Complete authorized containment/repair, or record the unresolved state and owner.
 2. If repaired, verify the original failure path; otherwise preserve reviewable evidence and risk boundaries.
-3. State what happened, why, how it was detected, and how it was handled.
+3. Describe the observed failure, its supported causal mechanism, detection and actual treatment. Include real timeline or failed hypotheses only when known and useful; never invent them to make the narrative sound human. State uncertainty directly. Prefer a concrete source correction over promises to communicate better or be more careful; ownership and dates must come from real assignments.
 4. Classify using the orthogonal dimensions in section 3.
 5. Update the corresponding owner only within current write authority; otherwise record the proposed action.
 6. Log only substantive fixes, decisions, or unresolved risks. Promote to a lesson and anti-regression entry only after reproduction and verification conditions are met.

@@ -8,7 +8,9 @@
   <a href="README.md">简体中文</a> · <a href="README.en.md">English</a> · <a href="README.ja.md">日本語</a>
 </p>
 
-<!-- product-surface-review: 2.7.1 -->
+<!-- product-surface-review: 2.10.0 -->
+
+This source version separates the distributable product from private maintainer records. Feedback stays in the user data root until an authorized, selective handoff; product use and contribution do not require that private state. Relocated sources retain verifiable identity, and publication targets an explicit independent checkout without private ancestry. The eight Skills and existing quality and safety boundaries remain intact. See [release notes](RELEASE_NOTES.md).
 
 <p align="center">
   <a href="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml"><img src="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml/badge.svg" alt="Validate Senmu BuildOS"></a>
@@ -74,6 +76,8 @@ Refresh Codex, start a new conversation, and describe the outcome in normal lang
 
 ### Claude Code
 
+For initial Claude setup or project governance, see [project-instruction compatibility](adapters/claude-code/README.md); discovery does not prove loading.
+
 ```bash
 claude plugin marketplace add SenMuShare/senmu-buildos
 claude plugin install senmu-buildos@senmu-buildos
@@ -101,7 +105,7 @@ python3 adapters/workbuddy/install_workbuddy.py --dry-run
 python3 adapters/workbuddy/install_workbuddy.py --scope user
 ```
 
-The default installs into the user-level `~/.workbuddy/skills/`; use `--scope project --workspace <workspace-root>` to keep it project-scoped. See [adapters/workbuddy/README.md](adapters/workbuddy/README.md) for the WorkBuddy adapter.
+The default installs into the user data root's `skills/` directory (`~/.workbuddy-ai/skills/`, falling back to the legacy `~/.workbuddy/` when only that exists); use `--scope project --workspace <workspace-root>` to keep it project-scoped. See [adapters/workbuddy/README.md](adapters/workbuddy/README.md) for the WorkBuddy adapter.
 
 ### ZCode
 
@@ -225,9 +229,9 @@ BuildOS does not promise a fixed percentage. It reduces avoidable cost by preven
 
 ## Install, update, and remove
 
-The current formal release is Senmu BuildOS `v2.7.1`. It supports Codex, Claude Code, a Doubao adapter, a WorkBuddy adapter, and a ZCode adapter. Install the plugin as one unit; the eight Skills do not need separate downloads. Professional English is used for both the normative runtime specifications and all active Reference paths, while users can continue to work in Chinese or any other requested output language. When comparing external Skills, BuildOS calibrates them to the current model and host, retaining useful domain methods without copying obsolete process. Development and Delivery reuse verification evidence that remains valid, then add only checks invalidated by a change and independent artifact, environment, or runtime facts.
+The current source version is Senmu BuildOS `v2.10.0`. It supports Codex, Claude Code, a Doubao adapter, a WorkBuddy adapter, and a ZCode adapter. Install the plugin as one unit; the eight Skills do not need separate downloads. Professional English is used for both the normative runtime specifications and all active Reference paths, while users can continue to work in Chinese or any other requested output language. When comparing external Skills, BuildOS calibrates them to the current model and host, retaining useful domain methods without copying obsolete process. Development and Delivery reuse verification evidence that remains valid, then add only checks invalidated by a change and independent artifact, environment, or runtime facts.
 
-This release closes bare-Git protection in local cleanup planning and aligns engineering routing with generated quality defaults. Native recovery and model behavior remain unverified; the cleanup helper does not support Windows execution. See [release notes](RELEASE_NOTES.md).
+This source update fixes release-cleanup reporting and failure handling, distinguishes undecided feedback from follow-up work, and inventories Claude project instructions without claiming they are loaded. Update generated cleanup scripts through project governance; upgrading the plugin does not clean devices or upload feedback. Native recovery, actual host loading and Token impact remain separately unverified; the ordinary-file cleanup helper does not support Windows execution. See [release notes](RELEASE_NOTES.md).
 
 ### Update Codex
 

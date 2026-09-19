@@ -53,6 +53,8 @@ A backlog is optional. The owner may record ideas first or proceed directly to a
 
 Do not repeat questions or await separate approval when owners and context suffice. Unknowns block only when they would silently change outcome. Keep discussion in the task owner; the PRD stores current conclusions.
 
+When overloaded terms or inconsistent names would change behavior, permissions, billing, state or acceptance, resolve the concept against existing decisions and a concrete boundary scenario. For example, distinguish retrying the same intent from starting a new potentially billable intent when that distinction matters; do not invent the project's answer. Retrieve discoverable facts yourself and ask only for a material unresolved choice, with a recommendation and consequence. Group independently answerable questions rather than exhausting future branches. Record adopted meaning in the existing product/terminology owner within write authority, then reuse it in technical mappings. Do not create a new CONTEXT file, ADR or glossary service for each term, re-ask settled choices, or turn observed code into permission to change approved intent.
+
 Assign implementation-ready work from product facts to the current open version, successor version, or uncommitted backlog. Add it to an open version when goal, acceptance, and delivery timing align. Ask only when placement would change scope/timing and cannot be inferred. Future unimplemented work records version intent without creating a code branch.
 
 Follow project version policy and approved change, not version numbers alone. Fixes, compatible features, and incompatible changes may suggest patch/minor/major candidates; retain product roles such as current patch batch, later feature version, or successor until scope stabilizes.
@@ -69,7 +71,7 @@ Maintain one version requirement/defect list in the PRD or equivalent owner, not
 
 A field, copy, or local behavior change may need only version, change, and acceptance. By default expand template areas for actual workflow, state, permission, billing, data, compliance, or release-unit risk. A fix that restores the current specification changes code/tests, not the PRD.
 
-When the owner says a feature is no longer wanted, should be deleted, cancelled, or permanently removed, default to **permanent retirement**: no user, system, or external caller can trigger it. Acceptance states replacement behavior and historical-data read/migration/compliance boundaries. Treat hiding, pausing, gradual disablement, or retained rollback/compatibility as the goal only when explicitly requested, with scope and exit conditions. Permanent retirement does not authorize destruction of business data, audit records, or rollback evidence.
+Resolve the object and intent of cancellation from the request and existing product decisions. Cancelling unimplemented work removes that work from the plan; stopping a run follows its cancellation contract; explicitly retiring an existing capability removes its executable entrypoints under the approved retirement scope. Do not infer permanent capability removal from the word cancel alone. Record replacement behavior and required historical-data, compliance, compatibility or rollback boundaries. Retirement of code never by itself authorizes destroying business data, audit records or recovery evidence.
 
 ## 4. Development, Testing, and Acceptance
 

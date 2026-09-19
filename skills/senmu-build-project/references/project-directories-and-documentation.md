@@ -37,7 +37,7 @@ Keep existing numbered Chinese paths, `inputs`, `staging`, `outputs`, or `receip
 ## 3. Entrypoints and Project Map
 
 - `README.md`: identity, startup, primary applications/services, key entrypoints.
-- Root `AGENTS.md`: under BuildOS, project differences, real commands, authority paths, explicit overrides only; never copied BuildOS/domain standards. Subdirectories may add narrower delta layers.
+- Root `AGENTS.md`: real project routes and commands, concise adopted constraints needed by ordinary execution, and explicit overrides. Keep complete methods with their domain owner and preserve a usable route before removing duplicate prose. Subdirectories may add narrower scoped instructions.
 - `.senmu-buildos/config.json`: governance-instance identity, layout, modules, relocatable location.
 - `governance/PROJECT_MAP.md` or equivalent: routes owners, state sources, commands, release units, legacy boundaries without copied bodies or current mutable state.
 - Project agents get a register and sole definition only when actually enabled. Skill `agents/openai.yaml` is not a business agent.

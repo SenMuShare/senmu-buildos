@@ -34,7 +34,7 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent.parent  # senmu-buildos-internal
+ROOT = Path(__file__).resolve().parent.parent.parent  # product root
 KERNEL_SOURCE = ROOT / "adapters" / "zcode" / "kernel"
 SKILLS_SOURCE = ROOT / "skills"
 KERNEL_SKILL_NAME = "senmu-build-kernel"

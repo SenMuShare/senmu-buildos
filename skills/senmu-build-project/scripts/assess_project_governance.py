@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import Any
 
 
-ENTRYPOINT_NAMES = {"AGENTS.md", "README.md"}
+ENTRYPOINT_NAMES = {"AGENTS.md", "README.md", "CLAUDE.md", "CLAUDE.local.md"}
 MAP_NAMES = {"PROJECT_MAP.md", "repositories.json", "REPOSITORY_CUTOVER_REPORT.md"}
 AUTHORITY_REGISTRY_NAMES = {
     "项目总架构与AI修改导航.md": "project_navigation",
@@ -321,6 +321,37 @@ def assess_capability_signals(paths: list[Path], root: Path) -> dict[str, Any]:
     }
 
 
+def instruction_metadata(path: Path, root: Path) -> dict[str, Any] | None:
+    """Discover instruction candidates; host selection and imported scopes remain unverified."""
+    if path.is_symlink():
+        return None
+    relative = path.relative_to(root)
+    parts = relative.parts
+    is_claude_rule = any(parts[i:i + 2] == (".claude", "rules") for i in range(len(parts) - 1)) and path.suffix == ".md"
+    if path.name not in {"AGENTS.md", "AGENTS.override.md", "CLAUDE.md", "CLAUDE.local.md"} and not is_claude_rule:
+        return None
+    scope = relative.parent
+    if ".claude" in parts:
+        scope = Path(*parts[:parts.index(".claude")])
+    host = "codex" if path.name == "AGENTS.override.md" else "claude_code" if path.name.startswith("CLAUDE") or is_claude_rule else "host_dependent"
+    result = {
+        "path": relative.as_posix(), "scope": scope.as_posix(),
+        "kind": "scoped_rule" if is_claude_rule else "override" if path.name == "AGENTS.override.md" else "instructions",
+        "host": host, "load_status": "not_verified",
+    }
+    try:
+        data = path.read_bytes()
+    except OSError:
+        result["read_status"] = "unreadable"
+        return result
+    result["sha256"] = hashlib.sha256(data).hexdigest()
+    result["read_status"] = "readable"
+    # A locator is not an instruction-loader implementation. Do not follow imports
+    # outside the assessed root or evaluate path-glob precedence here.
+    result["import_candidates"] = re.findall(r"(?m)^\s*@([^\s]+)\s*$", data.decode("utf-8", errors="replace"))
+    return result
+
+
 def assess(root: Path, max_depth: int, verbose: bool) -> dict[str, Any]:
     excluded: dict[str, list[str]] = defaultdict(list)
     scanned_files: list[Path] = []
@@ -373,8 +404,8 @@ def assess(root: Path, max_depth: int, verbose: bool) -> dict[str, Any]:
         marker_kind = git_marker_kind(unit_root)
         entrypoints = [
             path.relative_to(root).as_posix()
-            for path in (unit_root / "AGENTS.md", unit_root / "README.md")
-            if path.is_file()
+            for path in (unit_root / name for name in ("AGENTS.md", "README.md", "CLAUDE.md", "CLAUDE.local.md", ".claude/CLAUDE.md", ".claude/AGENTS.md"))
+            if path.is_file() and not path.is_symlink()
         ]
         quality = [
             (unit_root / name).relative_to(root).as_posix()
@@ -471,21 +502,13 @@ def assess(root: Path, max_depth: int, verbose: bool) -> dict[str, Any]:
     if len(candidates.get("run_state", [])) > 1:
         migration_risks.append("存在多个数据库或运行清单候选；需确认当前库、投影、备份库和各发布单元 owner。")
 
-    instruction_files = sorted(
-        (path for path in scanned_files if path.name in {"AGENTS.md", "AGENTS.override.md"}
-         and not path.is_symlink()), key=lambda path: path.as_posix()
-    )
-    agent_entrypoints = [path.relative_to(root).as_posix() for path in instruction_files]
-    instruction_inventory = [{
-        "path": path.relative_to(root).as_posix(),
-        "scope": path.parent.relative_to(root).as_posix(),
-        "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
-        "kind": "override" if path.name == "AGENTS.override.md" else "instructions",
-    } for path in instruction_files]
+    instruction_inventory = [item for path in sorted(scanned_files, key=lambda p: p.as_posix())
+                             if (item := instruction_metadata(path, root)) is not None]
+    agent_entrypoints = [item["path"] for item in instruction_inventory]
     if agent_entrypoints:
         migration_risks.append(
-            "现有 AGENTS.md 必须先做语义去重：保留项目事实、真实命令、权威路径和明确覆盖；"
-            "把已有专业正文压缩为路由；删除与 BuildOS 相同的通用方法；冲突或过期项先按现行权威核对；只有未决且影响结果的选择才交用户裁决。"
+            "现有宿主指令需先核对实际加载和作用域：保留项目事实、真实命令、权威路径、必要的简短采用约束和明确覆盖；"
+            "只有专业正文有可用 owner 时才压缩为路由；不因与 BuildOS 同义就删除唯一可用约束；只把未决且影响结果的选择交用户裁决。"
         )
 
     result: dict[str, Any] = {
@@ -515,6 +538,8 @@ def assess(root: Path, max_depth: int, verbose: bool) -> dict[str, Any]:
                 "max_depth": max_depth,
                 "depth_limited_directories": sorted(depth_limited),
                 "external_ancestor_and_host_instructions": "not_scanned",
+                "host_configuration_and_effective_loading": "not_verified",
+                "import_targets_and_rule_globs": "not_evaluated",
                 "registered_worktrees": "assess_selected_active_root_separately",
                 "selection": "candidate_scopes_require_host_and_authority_confirmation",
             },

@@ -8,7 +8,9 @@
   <a href="README.md">简体中文</a> · <a href="README.en.md">English</a> · <a href="README.ja.md">日本語</a>
 </p>
 
-<!-- product-surface-review: 2.7.1 -->
+<!-- product-surface-review: 2.10.0 -->
+
+本版では配布可能な製品ソースと作者の非公開記録を分離しました。フィードバックは利用者のデータ領域に残し、許可された必要部分だけを改善に用います。製品の利用・テストに非公開記録は不要です。移動後もソースの識別を保ち、公開先を明示して非公開履歴の混入を防ぎます。8 Skill の責務と品質・安全の境界は維持します。[更新履歴](RELEASE_NOTES.md)をご覧ください。
 
 <p align="center">
   <a href="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml"><img src="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml/badge.svg" alt="Validate Senmu BuildOS"></a>
@@ -74,6 +76,8 @@ Codex を更新して新しい会話を開始し、通常の言葉で目的を�
 
 ### Claude Code
 
+Claude の初回設定やプロジェクト整理については[指示ファイルの互換性](adapters/claude-code/README.md)を参照してください。ファイルの存在は読み込みの証明ではありません。
+
 ```bash
 claude plugin marketplace add SenMuShare/senmu-buildos
 claude plugin install senmu-buildos@senmu-buildos
@@ -101,7 +105,7 @@ python3 adapters/workbuddy/install_workbuddy.py --dry-run
 python3 adapters/workbuddy/install_workbuddy.py --scope user
 ```
 
-デフォルトではユーザーレベルの `~/.workbuddy/skills/` にインストールされます。プロジェクト限定にする場合は `--scope project --workspace <ワークスペースのルート>` を使います。WorkBuddy アダプターの詳細は [adapters/workbuddy/README.md](adapters/workbuddy/README.md) を参照してください。
+デフォルトではユーザーデータルート配下の `skills/`（`~/.workbuddy-ai/skills/`。旧版の `~/.workbuddy/` しか無い場合はそちら）にインストールされます。プロジェクト限定にする場合は `--scope project --workspace <ワークスペースのルート>` を使います。WorkBuddy アダプターの詳細は [adapters/workbuddy/README.md](adapters/workbuddy/README.md) を参照してください。
 
 ### ZCode
 
@@ -225,9 +229,9 @@ BuildOS は固定割合を約束しません。不要な機能、重複コード
 
 ## インストール、更新、削除
 
-Senmu BuildOS の現行正式リリースは `v2.7.1` です。Codex、Claude Code、豆包アダプター、WorkBuddy アダプター、ZCode アダプターをサポートします。8 Skill は個別ではなく、1 つのプラグインとしてインストールします。実行規範本文と active Reference パスは専門的な英語に統一し、ユーザーは引き続き中国語や希望する言語で依頼し、その言語の成果物を受け取れます。外部 Skill を対比する際は現行のモデルとホストに合わせて有用な領域手法を採用し、古い手順はそのまま持ち込みません。開発とデリバリーでは有効な検証証拠を再利用し、変更で無効になった確認と、成果物、環境、実行状態など独立した事実だけを追加で確認します。
+Senmu BuildOS の現行ソースバージョンは `v2.10.0` です。Codex、Claude Code、豆包アダプター、WorkBuddy アダプター、ZCode アダプターをサポートします。8 Skill は個別ではなく、1 つのプラグインとしてインストールします。実行規範本文と active Reference パスは専門的な英語に統一し、ユーザーは引き続き中国語や希望する言語で依頼し、その言語の成果物を受け取れます。外部 Skill を対比する際は現行のモデルとホストに合わせて有用な領域手法を採用し、古い手順はそのまま持ち込みません。開発とデリバリーでは有効な検証証拠を再利用し、変更で無効になった確認と、成果物、環境、実行状態など独立した事実だけを追加で確認します。
 
-本版ではローカル清理計画で裸 Git リポジトリを保護し、Engineering のルーティングと生成される品質既定を整合させました。実機での復元とモデル動作は未検証で、清理ツールは Windows での実行に対応していません。[更新履歴](RELEASE_NOTES.md)をご覧ください。
+本ソース更新では、リリース清理の結果と失敗処理を修正し、未裁定のフィードバックと後続作業を区別します。Claude の指示ファイルも調査対象に含めますが、実際の読み込みとは区別します。既存プロジェクトの清理スクリプトはプロジェクト整理時に更新してください。プラグイン更新だけで端末の清理やフィードバック送信は行いません。実機復元・ホスト読み込み・Token 効果は別途検証が必要で、通常ファイルの回収ツールは Windows では実行できません。[更新履歴](RELEASE_NOTES.md)。
 
 ### Codex の更新
 

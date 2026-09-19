@@ -17,6 +17,8 @@ Use only lightweight reference for an early single-person prototype, one-off val
 - **Authoritative working directory:** owner-approved daily entrypoint. Branches, worktrees, clones, migration staging, and builds may multiply, but one unit has one current code/ledger/formal-delivery source.
 - **Publication model:** private-only, public-native, or private authority producing a controlled public projection. In the last model, public is not editable source authority; contributions enter private authority and are reprojected.
 
+A private maintenance workspace may contain one public-ready product subtree and separate author-only records. Identify the product by repository revision and source-relative path; it must remain usable without private siblings. Public projection is an authorized delivery operation, not a requirement to keep a second editable source directory. Export product files into an independent public history, never publish the private parent repository or its ancestry.
+
 ### 2.1 Governance Levels
 
 | Level | Typical form | Strategy |

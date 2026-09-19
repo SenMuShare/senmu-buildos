@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import importlib.util
 import json
 import subprocess
 import sys
@@ -13,6 +14,19 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 ADAPTER = ROOT / "adapters" / "workbuddy"
 SKILLS = ROOT / "skills"
+
+
+def load_installer():
+    spec = importlib.util.spec_from_file_location(
+        "workbuddy_installer", ADAPTER / "install_workbuddy.py"
+    )
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+INSTALLER = load_installer()
+
 WORKBUDDY_SKILL_NAMES = [
     "senmu-build-project",
     "senmu-build-product",
@@ -124,6 +138,57 @@ class WorkBuddyAdapterTest(unittest.TestCase):
                     (workspace / ".workbuddy" / "skills" / name / "SKILL.md").is_file(),
                     f"{name}/SKILL.md not installed into project scope",
                 )
+
+    def test_skills_root_prefers_current_data_root_when_both_exist(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            (base / ".workbuddy-ai").mkdir()
+            (base / ".workbuddy").mkdir()
+            self.assertEqual(
+                INSTALLER.skills_root(base), base / ".workbuddy-ai" / "skills"
+            )
+
+    def test_skills_root_falls_back_to_legacy_data_root(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            (base / ".workbuddy").mkdir()
+            self.assertEqual(
+                INSTALLER.skills_root(base), base / ".workbuddy" / "skills"
+            )
+
+    def test_skills_root_defaults_to_current_name_when_neither_exists(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            self.assertEqual(
+                INSTALLER.skills_root(base), base / ".workbuddy-ai" / "skills"
+            )
+
+    def test_installer_project_scope_prefers_current_data_root(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            workspace = Path(tmp) / "ws"
+            (workspace / ".workbuddy-ai" / "skills").mkdir(parents=True)
+            (workspace / ".workbuddy" / "skills").mkdir(parents=True)
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(ADAPTER / "install_workbuddy.py"),
+                    "--scope", "project",
+                    "--workspace", str(workspace),
+                ],
+                capture_output=True, text=True,
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            for name in ALL_NAMES:
+                self.assertTrue(
+                    (
+                        workspace / ".workbuddy-ai" / "skills" / name / "SKILL.md"
+                    ).is_file(),
+                    f"{name}/SKILL.md not installed into the current data root",
+                )
+            # The stale root must not receive a second copy.
+            self.assertFalse(
+                (workspace / ".workbuddy" / "skills" / "senmu-build-project").exists()
+            )
 
 
 if __name__ == "__main__":

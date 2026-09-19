@@ -5,7 +5,7 @@ Use this standard for restarting delivered legacy systems, modernization, stack 
 Core rule:
 
 ```text
-The legacy source defines existing behavior; the new stack re-expresses it.
+Legacy source establishes observed behavior and migration coverage. Preserve the approved contract; investigate and record deviations instead of promoting implementation defects into requirements.
 ```
 
 ## 1. Classify the Refactor
@@ -33,7 +33,7 @@ Use this order for existing behavior:
 6. Screenshots from runnable production/local pages.
 7. Historical PRD, API docs, and chat.
 
-When source and documents conflict, provisionally follow source and register the conflict for confirmation.
+Use the list above to discover existing behavior, not as an instruction-authority ranking. Compare observations with approved and applicable requirements. Record any deviation and repair only within current authority. When no intended behavior can be established, preserve observed behavior provisionally and state the unresolved choice; neither silently redesign the business nor treat a known defect as a formal rule.
 
 ## 3. Prohibited Methods
 

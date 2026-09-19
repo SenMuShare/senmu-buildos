@@ -29,8 +29,13 @@ if [[ "${1:-} ${2:-} ${3:-}" == "image inspect --format" ]]; then
   case "$5" in
     example/app@sha256:currentdigest) echo sha256:current ;;
     example/app:1.9.0) echo sha256:previous ;;
+    example/app:1.8.0) echo sha256:old ;;
     *) exit 1 ;;
   esac
+elif [[ "${1:-} ${2:-}" == "context show" ]]; then
+  echo fixture-context
+elif [[ "${1:-} ${2:-}" == "info --format" ]]; then
+  echo fixture-engine
 elif [[ "${1:-} ${2:-} ${3:-}" == "ps -a --format" ]]; then
   echo example/app:1.9.0
 elif [[ "${1:-} ${2:-}" == "ps -aq" ]]; then
@@ -38,7 +43,10 @@ elif [[ "${1:-} ${2:-}" == "ps -aq" ]]; then
 elif [[ "${1:-} ${2:-} ${3:-}" == "inspect --format {{.Image}}" && "${4:-}" == "container-current" ]]; then
   echo sha256:runtime
 elif [[ "${1:-} ${2:-}" == "image ls" ]]; then
-  printf '%s\n' 'example/app:2.0.0|sha256:current' 'example/app:old-alias|sha256:current' 'example/app:1.9.0|sha256:previous' 'example/app:runtime-old|sha256:runtime' 'example/app:1.8.0|sha256:old'
+  printf '%s\n' 'example/app:2.0.0|sha256:current' 'example/app:old-alias|sha256:current' 'example/app:1.9.0|sha256:previous' 'example/app:runtime-old|sha256:runtime'
+  if [[ ! -f "${FAKE_DOCKER_REMOVALS:?}" ]] || ! grep -Fxq 'example/app:1.8.0' "$FAKE_DOCKER_REMOVALS"; then
+    echo 'example/app:1.8.0|sha256:old'
+  fi
 elif [[ "${1:-} ${2:-}" == "image rm" ]]; then
   echo "$3" >> "${FAKE_DOCKER_REMOVALS:?}"
 else
@@ -52,6 +60,8 @@ export PATH="$fixture/bin:$PATH"
 export FAKE_DOCKER_REMOVALS="$fixture/removals.log"
 
 dry_run="$(RETENTION_PROJECT_ROOT="$fixture" "$cleanup" "$fixture/operations/release-retention.env" dry-run)"
+grep -Fq 'release_retention_status=planned' <<< "$dry_run"
+grep -Fq 'artifacts_planned=1 artifacts_removed=0' <<< "$dry_run"
 grep -Fq 'would_remove_artifact=old' <<< "$dry_run"
 grep -Fq 'would_remove_image=example/app:1.8.0' <<< "$dry_run"
 grep -Fq 'kept_image=example/app:2.0.0' <<< "$dry_run"

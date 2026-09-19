@@ -38,9 +38,11 @@ Determine the governance level when entering a task. Escalate when investigation
 | G1 Contract-preserving local change | Local implementation or content adjustment that preserves product, runtime, and delivery contracts | Check contract and impact scope; run an available targeted quality check or disclose what was not verified |
 | G2 Ordinary engineering task | Small feature, ordinary bug, local refactor, read-only engineering governance review, documentation completion | Read relevant references; run formatting, lint, applicable type checks, and matching tests; for architecture review, report evidence without automatically expanding into refactoring; write a work log when needed |
 | G3 Release or structural task | Hotfix, formal release, cross-module architecture change, public contract or data-structure change, deployment, versioning, rollback, production verification | Explain relevant architecture impact; run matching checks and project-required gates. For an authorized release, satisfy the applicable version, log, Tag, artifact, production-verification, and rollback contract |
-| G4 High-risk or organizational-learning task | Security, payments, permissions, data migration, production incident, repeated failure, cross-agent rework | Verify the actual high-risk path. Retrospect on an incident, material rework, or explicit review request; update standards and submit BuildOS feedback only when eligible |
+| G4 High-risk task | Material security, payment, permission, production-data, irreversible-migration or incident risk; cross-project policy change with comparable actual impact | Verify the actual high-risk path and recovery basis. Retrospect on material incidents/rework or explicit requests; update rules and feedback only when eligible |
 
 Use the highest applicable level. Risk selects evidence depth; the development, acceptance, or release phase selects when that evidence is due. A structural change does not by itself turn an open development slice into a release candidate or require deployment/rollback exercises.
+
+Classify by impact, exposure, scope and recoverability. Repetition, cross-agent rework or organizational learning triggers cause and ownership analysis, not an automatic G4 tier, independent review or full-suite run. A first occurrence can already be high-risk; repeated low-risk confusion may only need its existing rule or capability entrypoint repaired.
 
 ## 2. Gate Types
 
@@ -100,12 +102,12 @@ Prefer these practices, but adapt them to project stage, technology, or owner di
 ## 4. Noise Reduction
 
 - Do not add unrelated documents, versions, or release records for lightweight work.
-- For G1, use Engineering's contract-preserving fast path: normally do not combine Product, Workflow, or Delivery; do not edit PRD, ADR, or Changelog; do not write a Work Log; retain only the affected implementation and one targeted check. Project rules or actual contract/risk escalation override this default.
+- For G1, follow Engineering's contract-preserving fast path: normally use the affected implementation, applicable project rule and focused check without additional governance artifacts. Explicitly requested edits to an existing document/contract, and navigation updates directly caused by the change, remain allowed within scope. A lightweight classification does not erase the requested outcome.
 - Engineering testing standards determine development batches and test timing; a governance level does not mechanically trigger every full gate after each small edit.
 - Do not add a prompt, checklist item, or validator for every fixed defect; first prove a residual risk still needs control.
 - Final replies should name only gates material to the task, not reproduce a complete PMO checklist.
 - Do not present Guidance as mandatory or a Hard Gate as optional.
-- State why the level escalated, such as discovered production impact, data risk, or repeated failure.
+- State the newly discovered impact or boundary that caused escalation, such as production exposure or data risk. A repeated error requires an explained risk change, not an automatic escalation.
 
 ## 5. Minimum Report
 
