@@ -12,7 +12,7 @@ Use this standard to decide how a project or skill references external knowledge
 ## 2. Skill Package Boundary
 
 - Retain only material required to execute the workflow and unavailable reliably on demand.
-- Put references directly under `references/` and link them from `SKILL.md`; do not create nested vendor knowledge trees.
+- Make each active reference reachable through a clear, bounded, conditional route from `SKILL.md`. Link primary decisions directly; a distinct resource group may use a small index and nested files. Preserve the existing Design Library rather than flattening it. Keep routes free of cycles and orphaned active content; do not turn a resource index into an unconditional full-library read.
 - Do not package complete `llms-full.txt`, whole-site documentation, or vendor material that might be useful later.
 - Route ecosystem-specific rules conditionally and do not load them before the project selects that ecosystem.
 - Put executable code in `scripts/` and output templates/reusable resources in `assets/`; do not mix them into references.

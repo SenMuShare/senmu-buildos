@@ -40,7 +40,9 @@ Durable Task State owns progress/recovery; WORKLOG appends chronological facts. 
 Each formal release unit maintains `VERSION` and `CHANGELOG.md`. When useful, separate:
 
 - Internal: implementation, interfaces, database, deployment, tests, risks, rollback.
-- User-facing: understandable features, experience, and redacted fixes—no internals, security detail, secrets, costs/pricing policy, payment configuration, or unpublished plans.
+- User-facing: verified changes, user impact, compatibility and actions needed to upgrade. Exclude secrets, exploitable security details, private implementation facts and unpublished plans. A product's approved public model names, queue concepts or prices are not secret merely because they are technical or commercial.
+
+Write for the upgrade decision: what changed, who is affected and what action is needed. Put real breaking changes and migration steps first when present. Use the project's existing format; remove unsupported praise and repeated summaries, not caveats, scope or recovery information. Claims come from the actual candidate and evidence; do not invent a benchmark, benefit, deadline or migration command. Do not impose a fixed line count or a separate style-review pass.
 
 Record version, date, impact scope, additions, fixes, technical/deployment changes, tests/evidence, known risks, and rollback/previous stable version.
 
@@ -62,29 +64,14 @@ Use only the matching variant from [Work Log Entry Templates](../assets/delivery
 
 ## 5. Lessons Learned Register
 
-The formal Lessons Learned Register is structured, decidable, and retireable—not a complaint/story collection. Promote from logs/retrospectives only when recurrence is plausible or repeated; cause/treatment are evidenced; scope, trigger, required/prohibited actions are explicit; and a repeatable check exists, preferably a test/doctor/validator/CI gate for important paths.
+Learning owns lesson classification, evidence, promotion, retrieval and retirement under [Organizational Learning](../../senmu-build-learning/references/organizational-learning-and-governance-closure.md). Delivery records the actual incident or delivery outcome and links an existing applicable lesson or a justified candidate; it does not maintain another lesson schema or promotion threshold.
 
-Each entry contains ID, state, scope, trigger, symptom, confirmed cause, source-governance action, must, prohibited, repair verification, authoritative rule, source log, owner/review date, and supersession. Add an automatic gate plus cost/retirement only for justified residual risk.
+A second error alone does not prove a repeated cause or require a new rule, lesson or validator. Repair the confirmed source first; Learning decides whether durable reuse and residual-risk controls are justified. Apply relevant existing lessons without loading the entire history or starting Learning for every ordinary log entry. Stable domain contracts stay with their original owner, and every write remains subject to the current task's authority.
 
-States:
-
-- `candidate`: insufficient evidence; not a hard rule.
-- `active`: future agents must retrieve and execute it when in scope.
-- `superseded`: historical, points to replacement.
-- `retired`: trigger gone, preserves exit evidence.
-
-Hard Gates:
-
-- Retrieve all in-scope `active` entries at start; on trigger, execute required/prohibited actions and detection.
-- On second occurrence, do not append another log only. Create/promote a lesson, explain why production still manufactures the defect and why source correction failed, and decide whether residual risk merits a gate.
-- A lesson is not a second PRD, architecture, or deployment standard. Put stable rules in authority; retain failure, trigger, and anti-regression index in lessons.
-- After mechanization, retain the lesson but use correct production entrypoints/defaults/executable contracts as primary defense and validators/tests for regression. Do not rely on an agent remembering prose.
-
-Learning uniquely owns `assets/learning-governance/LESSONS_LEARNED.template.md`.
 
 ## 6. AI Logging Requirements
 
-After substantive work, the final reply states whether a Work Log was written. Follow project rules. If no Work Log exists, suggest `governance/logs/WORKLOG.md` rather than creating it without scope.
+Follow the project's actual logging obligations. Mention log updates when they matter to recovery, delivery or the user's request; routine replies need not repeat a logging-status formula. If a durable record is genuinely needed and none exists, propose the smallest existing-owner-compatible location rather than silently creating a new ledger.
 
 Never log secrets, passwords, tokens, private keys, personal data, plaintext server configuration, or restricted business details without approved internal access controls.
 
@@ -109,8 +96,8 @@ Information affecting future requirements, architecture, or release must also up
 
 ## 9. Retrospective Relationship
 
-A retrospective affecting future execution enters the Work Log and follows Learning's retrospective standard for authority updates or BuildOS feedback. The Work Log keeps this event; Lessons accepts only evidenced recurring conclusions. One-off errors may stay in the log; project-rule gaps also update authority; repeated failures need a Lessons ID and executable control.
+Record material delivery facts in the existing Work Log, then route reusable experience to Learning's current contract. A one-off execution error may need no durable rule change; a domain-rule or discoverability gap is repaired at its actual owner. Repeated failure is evidence to investigate, not automatic permission to create a Lessons ID, schema or executable gate.
 
-The retrospective entry includes problem, detection, cause, treatment, evidence, classification (`one-off execution error`, `project-specific rule gap`, or `general governance gap`), changed project/Skill owner, and future constraint.
+Describe the actual mechanism, evidence, treatment and remaining uncertainty. Do not invent causes, timelines, wrong turns, owners or deadlines to make a report look complete. Use concrete source changes instead of generic promises to improve communication or be more careful.
 
-If BuildOS may change, record cross-project abstraction evidence and create a separate task in the BuildOS source repository through `senmu-build-learning`, adding `$skill-creator` for entry/structure/trigger changes. An application Work Log does not own BuildOS version history.
+A specific BuildOS component defect may enter its existing candidate path. Correct the application and BuildOS in their respective authorized repositories; do not confuse their version histories, installed snapshots or release states. Use the [BuildOS evolution](../../senmu-build-learning/references/buildos-evolution-and-upstream-feedback.md) method only when source improvement is in scope.

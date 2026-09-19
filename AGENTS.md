@@ -1,13 +1,20 @@
-# Senmu BuildOS 仓库身份与编辑边界
+# Senmu BuildOS product source
 
-在修改前先判定当前根的身份：
+This directory is the complete, distributable product source. It may be checked out alone or maintained as a declared subtree; use the actual Git root and source-relative path. Installed copies are execution artifacts, not a place to maintain source.
 
-- 存在 `.senmu-buildos/config.json`：这是内部权威库，Bug 修复、Skill 更新、测试和治理记录在此完成。
-- 存在 `.senmu-public-projection.json`：这是可重建的公开投影，只允许检查和发布复核，禁止直接修改。将问题返回内部 owner 修复后重新生成投影。
-- 两个标记都不存在：不要猜测当前副本是 owner；先查找工作区地图或请求用户指明权威根。
+- Start from the requested capability and its existing owner. Eight peer Skills live in `skills/`; Hooks in `hooks/`; host adapters in `adapters/`. Use `docs/architecture/skill-boundaries.md` when ownership or routing is unclear, not as a universal pre-read.
+- Preserve authorization, safety, truthful evidence and approved behavior. Reuse existing implementations and references; update affected consumers rather than duplicating complete rules. Runtime guidance and links remain portable.
+- Keep raw feedback, private tasks, credentials, user transcripts and author-only state outside this product. A public, synthetic regression or a useful architecture decision may remain here. Product checks and runtime cannot require a private sibling directory.
+- Use a scoped task branch and the project's actual write boundaries. Do not edit an installed cache or force-push unrelated work. A source commit does not authorize installation or public release.
 
-本机 Codex 刷新只消费内部库的已验证 commit。公开投影生成不等于发布；GitHub push、Tag 和 Release 需要用户单独的明确发布授权。
+Checks from this source root:
 
-内部库的具体命令和门禁见 `governance/PUBLICATION.md`。普通源码任务按目标 Skill/reference owner 直接执行；只有治理或发布决策才加载相应专业 Skill。
+```bash
+python3 scripts/validate_package.py
+python3 scripts/validate_public_surface.py
+python3 scripts/bump_version.py --check
+python3 -m unittest discover -s tests -p 'test_*.py'
+node --test tests/hooks/*.test.js
+```
 
-修改 Skill 时核对其引用和消费者；包检查为 `python3 scripts/validate_package.py`，Python 回归为 `python3 -m unittest discover -s tests -p 'test_*.py'`，Hook 回归为 `node --test tests/hooks/*.test.js`。按影响选取检查，安装刷新前完成配置声明的全部门禁。规则行为和性能结论须与结构检查分开报告。
+Use checks matching the changed contract during development and required integration checks at closeout. Preserve unverified limitations; passing source checks does not prove host activation or model performance. Contributor and release-source guidance is in `CONTRIBUTING.md`.

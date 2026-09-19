@@ -9,7 +9,7 @@ Each candidate receives exactly one disposition:
 - `merge`: add valid missing meaning to an existing owner.
 - `replace`: replace a rule whose direction, scope, or wording causes wrong decisions.
 - `add`: fill a genuine decision gap that adjacent rules cannot naturally imply.
-- `project_only`: return guidance specific to a project, organizational scale, framework, version, or runtime to project authority.
+- `project_only`: retain guidance whose validity depends on a particular project's business or policy. A reusable framework technique may belong in the existing conditional framework profile; naming a vendor does not by itself make the method project-only.
 - `needs_evidence`: retain a useful proposition that lacks scope evidence, counterexamples, or verification; do not execute it.
 - `discard`: reject marketing, common knowledge, duplication, personal preference, stale practice, or value below context cost.
 
@@ -79,11 +79,14 @@ Prefer `merge` or `replace`. An addition must explain why no existing owner can 
 
 ## 5. Compile into a BuildOS Rule
 
-Remove textbook style, organizational ceremony and source narration. State the outcome/property to preserve, relevant context, observable trigger, sensible default, genuine constraints/exceptions and sufficient verification. Let the model choose routine implementation details. Use a mandatory or prohibited action only where the contract or risk warrants it; do not turn every piece of advice into a gate.
+Write one scoped decision at its existing specialist owner. Keep its trigger, action, important constraints and material exceptions together, with only the rationale needed to prevent a wrong interpretation. A short pointer states when to read detail and which decision it serves. Do not rely on a distant disclaimer to cancel an overbroad command.
 
-Prefer short positive guidance with concrete boundaries over an exhaustive recipe. Retain a specialized procedure when its order is essential to correctness, recovery or compatibility. Project tooling owns mechanical style; complexity, coverage and function length are diagnostic signals unless project evidence supports a threshold. English wording should preserve the adjudicated meaning, not merely translate the source's commands.
+Prefer a clear positive default, preserving precise prohibitions where safety or authority requires them. Keep essential sequences for correctness, recovery or compatibility; leave routine implementation choices to the executor. Do not turn a model-specific phrase, fixed agent count, editing ratio or source author's preferred workflow into a universal requirement.
 
-Write rules to the Product, Workflow, Engineering, Delivery, Assurance, or Project owner that creates or controls the issue. Learning owns intake, adjudication, and promotion only; it does not create a second engineering standard.
+Use examples to clarify an existing rule rather than create another rule catalog. Definitions and consequences must remain readable across models: do not replace complete conditions with invented abbreviations or assume a stronger model's defaults apply to every executor. Templates are outlines; mechanically enforced style belongs in project tooling.
+
+Preserve one full semantic owner and its usable consumer path. A concise project constraint or task-specific safety summary may repeat necessary meaning; blindly deleting every repetition can remove the only reachable instruction. Write adopted terminology at Product, implementation rules at Engineering, navigation at Project, and delivery facts at Delivery. Learning owns the absorption method, not a second copy of all domain policies.
+
 
 ## 6. Batch Execution
 
@@ -101,24 +104,16 @@ When the user provides material for absorption, execute this loop without reopen
 
 Keep each batch focused on one closable topic.
 
-### 6.1 Proportional Behavior Evaluation
+### 6.1 Proportional Verification and Behavior Claims
 
-For a bounded wording/default correction, use the smallest realistic forward task and relevant exception that establish the intended decision; include a nearby non-trigger case when routing changes. Static checks alone do not establish behavior, but a full controlled experiment is not mandatory for every prompt edit. Record observed decisions and limits without claiming measured improvement.
+Select evidence for the claim being made. For bounded source corrections, inspect the complete affected rule and its direct consumers; use a relevant target, legitimate exception and nearby non-trigger as a semantic walkthrough. Program changes require deterministic tests of the actual behavior; template changes require checking generated output and preservation of existing project owners. Neither string checks nor a walkthrough prove actual model performance.
 
-Use controlled differential evaluation for material changes to authority, tool execution, external side effects, or a claim of model-specific performance improvement. Freeze the old Skill surface as control and the candidate as treatment, using the same model, reasoning, host, tools, budget and task order. Keep model comparisons separate; a result on one model is not proof for every supported model.
+There is no universal A/B or multi-model prerequisite for every instruction revision. Use available runtime observations when the claim concerns actual skill loading, agent behavior or a host-specific effect. If access is unavailable, disclose the unverified claim and complete the authorized source work; separately approved safety, independence and release requirements remain in force. Do not silently turn this exception into permission to deploy an unverified high-risk change.
 
-Cover four roles; one real case may satisfy several:
+A measured comparative performance claim needs an appropriate controlled comparison. When such an experiment is explicitly selected, preserve model, host, tools, source revision, task and budget comparability; separate models and invalidate contaminated runs. Use the existing evaluation schema, `validate_distillation_evaluation.py` and Assurance's [Reproducible POC Governance](../../senmu-build-assurance/references/reproducible-poc-governance.md) for that experiment. Their experiment-acceptance rules apply to the claimed differential result, not retroactively to every design correction.
 
-- `target`: normal trigger proving the intended wrong decision changes.
-- `non_trigger`: adjacent case proving no over-routing, over-refusal, or extra work.
-- `exception`: project authority, risk, version, or environment exception proving the default preserves decidable exceptions.
-- `adversarial`: attempt to induce overreach, shortcuts, mechanical matching, or bypass of higher authority.
+Unchanged behavior may still support a simpler equivalent rule without a performance claim. Never invent an improved verdict, completed run or Token saving to satisfy a check. Keep actual commands, results and limits in the existing task/experiment owner, not a new per-action ledger.
 
-Run isolation probes first to prove the control lacks the candidate capability and treatment loads it. Mark contaminated runs `invalidated` and rerun. For each case, record control observation, treatment observation, evidence, and `improved | unchanged | regressed | invalidated`. Correct decisions, risk boundaries, and external side effects are primary; tokens, duration, and output length are costs.
-
-For this controlled evaluation, validate receipts with `scripts/validate_distillation_evaluation.py`. `accept` requires at least one improvement, evidence for all four roles, and no regression or contamination. All `unchanged` cannot support a differential improvement claim; do not mark that experiment `accept`. A mechanical change with unchanged behavior uses its direct observable check. Do not manufacture an `improved` verdict to satisfy a validator; unchanged behavior may still support a simpler equivalent rule, without a performance claim.
-
-Assurance's [Reproducible POC Governance](../../senmu-build-assurance/references/reproducible-poc-governance.md) owns preregistration, full run ledgers, repetition, blinded human evaluation, and conclusion strength for formal controlled experiments. Learning does not duplicate experiment science or present self-review as independent assurance.
 
 ## 7. Acceptance
 
@@ -128,7 +123,7 @@ Distillation is complete only when:
 - Each meaning has one formal owner; specialist layers do not duplicate general prose.
 - New rules include trigger, action, exception, and verification and distinguish defect, risk, and preference.
 - Common tasks do not load raw textbooks, source catalogs, or unrelated language standards.
-- Behavior tests show correction of a wrong decision, not keyword appearance.
+- Evidence matches the declared result: source and template checks for source corrections, actual observations for behavior claims, and controlled evidence for comparative performance claims. Keyword appearance alone is not behavior proof.
 - Automated checks pass and unread material, unresolved conflicts, and unverified environments are explicit.
 - The batch did not acquire commit, install, tag, release, or production-write authority automatically.
 

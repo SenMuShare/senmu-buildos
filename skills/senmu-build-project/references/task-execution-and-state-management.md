@@ -42,6 +42,8 @@ At minimum, record:
 7. Research and verification summaries, unverified items, and residual risks.
 8. Recovery entrypoint, closeout, and release/delivery/rollback state.
 
+Write a task for its executor: the requested result, concrete scope, observable completion and unresolved facts. Reference context already owned elsewhere rather than retelling it. Do not fill a template with invented estimates, redundant background or obvious mechanical steps, and do not omit a real constraint merely to shorten the ticket.
+
 The plan is a coordination entrypoint. It does not duplicate formal requirements, technical design, code, runtime state, experiments, review reports, or release facts. Material product tradeoffs belong in REQ/PRD; durable technical decisions in TD/ADR; formal reviews, POCs, tests, and release evidence in their specialist owners.
 
 A key decision record must let a later agent distinguish a defect from an intentional constraint. Preserve `Decision Rationale`, `Rejected Alternatives`, `Preserved Constraints`, and `Revisit Trigger`: why the option won, which alternatives were rejected and why, what unchanged conditions prohibit silently restoring them, and what evidence or environmental change reopens the decision. Keep task-scoped decisions in the plan and promote durable product/architecture decisions to their original owner. Append a superseding decision when conditions change; do not rewrite history or make an old decision permanent.
@@ -66,8 +68,10 @@ Create a task package only when work is actually handed to another person or age
 
 - `Current Task`: the one required outcome, completion test, and explicit exclusions.
 - `Global Constraints`: still-valid user authority, prohibitions, risk gates, and stop conditions.
-- `Interfaces`: permitted read/write scope, inputs/outputs, shared state, dependencies, and contracts that must remain intact. Identify the accepted baseline and existing capability/API owners so handoffs do not mistake an old implementation or an unconnected consumer for a missing contract.
+- `Interfaces`: permitted read/write scope, inputs/outputs, shared state, dependencies, and contracts that must remain intact. Identify the accepted baseline and existing capability/API owners so handoffs do not mistake an old implementation or an unconnected consumer for a missing contract. Include the relevant implementation/contract/check locators, the critical invariants specific to this assignment and the inspected worktree or revision when needed for resumption. Pointers are retrieval aids, not permission or proof of current code. Send a concise applicable constraint when the assignee cannot otherwise retrieve it; do not paste the full repository map, every engineering rule or the exploration transcript.
 - `Output Contract`: slice completion, artifacts, actual changes, development/closeout checks and integrator-owned checks, evidence, deviations, remaining work, repair owner, temporary-resource disposition, and next action.
+
+For actual handoff or interruption, retain the useful navigation findings, unresolved questions and next action in the current task owner. The successor checks relevant worktree changes before reusing them and rereads only what is needed. Do not reopen project-wide discovery merely because the executor changed, and do not create a second recovery ledger.
 
 Send only facts needed for the current task, not the entire conversation, all BuildOS standards, or unrelated executor history. Read specialist rules through stable links and project entrypoints. Add overlap, shared-resource, and integration responsibility only for real parallel work. A package cannot expand original authority. Resolve apparent conflicts from current task decisions first; return only an uncovered decision to its owner. When responsibility changes, update the task owner and replace stale executor references in routes. A role title does not establish review independence: whoever implements the reviewed change, including a reviewer who takes over implementation, still needs separate evidence when independent acceptance is required.
 

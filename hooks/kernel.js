@@ -27,7 +27,7 @@ const SUBAGENT_CONTEXT = `SENMU BUILDOS SUBAGENT
 - Stay within delegated scope, requested path, write boundary, unit and authority.
 - Read authoritative owners and real state.
 - Reuse project/framework/platform capabilities and evidence; acquire bounded missing/changed guidance or outputs.
-- Before edits, verify task branch/Change Unit; never edit integration lines or reuse sealed work; return a verified stable commit.
+- For authorized edits, verify task branch/Change Unit; never edit integration/sealed work. Return a verified commit only within delegated commit authority. Read-only work returns findings and evidence, without changes or commits.
 - Keep security, data, destructive and release gates.
 - Return evidence, gaps, blockers and risk.`;
 

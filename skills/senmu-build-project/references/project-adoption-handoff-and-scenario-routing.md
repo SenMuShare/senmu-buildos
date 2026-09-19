@@ -113,7 +113,7 @@ When any scenario spans dependent steps, phases, agents, or sessions, follow [Ta
 When project rules and Senmu BuildOS differ:
 
 - Real runtime/delivery evidence and active specialist owners determine project facts; explicit project overrides beat BuildOS defaults.
-- Semantically identical rules are not conflicts. Remove the project copy and retain the BuildOS baseline; the project entrypoint may retain authoritative paths or real commands.
+- Semantically identical rules are not conflicts. Follow [Standards Discovery](project-standard-discovery-and-on-demand-loading.md#3-discovery-process) to retain the adopted contract and its usable consumer path before removing duplicate prose. A concise needed project constraint may remain; an unreachable BuildOS reference is not an adequate replacement.
 - Reconcile stale or conflicting rules through [Standards Discovery](project-standard-discovery-and-on-demand-loading.md#5-conditional-loading); that owner defines when evidence resolves the conflict and when a user decision is still needed.
 - After decision, update one project specialist owner and retain only necessary navigation or override in the delta layer. Never maintain synonymous bodies in several files.
 
@@ -130,9 +130,9 @@ For formal release, Delivery owns the frozen candidate and resumable release dri
 When maintaining Senmu BuildOS:
 
 - Extend an existing reference first; add a file only when a new topic cannot fit naturally.
-- Every new reference must be directly discoverable from `SKILL.md`.
+- Every active reference must be reachable through a clear conditional route from `SKILL.md`; distinct resource groups may use a short index under the [Reference Attachment](../../senmu-build-workflow/references/reference-attachment-governance.md#2-skill-package-boundary) contract.
 - Never put private project SOPs, customer information, server paths, or commercial details in a general Skill.
-- Never copy BuildOS prose into project `AGENTS.md`, business agents, or specialist documents; projects retain only deltas, facts, paths, and commands.
+- Do not duplicate complete BuildOS methods in project instructions or specialist owners. Retain real project facts, concise adopted constraints, commands and conditional routes needed for execution; apply Standards Discovery before deleting a duplicate. Necessary safety/task summaries are not a second policy owner.
 - Keep deep technology/vendor documentation as conditional attachments, outside the entry flow.
 - Prefer official tools for ecosystems with an official MCP/CLI, such as Ant Design. Keep vendor material for ECharts, players, or editors as small summaries, metadata, or out-of-project snapshots. If a topic warrants a durable frontend/admin specialist Skill, Engineering should retain only principles and routing.
 - After each version update, check whether entrypoints grew heavier, rules were duplicated, or governance levels still constrain trigger scope.

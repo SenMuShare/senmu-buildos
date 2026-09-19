@@ -1,6 +1,20 @@
 # WorkBuddy 适配器
 
-把 Senmu BuildOS 的八个平级 Skill 安装成 WorkBuddy 可加载的 Skill。WorkBuddy Skill 就是 `<skills-root>/<skill-name>/SKILL.md` 文件夹，支持两种作用域：**用户级** `~/.workbuddy/skills/`（跨项目共享）和**项目级** `<workspace>/.workbuddy/skills/`（仅当前工作区）。WorkBuddy **没有插件清单式的生命周期 Hook**，按每个 Skill 的 `description` 路由。
+把 Senmu BuildOS 的八个平级 Skill 安装成 WorkBuddy 可加载的 Skill。WorkBuddy Skill 就是 `<skills-root>/<skill-name>/SKILL.md` 文件夹，支持两种作用域：**用户级**（用户数据根下的 `skills/`，跨项目共享）和**项目级**（工作区数据根下的 `skills/`，仅当前工作区）。WorkBuddy **没有插件清单式的生命周期 Hook**，按每个 Skill 的 `description` 路由。
+
+## 数据根目录名
+
+WorkBuddy 的用户／工作区数据根已从 `.workbuddy` 更名为 `.workbuddy-ai`。安装脚本**不写死其中一个名字**，而是解析实际存在的那个：
+
+| 情况 | 解析结果（用户级） |
+| --- | --- |
+| 存在 `~/.workbuddy-ai/` | `~/.workbuddy-ai/skills/` |
+| 只有 `~/.workbuddy/`（旧版） | `~/.workbuddy/skills/` |
+| 两者都不存在 | `~/.workbuddy-ai/skills/` |
+
+项目级同理：`<workspace>/.workbuddy-ai/skills/` 优先，回退 `<workspace>/.workbuddy/skills/`。
+
+**为什么不能写死**：装进运行中的 App 不会枚举的数据根时，安装看起来成功、实际从不生效。安装结束会打印实际目标路径，请以该路径为准。
 
 ## 为什么需要这个适配器
 
@@ -17,7 +31,7 @@ Codex 与 Claude Code 用生命周期 Hook 在会话启动时自动注入一段"
 
 在 WorkBuddy 对话中粘贴下面这段话（把仓库地址换成你拿到的仓库）：
 
-> 请把 `https://github.com/SenMuShare/senmu-buildos` 安装为 WorkBuddy 的 Skill。先读取 `adapters/workbuddy/README.md` 和 `adapters/workbuddy/install_workbuddy.py` 了解适配与安装逻辑，再运行 `python3 adapters/workbuddy/install_workbuddy.py --scope user`（安装到用户级 `~/.workbuddy/skills/`；如需仅当前项目可用，改用 `--scope project --workspace <当前工作区根目录>`）。完成后报告实际安装的 Skill 列表和版本。
+> 请把 `https://github.com/SenMuShare/senmu-buildos` 安装为 WorkBuddy 的 Skill。先读取 `adapters/workbuddy/README.md` 和 `adapters/workbuddy/install_workbuddy.py` 了解适配与安装逻辑，再运行 `python3 adapters/workbuddy/install_workbuddy.py --scope user`（安装到用户级数据根下的 `skills/`；如需仅当前项目可用，改用 `--scope project --workspace <当前工作区根目录>`）。完成后报告实际安装的 Skill 列表、版本和实际写入路径。
 
 WorkBuddy Agent 需要能访问本地文件系统（读取仓库、写入 skills 目录）和 Git／Python。这是在你自己的机器上运行的常规能力。
 
@@ -28,7 +42,7 @@ git clone https://github.com/SenMuShare/senmu-buildos.git
 cd senmu-buildos
 
 python3 adapters/workbuddy/install_workbuddy.py --dry-run            # 预览，零写入
-python3 adapters/workbuddy/install_workbuddy.py --scope user         # 用户级 ~/.workbuddy/skills/
+python3 adapters/workbuddy/install_workbuddy.py --scope user         # 用户级数据根下的 skills/
 python3 adapters/workbuddy/install_workbuddy.py --scope project --workspace /path/to/workspace
 python3 adapters/workbuddy/install_workbuddy.py --target /path/to/skills   # 显式指定目标
 ```

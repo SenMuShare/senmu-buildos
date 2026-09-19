@@ -28,6 +28,8 @@ Turn principles into inspectable boundaries:
 | Replaceability/testability | Isolate valuable external boundaries; expose failure; verify contracts | Can key paths be unit/contract/integration tested? How much core changes on replacement? |
 | Proportionate design | Abstract only for current quality attributes and known evolution | Does a layer solve real pressure or hypothetical future complexity? |
 
+Use the [abstraction-value question](implementation-economy-and-overengineering.md#21-abstraction-value) when adding or removing a layer. Interface economy does not justify hiding side effects or weakening a real safety, compatibility or ownership boundary.
+
 Record tradeoffs from project quality/risk when principles conflict. Performance may reduce boundaries but must not silently break ownership or permit uncontrolled layer crossing.
 
 ## 3. Triggers and Levels
@@ -46,7 +48,7 @@ Assess architecture when adding modules, services, shared packages, jobs, public
 Long-lived code projects keep current technical facts in `engineering/SYSTEM_TECHNICAL_SPECIFICATION.md` or equivalent. Retain only facts affecting understanding, change, verification, or recovery; small projects may use a short combined document:
 
 1. System boundary and explicit exclusions.
-2. Module register: name, responsibility, path, public interface, data owner, allowed/forbidden dependencies, release unit.
+2. Module register: capability, responsibility, actual implementation entrypoint, public interface, data owner, allowed/forbidden dependencies, release unit, and the applicable contract and verification entrypoint. Reuse the project's navigation entry rather than maintaining a second module directory. A missing implementation or check is an explicit gap, not an invented path.
 3. Allowed dependency direction among UI, application, domain, data access, external services.
 4. Business invariants for money, permissions, state, ownership, idempotency, consistency.
 5. Side-effect boundaries and failure propagation for database, network, files, messages, caches, third parties.
@@ -139,7 +141,7 @@ Use `assets/architecture-governance/ENGINEERING_AUDIT_TASK.template.md` for risk
 
 Report scope, authority root, branch, commit, release unit, gaps; exact commands/results/evidence; current architecture/version facts; severity-ranked findings; quality/debt baseline; immediate/near/long-term actions; proposed contracts/commands/tests/registers; blind spots and owner decisions.
 
-Remediation is separately authorized and phased: protect critical behavior with tests, repair high-risk boundaries/duplication, then clean low-risk structure/style. Run matching gates and update debt/logs per phase. Do not rewrite the system at once for visual cleanliness.
+Remediation requires authority for the affected scope, not renewed approval at each phase. An audit-only request remains read-only; an audit-and-repair request continues within its existing scope. Preserve explicit approval checkpoints and ask only for uncovered authority or an unresolved material choice. Protect critical behavior with matching checks, repair confirmed causes and high-risk boundaries, then simplify low-risk structure where authorized. Update affected debt and work records at meaningful transitions; do not rewrite the system for visual cleanliness.
 
 ## 12. Noise Reduction and Exceptions
 

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "repository": "SenMuShare/senmu-buildos",
-  "reviewed_for_version": "2.7.1",
+  "reviewed_for_version": "2.10.0",
   "description": "AI-native BuildOS for Codex, Claude Code, Doubao, WorkBuddy and ZCode: product discovery, UI/UX design, software engineering, context-aware workflows, testing, Git and verifiable releases.",
   "topics": [
     "agent-skills",
@@ -27,13 +27,14 @@
   ],
   "readme_review": {
     "updated_sections": [
-      "install-update-remove",
-      "cleanup-safety-and-quality-defaults"
+      "release-cleanup-outcomes",
+      "feedback-follow-up",
+      "claude-project-instruction-compatibility"
     ],
     "summary": {
-      "zh": "本版补齐裸 Git 仓库的本地清理保护，并统一工程路由与新项目质量检查默认。真实回收恢复和模型行为仍待验证；新清理工具不支持 Windows 执行。详见 [用户更新日志](RELEASE_NOTES.md)。",
-      "en": "This release closes bare-Git protection in local cleanup planning and aligns engineering routing with generated quality defaults. Native recovery and model behavior remain unverified; the cleanup helper does not support Windows execution. See [release notes](RELEASE_NOTES.md).",
-      "ja": "本版ではローカル清理計画で裸 Git リポジトリを保護し、Engineering のルーティングと生成される品質既定を整合させました。実機での復元とモデル動作は未検証で、清理ツールは Windows での実行に対応していません。[更新履歴](RELEASE_NOTES.md)をご覧ください。"
+      "zh": "本版修正发布清理的结果与失败处理，区分未裁决反馈和后续处理，并补齐 Claude 项目指令的盘点与加载核对。已有业务项目中的清理脚本需要通过项目治理同步，升级插件不会替你清理设备或上传反馈。原生回收恢复、实际宿主加载与 Token 效果仍需相应验证，普通文件回收工具仍不支持 Windows 执行。详见[用户更新日志](RELEASE_NOTES.md)。",
+      "en": "This source update fixes release-cleanup reporting and failure handling, distinguishes undecided feedback from follow-up work, and inventories Claude project instructions without claiming they are loaded. Update generated cleanup scripts through project governance; upgrading the plugin does not clean devices or upload feedback. Native recovery, actual host loading and Token impact remain separately unverified; the ordinary-file cleanup helper does not support Windows execution. See [release notes](RELEASE_NOTES.md).",
+      "ja": "本ソース更新では、リリース清理の結果と失敗処理を修正し、未裁定のフィードバックと後続作業を区別します。Claude の指示ファイルも調査対象に含めますが、実際の読み込みとは区別します。既存プロジェクトの清理スクリプトはプロジェクト整理時に更新してください。プラグイン更新だけで端末の清理やフィードバック送信は行いません。実機復元・ホスト読み込み・Token 効果は別途検証が必要で、通常ファイルの回収ツールは Windows では実行できません。[更新履歴](RELEASE_NOTES.md)。"
     }
   },
   "readmes": {

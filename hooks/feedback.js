@@ -138,7 +138,8 @@ function listCandidates(env = process.env, includeDecided = false) {
     .map((candidate) => ({ ...candidate, decision: decisions.get(candidate.id) || null }));
 }
 
-function decideCandidate(candidateId, disposition, note, env = process.env) {
+function decideCandidate(candidateId, disposition, note, env = process.env, options = {}) {
+  if (!/^FB-[0-9a-f]{16}$/.test(candidateId)) throw new Error('invalid candidate ID');
   if (!DISPOSITIONS.has(disposition)) {
     throw new Error(`invalid disposition: ${disposition}`);
   }
@@ -151,6 +152,7 @@ function decideCandidate(candidateId, disposition, note, env = process.env) {
     candidate_id: candidateId,
     disposition,
     note: redactSensitive(note),
+    tracking_ref: redactSensitive(options.trackingRef || ''),
     decided_at: new Date().toISOString(),
   };
   const decisionPath = path.join(paths.decisions, `${candidateId}.json`);

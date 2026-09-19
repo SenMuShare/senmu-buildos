@@ -8,7 +8,9 @@
   <a href="README.md">简体中文</a> · <a href="README.en.md">English</a> · <a href="README.ja.md">日本語</a>
 </p>
 
-<!-- product-surface-review: 2.7.1 -->
+<!-- product-surface-review: 2.10.0 -->
+
+本版让产品源码独立于作者私有资料：安装与普通贡献无需研发记录，反馈先留在使用者的数据根，经授权整理后才进入产品。目录移动后仍能核验源码身份；公开交付使用明确选择的独立目标，不推送私有历史。八个 Skill 的职责、工程质量与安全边界保持不变。详见 [用户更新日志](RELEASE_NOTES.md)。
 
 <p align="center">
   <a href="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml"><img src="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml/badge.svg" alt="Validate Senmu BuildOS"></a>
@@ -74,6 +76,8 @@ codex plugin add senmu-buildos@senmu-buildos
 
 ### Claude Code
 
+首次接入或治理 Claude 项目时，参见[项目指令兼容说明](adapters/claude-code/README.md)；文件存在不等于宿主已经加载。
+
 ```bash
 claude plugin marketplace add SenMuShare/senmu-buildos
 claude plugin install senmu-buildos@senmu-buildos
@@ -101,7 +105,7 @@ python3 adapters/workbuddy/install_workbuddy.py --dry-run
 python3 adapters/workbuddy/install_workbuddy.py --scope user
 ```
 
-默认安装到用户级 `~/.workbuddy/skills/`；仅当前项目可用时改用 `--scope project --workspace <工作区根目录>`。WorkBuddy 适配说明见 [adapters/workbuddy/README.md](adapters/workbuddy/README.md)。
+默认安装到用户级数据根下的 `skills/`（`~/.workbuddy-ai/skills/`，若只有旧版 `~/.workbuddy/` 则回退到该处）；仅当前项目可用时改用 `--scope project --workspace <工作区根目录>`。WorkBuddy 适配说明见 [adapters/workbuddy/README.md](adapters/workbuddy/README.md)。
 
 ### ZCode
 
@@ -233,9 +237,9 @@ BuildOS 不承诺固定比例。它通过减少不必要的功能、重复代码
 
 ## 安装、更新与卸载
 
-Senmu BuildOS 当前正式版本为 `v2.7.1`，支持 Codex、Claude Code、豆包、WorkBuddy 和 ZCode 适配。安装的是整个插件，不需要逐个下载八个 Skill。运行时规范正文与 active Reference 路径统一使用专业英文；用户仍可直接使用中文或其他语言提出需求并获得对应语言的产物。对标外部 Skill 时，系统会结合当前模型和宿主能力保留有价值的领域方法，避免照搬过时流程；开发与交付阶段会复用仍有效的验证证据，只补验因改动而失效的部分及制品、环境、运行状态等独立事实。
+Senmu BuildOS 当前源码版本为 `v2.10.0`，支持 Codex、Claude Code、豆包、WorkBuddy 和 ZCode 适配。安装的是整个插件，不需要逐个下载八个 Skill。运行时规范正文与 active Reference 路径统一使用专业英文；用户仍可直接使用中文或其他语言提出需求并获得对应语言的产物。对标外部 Skill 时，系统会结合当前模型和宿主能力保留有价值的领域方法，避免照搬过时流程；开发与交付阶段会复用仍有效的验证证据，只补验因改动而失效的部分及制品、环境、运行状态等独立事实。
 
-本版补齐裸 Git 仓库的本地清理保护，并统一工程路由与新项目质量检查默认。真实回收恢复和模型行为仍待验证；新清理工具不支持 Windows 执行。详见 [用户更新日志](RELEASE_NOTES.md)。
+本版修正发布清理的结果与失败处理，区分未裁决反馈和后续处理，并补齐 Claude 项目指令的盘点与加载核对。已有业务项目中的清理脚本需要通过项目治理同步，升级插件不会替你清理设备或上传反馈。原生回收恢复、实际宿主加载与 Token 效果仍需相应验证，普通文件回收工具仍不支持 Windows 执行。详见[用户更新日志](RELEASE_NOTES.md)。
 
 ### 更新 Codex
 

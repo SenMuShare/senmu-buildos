@@ -14,7 +14,7 @@ from pathlib import Path
 
 MARKER = ".senmu-public-projection.json"
 ABSOLUTE_PRIVATE_PATH = re.compile(
-    r"(?:/Users/[A-Za-z0-9._-]+/|/home/[A-Za-z0-9._-]+/|[A-Za-z]:\\Users\\[A-Za-z0-9._-]+\\)"
+    r"(?:/(?:Users|home)/[\w .@+-]+/|[A-Za-z]:[\\/]+Users[\\/]+[\w .@+-]+[\\/])"
 )
 SENSITIVE_SUFFIXES = {".log", ".sqlite", ".sqlite3", ".db", ".pem", ".key"}
 HIGH_CONFIDENCE_SECRET = re.compile(r"(?:AKIA[0-9A-Z]{16}|gh[pousr]_[A-Za-z0-9]{20,})")
@@ -57,6 +57,14 @@ def collect_files(source: Path, includes: list[Path], excludes: list[Path]) -> l
     files: set[Path] = set()
     for included in includes:
         candidate = source / included
+        # Check the selected root and its parents, not only yielded descendants.
+        for part in (candidate, *candidate.parents):
+            if part == source:
+                break
+            if part.is_symlink():
+                raise ValueError(f"公开投影拒绝符号链接：{part.relative_to(source)}")
+        if not candidate.resolve().is_relative_to(source.resolve()):
+            raise ValueError(f"公开白名单路径越出源根：{included.as_posix()}")
         if not candidate.exists():
             raise ValueError(f"公开白名单路径不存在：{included.as_posix()}")
         candidates = [candidate] if candidate.is_file() else candidate.rglob("*")

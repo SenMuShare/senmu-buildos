@@ -32,9 +32,9 @@ class AgentsSpecGovernanceTests(unittest.TestCase):
             "Apply two admission tests",
             "Current engineering constraints need only be valid, stable, implementation-relevant, and verifiable",
             "prior failure is unnecessary",
-            "Several triggers may point to one authority",
-            "neither require every Markdown file in the index",
-            "warnings for exact duplicate entries",
+            "Several triggers may share an owner",
+            "not semantic correctness, freshness or complete project coverage",
+            "duplicate/unverified entries as warnings",
         ):
             self.assertIn(phrase, discovery)
 

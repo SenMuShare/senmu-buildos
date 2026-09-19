@@ -18,8 +18,8 @@ A plan is not a candidate; a candidate is not authority; deployment completion i
 | State | Meaning |
 | --- | --- |
 | `planned` | Scope planned; no unambiguous candidate |
-| `candidate` | Revision, version, and candidate artifact locked; not approved |
-| `preflight_passed` | Pre-release gates passed; no external-change authority |
+| `candidate` | Revision, version and candidate artifact are locked; this state alone grants no authority |
+| `preflight_passed` | Applicable pre-release checks passed; bind any existing batch authority to the current candidate before external action |
 | `authorized` | User explicitly authorized this scope/environment |
 | `deploying` | Target environment is changing |
 | `deployed_unverified` | Deployment action ended; production evidence incomplete |
@@ -28,6 +28,8 @@ A plan is not a candidate; a candidate is not authority; deployment completion i
 | `rolled_back` | Rollback action and resulting production truth verified |
 | `cancelled` | Candidate explicitly stopped |
 | `superseded` | Later version replaces it; history retained |
+
+Workflow state describes progress and evidence; authorization separately defines permitted actions. A transition neither grants permission nor revokes a still-valid scoped approval. A previously authorized batch can continue when the verified candidate remains within its approved scope, environment and effects; otherwise resolve the specific missing authority.
 
 Advance only as far as evidence. If external change is uncertain, use `deployed_unverified` or `failed`; never guess old, successful, or rolled back.
 

@@ -25,6 +25,8 @@ Freeze before execution:
 - applicable requirement, architecture, testing, release, or business standards and versions;
 - finding priorities, conclusion states, and stopping conditions.
 
+Read-only describes the protected subject and allowed effects. A review may create a report or isolated fixture only when its destination and writes are covered by current authority; that does not authorize modifying the reviewed project. An explicit zero-write request permits neither fixture files nor cache-producing checks. Correcting the reviewer's own report does not grant remediation authority over the subject.
+
 For “review the entire project,” map release units, modules, data/permission boundaries, entrypoints, and primary journeys. Review in bounded batches when needed. A representative sample cannot support a whole-project conclusion.
 
 ### 2.1 Modes and Completeness

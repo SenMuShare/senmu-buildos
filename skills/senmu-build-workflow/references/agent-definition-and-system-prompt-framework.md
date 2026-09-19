@@ -24,7 +24,7 @@ Separate durable rules from per-run data:
 
 A tool prompt or API parameters derive from the task package; they do not replace the charter.
 
-Dynamic state belongs to none of these prompt layers. Put current step, attempt, cursor, external side effects, and recovery checkpoint in a Run Manifest, database, or registered state system. Prompts only reference its entrypoint and reading rule.
+Canonical mutable run state lives in the existing Run Manifest, database or registered task system, not in the persistent Agent charter. A current task or handoff package may carry a minimal snapshot with its owner reference and revision/time: current step, completed and remaining scope, relevant evidence, authority and next action. Refresh relevant facts on recovery or before dependent side effects when they may have changed. The snapshot is not a second writable state source; do not reload the full history before every action.
 
 ## 3. Standard Content Structure
 

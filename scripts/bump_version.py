@@ -23,9 +23,9 @@ SEMVER_RE = re.compile(
     r"(?:\+(?P<build>[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?$"
 )
 README_VERSION_PATTERNS = {
-    "README.md": r"(Senmu BuildOS 当前正式版本为 `v)([^`]+)(`)",
-    "README.en.md": r"(The current formal release is Senmu BuildOS `v)([^`]+)(`)",
-    "README.ja.md": r"(Senmu BuildOS の現行正式リリースは `v)([^`]+)(`)",
+    "README.md": r"(Senmu BuildOS 当前(?:正式版本|源码版本)为 `v)([^`]+)(`)",
+    "README.en.md": r"(The current (?:formal release|source version) is Senmu BuildOS `v)([^`]+)(`)",
+    "README.ja.md": r"(Senmu BuildOS の現行(?:正式リリース|ソースバージョン)は `v)([^`]+)(`)",
 }
 
 

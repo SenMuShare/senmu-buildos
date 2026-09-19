@@ -10,17 +10,28 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parent.parent
+# Private owners that must never appear in a distributable tree. `maintainer` is
+# this workspace's own private root; the `governance/*` and `evidence/*` entries
+# are the owners the product prescribes for governed projects. Keep both: a
+# private tree can be laid out either way.
 FORBIDDEN_PREFIXES = (
     Path(".senmu-buildos"),
+    Path("maintainer"),
     Path("governance/tasks"),
     Path("governance/logs"),
     Path("evidence/releases"),
     Path("evidence/reviews"),
 )
+# A private workspace is identified by its maintenance policy or, on layouts
+# that predate the product/maintainer split, by the authority marker.
+PRIVATE_ROOT_MARKERS = (
+    Path("maintainer/workspace.json"),
+    Path(".senmu-buildos/config.json"),
+)
 TEXT_SUFFIXES = {".md", ".json", ".yaml", ".yml", ".py", ".js", ".sh", ".env", ".txt"}
 SENSITIVE_SUFFIXES = {".log", ".sqlite", ".sqlite3", ".db", ".pem", ".key"}
 ABSOLUTE_PRIVATE_PATH = re.compile(
-    r"(?:/Users/[A-Za-z0-9._-]+/|/home/[A-Za-z0-9._-]+/|[A-Za-z]:\\Users\\[A-Za-z0-9._-]+\\)"
+    r"(?:/(?:Users|home)/[\w .@+-]+/|[A-Za-z]:[\\/]+Users[\\/]+[\w .@+-]+[\\/])"
 )
 HIGH_CONFIDENCE_SECRET = re.compile(r"(?:AKIA[0-9A-Z]{16}|gh[pousr]_[A-Za-z0-9]{20,})")
 
@@ -52,10 +63,10 @@ def main() -> None:
     parser.add_argument("--deny-term", action="append", default=[])
     args = parser.parse_args()
     root = args.root.expanduser().resolve()
-    if (root / ".senmu-buildos/config.json").is_file():
+    if any((root / marker).is_file() for marker in PRIVATE_ROOT_MARKERS):
         raise SystemExit(
-            "[ERROR] 公开源码面校验只能针对生成后的公开投影；"
-            "当前目录是内部权威库。内部开发请运行包、项目治理、Python、"
+            "[ERROR] 公开源码面校验针对可分发产品目录；"
+            "当前目录是内部权威库，含私有项目配置。请先分离产品与私有数据，再运行包、Python、"
             "publication 和 Hook 检查，公开面检查留到投影生成后执行。"
         )
     errors = []

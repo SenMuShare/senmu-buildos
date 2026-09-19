@@ -11,7 +11,7 @@ Senmu BuildOS 已从 `v1.0.0` 开始进入正式源码版本管理。任何变�
 5. 把完整 Git 仓库视为源码和版本边界；即使只修改一个 Skill，也要检查 README、架构、相邻 owner、Hooks、脚本、测试和发布元数据。
 6. 应用项目经验先在应用项目内闭环，只有已经验证且能够跨项目复用的候选才进入 BuildOS。
 7. 新增依赖、代码或内容时确认来源、许可证、维护责任和退出方式，不复制无法持续维护的材料。
-8. 公开仓是由维护者的私有权威库生成的发布投影；贡献会先作为候选吸收到权威库，再经同一隐私门禁重新投影，因此最终提交可能被重写但会保留贡献归属。
+8. 产品源码只有一份，按可公开标准维护；原始反馈、作者私有任务和未公开证据留在产品之外。公开贡献按正常候选审议接收，保留贡献归属；私有工作区的历史不推送到公开仓库。
 9. 用外部网页、PDF、书、仓库或第三方 Skill 升级标准时，执行[工程知识蒸馏与标准晋级规范](skills/senmu-build-learning/references/engineering-knowledge-distillation-and-standard-promotion.md)；外部内容只作为临时候选，不把原文、来源目录或竞争规范直接装入运行时 Skill。
 
 ## 开放迭代飞轮贡献流程
@@ -38,14 +38,7 @@ python3 -m unittest discover -s tests -p 'test_*.py'
 node --test tests/hooks/*.test.js
 ```
 
-维护者在内部权威库开发时不直接运行公开面校验；内部任务分支运行包、Python、publication 和 Hook 检查，集成后再从权威根运行严格项目治理。公开面校验只对生成后的公开投影执行：
-
-```bash
-python3 scripts/validate_package.py
-python3 -m unittest discover -s tests -p 'test_*.py'
-python3 -m unittest discover -s governance/publication -p 'test_*.py'
-node --test tests/hooks/*.test.js
-```
+维护者与外部贡献者运行同一套产品检查。产品可独立测试，不需要作者私有任务、实例配置或发布脚本；维护工具由维护工作区另行验证。
 
 仓库 CI 复用公开包入口。修改 Skill 后还应运行 Skill Creator 的 `quick_validate.py`，并用 `tests/behavior/` 中的真实提示词做独立触发检查。格式通过不代表实际 Agent 路由、Hook 信任或任务行为已经验证。
 
@@ -80,9 +73,7 @@ node --test tests/hooks/*.test.js
 
 `validate_package.py` 会阻断缺少 Release 正文、README 三语复核或 GitHub Product Surface 漂移的候选。公开 `main` 精确校验成功后，`promote-public-release` 在创建 Tag 前同步并回读 GitHub 仓库简介与 Topics；同步失败时不创建正式 Tag。Tag workflow 必须最终创建非 draft、非 prerelease 的 GitHub Release，发布回执再核对其正文与 `RELEASE_NOTES.md` 一致。
 
-内部候选还需运行 publication 测试；生成公开投影后，再在公开根运行 `python3 scripts/validate_public_surface.py`。
-
-版本准备、候选 commit、公开主线验证、正式 Tag 和 GitHub Release 是不同状态。取得明确发布授权后，先提交并冻结版本候选，生成脱敏公开投影，将候选提交到公开主线并等待验证。只有该精确公开 commit 已有成功的 `main` push 验证回执后，才能使用 `python3 governance/publication/manage_lifecycle.py promote-public-release --commit <sha> --apply` 创建并推送正式 Tag；Tag 工作流复核后创建 GitHub Release。当前安装链直接消费 Git 源码，所以 GitHub 自动源码快照足够，不另造无消费者的定制制品。
+版本准备、候选 commit、公开主线验证、正式 Tag 和 GitHub Release 是不同状态。维护者在获准发布时，只把经过检查的产品文件送入独立公开 checkout，不推送私有工作区历史。等精确公开 commit 的主线校验通过后再创建正式 Tag；Tag 工作流复核后创建 GitHub Release。外部贡献者无需作者的私有发布工具，也不要从版本号推断某个渠道已经发布。
 
 ## 高风险边界
 

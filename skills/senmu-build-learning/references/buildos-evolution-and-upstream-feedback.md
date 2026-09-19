@@ -1,32 +1,29 @@
 # BuildOS Evolution and Upstream Feedback
 
-Use this standard to convert validated cross-project learning into reviewable improvements to the Senmu BuildOS source project. The feedback target is the complete BuildOS Git project, not a private directory inside one installed Skill.
+Use this standard for authorized repair of concrete BuildOS component defects and for justified promotion of reusable engineering knowledge into the BuildOS source project. The feedback target is the complete BuildOS Git project, not a private directory inside one installed Skill.
 
 ## 1. Keep Three Objects Distinct
 
 | Object | Meaning | Authority boundary |
 | --- | --- | --- |
 | Application project | Software, workflow, content, experiment, or composite project using BuildOS | Its own entrypoints, facts, tasks, lessons, Git, and release/delivery units |
-| BuildOS source project | Independent Git repository maintaining the plugin product | Repository root, manifests, Skills, Hooks, docs, scripts, tests, migrations, and version history |
+| BuildOS source project | Declared product source root, either an independent repository or a subtree of a maintenance workspace | Repository revision plus source-relative path, manifests, Skills, Hooks, docs, scripts, tests, migrations and version history |
 | Installed BuildOS instance | Plugin and Skills installed or cached for Codex execution | Executable derivative; not maintenance authority unless installation explicitly links source |
 
 Close application-project learning in that project first. Raw local-inbox items are not rules. Only items centrally adjudicated as `buildos_candidate` enter the BuildOS source project. Never edit an installed instance directly from an application project or merge the two projects' Git histories into a fictitious shared completion state.
 
 ## 2. Admission to the BuildOS Project
 
-A candidate must satisfy all of the following:
+Keep defect repair and general policy promotion distinct. A concrete Skill, template, script, Hook or routing defect may enter the existing candidate/adjudication path with reviewable source evidence, a counterexample or a reproducible fixture from one project. Authorized repair does not require the defect to cause incidents in several projects first, or require proof of the cure before repair may begin.
 
-- Root cause and effective treatment have reviewable evidence, not just chat judgment or one accidental result.
-- The issue recurs across projects or is demonstrably a stable mechanism affecting several project forms.
-- It can be stated without customer data, accounts, secrets, personal paths, or unpublished business facts.
-- The rule changes an agent's actual decision, artifact, or verification—not merely asks for greater care.
-- Expected benefit exceeds added reading, routing, execution, maintenance, and context cost.
+For a new general policy, establish its mechanism, affected decisions, scope, exceptions and maintenance/context cost. Evidence may include engineering reasoning, applicable specifications, source analysis, observed tasks and focused verification; its strength must match the conclusion. A personal preference or one unsatisfactory answer is not automatically a universal rule.
 
-Otherwise retain it in the application project's Work Log, Lessons Learned Register, or specialist standard.
+Keep raw feedback and author-private work outside the distributable source tree. Product rules, tests and contributor documentation must work without a private sibling directory; authorized decisions may link a private candidate to its resulting source change without copying raw evidence. Keep private data, credentials, local paths and unpublished business facts out of public proposals. Find the existing semantic owner and distinguish changes to source, installed instances and release channels. The candidate grants no write, install or release authority.
 
-Runtime value is not established by token counts, length, load frequency, or green tests alone. State which decision or artifact changes, which repeated implementation, wrong edit, invalid verification, or risk is prevented, why the result is correct, and the added costs. Tokens are a cost, not the optimization objective. A short rule with no observable behavior or necessary risk-control benefit does not qualify. Static behavior matrices freeze expectations; real candidate-environment tasks must still verify routing, implementation direction, and misleading effects.
+Direct checks support bounded source corrections. A semantic walkthrough is not a real model run; actual behavior or performance claims require corresponding observations. No universal A/B or multi-model competition is a prerequisite to an engineering correction, and passing structural checks alone does not prove reduced Token use.
 
-For public webpages, PDFs, books, repositories, third-party Skills, or team manuals that are not project-experience candidates, use [Engineering Knowledge Distillation and Standard Promotion](engineering-knowledge-distillation-and-standard-promotion.md). External reputation does not grant rule authority.
+For external webpages, papers, repositories or Skills, use [Engineering Knowledge Distillation and Standard Promotion](engineering-knowledge-distillation-and-standard-promotion.md). External reputation does not create project authority.
+
 
 ## 3. Whole-Repository Impact Analysis
 
@@ -52,7 +49,7 @@ Whole-repository analysis does not require editing every file. A final change ma
 
 ## 5. Version and Git Rules
 
-- Version BuildOS as one Git repository and plugin package, not independent products per Skill.
+- Version BuildOS as one product source tree and plugin package, not independent products per Skill. A containing private workspace is not a public release artifact or public history.
 - One change may cross Skills, Hooks, docs, and scripts and receives project-level review and verification.
 - Application fixes and BuildOS generalization commits occur in their respective repositories; evidence links relate them without sharing a false completion state.
 - Local source changes, candidate package generation, local installation, and public release are distinct states.

@@ -6,9 +6,14 @@ skill from adapters/workbuddy/kernel/, stripping Codex-only metadata, then write
 an install identity file. Deterministic and idempotent; only writes under the
 target skills directory.
 
-WorkBuddy loads skills from `~/.workbuddy/skills/` (user level, shared across
-projects) or `<workspace>/.workbuddy/skills/` (project level). Both use the same
-`<skill-name>/SKILL.md` layout as the other adapters.
+WorkBuddy loads skills from `<data-root>/skills/` at user level (shared across
+projects) or `<workspace>/<data-root>/skills/` at project level. Both use the
+same `<skill-name>/SKILL.md` layout as the other adapters.
+
+The WorkBuddy data root was renamed from `.workbuddy` to `.workbuddy-ai`. The
+installer resolves whichever root exists under the chosen base so the payload
+lands where the running app enumerates skills, and falls back to the current
+name when neither exists.
 
 Usage:
     python3 adapters/workbuddy/install_workbuddy.py --dry-run
@@ -27,7 +32,7 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent.parent  # senmu-buildos-internal
+ROOT = Path(__file__).resolve().parent.parent.parent  # product root
 KERNEL_SOURCE = ROOT / "adapters" / "workbuddy" / "kernel"
 SKILLS_SOURCE = ROOT / "skills"
 KERNEL_SKILL_NAME = "senmu-build-kernel"
@@ -47,15 +52,30 @@ WORKBUDDY_SKILL_NAMES = [
 # Harness-specific files/folders that must not be copied into WorkBuddy.
 EXCLUDED_RELATIVE_NAMES = {"agents", "__pycache__"}
 
+# WorkBuddy renamed its per-user and per-workspace data root. Resolve the root
+# that exists instead of hardcoding one name: installing into a root the running
+# app never enumerates looks successful but is never loaded.
+DATA_ROOT_CURRENT = ".workbuddy-ai"
+DATA_ROOT_LEGACY = ".workbuddy"
+
+
+def skills_root(base: Path) -> Path:
+    """Return the WorkBuddy skills directory under a user or workspace base."""
+    current = base / DATA_ROOT_CURRENT
+    legacy = base / DATA_ROOT_LEGACY
+    if current.is_dir() or not legacy.is_dir():
+        return current / "skills"
+    return legacy / "skills"
+
 
 def user_skills() -> Path:
     """WorkBuddy user-level skills directory (shared across projects)."""
-    return Path.home() / ".workbuddy" / "skills"
+    return skills_root(Path.home())
 
 
 def project_skills(workspace: Path) -> Path:
     """WorkBuddy project-level skills directory inside the given workspace."""
-    return workspace / ".workbuddy" / "skills"
+    return skills_root(workspace)
 
 
 def version() -> str:
@@ -129,8 +149,9 @@ def main() -> None:
     )
     parser.add_argument(
         "--scope", choices=("user", "project"), default="user",
-        help="user installs into ~/.workbuddy/skills; project installs into "
-             "<workspace>/.workbuddy/skills (default: user)",
+        help="user installs into the user data root's skills directory; project "
+             "installs into the workspace data root's skills directory "
+             "(default: user)",
     )
     parser.add_argument(
         "--workspace", type=Path, default=None,
@@ -165,7 +186,9 @@ def main() -> None:
             f"[ERROR] WorkBuddy skills directory not found: {target}\n"
             "Pass an explicit target with --target, or use --scope user / "
             "--scope project --workspace <dir>. WorkBuddy loads user skills from\n"
-            "~/.workbuddy/skills/ and project skills from <workspace>/.workbuddy/skills/."
+            f"~/{DATA_ROOT_CURRENT}/skills/ (or the legacy ~/{DATA_ROOT_LEGACY}/skills/) "
+            f"and project skills from <workspace>/{DATA_ROOT_CURRENT}/skills/ "
+            f"(or the legacy <workspace>/{DATA_ROOT_LEGACY}/skills/)."
         )
 
     installed = install(target, scope, args.dry_run)

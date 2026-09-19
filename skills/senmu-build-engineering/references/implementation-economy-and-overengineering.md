@@ -24,10 +24,17 @@ Before coding, identify the approved outcome, existing owner, and real variation
 - Quality words such as perfect, long-term, general, or must not affect anything constrain results but do not expand scope. Without an approved roadmap, real consumer/second use case, proven bottleneck, or explicit replacement/isolation/reuse/test pressure, do not add a platform, abstraction, plugin/rule system, general DSL, configuration surface, compatibility mode, placeholder module, or unplanned feature. Judge one-implementation interfaces, one-product factories, forwarding wrappers, and dynamic frameworks for static configuration by the same evidence.
 - If the user says a proposal is excessive or too heavy, stop expanding and return to the minimum approved result. Remove unauthorized parts while retaining protections required for security, privacy, permissions, payments, data, law, irreversible actions, release integrity, and approved compatibility; do not defend the abandoned design.
 - Preserve necessary calibration, fault tolerance, and observability for unavoidable variation in inputs, devices, networks, or hardware; do not hard-code an accidental sample in the name of simplicity.
+- When a loop or repeated operation rebuilds the same collection, reloads the same file or repeats the same lookup for unchanged inputs, consider scoped reuse, indexing, batching or streaming. Preserve ordering, freshness, permissions, transaction scope and memory bounds. Do not hoist work across changing state or introduce a global cache merely to reduce a local count; first remove demonstrably redundant work and verify the affected behavior and workload assumption.
+
+### 2.1 Abstraction Value
+
+Before adding or removing a layer at a meaningful design decision, ask: if this layer vanished, would complexity disappear, or would permissions, cancellation, retries, compatibility and error handling spread back to callers? This is a thought experiment, not deletion authority.
+
+Judge total responsibility and knowledge across callers, implementation and operations. An interface includes relevant ordering, failure, state and side-effect contracts, not just method count. Simplify a pass-through only when it owns no justified responsibility. Keep a boundary justified by security, ownership, compatibility, testing or framework contracts even with one production implementation. Do not make modules larger for appearance, conceal effects, require two adapters, or delete useful lower-level tests merely because a higher-level test exists.
 
 ## 3. Value-First Staging
 
-- Before each action, decide whether it changes deliverable value, proves correctness, or only maintains hashes, receipts, dashboards, or progress records. Perform the first two as needed. Pure bookkeeping must not block the main path, negate confirmed results, or force rework unless it is itself a product feature, regulatory audit, security/authorization record, external-side-effect reconciliation, or release fact.
+- Reassess value and complexity at material design decisions, scope growth or newly discovered risk, not before every action. Do work that advances the requested result or supplies necessary evidence. Avoid bookkeeping that creates no usable decision or recovery value, while preserving records required for product behavior, compliance, authorization, external-effect reconciliation or release truth. Routine execution does not need a compliance narration.
 - Define the phase's minimum value slice before implementation: authoritative input through the real core path to observable result, matching verification, and deliverable output. Scaffolding, abstractions, generic platforms, or check systems alone are not a value slice.
 - Leave every phase runnable, verifiable, handoff-ready, and—with data, deployment, or external side effects—recoverable. Do not open many incomplete branches for a later long session to reconcile.
 - Do not invoke governance to front-load validators, checklists, approvals, and reports. Repair the production path and make correctness the default, then retain minimum executable gates for material residual risk.
@@ -45,7 +52,7 @@ The fast path also requires one known owner/release unit and excludes security, 
 
 - With clear project rules, implement through the project entrypoint without loading a BuildOS Skill. If an engineering contract gap, conflict, change or explicit review correctly triggered Engineering, it remains the sole primary Skill for this lightweight decision. User visibility, future commit intent, or steps in code do not automatically compose Product, Delivery, or Workflow.
 - Read affected code, project-local rules, and nearest matching tests only. Do not load unrelated references, the full product system, or release standards merely to restate local contracts.
-- Modify only implementation and the nearest valuable test. Do not create Task, TD, ADR, PRD, Changelog, or release records; G1 normally has no Work Log.
+- Make the requested local change and matching verification. Do not create unrelated Task, TD, ADR, PRD, Changelog or release records; G1 normally needs no Work Log. Explicitly requested corrections to an existing rule/document and navigation changes actually caused by the task may update their original owner within authority; they do not require a new governance chain.
 
 The software-testing standard owns batch and test timing; this standard creates no second closeout rule.
 
@@ -80,7 +87,7 @@ Do not create a Skill-private comment format or second debt ledger. Without a re
 
 ## 7. Implementation and Review Output
 
-Daily implementation needs no long scorecard, but must explain what was reused, why no parallel capability was added, and which semantics/risks were verified. Read-only review may add an `implementation economy` lens:
+Report material implementation choices, actual verification and remaining gaps. Explain reuse, custom code or retained complexity when a real tradeoff was made; a routine local edit does not need a fixed reuse scorecard or a defense of every layer not added. Read-only review may use an `implementation economy` lens when relevant:
 
 - unused code, dependencies, files, and old entrypoints safe to delete;
 - duplicate implementation replaceable by an existing owner, platform/standard capability, or installed dependency;

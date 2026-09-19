@@ -51,7 +51,7 @@ Large projects should not require an agent to read the entire repository. Provid
 
 Initialization is not merely directory creation. Select modules by project form: product projects need requirements and planning; code projects need technical, quality, and Git rules; workflow/media projects need input, state, staging, delivery, and receipt boundaries; POCs need an experiment ledger and promotion/archive conditions. Files may combine, but responsibilities and routes must remain discoverable.
 
-The `standard` and `release` profiles create `governance/PROJECT_MAP.md`. It is only a navigation and ownership index: modules/processes, authority, responsibility, state source, public entrypoint, delivery unit, and legacy boundary. Detailed rules remain in requirement, architecture, workflow, or release owners. Before adding files, modules, components, processes, or parallel versions, consult the map and existing implementation to avoid a second truth created by differing agent context.
+The `standard` and `release` profiles create `governance/PROJECT_MAP.md` as a draft navigation owner. A core or established project may keep a sufficient README or existing equivalent. Calibrate real capabilities, responsibilities, implementation entrypoints, applicable contracts and verification under the [Index Contract](project-standard-discovery-and-on-demand-loading.md#4-index-contract). Ordinary files inherit module ownership; an existing known route does not require a map read before every edit. Update only navigation facts changed by the task. Template generation is not semantic completion, and unknown implementation or testing paths must remain explicit gaps.
 
 Record work object, lifecycle intent, delivery model, and composition separately. Software, workflow, media, or research is the work object. Exploration/POC, pilot, production, migration, or one-off delivery is lifecycle intent. Continuous product, source distribution, versioned artifact, managed service, project deliverable, or internal process is delivery model. Composite means several work objects or delivery units; it does not make POC or mixed an exclusive project type.
 
@@ -115,18 +115,18 @@ Use `--with-agents` only when the project maintains its own agents/system prompt
 
 After initialization/calibration, the project must make these facts directly discoverable; files may combine, responsibilities may not disappear:
 
-- Project form, current objective, authoritative entrypoint, state source, and final-delivery definition.
-- If requirements are enabled: intake, planning/iteration, and acceptance relationships.
-- If files/media are produced: source input, workspace, temporary files, runtime state, final material, receipts, and archive boundaries.
-- AI/newcomer entrypoint and document-authority order.
-- If agents are enabled: Agent Register, stable key/version, unique definition, runtime entrypoint, and Workflow/Harness relationship.
-- Technical design, architecture contract, technical debt, and decision records.
-- Source quality, actual language/framework rules, and unified check command.
-- Python, TypeScript, Go, and Java use the matching Engineering language profile; multilingual projects load only profiles involved in the task, while other languages follow project tools and official ecosystems.
-- If Git/code is enabled: repository, code boundary, branch/worktree, quality, and merge rules.
-- If formal delivery/release is enabled: delivery units, version/delivery IDs, artifacts, deployment/delivery verification, and recovery rules.
-- Current work log, unresolved items, and handoff note.
-- Active lessons and anti-regression entries managed by `senmu-build-learning`, with their detection/validator.
+- Project form, current objective, authoritative entrypoint, applicable constraints and the requested delivery outcome.
+- For actual multi-step or cross-session work: the existing task state and unresolved next steps; immediate small work need not create a task system.
+- For enabled Product work: requirements, terminology and acceptance ownership.
+- For real code modules: capability-to-implementation, contract and verification routes; use a combined README for a small core project when sufficient.
+- For architecture decisions that need durable explanation: the existing technical owner, selected baseline and relevant rationale. No empty ADR or debt register is required.
+- For code/tooling: actual quality commands and applicable language/framework guidance, loaded only for the current need.
+- For files/media: real input, work, temporary, delivery and recovery locations with applicable retention; do not invent unused resource roles.
+- For enabled project-owned agents: their registry/definition/runtime relationship. Using an AI to code does not by itself enable this module.
+- For Git work: actual repository and permitted worktree/branch/integration rules.
+- For formal delivery in scope: release/delivery identity, artifact, target verification and recovery ownership.
+- For meaningful history or reusable learning that actually exists: the existing log and lesson routes, without creating blank parallel ledgers.
+
 
 Prefer short entrypoints routing to authority, machine-readable configuration, and one validator. Do not duplicate long standards.
 
@@ -137,7 +137,7 @@ Before delivery, confirm:
 - The result is in the authoritative project and correct release unit, not only a temporary directory or chat.
 - No unexplained conflict exists among input, rules, implementation/runtime, state, verification, and deliverables in enabled modules.
 - Risk-proportional verification ran, with actual results, omissions, and residual risk recorded.
-- Formal delivery/release has a traceable delivery ID or version, result, acceptance/production verification, and executable recovery basis.
+- When formal delivery/release is within the authorized outcome, it has its required identity, evidence and recovery basis. A navigation-only or source-only task does not acquire deployment obligations or permission by entering closeout.
 - Project-specific learning updates project standards only. A concrete BuildOS component and reviewable harm suffice for feedback intake through `senmu-build-learning`; promotion to a general rule requires cross-project evidence or a stable mechanism affecting multiple project types, without disproportionate burden.
 
 ## Minimum Technology Baseline

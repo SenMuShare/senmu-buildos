@@ -42,10 +42,13 @@
 
 - 回滚目标和触发条件：`<待确认>`
 - 代码／配置／数据恢复入口：`<待确认或不适用>`
-- 最终生产事实：`<待确认>`
+- 最终生产事实：`<待确认；与清理收口独立>`
+- 清理收口状态：`<pending|complete|partial|not_applicable；按下列真实资源面汇总>`
+- 配置/身份依据：`<实际发布驱动、当前/已验证回滚/Pin 的制品事实，非初始化占位值>`
 - 生产运行端收口：`<release_retention_status、保留 digest／ID、临时目录和磁盘结果>`
 - 本机构建端收口：`<release_retention_status、保留 digest／ID、构建制品和磁盘结果>`
 - 远程镜像／制品库：`<生命周期策略、保留 digest／Tag、执行回执或不适用>`
 - 本次 Git 执行面：`<已清理的短分支／worktree；保留项的 owner、理由和退出条件>`
+- 未完成清理：`<资源面、实际目标/engine、planned/disabled/blocked/failed 原因、owner 和继续入口；没有则无>`
 - 收口例外／Pin：`<完整身份、理由、批准者、退出条件或无>`
 - 后续任务／Task ID：`<待确认或无>`

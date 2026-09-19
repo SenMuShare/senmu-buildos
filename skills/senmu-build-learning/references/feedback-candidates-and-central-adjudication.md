@@ -19,6 +19,8 @@ Do not submit ordinary business requirements, feature bugs, project-specific fac
 
 The agent using BuildOS decides and submits feedback; it does not infer a candidate from every user message. When a user says BuildOS is difficult, resolve the current request first, then test the BuildOS-target and real-effect criteria. If eligible, route through Learning:
 
+Writing the local inbox is still a write. Submit only when current user/session authority permits that destination and action. A read-only or review-before-edit task reports the candidate in the requested output without silently writing the inbox, project log or source rules. Invocation and an available CLI do not expand authority.
+
 ```text
 node <plugin-root>/hooks/feedback-cli.js submit \
   --component "<BuildOS Skill/reference/template/script/Hook>" \
@@ -33,7 +35,7 @@ node <plugin-root>/hooks/feedback-cli.js submit \
 
 ## 3. Local Inbox
 
-The default inbox is `~/.senmu-buildos/feedback/`; `SENMU_BUILDOS_DATA_DIR` may select another local data root. The source project records where the problem occurred; the candidate is always feedback about BuildOS. Submission creates no business-project README, ledger, or governance structure, uploads nothing, and changes no Git state.
+The default inbox is `~/.senmu-buildos/feedback/`; `SENMU_BUILDOS_DATA_DIR` may select another local data root. The source project records where the problem occurred; the candidate is always feedback about BuildOS. Submission creates no business-project README, ledger, or governance structure, uploads nothing, and changes no Git state. An authorized handoff to a maintainer includes only selected necessary records, preserving candidate IDs and provenance. Raw evidence stays in approved private storage, not the product source or install directory. Record the resulting issue/commit/version in the existing decision owner; do not automatically upload the whole inbox or transcript.
 
 Each candidate is an independent JSON file with a stable fingerprint to prevent duplicate writes of one event. Store only:
 
@@ -47,11 +49,11 @@ Use `0600` for files and `0700` for directories on systems supporting POSIX perm
 
 When the user asks to process or organize the BuildOS inbox:
 
-1. Locate the plugin root from the loaded Skill. Run `node <plugin-root>/hooks/feedback-cli.js pending --summary` for count, components, source projects, and time range. Then page only the candidates needed with `--json --limit <n> --offset <n>`; do not load the entire inbox by default.
+1. Locate the plugin root from the loaded Skill. Run `node <plugin-root>/hooks/feedback-cli.js pending --summary` for count, components, source projects, and time range. `pending` (alias `unreviewed`) counts missing first decisions, not unresolved work. For follow-up review also inspect `all --summary` and `followup --summary`; the latter lists classified items that require checking their existing issue/task, without asserting that those owners are still open. Then page only the candidates needed with `--json --limit <n> --offset <n>`; do not load the entire inbox by default.
 2. Cluster by root cause, scope, and specialist owner—not wording or count. If a current Skill already covers the decision, inspect whether the actual Harness, project entrypoint, script, validator, and behavior tests consume it. Wrong behavior despite existing prose usually indicates an execution-source gap, not a need to repeat the rule. For chat-derived candidates or reports, a final summary is candidate evidence only: retrieve relevant original turns as needed to verify premises, user corrections, alternatives, and evidence against project/runtime facts. User statements are important input but not automatically verified facts; neither read the whole transcript mechanically nor rely only on the final answer.
 3. Propose exactly one disposition per group: `discard`, `project`, `buildos_candidate`, or `needs_evidence`, with rationale.
-4. Confirm classification and abstraction with the user before modifying any project, BuildOS source, installed instance, or release state.
-5. After confirmation, write an independent decision receipt with `feedback-cli.js decide`. Preserve the original candidate; never rewrite history by deletion.
+4. Resolve any material classification or abstraction choice not already covered by the user's request. Existing authority to adjudicate and make scoped source corrections remains valid; processing an inbox alone grants no project, source, install or release authority.
+5. Write the decision receipt with `feedback-cli.js decide` only within current write authority. Reuse the actual decision and its provenance instead of requesting a second generic approval. Preserve the original candidate; do not rewrite history by deletion.
 
 Minimum commands:
 
@@ -63,9 +65,11 @@ node <plugin-root>/hooks/feedback-cli.js decide --id <FB-id> --disposition <valu
 
 ## 5. Post-Adjudication Boundaries
 
-- `discard`: one-off, noise, already governed but not followed, or cannot become a decidable action.
+- `discard`: verified noise, an out-of-scope non-actionable observation, or a duplicate with its existing owner identified. Existing prose alone does not justify discard: check whether the actual project, adapter, template, script or test consumes it. Unknown causes remain `needs_evidence`.
 - `project`: specific to the source project; return it to requirement, architecture, implementation, process, or delivery authority without copying prose into the BuildOS inbox.
 - `needs_evidence`: record the required reproduction, verification, or second-project sample; do not execute it as a durable rule.
 - `buildos_candidate`: independent input to the BuildOS source project, implemented under BuildOS source-change authority with whole-repository impact analysis and matching tests; installation and release need their applicable authority.
+
+A first decision classifies intake; it is not implementation completion. Link accepted/project/needs-evidence items to the existing issue/task, using `decide --tracking-ref <reference>` when recording a new decision. Preserve old decisions and raw candidates; do not re-decide or delete them to change a completion count. The linked owner records `pending`, `not adopted` with rationale, or `resolved` with the matching commit/version and actual verification. Source fixed, installed, deployed and user-observed recovery are separate facts. Without access to the local inbox or the linked owner's current state, report that limit; never infer "all solved" from zero undecided candidates.
 
 An optional scheduled task may read pending candidates and propose adjudication. It must never modify or publish BuildOS without human review.

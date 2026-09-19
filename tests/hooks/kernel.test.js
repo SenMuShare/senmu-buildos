@@ -49,8 +49,9 @@ test('SubagentStart kernel stays shorter than the session kernel', () => {
   assert.match(subagent, /requested path/);
   assert.match(subagent, /project\/framework\/platform capabilities and evidence/);
   assert.match(subagent, /bounded missing\/changed guidance or outputs/);
-  assert.match(subagent, /verified stable commit/);
-  assert.match(subagent, /never edit integration lines or reuse sealed work/);
+  assert.match(subagent, /verified commit only within delegated commit authority/);
+  assert.match(subagent, /never edit integration\/sealed work/);
+  assert.match(subagent, /Read-only work returns findings and evidence, without changes or commits/);
   assert.match(subagent, /gaps, blockers and risk/);
 });
 

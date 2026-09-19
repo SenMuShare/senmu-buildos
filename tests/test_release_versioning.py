@@ -106,6 +106,22 @@ class ReleaseVersioningTests(unittest.TestCase):
             (root / relative).write_text(text, encoding="utf-8")
         return temporary, root
 
+    def test_source_version_labels_do_not_claim_public_release(self) -> None:
+        temporary, root = self.make_repo()
+        with temporary:
+            replacements = {
+                "README.md": ("当前正式版本为", "当前源码版本为"),
+                "README.en.md": ("current formal release", "current source version"),
+                "README.ja.md": ("現行正式リリース", "現行ソースバージョン"),
+            }
+            for name, (old, new) in replacements.items():
+                file = root / name
+                file.write_text(file.read_text().replace(old, new), encoding="utf-8")
+            changes = prepare_changes(root, "1.0.1", "2026-09-18")
+            apply_changes(changes)
+            self.assertEqual(validate_current(root), "1.0.1")
+            self.assertIn("current source version", (root / "README.en.md").read_text())
+
     def test_prepare_and_apply_updates_all_release_owners(self) -> None:
         temporary, root = self.make_repo()
         self.addCleanup(temporary.cleanup)

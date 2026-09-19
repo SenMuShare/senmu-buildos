@@ -139,3 +139,40 @@ test('review decisions close a candidate without deleting its evidence', (t) => 
   assert.equal(all[0].decision.disposition, 'buildos_candidate');
   assert.ok(fs.existsSync(path.join(feedbackPaths(env).inbox, `${candidate.id}.json`)));
 });
+
+test('classification, follow-up and resolution are not conflated', (t) => {
+  const env = temporaryEnvironment(t);
+  const needs = createCandidate(env, 21);
+  const accepted = createCandidate(env, 22);
+  const discarded = createCandidate(env, 23);
+  decideCandidate(needs.id, 'needs_evidence', 'Need a local execution receipt.', env,
+    { trackingRef: 'issue:example/repo#7' });
+  decideCandidate(accepted.id, 'buildos_candidate', 'Accepted, implementation not verified.', env);
+  decideCandidate(discarded.id, 'discard', 'Synthetic duplicate; original is tracked separately.', env);
+  function query(...args) {
+    const result = childProcess.spawnSync(process.execPath, [cli, ...args], {
+      encoding: 'utf8', env: { ...process.env, ...env },
+    });
+    assert.equal(result.status, 0, result.stderr);
+    return JSON.parse(result.stdout);
+  }
+  const pending = query('pending', '--summary');
+  assert.equal(pending.count, 0);
+  assert.equal(pending.queue_semantics, 'awaiting_first_decision');
+  const followup = query('followup', '--summary');
+  assert.equal(followup.count, 2);
+  assert.equal(followup.queue_semantics, 'owner_status_not_queried');
+  assert.equal(followup.by_disposition.needs_evidence, 1);
+  const page = query('followup', '--json', '--limit', '10');
+  assert.equal(page.returned, 2);
+  const all = query('all', '--json');
+  assert.equal(all.length, 3);
+  assert.equal(all.find(c => c.id === needs.id).decision.tracking_ref, 'issue:example/repo#7');
+  assert.throws(() => decideCandidate(needs.id, 'discard', 'Do not overwrite.', env), /already decided/);
+});
+
+test('decision IDs cannot traverse outside the feedback inbox', (t) => {
+  const env = temporaryEnvironment(t);
+  assert.throws(() => decideCandidate('../outside', 'discard', 'no', env), /invalid candidate ID/);
+  assert.equal(fs.existsSync(feedbackPaths(env).decisions), false);
+});

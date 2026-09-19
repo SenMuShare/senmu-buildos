@@ -61,6 +61,12 @@ Cleanup affects only managed paths/registries of the current unit:
 
 Register local builder, production runtime, remote registry/artifact store, and current Git surface separately. Host cleanup does not close remote registry or Git.
 
+For a project with managed release resources, its existing release driver must invoke the scoped cleanup after successful target verification, not merely generate the helper or print a preview. During initialization, takeover or a change to that driver, trace the real call and validate it with a disposable fixture. Update current/verified-rollback/pin identities from the release's artifact facts before planning; template values are not a permanent retention registry. Reuse the existing release receipt for each real resource surface and preserve an explicit next action for incomplete closeout.
+
+A receipt distinguishes `planned`, `disabled`/not configured, `no_candidates` after an enabled complete inventory, `completed`, `blocked` before removal, and `failed` after an attempted or partial removal. Planned counts are not removal counts. Enumeration/inspection failures must propagate; unknown is not zero. Deployment truth and cleanup truth remain separate: a live version can have pending cleanup, but the complete release task cannot be reported closed while configured cleanup remains unaccounted for. Inapplicable resources need no fake cleanup command.
+
+The bundled template covers governed reproducible artifact directories and tagged image references on one selected Docker engine. Its receipt identifies that context/engine, counts image references rather than unique storage layers, and does not claim measured disk recovery. Retiring stopped containers, unowned/dangling images, shared build caches and remote registry objects requires the relevant project-native lifecycle and existing scope/authority; do not weaken container-reference protection or use global prune to force a two-version count.
+
 ## 5. Release Source and Production Verification
 
 Build formal artifacts only from the unit's authoritative directory and frozen commit. Passing in another worktree does not replace release-source evidence; unrelated dirt elsewhere does not invalidate the candidate.

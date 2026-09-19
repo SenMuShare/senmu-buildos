@@ -13,6 +13,8 @@ When no content owner exists, store durable terminology, object names, and voice
 - **Name the user's task.** Use familiar objects, actions, and outcomes.
 - **Lead with the material result.** State what happened, what it affects, and the next action; defer cause, limits, and technical detail.
 - **Use one name per concept.** Keep entry actions, titles, object names, states, and feedback consistent.
+
+- If terminology ambiguity changes behavior or acceptance, resolve it under [Requirements and Product Iteration](product-requirements-and-iteration.md#3-from-requirement-to-version-prd); interface copy consumes that decision and does not create a competing glossary.
 - **Be concise but complete.** Remove pleasantries, repetition, and decoration, not scope, consequence, recovery, or relevant limits.
 - **Match tone to fact.** State ordinary results without unrelated celebration, emotion, or unsupported promises. Clarity and truth precede brand voice.
 - **Do not rely on visuals alone.** Essential actions/states need text or an accessible name, not color, position, or icon alone.
@@ -38,12 +40,12 @@ For dangerous or irreversible actions, name the actual action and object and sta
 ## 4. Status, Errors, and Feedback
 
 - **Success:** avoid redundant notifications when the result is already visible; otherwise name the completed action and affected object.
-- **In progress:** describe the user's goal, not model, queue, internal stage, or an unproven percentage. State whether it may continue off-page, be cancelled, or take significant time when true.
+- **In progress:** describe the user's task and product-visible state. Approved product concepts such as a selected model or visible queue may be named when useful; do not expose unrelated implementation stages or invent progress percentages. State off-page continuation, cancellation and expected delay only when true.
 - **Error:** state the action that could not complete, give an actionable known cause, then recovery. “Operation failed,” “invalid parameter,” or an internal code alone is incomplete.
 - **Empty:** explain why content is absent and offer a primary action only when a reasonable one exists; do not fill space with feature marketing.
 - **Confirmation:** interrupt only for material consequences, likely mistakes, or difficult recovery. Name object, consequence, and continuation; avoid confirmation for ordinary reversible actions.
 
-Primary user messages must not expose database fields, enums, stack traces, prompts, model routing, pipeline steps, or implementation rationale. Put necessary diagnostics in a redacted, expandable, copyable technical-details area.
+Primary messages use the product's approved terminology, including technical objects the user actually operates. Exclude secrets, raw internal prompts, stack traces and irrelevant implementation details. Put necessary diagnostics in a redacted, expandable, copyable area; do not hide an approved model, queue, API field or public price solely because it is technical or commercial.
 
 ## 5. Generated Interface Content
 

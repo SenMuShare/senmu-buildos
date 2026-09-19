@@ -122,5 +122,38 @@ class PublicProjectionTests(unittest.TestCase):
             self.assertTrue((source / "src/main.py").is_file())
 
 
+    def test_unicode_and_spaced_home_paths_are_rejected(self) -> None:
+        paths = ["/" + "Users/测试用户/project", "/" + "home/example user/project",
+                 "C:" + "\\Users\\测试用户\\project", "D:/" + "Users/example user/project"]
+        for private_path in paths:
+            with self.subTest(private_path=private_path), tempfile.TemporaryDirectory() as raw:
+                root = Path(raw)
+                source, target = root / "source", root / "target"
+                (source / "src").mkdir(parents=True)
+                (source / "src/main.py").write_text(private_path, encoding="utf-8")
+                (source / "README.md").write_text("# Example")
+                manifest = source / "manifest.json"
+                self.write_manifest(manifest)
+                result = self.run_export(source, target, manifest, "--apply")
+                self.assertNotEqual(result.returncode, 0)
+                self.assertFalse(target.exists())
+
+    def test_allowlisted_symlink_root_is_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as raw:
+            root = Path(raw)
+            source, target, outside = root / "source", root / "target", root / "outside"
+            source.mkdir()
+            outside.mkdir()
+            (outside / "private.txt").write_text("outside")
+            (source / "src").symlink_to(outside, target_is_directory=True)
+            (source / "README.md").write_text("# Example")
+            manifest = source / "manifest.json"
+            self.write_manifest(manifest)
+            result = self.run_export(source, target, manifest, "--apply")
+            self.assertNotEqual(result.returncode, 0)
+            self.assertFalse(target.exists())
+            self.assertEqual((outside / "private.txt").read_text(), "outside")
+
+
 if __name__ == "__main__":
     unittest.main()
