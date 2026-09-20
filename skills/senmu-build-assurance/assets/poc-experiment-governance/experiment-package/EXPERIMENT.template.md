@@ -1,27 +1,33 @@
-# EXP-<NNNN>：<实验名称>
+# <experiment-id>: <question>
 
-> 状态：`planned | running | evaluating | concluded | invalidated | cancelled | archived`
-> 负责人：`<待确认>`
-> 创建：`<YYYY-MM-DD>`
-> 来源需求／Task：`<REQ-NNNN／TASK-NNNN 或不适用>`
+> Status: `planned | running | pending_human_evaluation | blocked | invalidated | cancelled | concluded | archived | superseded`
+> Owner / executor: <roles>
+> Created / updated: <ISO date and timezone>
+> Source task/requirement: <existing reference or not applicable>
+> Project experiment contract: <existing owner, not copied policy>
 
-## 决策问题
+## Question and design
 
-- 要回答的问题：
-- 当前基线：
-- 可证伪假设：
-- 适用范围与不可外推范围：
+- Decision to support, baseline, hypothesis and limits:
+- Alternatives and why each is worth considering (including untested proposals):
+- Success/failure criteria, cost/time limits and stopping conditions:
+- Input identity, authority, privacy and licenses:
+- Frozen code/model/engine/dependency versions and necessary patches:
+- Controls, intended variables and known uncontrollables:
+- Execution surface and shared resource isolation (branch/worktree, ports, DB, cache):
+- Registered POC root, stable record location and bulk-asset locators:
 
-## 成功与停止条件
+## Runs and decision
 
-- 成功标准：
-- 失败标准：
-- 停止条件：
-- 付费／外部操作授权边界：
+For a compact demo, record its actual steps/times, changes and reasons, measurements,
+failures, evidence, conclusion and limits here. For a multi-run comparison, link the
+existing plan/results/decision sections or optional package files instead of copying them.
+Never reconstruct unrecorded runs as facts or save hidden model reasoning as a ledger.
 
-## 输入与环境
+## Resource closeout
 
-- 冻结输入、版本与 SHA：
-- 代码、commit 与依赖版本：
-- 运行环境、设备、种子与计时口径：
-- 大型输出位置：`<项目工作区外部路径或对象存储>`
+- Retained report, scripts/patches, parameters and representative evidence:
+- Bulk groups eligible for disposal, regeneration source and existing authority:
+- Backup verification / reproduction limits / actual cleanup result or next action:
+
+`concluded` does not mean cleaned; `archived` does not mean deleted or production-approved.

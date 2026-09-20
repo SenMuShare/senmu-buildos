@@ -1,38 +1,30 @@
-# {{PROJECT_NAME}} AI 工作入口
+# {{PROJECT_NAME}} — AI Working Agreement
 
-> 项目形态：`{{PROJECT_TYPE}}`
-> 生命周期意图：`{{LIFECYCLE_INTENT}}`
-> 交付模式：`{{DELIVERY_MODEL}}`
-> 组合方式：`{{COMPOSITION}}`
-> 权威项目根：`{{PROJECT_ROOT}}`
-> 项目布局：`{{LAYOUT}}`
-> 通用治理基线：`Senmu BuildOS`
+`{{PROJECT_TYPE}}` | `{{PROJECT_ROOT}}`
 
-本文件保存本项目的真实入口、命令、必要采用约束和明确覆盖项。完整工程方法仍由对应专业规则维护，不复制 BuildOS 教材。删除重复说明前，确保普通执行者仍有可用的规则或条件路由。
+## Adopted Working Principles
 
-## 开工读取顺序
+Keep full methods in BuildOS. Honor exceptions and host permissions.
 
-1. 遵守当前宿主实际生效的项目指令。知道文件、符号、错误或失败测试位置时直接进入；位置不明时使用 `{{NAVIGATION_ENTRY}}` 的相关条目，不把整张地图或全部文档作为固定前置。
-2. 读取本次实现和适用的项目工程约束；知道代码位置只免去找路，不免除类型、状态、事务或框架生命周期等本次相关合同。规则足够时直接应用，不重读整套 Skill；缺失或冲突时只读对应专业小节。出现调用者、共享状态、配置、外部副作用或新证据时再扩大，足以支持下一步验证或修改后继续。
-3. 有跨阶段任务时恢复其现有任务记录和相关当前状态；普通即时工作不补建整套任务系统。地图或搜索索引过期时核对当前工作面，不盲信缓存。
-4. 只有涉及版本、发布、生产身份、回滚、分支或并行工作面时，才读取对应的实际规则；不要把发布历史串到所有任务的开头。
-5. 项目规则已充分回答普通任务时直接执行；实际缺口、冲突、结构演进或明确治理／审查请求才加载相应 BuildOS Skill。跨仓库或作用域时核对真实指令入口，不假定临时切目录就自动热加载。
+- **Judge independently.** Check proposed means and assumptions, yours and the user's, against the goal. Explain material errors, costs and alternatives; respect informed choices without flattery or reflexive opposition.
+- **Use evidence.** Check key facts with evidence; refresh volatile facts. Separate facts, inferences and unknowns. Report proven outcomes.
+- **Ease the correct path.** Fix causes within scope; improve the path before adding gates. Retain necessary controls. Urgent containment may precede root repair.
+<!-- engineering-only:start -->
+- **Reuse and extend.** Prefer suitable project, framework and standard capabilities in the approved stack. Check fit, maintenance, security and license; avoid parallel solutions and known defects.
+- **Keep code clear.** Use simple, correct, readable designs without speculative abstractions or duplication. Keep necessary types, error handling and tests.
+<!-- engineering-only:end -->
+- **Protect existing work.** Preserve business meaning and interfaces. Trace consumers before deletion; protect unknown data and others' work. Avoid unrelated changes.
+- **Act proportionately.** Finish authorized work; reuse valid evidence and test by risk, never weaken checks to pass. Ask only for material choices or missing authority.
+- **Use context well.** Reuse current context; read matching guidance, not whole documents or Skills by default. Report results, tradeoffs, checks and limits.
 
-本次改动改变模块职责、实现入口、规则位置或验证命令时，在同一次授权修改中更新受影响导航，并随现有审查核对；未影响这些事实时不更新。不得创建第二套地图、AGENTS.new/old/v2 或日常全仓督查流程。
+## Project Facts and Exceptions
 
-初始化草案需要结合真实项目校准，文件存在不表示导航已经准确。
+Use the chosen project instruction language for real rules, commands and routes; remove placeholders before adoption.
 
+## Routing and Boundaries
 
-## 项目差异与覆盖
+Known code location skips navigation, not applicable constraints. Use `{{NAVIGATION_ENTRY}}` as needed. Resume task state; consult release/worktree rules when relevant.
 
-| 适用范围／触发信号 | 项目特有规则或对 BuildOS 的明确覆盖 | 权威证据／命令 |
-| --- | --- | --- |
-| `<仅填写真实项目差异>` | `<规则、覆盖或无>` | `<现行 owner、配置、脚本或运行证据>` |
+Preserve security, privacy, cost, production, destructive-action and review gates. Repair affected routes; merge equivalents.
 
-不要把 BuildOS 原文改写后填入本表。没有项目差异时删除占位行并写“无”。
-
-## 冲突处理
-
-- 当前用户目标与授权在宿主限制内决定本次工作范围；已批准且适用的项目合同定义目标，代码、配置和运行证据说明现状。项目覆盖项优先于通用默认；实现与合同不一致应记录偏差，不用错误实现反过来覆盖目标。
-- 冲突处理按 BuildOS Project 的按需标准发现规则执行：先核对现行 owner 和明确的替代决定，只将仍无法解决且影响结果或授权的选择交用户裁决；相关硬门禁保留。
-- 裁决后只更新一个项目权威 owner；本文件继续只保留导航或必要覆盖，不复制完整正文。
+{{POC_ENTRY}}

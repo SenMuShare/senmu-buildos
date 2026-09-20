@@ -5,10 +5,11 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import subprocess
 import sys
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 from typing import Any
 from urllib.parse import unquote
 
@@ -318,6 +319,145 @@ def canonical_git_root(root: Path) -> Path:
         return checkout
     common_dir = Path(common.stdout.strip()).resolve()
     return common_dir.parent if common_dir.name == ".git" else checkout
+
+
+def validate_poc_registration(
+    root: Path, policy: dict[str, Any], strict: bool,
+    errors: list[str], warnings: list[dict[str, str]],
+) -> None:
+    """Check declared POC locations; never run experiments, cleanup or owner commands.
+
+    The config is a locator/contract, not a proof of human approval or backup health.
+    Older projects can point at their existing owner instead of migrating records.
+    """
+    registration = policy.get("poc_management")
+    if "poc" not in (policy.get("selected_modules") or []) and registration is None:
+        return
+
+    def pending(message: str) -> None:
+        if strict:
+            errors.append("POC: " + message)
+        else:
+            warnings.append(issue("poc.unconfigured", message, POLICY_REL.as_posix(), "warning"))
+
+    if registration is None:
+        pending("实验存储未登记；沿用现有 owner 并补齐指针，不重新初始化或覆盖历史实验")
+        return
+    if not isinstance(registration, dict):
+        errors.append("POC: poc_management 必须是对象或 null")
+        return
+
+    def location(base: Path, raw: Any, label: str, *, file: bool = False) -> Path | None:
+        # Reject foreign-platform absolute paths even when validating on another OS.
+        if not isinstance(raw, str) or not raw.strip() or "\x00" in raw:
+            errors.append(f"POC: {label} 必须为非空相对路径")
+            return None
+        if Path(raw).is_absolute() or PureWindowsPath(raw).drive or "\\" in raw:
+            errors.append(f"POC: {label} 不得持久化绝对路径")
+            return None
+        try:
+            resolved = (base / raw).resolve(strict=True)
+            resolved.relative_to(base)
+        except (OSError, ValueError, RuntimeError):
+            errors.append(f"POC: {label} 不存在或越出声明的根")
+            return None
+        if not (resolved.is_file() if file else resolved.is_dir()):
+            errors.append(f"POC: {label} 类型不符")
+            return None
+        return resolved
+
+    contract = location(root, registration.get("contract_path"), "contract_path", file=True)
+    if contract is not None and ".senmu-buildos/templates" in contract.relative_to(root).as_posix():
+        errors.append("POC: 未填写模板不能作为已采用的实验合同")
+    state = registration.get("activation_status")
+    if state != "active":
+        if not isinstance(state, str) or state not in {"draft", "requires_project_calibration"}:
+            errors.append("POC: activation_status 无效")
+        else:
+            pending("实验存储仍为草案；路径、隔离和留存校准后才能激活")
+        return
+    owner = registration.get("owner_kind")
+    if owner == "existing_contract":
+        warnings.append(issue(
+            "poc.existing_contract_requires_semantic_check",
+            "仅核验已有实验合同的入口；沿原 owner 检查隔离、留存与备份，未执行其命令",
+            str(registration.get("contract_path", "")), "warning",
+        ))
+        return
+    if owner != "project_policy":
+        errors.append("POC: owner_kind 必须为 project_policy 或 existing_contract")
+        return
+    workspace_raw = policy.get("workspace_root", ".")
+    if (not isinstance(workspace_raw, str) or not workspace_raw.strip()
+            or Path(workspace_raw).is_absolute() or PureWindowsPath(workspace_raw).drive
+            or "\\" in workspace_raw):
+        errors.append("POC: workspace_root 必须是已声明的相对根")
+        return
+    try:
+        workspace = (root / workspace_raw).resolve(strict=True)
+        root.relative_to(workspace)
+    except (OSError, ValueError, RuntimeError):
+        errors.append("POC: workspace_root 必须存在且包含治理根")
+        return
+    poc = location(workspace, registration.get("poc_root"), "poc_root")
+    mode = registration.get("tracking_mode")
+    if not isinstance(mode, str) or mode not in {"untracked", "split"}:
+        errors.append("POC: tracking_mode 必须为 untracked 或 split")
+    record_raw = registration.get("record_root")
+    records = poc if record_raw is None and mode == "untracked" else location(workspace, record_raw, "record_root")
+    protected_raw = registration.get("protected_roots")
+    if not isinstance(protected_raw, list):
+        errors.append("POC: protected_roots 必须是已核对的目录数组；没有并行开发/发布根时明确填 []")
+        protected_raw = []
+    protected = [location(workspace, raw, "protected_roots") for raw in protected_raw]
+
+    def overlaps(left: Path, right: Path) -> bool:
+        return left == right or left in right.parents or right in left.parents
+
+    for candidate in (poc, records):
+        if candidate is not None and any(part.lower() == ".git" for part in candidate.relative_to(workspace).parts):
+            errors.append("POC: Git 元数据目录不得作为实验或记录位置")
+    if poc == workspace or records == workspace:
+        errors.append("POC: 实验存储不得占用整个项目工作区")
+    for candidate in (poc, records):
+        if candidate is not None and any(p is not None and overlaps(candidate, p) for p in protected):
+            errors.append("POC: 实验或记录位置与受保护开发/发布工作树重叠")
+    if mode == "untracked" and records != poc:
+        errors.append("POC: untracked 的稳定记录应位于同一 poc_root；分开存放应声明 split")
+    if mode == "split" and poc is not None and records is not None and overlaps(poc, records):
+        errors.append("POC: split 的记录与大文件根必须独立，不得相互包含")
+    for key in ("retention_policy", "backup_policy"):
+        if not isinstance(registration.get(key), str) or not registration[key].strip():
+            errors.append(f"POC: {key} 必须记录现有策略或其可读引用，不能把 ignored 当成可删除")
+
+    if poc is None:
+        return
+    # Read-only Git queries use literal paths, bounded time and no caller Git redirection.
+    env = {k: v for k, v in os.environ.items() if k not in {
+        "GIT_DIR", "GIT_WORK_TREE", "GIT_COMMON_DIR", "GIT_INDEX_FILE",
+        "GIT_OBJECT_DIRECTORY", "GIT_ALTERNATE_OBJECT_DIRECTORIES",
+    }}
+    env.update(LC_ALL="C", GIT_OPTIONAL_LOCKS="0")
+    try:
+        probe = subprocess.run(["git", "-C", str(poc), "rev-parse", "--show-toplevel"],
+                               capture_output=True, text=True, timeout=10, env=env, check=False)
+        if probe.returncode:
+            if probe.returncode == 128 and "not a git repository" in probe.stderr.lower():
+                return  # A registered non-Git experiment area needs backup, not .gitignore.
+            errors.append("POC: 无法确定实验存储的 Git 边界")
+            return
+        git_root = Path(probe.stdout.strip()).resolve()
+        relative = poc.relative_to(git_root).as_posix()
+        tracked = subprocess.run(["git", "-C", str(git_root), "ls-files", "-z", "--", f":(literal){relative}"],
+                                 capture_output=True, timeout=10, env=env, check=False)
+        ignored = subprocess.run(["git", "-C", str(git_root), "check-ignore", "-q", "--", relative],
+                                 capture_output=True, timeout=10, env=env, check=False)
+        if tracked.returncode or ignored.returncode not in (0, 1):
+            errors.append("POC: 实验存储跟踪状态检查失败")
+        elif tracked.stdout or ignored.returncode != 0:
+            errors.append("POC: 大文件/非跟踪实验根必须已忽略且不含 Git 已跟踪文件")
+    except (OSError, ValueError, subprocess.TimeoutExpired):
+        errors.append("POC: Git 跟踪检查不可用或超时，不能声称已隔离")
 
 
 def validate(
@@ -691,6 +831,8 @@ def validate(
                     errors.append(f"Agent 定义校验失败：{detail}")
     elif agent_management is not None:
         errors.append("未启用 agents 模块时 agent_management 必须为 null")
+
+    validate_poc_registration(root, policy, strict, errors, warnings)
 
     release_retention = policy.get("release_retention")
     artifact_kinds = policy.get("artifact_kinds", [])

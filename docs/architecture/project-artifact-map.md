@@ -52,7 +52,7 @@
 | 发布保留配置 | Release Retention Configuration | `operations/release-retention.env` |
 | 发布制品收口脚本 | Release Artifact Cleanup | `operations/scripts/cleanup-release-assets.sh` |
 | 实验登记表 | Experiment Register | `experiments/EXPERIMENT_REGISTER.md` |
-| 实验包 | Experiment Package | `experiments/EXP-<NNNN>-<slug>/` |
+| 实验包 | Experiment Package | `<registered-record-root>/EXP-<NNNN>-<slug>/` |
 | 实验清单 | Experiment Manifest | 实验包内 `experiment-manifest.json` |
 | 审查报告 | Assurance Review Report | `engineering/audits/`、`evidence/reviews/` 或项目审计系统 |
 

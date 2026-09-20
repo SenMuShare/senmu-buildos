@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "repository": "SenMuShare/senmu-buildos",
-  "reviewed_for_version": "2.10.0",
+  "reviewed_for_version": "2.16.0",
   "description": "AI-native BuildOS for Codex, Claude Code, Doubao, WorkBuddy and ZCode: product discovery, UI/UX design, software engineering, context-aware workflows, testing, Git and verifiable releases.",
   "topics": [
     "agent-skills",
@@ -27,14 +27,16 @@
   ],
   "readme_review": {
     "updated_sections": [
-      "release-cleanup-outcomes",
-      "feedback-follow-up",
-      "claude-project-instruction-compatibility"
+      "release-summary-and-source-version",
+      "project-entrypoint-working-principles",
+      "project-and-workflow-capability-rows",
+      "github-readme-maintenance",
+      "release-channel-boundaries"
     ],
     "summary": {
-      "zh": "本版修正发布清理的结果与失败处理，区分未裁决反馈和后续处理，并补齐 Claude 项目指令的盘点与加载核对。已有业务项目中的清理脚本需要通过项目治理同步，升级插件不会替你清理设备或上传反馈。原生回收恢复、实际宿主加载与 Token 效果仍需相应验证，普通文件回收工具仍不支持 Windows 执行。详见[用户更新日志](RELEASE_NOTES.md)。",
-      "en": "This source update fixes release-cleanup reporting and failure handling, distinguishes undecided feedback from follow-up work, and inventories Claude project instructions without claiming they are loaded. Update generated cleanup scripts through project governance; upgrading the plugin does not clean devices or upload feedback. Native recovery, actual host loading and Token impact remain separately unverified; the ordinary-file cleanup helper does not support Windows execution. See [release notes](RELEASE_NOTES.md).",
-      "ja": "本ソース更新では、リリース清理の結果と失敗処理を修正し、未裁定のフィードバックと後続作業を区別します。Claude の指示ファイルも調査対象に含めますが、実際の読み込みとは区別します。既存プロジェクトの清理スクリプトはプロジェクト整理時に更新してください。プラグイン更新だけで端末の清理やフィードバック送信は行いません。実機復元・ホスト読み込み・Token 効果は別途検証が必要で、通常ファイルの回収ツールは Windows では実行できません。[更新履歴](RELEASE_NOTES.md)。"
+      "zh": "本版完善发布文档与三语 README 维护：每次 GitHub 更新先判断文档影响，相关内容同步修改，无实质变化的部分保持原样。使用说明明确项目 `AGENTS.md` 可承载精炼工作原则，并区分项目指令治理与业务 Agent 内容治理。本版延续既有运行能力和修复，不新增自动迁移或效果承诺；源码版本与各渠道实际发布状态分别核对。详见[用户更新日志](RELEASE_NOTES.md)。",
+      "en": "This documentation and release-maintenance update adds README impact review to each GitHub-bound change. Synchronize affected Chinese, English and Japanese content; preserve sections that remain accurate. The usage guide clarifies concise working principles in project AGENTS.md and distinguishes project-instruction governance from business-agent content governance. Existing runtime capabilities and fixes are retained; no automatic migration or performance gain is introduced. Verify source version and channel availability separately. See [release notes](RELEASE_NOTES.md).",
+      "ja": "本版では、GitHub に反映する変更ごとに README への影響を確認し、中国語・英語・日本語の関連箇所を同期する保守方針を明確にします。変更不要な記述は維持します。プロジェクトの AGENTS.md に簡潔な作業原則を置くことと、業務 Agent の内容整理との違いも説明します。既存の実行機能と修正は継承し、自動移行や性能向上を新たに提供するものではありません。ソースのバージョンと各配布経路の公開状況は別々に確認してください。詳しくは[更新履歴](RELEASE_NOTES.md)を参照してください。"
     }
   },
   "readmes": {

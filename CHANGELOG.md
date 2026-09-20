@@ -2,6 +2,85 @@
 
 ## Unreleased
 
+## [2.16.0] - 2026-09-20
+
+### Changed
+
+- Require README impact review for each GitHub-bound change, synchronizing affected Chinese, English and Japanese content while preserving unchanged sections and reusing the existing PR/task record.
+- Prepare the authorized 2.16.0 documentation and release-maintenance version; existing runtime Skills, Hooks, adapters, validators and tests are unchanged.
+
+### Fixed
+
+- Replace router-only AGENTS explanations and incomplete Project/Workflow capability rows with the already-supported working-principle and business-agent governance behavior.
+- Document the native version preparer's full metadata scope and distinguish source version from channel availability and local installation.
+
+
+## [2.15.0] - 2026-09-20
+
+### Fixed
+
+- Distinguish explicit unfinished agent-template slots from legal XML/HTML and runtime variables, including fenced examples.
+- Reconcile every unfenced Agent Key, Version and Status declaration; reject conflicts and empty values while accepting identical legacy aliases.
+- Align Engineering, Product, Design and Workflow entry boundaries and current picker/default-prompt metadata without forcing routine tasks through Skills.
+- Clarify authorized commits and repair-unit integration into one release root; expose conditional model references and short navigation in long references.
+
+### Changed
+
+- New business-agent starters use explicit BUILDOS_TODO authoring slots while retaining named legacy slot checks and localized structures.
+
+## [2.14.0] - 2026-09-20
+
+### Changed
+
+- Consolidate project working principles around independent judgment, evidence, source prevention, suitable reuse, clear code, protected work and proportionate delivery.
+- Distinguish goals, proposed means and assumptions; scrutinize the agent's assumptions too, explain material tradeoffs and respect informed choices without reflexive opposition.
+- Improve the correct execution path before adding gates, while preserving necessary controls and authorized urgent containment.
+
+### Fixed
+
+- Carry previously scattered core principles into project instruction adoption without adding a mandatory critique ceremony, duplicate manuals or business-agent behavior changes.
+- Preserve project language, approved exceptions and no-op repeated governance; package the already-integrated source improvements as a distinct 2.14.0 release.
+
+## [2.13.0] - 2026-09-20
+
+### Added
+
+- Business-agent content governance preserving approved business semantics, effective prompt assembly, I/O, model settings and authorization.
+- Conditional image-agent authoring guidance and current-source GPT Image 2/2.5 and hosted Qwen-Image 2.0/3.0 profiles.
+- English business-agent starter and language-neutral section labels with backwards-compatible structural validation.
+
+### Fixed
+
+- Project-level agent content review no longer stops at filenames or silently substitutes templates.
+- Root instruction governance, business-agent definition and actual model execution remain separate; source checks do not claim better generated output.
+
+## [2.12.0] - 2026-09-20
+
+### Added
+
+- Project instruction adoption now has two explicit outcomes: reconcile existing effective instructions and adopt concise shared working principles without requiring project uniqueness.
+- English AGENTS starters carry actionable default agreements; the initializer omits software-only principles for non-code modules. Adopting agents calibrate real facts and localize the draft before claiming completion.
+- Added structural/draft regressions and behavioral scenarios for language precedence, existing exceptions, audit-only authority, equivalent clauses and repeated governance without growth.
+
+### Changed
+
+- Existing instruction files keep their language unless explicitly changed; new files follow project collaboration language, then request language, then English fallback. Preserve modal strength, paths, commands and intentional multilingual structures without default bilingual duplication.
+- Authorized instruction optimization repairs original files and necessary consumers instead of ending at an audit verdict. Plugin updates do not rewrite project instances, expand Kernel injection or claim measured token savings.
+
+## [2.11.0] - 2026-09-20
+
+### Added
+
+- Opt-in project POC registration connects the existing AI entrypoint to experiment storage, protected worktrees, tracking and retention. A core project uses a short contract; established native owners remain authoritative.
+- Read-only project validation reports unconfigured POCs, missing or overlapping locations and incorrect Git tracking without creating experiments, evaluating results or cleaning resources.
+
+### Fixed
+
+- Align POC templates with registered storage and conclusion states; retain per-variant evidence, plan changes, failed runs, selection/rejection rationale, dates and reproduction limits.
+- Keep retained reports, necessary engine patches and representative media separate from disposable bulk groups. Archiving a conclusion does not claim resource cleanup or production approval.
+- Distinguish read-only audits from authorized isolated experiment writes. Preserve the already-integrated scoped execution recovery and subagent snapshot identity corrections.
+- Existing project records are not overwritten or migrated merely to adopt the new contract; legacy manifest locators remain readable historical data.
+
 ## [2.10.0] - 2026-09-19
 
 ### Added

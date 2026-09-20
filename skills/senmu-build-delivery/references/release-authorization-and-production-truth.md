@@ -79,6 +79,8 @@ Use a sufficient combination for the release unit:
 
 Local tests, candidate docs, Git Tag, green CI, successful upload, one health endpoint, or deployment exit 0 cannot alone prove `released`. On conflict, remain unverified and investigate the target; docs never override runtime.
 
+When auditing or repairing status checks, separate document consistency from release eligibility. Validate the claim's unit, environment, candidate/artifact identity and evidence rather than requiring fixed success wording. An existing production release and an unreleased hotfix candidate may coexist, even with the same version number. A truthful candidate document may pass consistency checks without qualifying as a verified release. Never require a future `released` claim to build or test that candidate. Repair an erroneous check in its existing owner under change authority; do not bypass it or manufacture a success sentence. Regression fixtures should accept truthful pending state for document consistency, reject unsupported release claims, and accept a release only with the required identity, health and affected-flow evidence.
+
 ## 7. Failure, Partial Deployment, and Rollback
 
 - After interruption, inventory every affected service, configuration, data, and traffic state before continuing or rolling back.

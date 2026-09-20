@@ -178,7 +178,7 @@ class ProjectGovernanceScaffoldTests(unittest.TestCase):
                 self.assertIn(contract, quality)
             self.assertNotIn("语言专项规则位于：`engineering/languages/`", quality)
             self.assertNotIn("框架专项规则位于：`engineering/frameworks/`", quality)
-            self.assertIn("知道代码位置只免去找路", agents)
+            self.assertIn("Known code location skips navigation, not applicable constraints", agents)
             policy = json.loads((target / ".senmu-buildos/config.json").read_text(encoding="utf-8"))
             self.assertEqual(policy["initialization_status"], "draft")
 
@@ -225,10 +225,10 @@ class ProjectGovernanceScaffoldTests(unittest.TestCase):
                         self.assertIn("治理版本：`1.0.0`", governance_text)
                         agents_text = (project_root / "AGENTS.md").read_text(encoding="utf-8")
                         self.assertLessEqual(len(agents_text), 2_300)
-                        self.assertIn("## 项目差异与覆盖", agents_text)
-                        self.assertIn("## 冲突处理", agents_text)
-                        self.assertNotIn("## 稳定规则", agents_text)
-                        self.assertNotIn("## 完成输出", agents_text)
+                        self.assertIn("## Project Facts and Exceptions", agents_text)
+                        self.assertIn("## Routing and Boundaries", agents_text)
+                        self.assertNotIn("## Stable Rules", agents_text)
+                        self.assertNotIn("## Completion Output", agents_text)
                         if profile in {"standard", "release"}:
                             self.assertTrue((project_root / "governance/tasks/TASK_REGISTER.md").is_file())
                             self.assertTrue((project_root / ".senmu-buildos/templates/TASK.md").is_file())

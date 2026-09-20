@@ -32,6 +32,7 @@ REFERENCE_OWNERS = {
     "project-directories-and-documentation.md": "senmu-build-project",
     "project-governance-instances-and-evolution.md": "senmu-build-project",
     "project-standard-discovery-and-on-demand-loading.md": "senmu-build-project",
+    "project-instruction-authoring.md": "senmu-build-project",
     "established-project-takeover-governance.md": "senmu-build-project",
     "product-requirements-and-iteration.md": "senmu-build-product",
     "interface-copy-and-content-design.md": "senmu-build-product",
@@ -48,6 +49,10 @@ REFERENCE_OWNERS = {
     "workflow-run-state-and-recovery.md": "senmu-build-workflow",
     "reference-attachment-governance.md": "senmu-build-workflow",
     "agent-definition-and-system-prompt-framework.md": "senmu-build-workflow",
+    "business-agent-content-governance.md": "senmu-build-workflow",
+    "image-generation-agent-guidance.md": "senmu-build-workflow",
+    "image-model-profiles/openai-gpt-image.md": "senmu-build-workflow",
+    "image-model-profiles/qwen-image.md": "senmu-build-workflow",
     "release-authorization-and-production-truth.md": "senmu-build-delivery",
     "independent-review-and-evidence-grading.md": "senmu-build-assurance",
     "technology-and-component-selection.md": "senmu-build-engineering",
@@ -716,7 +721,7 @@ def validate_project_instruction_layer() -> None:
             "project AGENTS template exceeds delta-layer budget: "
             f"{len(text)} > {MAX_PROJECT_AGENTS_TEMPLATE_CHARS} characters"
         )
-    for legacy_heading in ("## 稳定规则", "## 完成输出"):
+    for legacy_heading in ("## 稳定规则", "## 完成输出", "## Stable Rules", "## Completion Output"):
         if legacy_heading in text:
             fail(f"project AGENTS template still carries copied governance section: {legacy_heading}")
     peer_skill_catalog = EXPECTED_SKILLS - {"senmu-build-project"}
@@ -726,7 +731,7 @@ def validate_project_instruction_layer() -> None:
     # The delta layer must still reject unconditional document preloads and copied
     # BuildOS method text. Assert the current wording that carries those rules; the
     # peer-Skill catalog check above is the structural half of the same invariant.
-    for required in ("不把整张地图或全部文档作为固定前置", "不复制 BuildOS 教材"):
+    for required in ("not whole documents or Skills", "Keep full methods in BuildOS"):
         if required not in text:
             fail(
                 "project AGENTS template must reject unconditional document preloads "

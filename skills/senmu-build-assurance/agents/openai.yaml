@@ -1,4 +1,4 @@
 interface:
   display_name: "Senmu Build Governance Assurance"
   short_description: "Independent reviews, POCs, evidence, and causal findings"
-  default_prompt: "Use $senmu-build-assurance to produce a read-only evidence-backed experiment, audit, causal finding, or remediation verdict."
+  default_prompt: "Use $senmu-build-assurance to design or assess an evidence-backed POC, audit, or causal finding; keep reviews read-only and authorized experiment writes isolated."

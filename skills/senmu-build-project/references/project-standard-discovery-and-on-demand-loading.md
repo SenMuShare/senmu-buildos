@@ -1,13 +1,17 @@
 # Project Standard Discovery and Conditional Loading
 
-Use this standard to find effective rules in an established project and load only what the current task needs. It does not create a BuildOS-private project knowledge base or promote personal preference, incidental style, or chat impressions into standards.
+Find effective project rules and read only what the task needs. Do not create a separate knowledge base or promote unadopted preferences, incidental style or chat impressions into standards.
+
+## Contents
+
+[Discovery](#3-discovery-process) · [Index](#4-index-contract) · [Loading](#5-conditional-loading) · [Verification](#6-verify-routing) · [Maintenance](#8-project-instruction-maintenance)
 
 ## 1. Two Different Artifacts
 
-- **Authoritative standard:** complete project-specific rules, rationale, exceptions, and verification in existing owners such as CONTRIBUTING, CODE_QUALITY, ARCHITECTURE, TESTING_STRATEGY, WORKFLOW, DEPLOYMENT, or tool configuration. Under BuildOS, root `AGENTS.md` is a project-difference/router entrypoint, not a domain-standard owner.
+- **Authoritative standard:** complete project-specific rules, rationale, exceptions, and verification in existing owners such as CONTRIBUTING, CODE_QUALITY, ARCHITECTURE, TESTING_STRATEGY, WORKFLOW, DEPLOYMENT, or tool configuration. Under BuildOS, root `AGENTS.md` is a working-agreement and project-difference/router entrypoint, not an owner of complete domain manuals. Concise adopted shared principles are allowed; project uniqueness is not required for a useful working agreement.
 - **Standards index:** domain, trigger, one-sentence decision summary, and authoritative path for fast selection. It does not copy the standard.
 
-`governance/PROJECT_MAP.md` is the BuildOS standard/release default index. Map an established equivalent instead of adding `standards/`, `rules/`, or another Project Map. A core project may route directly from a short AGENTS, README, charter, and tool configuration.
+Use `governance/PROJECT_MAP.md` for a new standard/release project, or map its existing equivalent. Add no parallel index. Core projects may route directly through AGENTS, README, a charter or configuration.
 
 ## 2. When Discovery Is Needed
 
@@ -29,7 +33,7 @@ Skip full discovery when an ordinary task can already find clear rules from proj
    - user/business outcome, scope, acceptance, product decision -> Product;
    - architecture, implementation path, tradeoff, rationale -> design/decision owner; update the current engineering constraint when it changes without copying full history;
    - workflow, delivery, task state, release fact, learning evidence -> Workflow, Delivery, Durable Task State, or Learning respectively.
-4. Apply two admission tests. Durable agent instructions must be non-obvious, project-specific, repeatedly needed, or catastrophic if violated once. Current engineering constraints need only be valid, stable, implementation-relevant, and verifiable; prior failure is unnecessary. Exclude preferences, one-off task context, and unconfirmed judgment.
+4. Apply two admission tests. Durable agent instructions must be non-obvious, project-specific, repeatedly needed, or catastrophic if violated once. Current engineering constraints need only be valid, stable, implementation-relevant, and verifiable; prior failure is unnecessary. Exclude unadopted personal preferences, one-off task context, and unconfirmed judgment. Explicitly adopted team working principles follow the authoring contract below; do not reject them merely because they are reusable across projects.
 5. Retain evidence paths and distinguish formal rule, stable practice, candidate, legacy, and incidental style. A mixed file may remain physically intact when section responsibilities and current/history boundaries are clear. If classification is uncertain, report a candidate; keyword scripts do not migrate it.
 6. Ask one concrete owner question only when rationale/exception changes behavior and evidence cannot resolve it.
 7. After write authority, update the original domain owner. Select the closest existing document/configuration only when no owner exists; do not default to a new directory.
@@ -37,7 +41,7 @@ Skip full discovery when an ordinary task can already find clear rules from proj
 
 For established `AGENTS.md`, retain approved project facts, actual commands, authority routes, concise adopted constraints and explicit overrides. Compress a rule to a route when its complete owner remains available to ordinary execution. Remove a duplicate body only after preserving its authoritative meaning and a usable consumer path; matching BuildOS wording does not cancel an adopted project contract. Reconcile stale/conflicting content from current owners and authorized superseding decisions. Ask only for an unresolved material choice. Never cover an existing entrypoint with a fresh BuildOS template or create a parallel instruction file.
 
-Engineering's project-standard discovery reference owns code-evidence methods. Product, Workflow, Delivery, and Learning decide their own domain rules.
+Engineering owns code-evidence discovery; each specialist decides its domain rules.
 
 ## 4. Index Contract
 
@@ -53,7 +57,7 @@ The implementer maintains affected navigation in the same authorized change when
 
 Keep standards-index entries distinct from full rules: domain, trigger, one-sentence decision summary, authoritative path, status and relevant calibration identity/date. Use project-root-relative code paths or map-relative Markdown links. Preserve meaningful paths and roles; do not copy source code, whole tool configurations or dynamic task state into the map. Generated symbol indexes are disposable retrieval aids, not approved project policy, and must be refreshed for the current worktree when stale.
 
-Several triggers may share an owner; merge identical index rows. Existing validators establish declared reachability, boundaries and structural integrity only, not semantic correctness, freshness or complete project coverage. Keep deterministic structural defects as errors and duplicate/unverified entries as warnings using the existing output contract. A script's existence does not install a new CI gate.
+Several triggers may share an owner; merge identical rows. Validators prove declared reachability, boundaries and structure, not semantic correctness, freshness or complete project coverage. Keep structural defects as errors and duplicate/unverified entries as warnings under the existing output contract. A script does not create a CI gate.
 
 
 ## 5. Conditional Loading
@@ -101,6 +105,10 @@ Reconcile affected instructions in place: remove stale dynamic state, route to i
 
 Use one model-neutral contract for scope, autonomy, reuse, and evidence across supported models. Keep model-specific runtime settings in the host adapter; official prompt examples are tunable guidance, not an instruction to copy every example into every project. Record source/installed revision, affected owners, verification and unresolved behavior in the existing task/log. Do not create a second governance ledger, mandatory nightly job, or universal CI gate. Review the affected routing scenarios under section 6; distinguish source/route verification from any still-unverified fresh-session behavior.
 
+<a id="dual-track-instruction-authoring"></a>
+### Dual-Track Instruction Authoring
+
+For instruction initialization or improvement, follow [Instruction Authoring](project-instruction-authoring.md): reconcile existing instructions and adopt applicable shared working principles in the project language. Preserve approved exceptions; repeated governance of unchanged facts should not grow the entrypoint.
 
 ### Specialist Coordination and Task Evidence
 

@@ -1,11 +1,11 @@
 ---
 name: senmu-build-engineering
-description: Review architecture, technical baselines, contracts, tests or modernization when guidance is missing, conflicting or under review. Not for routine implementation or visual design.
+description: "Designs and reviews architecture, technology choices, contracts, tests and upgrades when a technical decision is needed. Not for routine implementation covered by project rules, visual design or release authority."
 ---
 
 # Software Engineering
 
-Use project rules first; continue for contract gaps, conflicts, changes or review.
+Use project rules first; continue for technical design, selection, contract gaps, conflicts, changes or review.
 
 ## Route by Outcome
 

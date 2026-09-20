@@ -67,9 +67,11 @@ Describe parallel boundaries only when work will actually be assigned to several
 Create a task package only when work is actually handed to another person or agent. It references existing owners and enables execution without the full chat:
 
 - `Current Task`: the one required outcome, completion test, and explicit exclusions.
-- `Global Constraints`: still-valid user authority, prohibitions, risk gates, and stop conditions.
+- `Global Constraints`: still-valid user authority, prohibitions, risk gates, and stop conditions, with their source and applicable scope.
 - `Interfaces`: permitted read/write scope, inputs/outputs, shared state, dependencies, and contracts that must remain intact. Identify the accepted baseline and existing capability/API owners so handoffs do not mistake an old implementation or an unconnected consumer for a missing contract. Include the relevant implementation/contract/check locators, the critical invariants specific to this assignment and the inspected worktree or revision when needed for resumption. Pointers are retrieval aids, not permission or proof of current code. Send a concise applicable constraint when the assignee cannot otherwise retrieve it; do not paste the full repository map, every engineering rule or the exploration transcript.
 - `Output Contract`: slice completion, artifacts, actual changes, development/closeout checks and integrator-owned checks, evidence, deviations, remaining work, repair owner, temporary-resource disposition, and next action.
+
+For controlled inputs, distinguish the registered worktree from shared resource roots; check both file existence and the required format/provenance before handing off a locator. A discovered path is a retrieval hint unless an explicit instruction makes it a binding input or access boundary. Within delegated read scope, an assignee may locate a candidate alternative, but must return a binding-input mismatch to the delegator with evidence rather than silently substitute it. The delegator may correct its own mistaken locator within existing user authority; an ordinary lookup correction is not a new product decision. User-pinned inputs, license requirements, access restrictions and cost limits remain binding; unresolved authority goes to the user, not around the boundary.
 
 For actual handoff or interruption, retain the useful navigation findings, unresolved questions and next action in the current task owner. The successor checks relevant worktree changes before reusing them and rereads only what is needed. Do not reopen project-wide discovery merely because the executor changed, and do not create a second recovery ledger.
 
@@ -92,7 +94,7 @@ Authoritative owners include:
 - Formal technical design: `engineering/designs/TD-<NNNN>-<slug>.md` or an established engineering owner.
 - Durable architecture decisions: `engineering/decisions/ADR-<NNNN>-<slug>.md`.
 - Formal workflow: `workflows/` or a registered Workflow Contract.
-- POC: `experiments/EXP-<NNNN>-<slug>/`.
+- POC: `<registered-record-root>/EXP-<NNNN>-<slug>/`.
 - Formal requirement/technical review: the corresponding Product/Engineering review owner.
 - Version, artifact, and release: `delivery/`, Release Plan, and Release Record.
 - Reusable learning: the declared Lessons Learned Register.
@@ -118,6 +120,8 @@ Route newly discovered facts as follows:
 | Local implementation detail that preserves all above contracts | Code, tests, and necessary comments |
 
 A Work Log records what happened; a numbered task plan records the current effective plan and state. Replace superseded current status and next actions instead of prepending another “latest” paragraph; preserve decision rationale and link historical evidence in its existing owner or Git history. Neither replaces the other.
+
+When an explicit applicable decision supersedes a constraint, remove that constraint from the current execution section and retain its history with the superseding source. Do not require a successor to infer which of several contradictory current paragraphs wins. A newer timestamp, session, build or stage alone does not revoke authority or a prohibition. Keep implementation progress, product acceptance and deployment facts distinct through their existing owners: a deployed version may still have unfinished acceptance or an unreleased repair candidate. On resumption, recover the effective scope, remaining results and next action before continuing; reconcile a genuine authority conflict without blocking independent permitted work.
 
 ## 7. Closeout and Archive
 

@@ -1,4 +1,4 @@
 interface:
   display_name: "Senmu Build Software Engineering"
-  short_description: "Architecture, technical contracts, and test strategy"
-  default_prompt: "Use $senmu-build-engineering to review or resolve missing, conflicting, or changing engineering contracts and technical baselines using the project's real architecture, code, tests, configuration, and ecosystem."
+  short_description: "Technical design, technology choices, contracts and tests"
+  default_prompt: "Use $senmu-build-engineering for the requested technical design, technology choice or engineering review, using actual project rules, architecture, code and tests. Resolve relevant contract gaps without forcing routine work through a new process."

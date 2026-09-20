@@ -8,9 +8,9 @@
   <a href="README.md">简体中文</a> · <a href="README.en.md">English</a> · <a href="README.ja.md">日本語</a>
 </p>
 
-<!-- product-surface-review: 2.10.0 -->
+<!-- product-surface-review: 2.16.0 -->
 
-This source version separates the distributable product from private maintainer records. Feedback stays in the user data root until an authorized, selective handoff; product use and contribution do not require that private state. Relocated sources retain verifiable identity, and publication targets an explicit independent checkout without private ancestry. The eight Skills and existing quality and safety boundaries remain intact. See [release notes](RELEASE_NOTES.md).
+This documentation and release-maintenance update adds README impact review to each GitHub-bound change. Synchronize affected Chinese, English and Japanese content; preserve sections that remain accurate. The usage guide clarifies concise working principles in project AGENTS.md and distinguishes project-instruction governance from business-agent content governance. Existing runtime capabilities and fixes are retained; no automatic migration or performance gain is introduced. Verify source version and channel availability separately. See [release notes](RELEASE_NOTES.md).
 
 <p align="center">
   <a href="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml"><img src="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml/badge.svg" alt="Validate Senmu BuildOS"></a>
@@ -134,7 +134,7 @@ Project entrypoint
   → release, runtime, and production evidence
 ```
 
-The entrypoint routes; it does not copy the rules. Current specifications say what the system must satisfy now. Requirements and technical decisions explain why it changes. Task state says where work can resume. Release and runtime evidence say what actually happened. BuildOS does not require fixed directories or five separate files in a small project. It requires one owner for each fact and a short route that a later agent can follow.
+The project entrypoint holds concise working principles, project constraints, necessary commands and conditional routes, not complete specialist manuals. Current specifications say what the system must satisfy now. Requirements and technical decisions explain why it changes. Task state says where work can resume. Release and runtime evidence say what actually happened. BuildOS does not require fixed directories or five separate files in a small project. It requires one owner for each fact and a short route that a later agent can follow.
 
 In engineering work, BuildOS does not wait until the code is finished. It tries to absorb errors earlier in the production path:
 
@@ -198,10 +198,10 @@ For the full system design, see [System overview](docs/architecture/system-overv
 
 | Skill | Use it when |
 | --- | --- |
-| `senmu-build-project` | A new project needs a basic operating structure, or a mature project needs its existing structure, rules, and durable task state identified |
+| `senmu-build-project` | Project governance needs initialization, or existing AGENTS.md instructions, shared working principles, project language, rules or durable task state need reconciliation |
 | `senmu-build-product` | Requirements, scope, priority, interface content standards, or acceptance criteria need to be defined or changed |
 | `senmu-build-design` | Visual direction, design systems, layout, interaction, motion, responsive behavior, accessibility, or interface quality needs design or review |
-| `senmu-build-workflow` | A multi-step workflow, agent responsibility, material flow, recovery path, or delivery state needs to be designed |
+| `senmu-build-workflow` | Business agents, prompts, workflows, materials, recovery or delivery contracts need definition or improvement; image nodes use only the guidance for their actual model |
 | `senmu-build-engineering` | Technical design, architecture, technology selection, code quality, testing, refactoring, or technical debt needs governance |
 | `senmu-build-delivery` | Complex Git collaboration, versions, artifacts, releases, rollback, or production verification needs governance |
 | `senmu-build-assurance` | Independent reproduction, a POC, an audit, or an evidence-strength judgment is the requested result |
@@ -229,9 +229,11 @@ BuildOS does not promise a fixed percentage. It reduces avoidable cost by preven
 
 ## Install, update, and remove
 
-The current source version is Senmu BuildOS `v2.10.0`. It supports Codex, Claude Code, a Doubao adapter, a WorkBuddy adapter, and a ZCode adapter. Install the plugin as one unit; the eight Skills do not need separate downloads. Professional English is used for both the normative runtime specifications and all active Reference paths, while users can continue to work in Chinese or any other requested output language. When comparing external Skills, BuildOS calibrates them to the current model and host, retaining useful domain methods without copying obsolete process. Development and Delivery reuse verification evidence that remains valid, then add only checks invalidated by a change and independent artifact, environment, or runtime facts.
+The source version below does not mean every distribution channel offers it. Check the Release/Tag in the channel you actually use; source updates, private releases, public releases and local installation are separate states.
 
-This source update fixes release-cleanup reporting and failure handling, distinguishes undecided feedback from follow-up work, and inventories Claude project instructions without claiming they are loaded. Update generated cleanup scripts through project governance; upgrading the plugin does not clean devices or upload feedback. Native recovery, actual host loading and Token impact remain separately unverified; the ordinary-file cleanup helper does not support Windows execution. See [release notes](RELEASE_NOTES.md).
+The current source version is Senmu BuildOS `v2.16.0`. It supports Codex, Claude Code, a Doubao adapter, a WorkBuddy adapter, and a ZCode adapter. Install the plugin as one unit; the eight Skills do not need separate downloads. Professional English is used for both the normative runtime specifications and all active Reference paths, while users can continue to work in Chinese or any other requested output language. When comparing external Skills, BuildOS calibrates them to the current model and host, retaining useful domain methods without copying obsolete process. Development and Delivery reuse verification evidence that remains valid, then add only checks invalidated by a change and independent artifact, environment, or runtime facts.
+
+This documentation and release-maintenance update adds README impact review to each GitHub-bound change. Synchronize affected Chinese, English and Japanese content; preserve sections that remain accurate. The usage guide clarifies concise working principles in project AGENTS.md and distinguishes project-instruction governance from business-agent content governance. Existing runtime capabilities and fixes are retained; no automatic migration or performance gain is introduced. Verify source version and channel availability separately. See [release notes](RELEASE_NOTES.md).
 
 ### Update Codex
 
@@ -282,6 +284,8 @@ A mature project is not “initialized again.” It is adopted:
 The same BuildOS can therefore support React, Vue, Python, Go, Java, content production, and mixed workflows without hard-coding one project's absolute paths, framework preference, or directory layout as the answer for every project.
 
 ## Contributing
+
+Review the relevant Chinese, English and Japanese README content for each GitHub-bound change. Update affected explanations together; otherwise retain the text and note the no-change rationale in the existing PR/task. See [README maintenance](CONTRIBUTING.md#github-readme-sync).
 
 Install a formal release or maintain your own fork. New methods, external sources, and project experience do not become rules merely because they look useful; they are compared, validated, and given an explicit scope first.
 

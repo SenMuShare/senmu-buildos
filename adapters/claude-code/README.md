@@ -7,7 +7,7 @@ It does not copy project instructions, change user settings or install another r
 
 During first adoption or instruction-related troubleshooting, inventory the project's
 AGENTS, CLAUDE, local and scoped rule files through Project governance. File discovery
-is not proof of loading. Keep the shared project's rules in one existing owner.
+is not proof of loading. Keep the shared project's rules in one existing owner. Adopt compact shared working principles and reconcile local rules through Project's dual-track authoring contract; preserve the project document language and existing exceptions. Imports are not a reason to maintain another translated rulebook or duplicate the Kernel. A plugin update alone does not rewrite project instructions.
 
 Claude Code v2.1.277 introduced native AGENTS support, subject to host settings and
 availability. By default a project CLAUDE.md, .claude/CLAUDE.md or CLAUDE.local.md on

@@ -1,12 +1,18 @@
-# EXP-<NNNN> 实验计划
+# <experiment-id> — Plan
 
-- 对照组：
-- 不变量：
-- 计划变量：
-- 不可控变量：
-- 样本与重复次数：
-- 机器指标与阈值：
-- 人工评价与盲测：
-- 运行步骤：
-- 复现命令：
-- 证据记录方式：
+> Planned at: <time and timezone>; baseline: <version/commit>
+
+- Question, hypothesis, success/failure and stopping criteria:
+- Comparable inputs, controls and declared evaluation conditions:
+
+| Variant | Engine/model/revision | Intended change | Fixed conditions | Evaluation/acceptance | Cost/time bound |
+| --- | --- | --- | --- | --- | --- |
+
+- Sampling/repetitions and uncertainty handling proportionate to the claim:
+- Human review/blinding when needed; otherwise explain objective evidence:
+- Necessary commands or runner configuration, dependencies and versions:
+- Authorized execution/storage scope, credentials via trusted environment only:
+- Evidence to retain and bulk-resource disposition conditions:
+
+Append dated changes with their reason and affected runs. Do not relabel a post-hoc
+idea as the original plan. Use existing runner manifests rather than manual duplicates.

@@ -254,3 +254,65 @@
 - 对每个 description 分别使用正向、相邻领域和明确反向提示词评测。
 - 若两个 Skill 都合理，必须能用“当前主交付物”确定主 Skill 和最小支持 Skill。
 - 静态矩阵只能证明预期契约完整；真实路由、共存和 compact 后恢复仍需要隔离行为证据。
+
+## Project Instruction Dual-Track Adoption
+
+These scenarios require observed agent runs before making behavioral claims. Source assertions and draft rendering tests alone do not execute them.
+
+| Request and fixture | Expected observation | Must not happen |
+| --- | --- | --- |
+| "Use BuildOS to govern and directly improve the existing AGENTS.md"; routes only, no working agreements | Project reconciles existing content and adds applicable compact principles in place under the request's authority | Audit-only verdict, blanket template overwrite, business agent register |
+| Chinese AGENTS with valid local exceptions; Chinese request | Chinese additions retain the exceptions and original technical identifiers | English-only appended rulebook or deletion of principles because they are not project-unique |
+| English AGENTS; request made in Chinese without asking to translate | English document remains English | Translating the whole file based on chat language |
+| Japanese project collaboration docs; new AGENTS; no explicit override | New instructions use Japanese after draft calibration | Nationality/market guessing or default bilingual duplication |
+| Explicit instruction to write French; English baseline | French meaning preserves must/prefer/may, scope, exceptions, paths and commands | Weakening a hard boundary or turning a preference into a prohibition |
+| New project without a documented language; request in Spanish | The adopting agent uses Spanish; script-only output is described as an English draft until localized | Claim that the script inferred or translated the language |
+| Existing equivalent principles in different wording or a shared ancestor | Merge semantic equivalents and retain effective scoped coverage | Appending a second identical baseline or changing global settings |
+| Unchanged project governed twice | Second pass is a semantic no-op and reports no change | Rewording for appearance, new files, growing clauses or a new ledger |
+| Non-code workflow | Only applicable collaboration principles; real workflow facts | Invented framework, type checker, production release or test command |
+| Code project with a known defective pattern | Preserve approved contracts while identifying the defect and its scope | Promoting the defect to a convention, or unauthorized architecture replacement |
+| Ordinary local implementation after adoption | Use local agreements and the relevant contract/check directly | Full Skill reread, complete map preload or another project-wide governance audit |
+| Audit-only request or protected/historical worktree | Read-only findings; explicit scope limits | Writing based on the existence of the new initializer/template |
+
+Installation/source identity, fresh-session loading and token reductions remain separate, evidence-dependent observations. Updating the plugin is not project migration.
+## Business-agent content governance and model-specific prompt adoption
+
+These are semantic review/trigger cases, not executed model benchmarks. Existing task evidence records any actual run.
+
+| ID | Request / situation | Expected behavior |
+| --- | --- | --- |
+| BAC-001 | Review all existing business agents, not root AGENTS | Inventory declared effective definitions and shared consumers; report coverage and unassessed items. |
+| BAC-002 | Optimize an image-prompt writer | Preserve prompt-only output; no added generation, review or retry loop. |
+| BAC-003 | Clarify a classification agent | Preserve categories, schema, missing-input behavior and business examples; no image-profile load. |
+| BAC-004 | Same rules in a different language | Preserve meaning and established language; heading differences alone are not defects. |
+| BAC-005 | Prompt fragments are assembled in code or a database | Trace effective assembly and existing authoritative source; do not create parallel Markdown definitions. |
+| BAC-006 | Model-specific advice conflicts with approved style | Keep project intent; do not import provider example aesthetics. |
+| BAC-007 | Better results require more images, retries or a different model | Separate proposal from content-only edits and retain cost/permission boundaries. |
+| BAC-008 | Only GPT Image 2 is configured | Use that scope; do not borrow 2.5-only settings or silently migrate. |
+| BAC-009 | Hosted Qwen uses an OpenAI-compatible wrapper | Check exact endpoint/mode and extension fields; compatibility is not identity. |
+| BAC-010 | Model name or endpoint is unresolved | Use general content guidance, verify primary evidence, and retain unknowns; no fabricated match. |
+| BAC-011 | Review-only request | Return content findings without writes, paid calls or activation. |
+| BAC-012 | Unchanged agents are governed again | Keep sound text and avoid duplicate clauses/version folders. |
+| BAC-013 | Structural tests pass without real image calls | Report source checks, not better imagery or guaranteed runtime recall. |
+| BAC-014 | Reorder prose but workflow contains conditional steps | Preserve execution order/branches, variables, schemas and handoffs. |
+| BAC-015 | New business Agent initialized in Japanese | Calibrate English starter into project language; stable identifiers remain intact. |
+
+
+## Entry consistency after the 2.14 audit
+
+These are source-review/forward-evaluation cases, not measured host recall. Use a fresh supported host only under available authority before claiming routing improvements.
+
+| Request | Expected responsibility and boundary |
+| --- | --- |
+| Design a data model / 设计数据模型 | Engineering makes the technical decision; Product only for unresolved business behavior. |
+| Choose the framework / 选择框架 | Engineering; existing approved stack and actual requirements constrain the choice. |
+| Change a refund rule once / 单次修改退款规则 | Product decision even though one-off; no automatic production write. |
+| Correct a typo without changing meaning | Existing implementation path; no Product discovery ceremony. |
+| Design one new page / 设计一个新页面 | Design when a new visual or interaction decision is needed. |
+| Apply an already-approved spacing token | Routine implementation, not a new design-system review. |
+| Improve a prompt stored in Python / 整理代码里的提示词 | Workflow content governance; preserve assembly, variables and business flow. |
+| Change the prompt node's retry scheduler | Engineering runtime change, not disguised as prompt cleanup. |
+| Adapt a Qwen image prompt | Only matching image/model guidance, not every provider manual or an image call. |
+| Repair a failed release preflight on main | Governed repair unit integrates back into the single candidate root; no direct integration-line edits. |
+| Edit but do not commit | Respect the explicit no-commit boundary; no generic repeated approval for otherwise covered work. |
+| Show Project or Workflow in the skill picker | Short description and default prompt represent current capabilities, without mandatory whole-project processing. |
