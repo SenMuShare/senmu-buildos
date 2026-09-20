@@ -8,7 +8,7 @@ Quality is not format compliance. It includes correctness, security, local compr
 
 Precedence: safety and non-reducible Hard Gates > current project rules/machine configuration > applicable language/framework rules > this standard > community defaults.
 
-Project `AGENTS.md` contains deltas, real commands, and routing; `CODE_QUALITY` owns project quality decisions/exceptions; architecture, debt, and testing remain with their owners. Keep full methods at their authoritative source; project entrypoints may retain concise adopted constraints, actual commands and conditional routes necessary for ordinary execution. Resolve stale or inconsistent guidance from current owners and explicit superseding user decisions first. Ask only for an unresolved outcome-changing choice or missing authority; preserve safety, privacy, authorization, payments, production-data, and release boundaries.
+Project `AGENTS.md` contains concise adopted shared working principles, project deltas, real commands, and routing; `CODE_QUALITY` owns project quality decisions/exceptions; architecture, debt, and testing remain with their owners. Shared principles need not be project-unique and do not mandate a vendor, framework or minimum line count. Keep full methods at their authoritative source; project entrypoints may retain concise adopted constraints, actual commands and conditional routes necessary for ordinary execution. Resolve stale or inconsistent guidance from current owners and explicit superseding user decisions first. Ask only for an unresolved outcome-changing choice or missing authority; preserve safety, privacy, authorization, payments, production-data, and release boundaries.
 
 ## 2. Cross-Language Principles
 

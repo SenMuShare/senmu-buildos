@@ -1,6 +1,6 @@
 # Project Governance Instances and Evolution
 
-Senmu BuildOS supplies reusable governance methods, decision standards, defaults, and professional guidance. It is not a project's requirements, technical design, task state, or release fact. Each project creates a **Project Governance Instance** by applying relevant principles to its own authoritative entrypoints, owners, state sources, quality commands, and delivery evidence.
+BuildOS supplies methods, not project facts. A **Project Governance Instance** adopts them through actual entrypoints, owners, state sources, quality commands and delivery evidence.
 
 ## 1. Two Kinds of Authority
 
@@ -34,7 +34,7 @@ When a specific artifact is requested, create it in a confirmed owner. If it int
 
 For a blank or confirmed new project, determine lifecycle intent, composition, public model, release channels, confirmed artifacts, governance level, and modules separately from requirements, expected architecture, runtime, and user acquisition. Inspect a zero-write candidate with `--mode plan-new`; after implementation authority, run `--mode initialize-new` with the same explicit parameters.
 
-Project type suggests candidates only. `release` means formal release governance, not proof of a deployment target, container, installer, or retention need. If the approved path differs from script defaults, follow the target map: create minimum owners and record path roles/relationships in policy. Defaults are optional implementations.
+Project type suggests candidates only. `release` means formal release governance, not proof of a deployment target, container, installer, or retention need. If the approved path differs from script defaults, follow the target map: create minimum owners and record path roles/relationships in policy. Defaults are optional implementations. Finish instruction adoption through [dual-track authoring](project-standard-discovery-and-on-demand-loading.md#dual-track-instruction-authoring): calibrate real project facts and adopt applicable shared working principles in the chosen project language. An English generated scaffold is not completed localization or semantic acceptance.
 
 ### Assess an Existing Project
 
@@ -54,6 +54,14 @@ After assessment and authorization, evolve the original project. When requiremen
 Repair causes in requirements, responsibility, directories, interfaces, data ownership, defaults, and workflows; fill missing roles, merge duplicate owners, migrate immovable paths, and retain recovery points. Project entrypoints, policy, schema, tools, and evidence then own routine execution.
 
 For multi-domain audit, several remediation waves, cross-session recovery, and final review, use [Established Project Takeover](established-project-takeover-governance.md). It maps the existing Durable Task State Owner and preserves fact-first assessment, existing authorization boundaries, and original-owner evolution. A compound audit-and-repair request covers its scoped phases without another generic approval.
+
+For in-scope business-agent content, use [Workflow governance](../../senmu-build-workflow/references/business-agent-content-governance.md); root AGENTS-only work does not authorize it.
+
+### Experiment Adoption
+
+When POCs are in scope, resolve one experiment contract before creating run assets. New scaffolds declare a draft `poc_management` pointer; core projects may keep the storage contract in README; active reports still belong to the registered, isolated record root. Multi-run comparisons use the existing experiment register. Calibrate storage, protected development/release worktrees, tracking, retention and backup under Assurance's [POC contract](../../senmu-build-assurance/references/reproducible-poc-governance.md#3-project-storage-contract). Generated templates do not activate that contract.
+
+For an established project, evolve its original owner in place; use an `existing_contract` pointer when an equivalent already works rather than copying it into a second policy. Follow the entrypoint to one representative experiment or disposable fixture and check isolation, retained evidence and resource-closeout routing. Existing runs, rejected decisions and legacy manifests are historical evidence, not initializer output to overwrite. Do not read all experiments for ordinary implementation or execute real cleanup as a governance test.
 
 ## 4. State Owners
 

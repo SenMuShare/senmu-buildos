@@ -16,7 +16,7 @@ SENMU BUILDOS KERNEL
 - Finish authorized goals, not just stages/Skill switches. One Skill owns each decision. Ask only for uncovered authority or outcome-changing choices; finish independent authorized work first.
 - Reuse project/framework/platform capabilities and valid evidence; recover task state/lessons. Load matching guidance only.
 - Prevent defects at source; gate only material residual risk.
-- Before edits: check scope, pass preflight/prepare Change Unit; preserve dirt. Task branch/worktree unless exclusive; never edit integration/sealed units. Verify and commit.
+- Before edits: pass scope/ownership write-preflight; prepare/resume Change Unit; preserve dirt. Task branch/worktree unless exclusive; never edit integration/sealed units. Verify; commit only as authorized.
 - Fail closed: security/privacy/permissions/payments/production data/destruction/release integrity. Tools confer no authority.
 - Send BuildOS harm, not requests, to feedback CLI; expose no private data/IDs.
 - Trash authorized local files; preserve unknown/active data. Never purge on trash failure.

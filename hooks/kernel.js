@@ -16,7 +16,7 @@ const SESSION_CONTEXT = `SENMU BUILDOS KERNEL
 - Finish authorized goals, not just stages/Skill switches. One Skill owns each decision. Ask only for uncovered authority or outcome-changing choices; finish independent authorized work first.
 - Reuse project/framework/platform capabilities and valid evidence; recover task state/lessons. Load matching guidance only.
 - Prevent defects at source; gate only material residual risk.
-- Before edits: check scope, pass preflight/prepare Change Unit; preserve dirt. Task branch/worktree unless exclusive; never edit integration/sealed units. Verify and commit.
+- Before edits: pass scope/ownership write-preflight; prepare/resume Change Unit; preserve dirt. Task branch/worktree unless exclusive; never edit integration/sealed units. Verify; commit only as authorized.
 - Fail closed: security/privacy/permissions/payments/production data/destruction/release integrity. Tools confer no authority.
 - Send BuildOS harm, not requests, to feedback CLI; expose no private data/IDs.
 - Trash authorized local files; preserve unknown/active data. Never purge on trash failure.
@@ -25,9 +25,9 @@ const SESSION_CONTEXT = `SENMU BUILDOS KERNEL
 const SUBAGENT_CONTEXT = `SENMU BUILDOS SUBAGENT
 
 - Stay within delegated scope, requested path, write boundary, unit and authority.
-- Read authoritative owners and real state.
+- Read authoritative state.
 - Reuse project/framework/platform capabilities and evidence; acquire bounded missing/changed guidance or outputs.
-- For authorized edits, verify task branch/Change Unit; never edit integration/sealed work. Return a verified commit only within delegated commit authority. Read-only work returns findings and evidence, without changes or commits.
+- For edits, verify branch/Change Unit; never edit integration/sealed work. Return a verified commit only within delegated commit authority. Read-only work returns findings and evidence, without changes or commits.
 - Keep security, data, destructive and release gates.
 - Return evidence, gaps, blockers and risk.`;
 
@@ -50,16 +50,21 @@ function readInstallIdentity(pluginRoot = path.resolve(__dirname, '..')) {
   }
 }
 
-function getSessionContext(pluginRoot) {
+function getSnapshotContext(pluginRoot) {
   const identity = readInstallIdentity(pluginRoot);
-  const snapshot = identity
+  return identity
     ? `\n- Active snapshot: ${identity.version}@${String(identity.source_commit).slice(0, 12)}.`
     : '';
+}
+
+function getSessionContext(pluginRoot) {
+  const snapshot = getSnapshotContext(pluginRoot);
   return assertWithinBudget(`${SESSION_CONTEXT}\n\n${COMMUNICATION_CONTEXT}${snapshot}`, MAX_SESSION_CONTEXT_CHARS, 'SessionStart');
 }
 
-function getSubagentContext() {
-  return assertWithinBudget(`${SUBAGENT_CONTEXT}\n\n${COMMUNICATION_CONTEXT}`, MAX_SUBAGENT_CONTEXT_CHARS, 'SubagentStart');
+function getSubagentContext(pluginRoot) {
+  const snapshot = getSnapshotContext(pluginRoot);
+  return assertWithinBudget(`${SUBAGENT_CONTEXT}\n\n${COMMUNICATION_CONTEXT}${snapshot}`, MAX_SUBAGENT_CONTEXT_CHARS, 'SubagentStart');
 }
 
 module.exports = {

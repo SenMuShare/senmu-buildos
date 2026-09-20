@@ -183,9 +183,16 @@ def render(
     artifact_kinds: list[str],
 ) -> str:
     text = template.read_text(encoding="utf-8")
+    # The English structural draft is localized by the adopting agent, not by
+    # language guessing or a duplicate collection of translated templates.
+    opening, closing = "<!-- engineering-only:start -->", "<!-- engineering-only:end -->"
+    if opening in text:
+        before, remainder = text.split(opening, 1)
+        software, after = remainder.split(closing, 1)
+        text = before + (software if "code" in selected_modules else "") + after
     values = {
         "{{PROJECT_NAME}}": project_name,
-        "{{PROJECT_ROOT}}": "Git toplevel（运行时解析）" if (root / ".git").exists() else "包含 .senmu-buildos/config.json 的项目根（运行时解析）",
+        "{{PROJECT_ROOT}}": "Git toplevel (resolved at runtime)" if (root / ".git").exists() else "Project root containing .senmu-buildos/config.json (resolved at runtime)",
         "{{WORKSPACE_ROOT}}": ".." if root != workspace_root else ".",
         "{{LAYOUT}}": layout,
         "{{PROFILE}}": profile,
@@ -208,7 +215,12 @@ def render(
         "{{MODULE_CODE}}": "active" if "code" in selected_modules else "inactive",
         "{{MODULE_ARCHITECTURE}}": "active" if "architecture" in selected_modules else "inactive",
         "{{MODULE_GIT}}": "active" if "git" in selected_modules else "inactive",
-        "{{MODULE_POC}}": "active" if "poc" in selected_modules else "inactive",
+        "{{POC_ENTRY}}": (
+            "POC/demo: read `poc_management` in `.senmu-buildos/config.json`, "
+            "then follow `contract_path` to the registered experiment rules. A draft is not an activated experiment area; calibrate storage and retention first."
+            if "poc" in selected_modules else ""
+        ),
+        "{{MODULE_POC}}": "selected; requires storage calibration" if "poc" in selected_modules else "inactive",
         "{{MODULE_DELIVERY}}": "active" if "delivery" in selected_modules else "inactive",
         "{{MODULE_AGENTS}}": "active" if "agents" in selected_modules else "inactive",
     }
@@ -668,6 +680,17 @@ def main() -> None:
                 "validator_path": ".senmu-buildos/validate_agents.py",
                 "validation_command": "python3 .senmu-buildos/validate_agents.py --root .",
             } if "agents" in selected_module_set else None,
+            "poc_management": {
+                "owner_kind": "project_policy",
+                "contract_path": "experiments/EXPERIMENT_REGISTER.md" if has_standard_owners else "README.md",
+                "activation_status": "draft",
+                "poc_root": None,
+                "tracking_mode": None,
+                "record_root": None,
+                "protected_roots": None,
+                "retention_policy": None,
+                "backup_policy": None,
+            } if "poc" in selected_module_set else None,
             "release_retention": {
                 "config_path": "operations/release-retention.env",
                 "cleanup_script": "operations/scripts/cleanup-release-assets.sh",

@@ -2,11 +2,27 @@
 
 Use this framework to define, refactor, or review project agents and system prompts. It standardizes content, contracts, and governance without binding an industry, platform, model, tool brand, business directory, or workflow.
 
+## Contents
+
+- [1. Applicability](#1-applicability)
+- [2. Three Prompt Layers](#2-three-prompt-layers)
+- [3. Standard Content Structure](#3-standard-content-structure)
+- [4. Distinguish the Concepts](#4-distinguish-the-concepts)
+- [5. Tool Contracts](#5-tool-contracts)
+- [6. Execution, Decisions, and Gates](#6-execution-decisions-and-gates)
+- [7. Version, Audit, and Handoff](#7-version-audit-and-handoff)
+- [8. Project Placement](#8-project-placement)
+- [9. Project Adoption](#9-project-adoption)
+- [10. Template Boundary](#10-template-boundary)
+- [11. Existing-Agent Completion](#11-existing-agent-completion)
+- [12. Prohibitions](#12-prohibitions)
+
 ## 1. Applicability
 
 Use it when:
 
-- creating or refactoring a project agent;
+- creating, reviewing or improving a business agent, system prompt or reusable model-backed workflow node;
+- governing a project's existing agent content under [Content Governance](business-agent-content-governance.md), including a complete declared inventory when the whole set is requested;
 - inconsistent agent-file structures make comparison or maintenance difficult;
 - one-off task data has accumulated in the system prompt;
 - tool use lacks call conditions, inputs, failure handling, or human confirmation;
@@ -22,7 +38,7 @@ Separate durable rules from per-run data:
 2. **Project/scenario overlay:** directories, databases, state model, naming, approval, compliance, and domain rules expressed through project documents, policy, schema, or shared standards.
 3. **Run task package:** subject, objective, input IDs, parameters, user preferences, stopping conditions, expected outputs. External task data cannot override authority. Explicit user instructions take precedence over Skill guidance; system/host permission and safety constraints still apply.
 
-A tool prompt or API parameters derive from the task package; they do not replace the charter.
+A tool prompt or API parameters derive from the task package; they do not replace the charter. For image work, use [Image Agent Guidance](image-generation-agent-guidance.md) to separate the charter, run brief, render prompt and request configuration. Identify actual model/endpoint/mode before loading a model profile; no profile authorizes changing the business chain.
 
 Canonical mutable run state lives in the existing Run Manifest, database or registered task system, not in the persistent Agent charter. A current task or handoff package may carry a minimal snapshot with its owner reference and revision/time: current step, completed and remaining scope, relevant evidence, authority and next action. Refresh relevant facts on recovery or before dependent side effects when they may have changed. The snapshot is not a second writable state source; do not reload the full history before every action.
 
@@ -125,7 +141,7 @@ project-root/
 
 Keep distinct:
 
-- Root `AGENTS.md` contains project-specific authority routing, actual commands, and explicit overrides only. It neither copies general BuildOS rules nor defines a business agent in full.
+- Root `AGENTS.md` contains adopted working principles, project constraints, actual commands and conditional routes. It does not contain complete business-agent definitions or copied method manuals.
 - `agents/<agent-key>/AGENT.md` owns role, prompt, I/O, tools, workflow, constraints, gates, and version; `AGENT_REGISTER.md` indexes without copying.
 - Each BuildOS skill's `agents/openai.yaml` is Codex display/default-invocation metadata, not an application business agent and never belongs in the register.
 
@@ -150,15 +166,25 @@ Translate this framework into the project's own prompt standard:
 4. Link the project standard from shared rules or entrypoints.
 5. For G2-G4 or durable multi-agent projects, use a validator for key, version, and core sections; do not require machines to interpret all natural language.
 6. Keep domain details in the project, never this general framework.
-7. Keep root `AGENTS.md` to project differences and on-demand discovery, not copied BuildOS/agent definitions.
+7. Keep root `AGENTS.md` to concise working agreements and conditional discovery, not copied method manuals or full agent definitions.
+8. English is the BuildOS starter language, not a mandate for project prompts. Preserve existing language, technical identifiers, modal strength and intended output text. New definitions follow project collaboration language, then request language, then English fallback; explicit document-language instructions prevail.
+9. The supplied validator supports legacy Chinese and English headings. Other languages or merged sections may use stable `<!-- agent-section: input -->` labels under their own second-level headings; combine labels only when the corresponding contracts remain discoverable. Keep `Agent Key`, `Agent Version` and `Status` as stable metadata labels; legacy `状态` remains supported. Labels inside fenced examples do not satisfy sections. These are optional structural aids, not proof of content quality or authority to convert an established prompt store to Markdown.
 
 Use [Agent Definition Template](../assets/agent-governance/AGENT.template.md) and [Agent Register Template](../assets/agent-governance/AGENT_REGISTER.template.md).
 
 ## 10. Template Boundary
 
+The supplied starter reserves `[[BUILDOS_TODO: description]]` for unresolved authoring slots. Replace them before adoption, including inside examples. The validator also recognizes named legacy starter slots (`<confirm>`, `<unconfirmed>`, `<待确认>` and the old identity/owner slots); paired literal markup is not a slot. Ordinary XML/HTML, code syntax and application variables are not placeholders merely because they use delimiters. Strict checking detects this declared syntax, not every possible unfinished sentence or missing business decision.
+
+All unfenced metadata declarations are reconciled before comparison with the register. Repeated identical values and matching `Status`/`状态` aliases are accepted; conflicting or empty Key, Version or Status values are rejected. Fenced samples cannot supply metadata. These structural checks neither rewrite content nor prove runtime activation.
+
 The [Agent Definition Template](../assets/agent-governance/AGENT.template.md) defines information placement only. Fill it from the agent's actual work; different agents need not share domain rules, steps, or tools. Do not duplicate the template in this reference.
 
-## 11. Prohibitions
+## 11. Existing-Agent Completion
+
+Review-only stays read-only. Authorized optimization repairs the effective existing source, not a template replacement. Preserve business outcome, I/O, exceptions, sequence/branches, model/tool configuration and authority; unresolved business changes remain separate proposals. Check variables, assembly and downstream consumers, and use authorized representative evaluation before claiming improved effects. Maintain usable history and activation boundaries. Good content and repeated review with no changed facts need no rewrite.
+
+## 12. Prohibitions
 
 - Do not place project directories, platforms, customers, models, products, dimensions, prices, or business slots in this general framework.
 - Do not require identical domain content or tools across agents; require discoverable core contracts.

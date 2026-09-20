@@ -37,3 +37,5 @@
 - 部署与运行（如启用）：`operations/DEPLOYMENT.md`
 - 私有权威与公开投影（如启用）：`delivery/PUBLICATION.md`
 - 发布制品保留（仅在确认存在独立制品时）：`operations/release-retention.env`、`operations/scripts/cleanup-release-assets.sh`
+
+{{POC_ENTRY}}

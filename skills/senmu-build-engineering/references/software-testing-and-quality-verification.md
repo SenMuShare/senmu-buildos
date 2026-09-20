@@ -28,6 +28,8 @@ When installation, configuration, user operation, public API, CLI, SDK, or recov
 
 Layers may combine, responsibilities may not disappear. Verify a business invariant at the nearest boundary where untrusted input becomes trusted state; downstream layers reuse that result and test only added risk, not duplicate probes, error-code tables, or human reconciliation states. Retain defense across trust domains, independent consumer contracts, or safety boundaries and state what each layer proves. Small scripts may combine module/E2E with examples; large services must not put all confidence in slow brittle E2E.
 
+For a multi-step user capability, derive the starting state and observable final result from approved acceptance. Check the transitions connecting implemented modules, not just their isolated success: payment or preparation passing does not close a journey with no usable next action. Follow the same operation to the required result and verify applicable interruption recovery. A direction to run each real main flow once prevents duplicate expensive executions; it does not remove completion criteria, safety checks or impact-based regression after a fix.
+
 ## 3. Test Design
 
 Cover only relevant dimensions: normal/core outcomes; null/min/max/format/locale/time; invalid state, duplicate, reorder, timeout, cancellation, partial success; permissions, tenancy, ownership, sensitive data; commit/rollback, idempotency, race, retry effects; dependency failure, degradation, recovery, compensation, cleanup; schema/API/config/file/version compatibility; and legacy, migration equivalence, rollback.
@@ -49,6 +51,8 @@ Permanent retirement tests prove not only UI removal but that direct APIs/routes
 - Do not copy production algorithms into expected results. Use business rules, fixed examples, independent oracles, or properties.
 - Repair the contract owner when doubles drift from schemas/interfaces; do not add mocks to conceal it.
 - Names and failures should identify the production behavior at risk. Assert public result, state, persistence, or side effect. Mock calls, private order, or internal field existence alone do not prove business outcome. Adapter tests may assert call contracts, but an upper layer still proves the correct result.
+
+State each real-service receipt's scope and achieved stage: provider/model/route, relevant environment and observation time, request accepted, terminal success, or result retrieved and checked. Acceptance of an asynchronous request does not prove completion or application integration. A sample for one model/language cannot attest another model or every supported language. Reuse valid contract and entitlement evidence without demanding exhaustive paid probes; disclose the remaining gaps. Use existing operation/receipt owners rather than a parallel evidence framework, and reconcile uncertain external outcomes before another write.
 
 ## 5. Data and Environment
 

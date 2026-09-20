@@ -14,6 +14,15 @@ Senmu BuildOS 已从 `v1.0.0` 开始进入正式源码版本管理。任何变�
 8. 产品源码只有一份，按可公开标准维护；原始反馈、作者私有任务和未公开证据留在产品之外。公开贡献按正常候选审议接收，保留贡献归属；私有工作区的历史不推送到公开仓库。
 9. 用外部网页、PDF、书、仓库或第三方 Skill 升级标准时，执行[工程知识蒸馏与标准晋级规范](skills/senmu-build-learning/references/engineering-knowledge-distillation-and-standard-promotion.md)；外部内容只作为临时候选，不把原文、来源目录或竞争规范直接装入运行时 Skill。
 
+<a id="github-readme-sync"></a>
+## GitHub 更新与三语 README
+
+每个准备同步到 GitHub 的完整变更批次（包括仅同步源码、修复、文档更新和正式发布），都应结合实际差异审阅 `README.md`、`README.en.md`、`README.ja.md`，判断是否影响用户可见说明。检查定位、能力边界、工作方式、使用示例、安装／升级／卸载入口、版本摘要及相关链接；不把版本号替换当作内容审阅。
+
+受影响的内容在同一批次中按三种语言同步，保持事实、约束、链接和使用含义一致，不要求逐句直译。未受影响的段落保留；完全没有 README 影响时，在已有 PR 或任务记录中简述原因，不为获得“已更新”状态机械改写。复用仍有效的审阅判断，后续只补看变化部分，不为每个本地提交新增审批、台账或强制全量阅读。
+
+普通源码同步不自动创建新版本或发布记录。已授权的正式发布同时维护 `CHANGELOG.md`、`RELEASE_NOTES.md`、版本清单及三语摘要，复用下述原有版本准备与产品表面检查。源码版本、私有发布、公开渠道可用版本和本地安装是不同事实；不以其中一个状态宣称其他状态已经完成。
+
 ## 开放迭代飞轮贡献流程
 
 你可以直接 `clone` 仓库做本地研究，也可以在 GitHub `fork` 后长期维护自己的 BuildOS。一次可回馈的改进使用一个范围清楚的短分支：
@@ -51,7 +60,7 @@ python3 scripts/bump_version.py 1.0.1 --date 2026-08-26 --dry-run
 python3 scripts/bump_version.py 1.0.1 --date 2026-08-26
 ```
 
-该脚本一次性更新 `VERSION`、`.codex-plugin/plugin.json`、`.agents/plugins/marketplace.json` 的正式 Tag 指向和 Changelog 版本标题。它拒绝版本倒退、空的 Unreleased、现有版本漂移和非法日期，并在写入前完成全部解析；`--dry-run` 始终保持零写入。
+该脚本一次性更新 `VERSION`、Codex／Claude Code／ZCode 三份插件清单、两份 marketplace 清单、三语 README 的当前源码版本和 Changelog 版本标题；README 正文、三语摘要与用户更新说明仍需按实际变化编写。它拒绝版本倒退、空的 Unreleased、现有版本漂移和非法日期，并在写入前完成全部解析；`--dry-run` 始终保持零写入。
 
 准备完成后运行完整验证并审查差异：
 

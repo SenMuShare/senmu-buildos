@@ -20,7 +20,7 @@ Read only what is needed. Implement the selected or already-authorized direction
 
 - Establish interface type, task, context, hierarchy, assets, and constraints. If needed, offer distinct directions with a recommendation and risks.
 - Express hierarchy, layout, components, tokens, states, assets, responsiveness, and verification. Adjectives are not specifications.
-- Reuse project systems, brand, and components. Govern cross-page gaps only; keep one-offs with implementation.
+- Reuse project systems, brand, and components. Own new visual/interaction decisions even for one page; routine changes covered by existing design rules stay with implementation.
 - Make frequent actions direct/predictable. Motion must explain feedback, state, space, or change, with reduced-motion/non-hover paths.
 - Design accessibility, responsiveness, and loading/empty/error/disabled states from the start; never rely on one sensory cue.
 - Deliver direction analysis with observed evidence, implementable decisions, and limits. To claim implemented visual/interaction quality, verify real rendering at affected viewports/states; code or static checks alone are insufficient.

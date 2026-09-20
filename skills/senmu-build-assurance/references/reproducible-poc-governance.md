@@ -13,7 +13,7 @@ Use it when any of these is true:
 - the run is long or dependency-heavy and may need reproduction;
 - the project owner requests a durable ledger of reasoning, runs, and conclusions.
 
-Default to G2; use G3-G4 when critical production paths, cost, safety, data, or formal release are affected. Lightweight exploration need not adopt the full process, but any comparative claim still requires recorded variables, inputs, and evidence.
+Match evidence depth to the decision and risk. Lightweight exploration may use one short report in an existing experiment/task owner instead of a fixed document kit; comparative claims still need recorded variables, inputs and evidence. Do not invent repeated runs or a statistical test for a simple connectivity demo. Paid use and production effects retain their applicable controls.
 
 ## 2. Gates and Guidance
 
@@ -24,11 +24,11 @@ Default to G2; use G3-G4 when critical production paths, cost, safety, data, or 
 - Before deleting unique outputs, retain a stable ledger, structured manifest, and sufficient reproduction protocol.
 - Preserve failed runs, warnings, and counterexamples. Correct through append/supersession, never silent historical edits.
 - Pending human evaluation remains pending; engineering preference is not the owner's decision.
-- POC conclusions are not production approval. Productization requires formal requirement, architecture, test, version, release, and rollback gates.
+- POC conclusions are not production approval. Productization follows the applicable requirement, architecture, test and delivery controls; do not invent versions or deployments where none exist.
 - Obtain cost and mutation authority before paid models, cloud resources, external recruiting, or irreversible writes. Approval of a design is not authority for unlimited reruns.
 - For secrets, privacy, biometrics, or unlicensed material, record controlled locators and fingerprints rather than copying originals into a general ledger.
-- Keep the stable ledger, run assets, and owner-visible path under the project's registered `POC_ROOT`. Project authority does not imply the product repository's `main` worktree or release directory. External worktrees, clones, temporary folders, and personal caches are execution surfaces only.
-- Register one `POC_ROOT`, `tracking_mode`, retention/backup policy, and validation command. If these project facts cannot be resolved, stateful POC writes fail closed; do not invent another root.
+- Keep run assets under the registered `POC_ROOT` and stable records there or in the registered `split` record owner. Project authority is not the product's main worktree. Unregistered worktrees, clones, temporary folders and personal caches are execution surfaces only.
+- Resolve one `POC_ROOT`, record owner, tracking/retention/backup policy, and validation entrypoint before stateful runs. First-time setup may establish these within existing setup/experiment authority; ask only for an unresolved choice that changes scope or authority. Unknown storage remains unconfigured, not permission to write into another task or invent a second root.
 - Parallel POCs must not write active experiment state into release worktrees, iteration plans, formal business ledgers, or production state. If small records need Git, use a separate POC branch/repository until productization is approved.
 - Validation must check physical ownership, not only internal consistency under arbitrary `--root`. POC closeout scans registered execution surfaces for unique facts; unrelated releases do not require an isolated running POC to stop or commit.
 - Cross-task release/hotfix notices normally record facts and a suggested checkpoint only. Interrupt an isolated POC only on user instruction, a registered checkpoint, or evidenced risk to safety, data integrity, or shared production resources.
@@ -52,19 +52,29 @@ Before the first stateful POC, register in the project AI entrypoint, governance
 project_authority_root: <owner-recognized project boundary>
 poc_root: <single POC state root within that boundary>
 tracking_mode: untracked | split
-release_source_roots: [<source or delivery roots that may release concurrently>]
+protected_roots: [<active development and release worktrees>]
 retention_classes: [ephemeral, reproducible, retained]
 backup_policy: <snapshot, backup, or no-backup policy by class>
 validator: <project command that exits nonzero on failure>
 ```
 
-`project_authority_root` may contain several repositories, release units, and one separate POC area; it is not a repository's main worktree. `release_source_roots` prove separation from parallel releases. Persist relocatable location rules, not machine-specific absolute paths.
+`project_authority_root` may contain several repositories, release units, and one separate POC area; it is not a repository's main worktree. `protected_roots` records active development and release worktrees to avoid; legacy `release_source_roots` remains a release-only input, not proof that other active writers were considered. Persist relocatable location rules, not machine-specific absolute paths. Declaration alone does not prove writer, port, database or container isolation.
 
 - `untracked`: all experiment facts live together under an ignored `POC_ROOT`. Verify non-tracking with `.gitignore` and `git ls-files`.
 - `split`: track small ledgers, manifests, protocols, and necessary source only in a separate POC branch/repository or registered non-release owner; keep large files in the single ignored run root. Both sides share `experiment_id` and cross-reference paths, versions, and hashes.
-- Select one project default. Approve and register exceptions individually; no third unregistered location.
-- The POC root stays within project authority and outside any concurrently released worktree. Codex-managed folders, outside worktrees/clones, `/tmp`, and personal caches cannot be durable primary or secondary roots.
+- Use one project default; register justified exceptions within existing authority, not an unregistered third location.
+- The POC root stays within project authority and outside concurrently developed/released worktrees. Registered POC-only worktrees or repositories may hold small records in `split` mode; unrelated or temporary execution surfaces and personal caches cannot become durable owners. A tracked experiment record may be promoted to the project decision owner after review without merging experimental runtime code.
 - `untracked` does not mean disposable. `retained` requires verified external backup; `reproducible` requires recoverable inputs and protocol; `ephemeral` still requires a frozen conclusion and deletion record.
+
+### Project Adoption and Checks
+
+At initialization or the first governed POC, use the existing project experiment owner. Generated projects declare `poc_management` in `.senmu-buildos/config.json`; only projects using POCs need it. Its `contract_path` points to the existing register (README for a core project), not a second ledger. Paths in this object are relative to the configured project `workspace_root`, except `contract_path`, which is relative to the governance root.
+
+For `owner_kind=project_policy`, calibrate `poc_root`, `tracking_mode`, `record_root` (required only for `split`), `protected_roots`, `retention_policy` and `backup_policy`, then mark `activation_status=active`. Null roots/unknown protection are drafts, not working defaults. Under `untracked`, `record_root=null` means records stay in `poc_root`; confirm ignored/non-tracked status and backup before relying on it. Under `split`, the record root and large-asset root must be distinct and outside protected worktrees. Never exclude the only copy of retained evidence merely because it is ignored.
+
+An established equivalent can use `owner_kind=existing_contract`, `contract_path`, and `activation_status` without duplicating its storage policy in JSON. The project validator checks that this pointer is reachable and reports that its isolation/retention semantics need the existing owner's checks; it does not claim to validate an opaque external system. Existing histories are not migrated or overwritten merely to fill new fields.
+
+Use the existing project validator for the declared path/tracking contract; it does not run experiments, evaluate scientific merit, verify backups or authorize cleanup. At adoption, follow the actual route from the AI entrypoint to the contract and one representative experiment/fixture. Correct missing or contradictory roots at their one owner. Ordinary runs then load just that contract and the selected experiment, not all past experiments.
 
 ## 4. Experiment Package
 
@@ -79,7 +89,7 @@ validator: <project command that exits nonzero on failure>
   evidence/                  # small reviewable evidence
 ```
 
-Use monotonic, non-reused IDs: `EXP-<NNNN>-<slug>`. In `untracked`, records and run assets stay together. In `split`, an ignored run root such as `inputs/ engine/ models/ cache/ outputs/ reports/` may hold large inputs, models, databases, caches, and outputs, but it must cross-reference the small-record owner and cannot become the sole history. Active POCs do not enter product iteration state. Only approved productization creates a formal engineering slice in the target PRD/task owner.
+Use stable, non-reused project IDs; `EXP-<NNNN>-<slug>` is the bundled default, not a mandate to rename existing experiments. A compact report may combine the sections below and reference an existing manifest; do not create empty parallel files just to match the package layout. In `untracked`, records and run assets stay together. In `split`, an ignored run root such as `inputs/ engine/ models/ cache/ outputs/ reports/` may hold large inputs, models, databases, caches, and outputs, but it must cross-reference the small-record owner and cannot become the sole history. Active POCs do not enter product iteration state. Only approved productization creates a formal engineering slice in the target PRD/task owner.
 
 ### Promote a Conclusion
 
@@ -105,7 +115,7 @@ Freeze at least:
 8. authority/POC/release roots, tracking/retention, backup, deletion, scratch locations;
 9. who may conclude and who may approve productization.
 
-Record deviations from preregistration instead of rewriting them as planned.
+Record deviations from preregistration instead of rewriting them as planned. Keep concise, reviewable hypotheses, assumptions, evidence and decision rationale, not verbatim chats or hidden model reasoning. Record actual times and tested variants; mark proposed or untested alternatives explicitly.
 
 ### Baseline Checkpoints
 
@@ -144,13 +154,17 @@ planned -> running -> pending_human_evaluation -> concluded -> archived
 concluded -> superseded
 ```
 
-Mark interim conclusions `interim` with evidence and unknowns. Final conclusions record selection/rejection, rationale, scope, uncertainty, signer, and date. Supersede rather than rewrite conclusions overturned by new evidence. State whether generalization across data, hardware, versions, or users was retested. `invalidated` means design, contamination, or missing critical evidence made a run unusable; it is not a falsified hypothesis and remains in the ledger.
+Mark interim conclusions `interim` with evidence and unknowns. Final conclusions record each considered alternative, tested/untested status, selection/rejection or deferral, supporting run/evidence IDs, rationale, scope, uncertainty, signer, and date. State why the plan changed and what future evidence, price, interface or version change would justify reopening the decision. Supersede rather than rewrite conclusions overturned by new evidence. State whether generalization across data, hardware, versions, or users was retested. `invalidated` means design, contamination, or missing critical evidence made a run unusable; it is not a falsified hypothesis and remains in the ledger.
 
 ## 9. Deletion and Reproduction
 
 Before deleting large outputs, verify recoverable versioned/hashed inputs; repository commit and patches; model/dependency identities; source or full protocol for custom algorithms, prompts, segmentation, post-processing, and validation; explicit commands without remembered steps; stable summaries, output hashes, failures, and human reviews; disclosed limits from randomness, drivers, hardware, or upstream deletion; and a deletion record with time, scope, recoverability, and executor.
 
-For outside worktrees, first migrate stable records and ignored assets into `POC_ROOT`, reconcile inventories/hashes, validate the root, and prove zero unique experiment files remain. Scratch space may hold declared downloads, extraction, or intermediates only; migrate, delete per policy, or register retention before closeout. Under `untracked`, verify backup/reproducibility by retention class; Git history is not recovery.
+Retain the smallest evidence set that still supports the conclusion: plan, relevant experiment code/patches, versioned parameters, run measurements and failures, decision rationale, and representative media or counterexamples when the judgement depends on them. A modified engine is not merely a redownloadable dependency. Non-deterministic or unavailable outputs essential to the decision require retention or an explicit reduction of the reproducibility claim; a hash or download URL alone is insufficient.
+
+Classify bulk groups (models/engines, environments, cache, generated outputs) by ownership, regeneration and retention, not age or size alone. Shared caches, active processes, credentials, volumes and unique data remain protected. Record disposal in the existing experiment manifest/decision: planned scope, retained evidence, recovery source, authority, actual result/date and remaining action. Follow Workflow's ordinary-file recovery rules and Delivery's native resource rules; no experiment tool silently acquires deletion authority. Conclusion status and resource-closeout status are separate: a rejected or inconclusive experiment may be archived with evidence, while cleanup may still be pending. Non-release experiments close on their own lifecycle, not the next production release.
+
+Before retiring execution surfaces, preserve records in the registered record owner and assets in `POC_ROOT`, reconcile inventories/hashes, validate their locations, and confirm no unique experiment files remain on the retiring surface. Scratch space may hold declared downloads, extraction, or intermediates only; migrate, delete per policy, or register retention before closeout. Under `untracked`, verify backup/reproducibility by retention class; Git history is not recovery.
 
 A hash without a retrievable source is not reproducible; an environment name without exact versions is not comparable; a success screenshot without raw measures cannot support the conclusion.
 
@@ -166,4 +180,4 @@ If productization is chosen, translate approved conclusions into formal requirem
 
 ## 11. Templates
 
-Use `assets/poc-experiment-governance/` ledgers and manifest, adapted to the project's existing equivalent. Do not create a parallel ledger.
+Use `assets/poc-experiment-governance/` or the project's equivalent, not a parallel ledger. New manifests add project/evidence/closeout locators; legacy `external_workspace` is only an execution locator. Preserve old manifests and `evaluating` records as history; new pending human review uses `pending_human_evaluation`.

@@ -142,3 +142,10 @@ test('communication defaults reach both lifecycle events and bootstrap installer
     assert.equal(source.split(start)[1].split(end)[0].trim(), COMMUNICATION_CONTEXT);
   }
 });
+
+
+test('main and subagent commits retain their existing authorization boundary', () => {
+  assert.match(getSessionContext(), /Verify; commit only as authorized/);
+  assert.match(getSubagentContext(), /within delegated commit authority/);
+  assert.doesNotMatch(getSessionContext(), /Verify and commit\./);
+});

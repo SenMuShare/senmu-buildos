@@ -1,12 +1,17 @@
 # Code Management and Integration
 
-Use this standard only for non-routine Git decisions, parallel execution surfaces, integration, and version-line governance. Current project branching policy prevails. Local Git is complete by itself; use remotes, PR/MR, CI, and platform Releases only when they exist and authority covers them.
+Use for non-routine Git, parallel work, integration and version lines. Project branching policy prevails. Local Git needs no remote; remotes, PR/MR, CI and platform Releases apply only when present and authorized.
+
+## Contents
+
+- [Scope](#1-establish-the-scene) · [Branches](#2-branches-and-commits) · [Worktrees](#3-worktrees-and-parallel-surfaces)
+- [Hotfixes](#4-hotfix-and-successor-line) · [Review](#5-integration-and-review) · [Release](#6-release-source-and-parallel-exclusions) · [Retirement](#7-local-worktree-retirement)
 
 ## 1. Establish the Scene
 
-Read-only recover authority root/repository, Git state, integration line, open batch, release unit, concurrent writers, shared resources, and authority. Decide line, branch, surface, and phase from product-version placement -> batch/Change Unit -> writer/worktree -> delivery intent. Agent count does not decide product versions or topology.
+Read-only identify the authority root, Git state, target line, batch, release unit, writers, shared resources and permissions. Choose line/surface/phase by version placement, Change Unit, writer/worktree and delivery intent, not agent count.
 
-Infer and proceed when owners, tasks, Git, and context suffice. Ask once in product language only when a choice changes version placement, batch cutoff, cost, data safety, or production outcome—not Git mechanics.
+Proceed from available owners, tasks and Git. Ask only about unresolved version placement, cutoff, cost, data safety or production outcomes, in product language—not Git mechanics.
 
 Defaults:
 
@@ -39,11 +44,11 @@ python3 skills/senmu-build-delivery/scripts/manage_change_unit.py verify \
 
 `prepare` branches/worktrees from a frozen commit and records identity in the Git common dir; mismatched, foreign, or sealed records fail closed. It does not replace Durable Task State.
 
-Reuse frozen facts within a task and re-inspect only on HEAD, tree, surface, or release-scope change. Complex Git advice states facts, blind spots, rationale, exceptions, and closeout. Diagnosis does not authorize deletion or a new ledger. Engineering owns routine local commits.
+Reuse frozen facts until HEAD, tree, surface or release scope changes. Explain facts, limits, rationale, exceptions and closeout. Diagnosis grants no deletion or new ledger; Engineering owns routine commits.
 
 ## 2. Branches and Commits
 
-One independent Change Unit uses one short branch; it belongs to the unit, not a session/item. Continue the same open batch and use checkpoint commits. Create new only when sealed, boundaries differ, or work is independently deliverable. Add worktrees for unknown/real concurrency. Without policy use `main + codex/<scope>/<topic>`; add `next/*` or `release/*` only for long-lived replacement lines or independent candidate roots. Never edit integration directly.
+A short branch belongs to its Change Unit, not a session/item. Checkpoint within the open batch; new-unit conditions are in section 1. Unknown/real concurrency adds worktrees. Without policy use `main + codex/<scope>/<topic>`; reserve `next/*` or `release/*` for long-lived replacement lines or independent candidate roots. Never edit integration directly.
 
 - Inspect branch, short status, recent commits first.
 - Preserve merge strategy; explain divergence/conflict instead of forcing.
@@ -90,7 +95,7 @@ python3 skills/senmu-build-delivery/scripts/manage_change_unit.py resume \
 
 Projects may serialize when worktrees are prohibited/costly, baseline is unclear, or another state owner would result. Only verifiable exclusivity permits current-directory reuse.
 
-Record purpose, baseline, integration target, shared resources, and exit. Business ledgers, databases, POC state, media, and receipts remain with their unique owners and are not copied with source worktrees. Stop if authority root is unclear or two active owners appear.
+Record purpose, baseline, target, shared resources and exit. Keep business ledgers, databases, POC state, media and receipts at their unique owners, not copied into worktrees. Stop on an unclear authority root or competing active owners.
 
 One writer owns one open unit; a single writer may accept same-batch additions, while multiple writers isolate. For review, freeze and verify a stable commit in the open unit; review alone does not seal it. After the authorized batch is complete, verification and any required review/repair are closed, and the tree is clean, seal:
 
@@ -113,9 +118,9 @@ Never auto-stash/reset/commit mixed dirty changes. After integration and target 
 
 ## 4. Hotfix and Successor Line
 
-Before hotfix, confirm production/release baseline, current version, rollback, unreleased work, and candidate version. Reproduce and run matching regressions. Propagate high-risk shared causes immediately; ordinary fixes at checkpoints; all applicable low-risk items by RC freeze/successor promotion.
+Before a hotfix, confirm production baseline, current/candidate versions, rollback and unreleased work; reproduce and test. Propagate shared high-risk fixes immediately, ordinary fixes at checkpoints and all applicable low-risk fixes by RC freeze/successor promotion.
 
-Propagation is a registered fact/checkpoint, not interruption of another agent. A successor line is a future replacement, not a second project; it shares governance, state owners, and release entrypoint, absorbs applicable maintenance fixes, and after promotion leaves one current main plus old-line history/rollback evidence.
+Register propagation without interrupting other agents. A successor replaces the current line, not the project: share governance, state owners and release entrypoint, absorb applicable fixes, then retain one current main and old history/rollback evidence.
 
 ## 5. Integration and Review
 
@@ -124,8 +129,7 @@ Propagation is a registered fact/checkpoint, not interruption of another agent. 
 - Run only risk/stack-relevant gates, not universal checklists.
 - Do not integrate with failed Hard Gates/quality commands or open blocking Findings.
 - Review approval binds the frozen head; a new commit requires candidate re-review. Continued task or release authority is decided by the [Authorization Protocol](release-authorization-and-production-truth.md#3-authorization-boundary).
-- Self-review does not replace required separation, but low risk does not require independent review.
-- Review belongs to the frozen set, not a permanent agent. The integration/release closer may self-review low risk; use independence only by hard gate/risk.
+- Review belongs to the frozen set, not a permanent role. The integration/release closer may self-review low risk; required separation and risk/hard-gate independence still apply.
 
 ## 6. Release Source and Parallel Exclusions
 
@@ -159,21 +163,21 @@ With one unit/target/entrypoint:
 4. Build the frozen artifact once, deploy, then verify identity, health, and affected core flow—not every page.
 5. Rerun only for candidate-code changes, behavior-changing conflict resolutions, or gate-fix changes. Appending release records does not invalidate tests.
 
-Without that top-level driver, the project has release scripts, not a standard pipeline. An emergency release uses existing safe entrypoints and one necessary gate; register the driver as automation debt afterward.
+Without this driver, scripts are not a standard pipeline. Emergency release uses existing safe entrypoints and one necessary gate; record the missing driver as automation debt.
 
 A dirty legacy shared main has no fast path. Do only minimum recovery needed to attribute scope, form one recovery/consolidation commit, then freeze and preflight once. Do not replay all historical tests and then duplicate the same preflight. Record this as unsealed-session recovery cost.
 
 Isolated candidate-unreachable POCs/branches/worktrees that do not write shared production resources do not block release or require pause/commit/cleanup/integration. Record `branch@HEAD` as exclusion evidence without interrupting them.
 
-Closeout records authority root, integration commit, source, delivery path, rollback, parallel exclusions, and temporary-surface disposition. Facts only in temporary directories, or two “current/formal” directories, mean incomplete closure.
+Closeout records root, integration commit, source, delivery, rollback, parallel exclusions and temporary-surface disposition. Temporary-only facts or two current/formal directories mean incomplete closure.
 
 ### 6.1 Release Train and Cutoff
 
-One release has one mutable integration root. If `release/*` worktree is used, candidate fixes return there and preflight reruns; do not also advance `main`. If `main` is the root, create no second candidate branch.
+One release has one mutable integration root. If a `release/*` worktree is used, integrate candidate repairs there, not also into `main`. If `main` is the root, create no second candidate root. For already-integrated defects, repair on a scoped task branch from the current release-root baseline, then integrate back. This is not a second candidate root or permission to edit integration or sealed lines.
 
 - Cutoff snapshots accepted units, not future branch prohibition. Later candidate-unreachable/no-shared-resource tasks are automatically excluded; record `branch@HEAD` without candidate commits.
 - Version/changelog/candidate state may be mutable release-train preparation before full preflight; only a passing head freezes.
-- Fix preflight failures in the same root, invalidating the old candidate; rerun affected checks and full preflight before freezing.
+- Fix preflight failures through the registered repair unit and integrate back into the sole release root; invalidate the old candidate and rerun affected checks and required preflight before freezing. Reuse scoped authority; ask only for uncovered effects.
 - Before candidate/artifact, run `verify_release_identity.py` to establish `reviewed_commit = tested_commit = release_source_head = artifact_source_commit`. A formal Tag is not candidate input. After target verification, the promotion entrypoint verifies the exact commit receipt before creating/pushing the Tag.
 
 ## 7. Local Worktree Retirement

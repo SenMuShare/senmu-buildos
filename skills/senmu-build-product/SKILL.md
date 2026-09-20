@@ -1,11 +1,11 @@
 ---
 name: senmu-build-product
-description: Define durable product scope, version placement, priority, acceptance, state, and cross-page interface content. Not for one-off edits, implementation review, technical design, or deployment.
+description: "Defines product goals, scope, priorities, versions, behavior, acceptance and shared interface content. Excludes meaning-preserving local wording, implementation review, technical design and deployment."
 ---
 
 # Product Management
 
-Maintain one truth chain across optional requirements, version PRDs, current product specifications, and acceptance. Continue only for durable contract, version-placement, or cross-page content changes.
+Maintain one truth chain across optional requirements, version PRDs, current product specifications, and acceptance. Use for product decisions, behavior/acceptance changes, version placement or shared content; a one-off request can still change a product contract.
 
 ## Route by Outcome
 

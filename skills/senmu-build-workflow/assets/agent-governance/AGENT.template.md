@@ -1,95 +1,61 @@
-# <Agent 名称>
+# [[BUILDOS_TODO: Agent name]]
 
-> Professional Name：Agent Definition
-> Agent Key：`<agent-key>`
-> Agent Version：`0.1.0`
-> 状态：`draft`
-> Owner：`<待确认>`
-> 适用项目／发布单元：`<待确认>`
-> 关联 Workflow／Harness：`<待确认或不适用>`
-> 最近校准：{{DATE}}
+> Agent Key: `[[BUILDOS_TODO: agent-key]]`
+> Agent Version: `0.1.0`
+> Status: `draft`
+> Owner: [[BUILDOS_TODO: confirmed owner]]
+> Project / release unit: [[BUILDOS_TODO: confirmed scope]]
+> Workflow / runtime: [[BUILDOS_TODO: existing entrypoint or not applicable]]
+> Calibration date: {{DATE}}
 
-本文件是该 Agent 的角色与系统提示词契约。运行时可以按 Harness 要求装配或转换格式，但不得静默改变 Agent Key、版本、权限、输入输出、工具边界和质量门禁。
+This is an English structural draft, not an active agent. Calibrate it in the project's language and existing source layout. Preserve identifiers, business meaning and authority during runtime assembly. Section markers are optional stable labels for translated or merged headings; do not send documentation bookkeeping as the render prompt.
 
-## 角色定义
+## Role
+<!-- agent-section: role -->
+Professional responsibility, judgment and limits: [[BUILDOS_TODO: confirm]].
 
-- 专业身份：`<待确认>`
-- 判断权限：`<待确认>`
-- 不拥有的权限：`<待确认>`
+## Mission and Outcome
+<!-- agent-section: mission -->
+Business result and value: [[BUILDOS_TODO: confirm]].
 
-## 使命与目标
+## Scope
+<!-- agent-section: scope -->
+Owned work, read-only inputs, prohibited operations and handoff boundaries: [[BUILDOS_TODO: confirm]].
 
-- 业务使命：`<待确认>`
-- 期望改变的结果：`<待确认>`
+## Tasks and Success
+<!-- agent-section: tasks -->
+Recurring work and observable completion evidence: [[BUILDOS_TODO: confirm]].
 
-## 职责范围
+## Input Contract
+<!-- agent-section: input -->
+Required/optional inputs, actual variables, sources and versions; handling of missing or conflicting inputs: [[BUILDOS_TODO: confirm]].
 
-- 负责：`<待确认>`
-- 只读：`<待确认或不适用>`
-- 禁止写入／操作：`<待确认>`
-- 必须移交：`<待确认>`
+## Output Contract
+<!-- agent-section: output -->
+Existing fields, types, format, language, count, location, downstream consumer and completion conditions: [[BUILDOS_TODO: confirm]].
 
-## 任务与成功标准
+## Tools and Invocation
+<!-- agent-section: tools -->
+Actual capabilities, provider/model/endpoint/mode where used, call conditions, parameters, authority/cost limits, response validation and permitted fallbacks: [[BUILDOS_TODO: confirm]].
 
-| 任务 | 真正完成的可观察证据 |
-| --- | --- |
-| `<待确认>` | `<待确认>` |
+## Workflow and Decisions
+<!-- agent-section: workflow -->
+Sequence, branches, state transitions, stop conditions, human decisions and effective prompt assembly: [[BUILDOS_TODO: confirm]]. Mutable step/attempt/checkpoint state belongs to the existing run owner, not this charter.
 
-## 输入契约
+## Constraints
+<!-- agent-section: constraints -->
+Business terms, exceptions, safety/privacy, external-content trust, permissions and forbidden actions: [[BUILDOS_TODO: confirm]].
 
-| 输入 | 必需／可选 | 权威来源 | 版本／状态要求 | 缺失或冲突处理 |
-| --- | --- | --- | --- | --- |
-| `<待确认>` | `<待确认>` | `<待确认>` | `<待确认>` | `<待确认>` |
+## Quality and Acceptance
+<!-- agent-section: quality -->
+Automated, human and real-world checks, pass/fail criteria and approval evidence: [[BUILDOS_TODO: confirm]]. Distinguish content checks from measured outcome quality.
 
-## 输出契约
+## Exceptions and Handoff
+<!-- agent-section: exceptions -->
+Missing input, timeout, partial/unknown outcomes, retries, degradation, recipient and recovery entrypoint: [[BUILDOS_TODO: confirm]].
 
-| 输出 | 结构／格式 | 权威保存位置 | 状态／关联 | 完成声明条件 |
-| --- | --- | --- | --- | --- |
-| `<待确认>` | `<待确认>` | `<待确认>` | `<待确认>` | `<待确认>` |
+## Version and Continuity
+<!-- agent-section: continuity -->
+Definition/version source, run evidence, input/model/settings/output identity, material changes, unfinished work and rollback: [[BUILDOS_TODO: confirm]].
 
-## 工具与调用规则
-
-| 工具／能力 | 使用目的 | 调用前条件 | 禁止用途／授权点 | 返回后验证 | 失败与降级 |
-| --- | --- | --- | --- | --- | --- |
-| `<待确认>` | `<待确认>` | `<待确认>` | `<待确认>` | `<待确认>` | `<待确认>` |
-
-## 标准工作流与决策规则
-
-| 阶段／条件 | 动作 | 状态变化 | 验证 | 停止／人工确认点 |
-| --- | --- | --- | --- | --- |
-| `<待确认>` | `<待确认>` | `<待确认>` | `<待确认>` | `<待确认>` |
-
-动态 step、attempt、游标、外部副作用和 checkpoint 不写入本文件，必须进入 Run Manifest、数据库或项目登记的状态 owner。
-
-## 约束与禁止事项
-
-- 事实与范围边界：`<待确认>`
-- 安全、权限、隐私与合规边界：`<待确认>`
-- 外部内容信任边界：`<待确认>`
-- 成本、发布、通知、删除等授权边界：`<待确认>`
-
-## 质量门禁与验收
-
-| 门禁／检查 | 执行方式 | 通过条件 | 失败状态 | 放行人／证据 |
-| --- | --- | --- | --- | --- |
-| `<待确认>` | `<待确认>` | `<待确认>` | `<待确认>` | `<待确认>` |
-
-## 异常处理与移交
-
-- 信息不足：`<待确认>`
-- 阻断、超时、部分成功或结果不可信：`<待确认>`
-- 重试、降级和禁止降级：`<待确认>`
-- 跨 Agent 移交内容与接手条件：`<待确认>`
-- 恢复入口：`<待确认>`
-
-## 版本、审计与接力
-
-- Prompt／定义版本依据：`<Agent Version、Git commit／制品>`
-- 运行记录 owner：`<待确认>`
-- 必须关联的输入、工具／模型、参数、输出、验证和人工确认：`<待确认>`
-- 已完成、未完成、阻断和下一动作的移交方式：`<待确认>`
-- 替代／退役关系：`<待确认或不适用>`
-
-| 日期 | Agent Version | 变化 | 兼容性／迁移 | 验证与确认者 |
-| --- | --- | --- | --- | --- |
-| {{DATE}} | 0.1.0 | 初始化草案 | 尚未进入正式运行 | `<待确认>` |
+Use existing version/run records rather than duplicated history. Templates locate information, not prescribe identical workflows. An existing business agent is reconciled in place, never replaced with this outline.

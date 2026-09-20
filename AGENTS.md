@@ -7,6 +7,8 @@ This directory is the complete, distributable product source. It may be checked 
 - Keep raw feedback, private tasks, credentials, user transcripts and author-only state outside this product. A public, synthetic regression or a useful architecture decision may remain here. Product checks and runtime cannot require a private sibling directory.
 - Use a scoped task branch and the project's actual write boundaries. Do not edit an installed cache or force-push unrelated work. A source commit does not authorize installation or public release.
 
+- For each GitHub-bound change, assess all three READMEs and synchronize affected content; preserve unchanged sections and record the impact decision in the existing PR/task. Follow [README maintenance](CONTRIBUTING.md#github-readme-sync); do not invent runtime changes or publication claims.
+
 Checks from this source root:
 
 ```bash

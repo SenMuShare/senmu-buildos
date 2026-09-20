@@ -1,16 +1,21 @@
-# {{PROJECT_NAME}} 实验登记表
+# {{PROJECT_NAME}} Experiment Register
 
-> Professional Name：Experiment Register
-> 最近校准：{{DATE}}
+> Last calibrated: {{DATE}}
 
-本表只登记需要影响决策的 POC／实验。每个实验使用稳定 `EXP-<NNNN>-<slug>/` 包，详细假设、计划、结果和决定不复制到本表。
+Register decision-bearing experiments here. Stable IDs link to one report/package; do not copy results or decisions into this index. This register is navigation, not an execution workspace.
 
-## 活跃实验
+## Project entrypoint
 
-| Experiment ID | 名称 | 状态 | 来源需求／Task | 实验包 | 最近更新 |
+Use `.senmu-buildos/config.json` → `poc_management` for the adopted storage contract, or follow its `existing_contract` pointer. Calibrate that one owner before stateful runs: experiment root, stable record root, tracking, protected development/release worktrees, retention, backup and applicable checks. Do not write runtime assets next to this register merely because it exists. A generated register is a draft, not activated experiment governance.
+
+Simple demos may use a short report with design, run evidence, decision and resource disposition. Use the optional package templates only when separate documents help. Retain adopted, rejected, inconclusive and cancelled work; do not erase unfavorable results.
+
+## Active experiments
+
+| Experiment ID | Question | Status | Source task | Report/package | Last update |
 | --- | --- | --- | --- | --- | --- |
 
-## 已结束实验
+## Closed experiments
 
-| Experiment ID | 名称 | 结论 | 决策文件 | 归档状态 |
+| Experiment ID | Decision and date | Durable report | Evidence/backup reference | Resource closeout/next action |
 | --- | --- | --- | --- | --- |

@@ -1,11 +1,11 @@
 ---
 name: senmu-build-assurance
-description: "Produce read-only, evidence-graded POC, audit, reproduction, or disputed-cause verdicts. Not for implementation, routine review, retrospectives, or fixes."
+description: "Design or assess decision POCs, comparisons, audits, reproductions, or disputed causes with graded evidence. Reviews are read-only; authorized experiments use isolated scope. Not for routine review or production implementation."
 ---
 
 # Governance Assurance
 
-Operate read-only by default. Freeze the subject, version, scope, and standard; then distinguish facts, inferences, and unknowns with reviewable evidence. Produce a verdict without automatically remediating it.
+Reviews are read-only by default; an authorized POC may write its isolated experiment materials, not the audited product or production state. Freeze the subject, version, scope, and standard; distinguish facts, inferences, and unknowns with reviewable evidence. A verdict does not itself authorize remediation.
 
 ## Route by Outcome
 

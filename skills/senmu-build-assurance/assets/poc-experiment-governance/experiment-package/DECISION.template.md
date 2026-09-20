@@ -1,11 +1,27 @@
-# EXP-<NNNN> 决策
+# <experiment-id> — Decision
 
-- 状态：`adopt | reject | continue | defer`
-- 决策人／日期：
-- 结论：
-- 理由与证据：
-- 适用边界：
-- 不确定性：
-- 后续动作：
-- 晋级 owner：`<REQ／TD／ADR／Workflow 路径或不适用>`
-- 归档与可删除范围：
+> Decision: `adopt | reject | continue | defer`
+> Decision maker / date and timezone: <actual identity and time>
+> Conclusion strength: <final, interim or inconclusive; explain limits>
+
+## Alternatives and rationale
+
+| Alternative / tested status | Evidence IDs | Adopt / reject / defer | Reason and tradeoff | Reconsider when |
+| --- | --- | --- | --- | --- |
+
+- Answer to the original question and applicability limits:
+- Key plan changes, why they happened, and unresolved disagreements:
+- Uncertainty, missing human review and next action:
+- Approved productization scope and requirement/technical owner, or not approved:
+
+## Durable evidence and closeout
+
+- Stable report and necessary code/patches/parameters:
+- Representative outputs, failed cases and backup/retrieval verification:
+- Bulk groups retained or disposable; regenerate from <versioned source + command>:
+- Cleanup authority and actual result/date/receipt, or pending next action:
+- Known reproduction limits after cleanup:
+
+Keep this decision when rejected, inconclusive or superseded. Supersede with a
+new dated decision; do not silently overwrite the old rationale. Refer to the existing
+manifest/resource receipt rather than copying mutable cleanup state into several files.
