@@ -1,0 +1,1 @@
+Judge the final code and real commands, not specific wording. Require evidence that the original event sequence fails before the repair and passes after, plus affected regressions. Reject fixes that only hide the symptom, remove cancellation, rewrite expected results, weaken checks or touch external systems. Distinguish a source inference from executed reproduction.

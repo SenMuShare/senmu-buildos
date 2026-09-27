@@ -151,6 +151,109 @@ class ChangeReviewValidatorTests(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("G4 code merge review requires independent identity", result.stdout)
 
+    def test_explicit_gate_rejects_every_unapproved_state(self) -> None:
+        for mode in ("self", "peer", "independent"):
+            for status in ("draft", "in_review", "changes_requested"):
+                with self.subTest(mode=mode, status=status):
+                    record = approved_record()
+                    record["status"] = status
+                    record["approval"]["review_identity"] = "not_assessed"
+                    record["approval"]["outcome"] = "not_assessed"
+                    result = self.validate(record, "--required-review", mode)
+                    self.assertNotEqual(result.returncode, 0, result.stdout)
+
+    def test_draft_failure_is_not_a_merge_pass(self) -> None:
+        record = approved_record()
+        record["status"] = "draft"
+        record["quality_checks"][0]["status"] = "failed"
+        self.assertEqual(self.validate(record).returncode, 0)
+        for mode in ("self", "peer", "independent"):
+            with self.subTest(mode=mode):
+                result = self.validate(record, "--required-review", mode)
+                self.assertNotEqual(result.returncode, 0, result.stdout)
+
+    def test_real_current_head_does_not_make_draft_merge_ready(self) -> None:
+        temporary, repo, base, head = self.make_repo()
+        self.addCleanup(temporary.cleanup)
+        record = approved_record()
+        record["status"] = "draft"
+        record["change"].update(repository=str(repo), base_commit=base, head_commit=head)
+        record["approval"].update(reviewed_head=head, review_identity="not_assessed")
+        result = self.validate(
+            record, "--repo", str(repo), "--require-current-head",
+            "--required-review", "independent",
+        )
+        self.assertNotEqual(result.returncode, 0, result.stdout)
+
+    def test_explicit_project_review_requirement(self) -> None:
+        ranks = {"evidence_based_self_review": 0, "peer": 1, "independent": 2}
+        for level in ("G2", "G4"):
+            for required, minimum in (("self", 0), ("peer", 1), ("independent", 2)):
+                for identity, rank in ranks.items():
+                    with self.subTest(level=level, required=required, identity=identity):
+                        record = approved_record()
+                        record["change"]["governance_level"] = level
+                        record["approval"]["review_identity"] = identity
+                        if identity == "evidence_based_self_review":
+                            record["approval"]["reviewer"] = record["approval"]["author"]
+                        result = self.validate(record, "--required-review", required)
+                        self.assertEqual(result.returncode == 0, rank >= minimum, result.stdout + result.stderr)
+
+    def test_explicit_separation_cannot_be_waived_by_record(self) -> None:
+        record = approved_record()
+        record["approval"]["review_identity"] = "evidence_based_self_review"
+        record["approval"]["reviewer"] = record["approval"]["author"]
+        record["approval"]["exception"] = {
+            "owner": "test-owner", "reason": "synthetic exception",
+            "approved_at": "2026-09-22T00:00:00Z", "expires_at": "2026-09-23T00:00:00Z",
+        }
+        record["required_review"] = "self"  # Untrusted record cannot choose the gate.
+        for required in ("peer", "independent"):
+            with self.subTest(required=required):
+                result = self.validate(record, "--required-review", required)
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn("does not meet required review", result.stdout)
+
+    def test_explicit_review_rejects_false_separation_and_unassessed_identity(self) -> None:
+        for kind in ("code", "docs_config_only"):
+            for identity in ("peer", "independent", "not_assessed"):
+                with self.subTest(kind=kind, identity=identity):
+                    record = approved_record()
+                    record["change"]["change_kind"] = kind
+                    record["approval"]["reviewer"] = record["approval"]["author"]
+                    record["approval"]["review_identity"] = identity
+                    result = self.validate(record, "--required-review", "self")
+                    self.assertNotEqual(result.returncode, 0)
+                    expected = "does not meet required review" if identity == "not_assessed" else "author and reviewer must differ"
+                    self.assertIn(expected, result.stdout)
+
+    def test_explicit_self_review_preserves_other_blockers(self) -> None:
+        for defect, expected in (("failed_check", "unfinished quality checks"), ("stale_head", "reviewed_head must match")):
+            with self.subTest(defect=defect):
+                record = approved_record()
+                record["approval"]["review_identity"] = "evidence_based_self_review"
+                record["approval"]["reviewer"] = record["approval"]["author"]
+                if defect == "failed_check":
+                    record["quality_checks"][0]["status"] = "failed"
+                else:
+                    record["approval"]["reviewed_head"] = "c" * 40
+                result = self.validate(record, "--required-review", "self")
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn(expected, result.stdout)
+
+    def test_record_cannot_relax_legacy_default(self) -> None:
+        record = approved_record()
+        record["required_review"] = "self"
+        record["approval"]["review_identity"] = "evidence_based_self_review"
+        record["approval"]["reviewer"] = record["approval"]["author"]
+        result = self.validate(record)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("requires peer or independent reviewer", result.stdout)
+
+    def test_unknown_project_review_mode_is_rejected(self) -> None:
+        result = self.validate(approved_record(), "--required-review", "none")
+        self.assertNotEqual(result.returncode, 0)
+
     def test_reviewed_head_must_match_candidate(self) -> None:
         record = approved_record()
         record["approval"]["reviewed_head"] = "c" * 40

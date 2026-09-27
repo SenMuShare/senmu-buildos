@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Offline job-state prototype</title>
+<style>
+:root{font:16px/1.6 system-ui,sans-serif;color:#203047;background:#f5f7fa}body{max-width:860px;margin:40px auto;padding:0 24px}h1{line-height:1.15}section{background:white;border:1px solid #dbe2ea;border-radius:12px;padding:20px;margin:20px 0}button{font:inherit;padding:8px 14px;margin:4px;border:1px solid #73849a;border-radius:6px;background:white;cursor:pointer}button:focus-visible{outline:3px solid #356ac3}dt{font-weight:700}dd{margin:0 0 8px}#notice{min-height:3em}small{display:block}code{white-space:normal}
+</style>
+<h1>Can a late result revive a cancelled job?</h1>
+<p>Prototype only. Explore a proposed state contract before building it. Everything stays in memory: no network, payment, files or persistent storage.</p>
+<section aria-labelledby="state-title"><h2 id="state-title">Current state</h2><dl id="state"></dl><p id="notice" role="status" aria-live="polite"></p></section>
+<section aria-labelledby="actions-title"><h2 id="actions-title">Try any action</h2><div id="actions"></div><small>Invalid actions stay available so you can test the boundary. They report a rejection without changing the job.</small><button id="reset" type="button">Reset</button></section>
+<section aria-labelledby="scenarios-title"><h2 id="scenarios-title">Guided scenarios</h2><label for="scenario">Scenario </label><select id="scenario"></select><p id="description"></p><button id="begin" type="button">Start scenario</button><button id="next" type="button">Run next step</button><p id="progress" aria-live="polite"></p></section>
+<p>Adopt only an explicitly chosen business contract. A successful demo does not prove provider cancellation, concurrency, storage, permissions or production readiness.</p>
+<script id="model">
+const JobPrototype = (() => {
+  const initial = () => ({ status: "created", attempt: 0 });
+  const transitions = {
+    created: { submit: "queued" },
+    queued: { start: "running", cancel: "cancelled" },
+    running: { fail: "failed", complete: "completed", cancel: "cancelled" },
+    failed: { retry: "queued", cancel: "cancelled" },
+    completed: {}, cancelled: {}
+  };
+  function apply(state, action) {
+    const allowed = Object.hasOwn(transitions, state.status) ? transitions[state.status] : {};
+    if (!Object.hasOwn(allowed, action)) {
+      return { state: { ...state }, accepted: false, message: `${action} is not allowed while ${state.status}.` };
+    }
+    const next = { status: allowed[action], attempt: state.attempt + (action === "submit" || action === "retry" ? 1 : 0) };
+    return { state: next, accepted: true, message: `${action}: ${state.status} → ${next.status}.` };
+  }
+  const scenarios = [
+    { name: "Successful job", description: "Submit, start and complete the first attempt.", actions: ["submit", "start", "complete"] },
+    { name: "Failure and retry", description: "A retry keeps the job but starts a new attempt.", actions: ["submit", "start", "fail", "retry", "start", "complete"] },
+    { name: "Cancellation and late result", description: "A late completion cannot revive a cancelled job.", actions: ["submit", "start", "cancel", "complete"] },
+    { name: "Invalid early completion", description: "Completion without a running attempt must be rejected.", actions: ["complete"] }
+  ];
+  return { initial, apply, scenarios, actions: ["submit", "start", "fail", "retry", "cancel", "complete"] };
+})();
+</script>
+<script id="view">
+let state = JobPrototype.initial();
+let step = 0;
+const byId = id => document.getElementById(id);
+function render(message) {
+  byId("state").replaceChildren();
+  for (const [name, value] of Object.entries(state)) {
+    const term = document.createElement("dt"); term.textContent = name;
+    const definition = document.createElement("dd"); definition.textContent = String(value);
+    byId("state").append(term, definition);
+  }
+  byId("notice").textContent = message;
+}
+function execute(action) {
+  const result = JobPrototype.apply(state, action); state = result.state;
+  render((result.accepted ? "Accepted: " : "Rejected: ") + result.message);
+}
+function resetScenario() {
+  state = JobPrototype.initial(); step = 0;
+  const scenario = JobPrototype.scenarios[byId("scenario").selectedIndex];
+  byId("description").textContent = scenario.description;
+  byId("progress").textContent = `Step 0 of ${scenario.actions.length}`;
+  byId("next").disabled = false; render("Reset to a known initial state.");
+}
+for (const action of JobPrototype.actions) {
+  const button = document.createElement("button"); button.type = "button"; button.textContent = action;
+  button.addEventListener("click", () => { execute(action); byId("progress").textContent = "Free exploration: restart the scenario to resume its ordered steps."; byId("next").disabled = true; });
+  byId("actions").append(button);
+}
+for (const scenario of JobPrototype.scenarios) {
+  const option = document.createElement("option"); option.textContent = scenario.name; byId("scenario").append(option);
+}
+byId("next").addEventListener("click", () => {
+  const scenario = JobPrototype.scenarios[byId("scenario").selectedIndex];
+  if (step >= scenario.actions.length) return;
+  execute(scenario.actions[step++]);
+  byId("progress").textContent = `Step ${step} of ${scenario.actions.length}`;
+  byId("next").disabled = step === scenario.actions.length;
+});
+byId("scenario").addEventListener("change", resetScenario);
+byId("begin").addEventListener("click", resetScenario);
+byId("reset").addEventListener("click", resetScenario);
+resetScenario();
+</script>
+</html>

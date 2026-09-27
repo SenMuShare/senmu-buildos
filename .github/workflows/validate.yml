@@ -45,3 +45,16 @@ jobs:
 
       - name: Run Hook tests
         run: node --test tests/hooks/*.test.js
+
+      - name: Verify quality-wiring examples with real tools
+        working-directory: .
+        run: |
+          set -euo pipefail
+          example="$PWD/skills/senmu-build-engineering/assets/code-quality/examples"
+          python3 -m venv "$RUNNER_TEMP/buildos-python-tools"
+          "$RUNNER_TEMP/buildos-python-tools/bin/python" -m pip install --disable-pip-version-check -r "$example/python/requirements-dev.txt"
+          mkdir -p "$RUNNER_TEMP/buildos-node-tools"
+          cp "$example/typescript/package.json" "$RUNNER_TEMP/buildos-node-tools/"
+          npm install --prefix "$RUNNER_TEMP/buildos-node-tools" --ignore-scripts --no-audit --no-fund
+          export PATH="$RUNNER_TEMP/buildos-python-tools/bin:$RUNNER_TEMP/buildos-node-tools/node_modules/.bin:$PATH"
+          python tests/recipes/check_quality_wiring.py

@@ -1,4 +1,4 @@
 interface:
   display_name: "Senmu Build Project Governance"
   short_description: "Project governance, AGENTS and shared working principles"
-  default_prompt: "Use $senmu-build-project for the requested governance or AGENTS.md outcome. Reconcile existing instructions and applicable working principles while preserving project language, constraints, exceptions and authorization."
+  default_prompt: "Use $senmu-build-project to reconcile the requested project governance or AGENTS.md, preserving language, existing agreements and write scope."

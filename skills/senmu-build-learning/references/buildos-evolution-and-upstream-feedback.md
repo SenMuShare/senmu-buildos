@@ -41,11 +41,15 @@ Whole-repository analysis does not require editing every file. A final change ma
 
 1. Freeze candidate source, problem, scope, evidence, and expected change.
 2. Search existing BuildOS rules, adjacent responsibilities, and migrations; classify as supplement, correction, merge, replacement, or rejection.
-3. Select one semantic owner. Use `$skill-creator` when Skill entry, structure, or triggering changes.
+3. Select one semantic owner. For Skill entry, structure or triggering changes, use the authoring capability policy below.
 4. Correct the principle, responsibility, template, script, or default production path that creates the problem. Gates cover only material residual risk that cannot be removed.
 5. Synchronize affected routes, docs, tests, and migration declarations.
 6. Run matching Skill, package, script, and behavior checks; record unverified runtime assumptions.
 7. Complete source changes, matching checks, and scoped local commits within the authorized BuildOS improvement task. Push, version, tag, candidate-install, and publication follow their own applicable authority; feedback intake alone authorizes none of them.
+
+### Authoring capability policy
+
+Use a trusted Skill-authoring capability when the current host provides it, with that host's actual invocation syntax. A name such as `skill-creator` is an available-tool choice, not a mandatory installation or cross-host command. When unavailable, continue authorized work using concrete trigger/non-trigger cases, one semantic owner, scoped references, matching interface metadata and existing package/behavior checks. Verify the same obligations and report unrun native checks; never install tools, widen trust or spend account usage merely to satisfy this step.
 
 ## 5. Version and Git Rules
 

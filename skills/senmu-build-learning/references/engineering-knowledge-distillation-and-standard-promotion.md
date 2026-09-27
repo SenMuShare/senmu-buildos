@@ -33,6 +33,14 @@ Keep a shared outcome/authority contract for mixed model use, including GPT-5.6 
 
 Use the existing candidate `scope`, `exceptions` and `verification` fields for this judgment; no extra mandatory ledger or numeric score. A narrow specialist technique can be merged while its surrounding permission ritual, global preload or obsolete model workaround is discarded. Technical SDK/framework facts still come from their own current official sources.
 
+### Entry and Invocation Calibration
+
+Front-load the actual job and trigger in `description`; topic overlap alone must not activate a Skill. Keep the public name stable. Review `agents/openai.yaml` alongside the entry: its short default prompt names `$skill-name` and requests the intended outcome without silently adding writes, artifacts or independent-review claims. Metadata presence is not observed selection.
+
+Keep entrypoints as conditional routers. Make useful references directly reachable where practical, and provide a short section map or targeted search cues for dense references. Examples inside code fences are not effective routes. Reference selection, responsibility handoff and subagent delegation are different decisions; none requires a fixed agent count or a new approval for already-authorized work.
+
+Review explicit, implicit, contextual and nearby non-trigger requests. Observe outcome, important actions, requested presentation and total task cost when running a live evaluation. Choose a small relevant set, not a new benchmark quota for every edit. Reuse existing scenarios and record untested host behavior honestly; official example commands and numeric limits do not become project obligations.
+
 ### Context and Input Discipline
 
 No change is a valid success. Prefer merging or replacing existing meaning; an addition must prevent a concrete wrong decision and justify its reading cost. Keep one owner and load detail conditionally. Do not import organizational roles, universal thresholds, source catalogs or textbook prose. A new Skill needs an independently requestable, verifiable task loop; framework variants usually belong in references. Compress or retire duplication before raising budgets. Scripts can enforce deterministic properties, not semantic judgment.

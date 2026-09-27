@@ -23,8 +23,8 @@ Retain fail-closed gates for unacceptable risks such as security, privacy, payme
 ### 0.1 Self-Check, Formal Review, and Independent Assurance
 
 - The current specialist owner performs ordinary self-checks: Product for requirements, Engineering for technical design, implementation, and tests, Workflow for process, and Delivery for release. Return findings directly to the original owner; do not create a separate review process or report.
-- Conduct formal review only when the project process, governance level, or owner explicitly requires it. Reuse existing requirement, technical, or release-review owners and tailor checks to current risk.
-- Use Assurance only when an independent conclusion is explicitly requested, a cross-domain dispute exists, or a formal review genuinely requires separation of duties. G3-G4 raises evidence, verification, and closeout strength but does not automatically invoke Assurance.
+- Conduct formal review when project policy, actual risk, duties or an explicit owner request requires it. Reuse existing requirement, technical, or release-review owners and tailor checks to current risk.
+- Use Assurance for an explicit audit of a frozen subject with an evidence report, a cross-domain dispute, or a required independent verdict. Select actual reviewer identity separately; an audit can be evidence-based self-review unless separation is required. G3-G4 raises evidence, verification and closeout strength, not automatic Assurance activation.
 - Run consistency checks at natural transitions: requirements to design/implementation, design to implementation, implementation to acceptance/release, and task closeout. Do not repeat the full suite for every small step or ordinary file edit.
 - Do not create `checklists/` or one-off checklist files by default. Establish a durable checklist only when checks recur, risk is material, content is stable, no existing owner can carry it, and maintenance ownership, review cadence, and retirement conditions are explicit. Otherwise record findings in the current task or existing review.
 

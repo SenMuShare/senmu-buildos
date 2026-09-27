@@ -28,7 +28,7 @@
 - 工作日志（standard/release）：`governance/logs/WORKLOG.md`
 - 经验与防回退（standard/release）：`governance/lessons/LESSONS_LEARNED.md`
 - 用户需求与当前产品规格（standard/release 且启用 product）：`product/`
-- 各版本 PRD、按需技术设计与测试用例：`versions/<version>/`
+- 各正式开发版本的 PRD 与技术设计，以及按需测试用例：`versions/<version>/`
 - 技术、质量与架构（standard/release 且启用）：`engineering/`
 - 工作流（standard/release 且启用）：`workflows/WORKFLOW.md`
 - 项目 Agent 与系统提示词（如启用）：`agents/AGENT_REGISTER.md`

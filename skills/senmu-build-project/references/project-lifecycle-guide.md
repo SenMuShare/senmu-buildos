@@ -1,5 +1,7 @@
 # Project Engineering Governance Guide
 
+**Read as needed:** [Position and Scope](#1-position-and-scope) · [Entry Order](#2-entry-order) · [Common Work Loop](#3-common-work-loop) · [Initialization Modules](#4-initialization-modules) · [Initialization Architecture Gate](#5-initialization-architecture-gate) · [Choosing Technology](#6-choosing-technology) · [Governance and Delivery Strength](#7-governance-and-delivery-strength) · [Project Handoff](#8-project-handoff) · [Completion Definition](#9-completion-definition) · [Minimum Technology Baseline](#minimum-technology-baseline)
+
 This guide is the second-level navigation for project entry, initialization, execution, release, and learning. It defines lifecycle and decision order without duplicating specialist standards. Load details conditionally from the `SKILL.md` index.
 
 ## 1. Position and Scope

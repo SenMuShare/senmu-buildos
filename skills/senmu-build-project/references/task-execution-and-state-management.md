@@ -1,5 +1,7 @@
 # Task Execution, Planning, and State Management
 
+**Read as needed:** [Create a task](#2-when-to-create-a-numbered-task-plan) · [Split and delegate](#4-split-plans-only-as-much-as-needed) · [Resume](#5-session-plans-and-authoritative-facts) · [Update status](#6-status-and-update-points) · [Close](#7-closeout-and-archive).
+
 Use this standard for work that spans meaningful steps, phases, or sessions. Task plans belong to the project, not chat memory or a specialist Skill. A project that needs recovery must declare a Durable Task State Owner. New BuildOS standard/release projects default to numbered task-plan files; core and mature projects may map a trusted README, issue tracker, database, plan file, or external system.
 
 ## 1. Default Location
@@ -102,6 +104,9 @@ Authoritative owners include:
 Keep ordinary discussion, research, decision, and verification summaries in the task plan. Move them to specialist owners only when they become independently maintained, formally reviewed, or reusable artifacts.
 
 ## 6. Status and Update Points
+
+For a progress request over enumerated scope, lead with the actual total and mutually exclusive counts: not started, implementing, implemented-awaiting-verification, verified, and blocked. Report excluded/cancelled scope separately and explain denominator changes. Derive counts from the existing item owner; a parent and its children are not separate completions. Verification, product acceptance and release remain distinct. Name the few real blockers and the next authorized action; do not dump a work log or invent percentages. A waiting dependent step does not make all work blocked.
+
 
 Use these statuses: `planned`, `active`, `blocked`, `verifying`, `completed`, `cancelled`, `archived`.
 

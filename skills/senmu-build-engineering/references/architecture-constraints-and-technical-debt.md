@@ -1,8 +1,10 @@
 # Architecture Constraints and Technical-Debt Governance
 
-Use this standard to prevent continuous local delivery from degrading responsibility, dependencies, ownership, implementation uniqueness, and version truth. It protects long-term modifiability; formatted, tested, runnable code is not automatically architecturally healthy.
+**Read by decision:** [Triggers](#3-triggers-and-levels) · [Current system](#4-current-system-technical-specification) · [Design changes](#5-architecture-change-contract) · [Verification](#8-tests-as-architecture-protection) · [Debt review](#10-existing-system-engineering-and-debt-review).
 
-Apply to initialization, engineering-health reviews, cross-module work, refactoring, public interfaces/data, repeated agent rework, debt governance, and architecture-gate calibration. Ordinary G1 copy/style or behavior-neutral fixes do not load it.
+Protect responsibilities, dependencies, ownership, unique implementation and version truth. Formatting/tests alone do not prove architecture health.
+
+Use for initialization, architecture/debt review, cross-module work, refactoring, public contracts, repeated rework or gate calibration; skip ordinary G1 copy/style and behavior-neutral fixes.
 
 ## 1. Govern Separate Objects
 
@@ -11,11 +13,11 @@ Apply to initialization, engineering-health reviews, cross-module work, refactor
 - **Technical debt:** a known temporarily accepted implementation/governance gap that raises future cost or risk.
 - **Engineering governance:** alignment among authority root, release unit, version, changelog, tag, quality commands, CI, Work Log, and release evidence.
 
-Passing code quality/tests does not prove architecture or version health. Review each object with separate evidence and conclusions.
+Assess each object with its own evidence and conclusion.
 
 ## 2. Architecture Principles
 
-Turn principles into inspectable boundaries:
+Inspect these boundaries:
 
 | Principle | Required property | Review question |
 | --- | --- | --- |
@@ -30,7 +32,7 @@ Turn principles into inspectable boundaries:
 
 Use the [abstraction-value question](implementation-economy-and-overengineering.md#21-abstraction-value) when adding or removing a layer. Interface economy does not justify hiding side effects or weakening a real safety, compatibility or ownership boundary.
 
-Record tradeoffs from project quality/risk when principles conflict. Performance may reduce boundaries but must not silently break ownership or permit uncontrolled layer crossing.
+Record tradeoffs from project quality/risk when principles conflict. Performance tradeoffs cannot silently break ownership or allow uncontrolled layer crossing.
 
 ## 3. Triggers and Levels
 
@@ -58,11 +60,11 @@ Long-lived code projects keep current technical facts in `engineering/SYSTEM_TEC
 9. Required quality attributes only, each tied to business impact, scope, observable target, verification, owner, constraints/dependencies, accepted tradeoff. Mark unmeasurable claims as hypotheses/open; avoid false universal precision.
 10. Evidence that cohesion, coupling, dependency direction, information hiding, and ownership appear in directories, interfaces, tests, or commands.
 
-Delete empty headings rather than filling “N/A.” Prefer small text tables/direction rules to unverifiable diagrams. The specification must match real paths, configuration, and release units. A template is available at `assets/architecture-governance/SYSTEM_TECHNICAL_SPECIFICATION.template.md`. Create version technical design only when technology, module/interface/data/state, migration, or risk needs durable explanation.
+Remove empty headings. Prefer concise tables or dependency rules; diagrams need evidence. Match real paths, configuration and release units. Use `assets/architecture-governance/SYSTEM_TECHNICAL_SPECIFICATION.template.md` when creating the document. Keep a technical design for each formal development version under Product Iteration. When the structure is unchanged, reference the current design and briefly state the affected implementation and verification. ADRs remain conditional on the decision, not required per version.
 
 ## 5. Architecture Change Contract
 
-Before coding, explain impact for module/service add/split/merge/move; dependency-direction or forbidden-crossing changes; public API/event/schema/shared package/cross-module state; table/destructive migration/data-owner changes; dependencies/infrastructure/frameworks/durable jobs; replacement while old entrypoints/data/consumers remain; or global state/cache/retry/async/compatibility added for a local problem. G3-G4 or critical modules also need an ADR/equivalent.
+Before coding, explain impact for module/service restructuring; dependency-direction or forbidden-crossing changes; public API/event/schema/shared package/cross-module state; table/destructive migration/data-owner changes; dependencies/infrastructure/frameworks/durable jobs; replacement while old entrypoints/data/consumers remain; or global state/cache/retry/async/compatibility added for a local problem. G3-G4 or critical modules also need an ADR/equivalent.
 
 Minimum impact statement:
 
@@ -73,7 +75,18 @@ Minimum impact statement:
 - How will it be tested, migrated, observed, and rolled back?
 - Is it permanent design or registered temporary debt?
 
-ADRs record decision, context, alternatives, consequences, and replacement condition—not every implementation detail.
+### Design from the Caller to the Structure
+
+Use this method when public interfaces, key state/data, module ownership or a genuinely uncertain architecture changes. Known patterns and local contract-preserving work do not require competing designs or an extra approval.
+
+1. Start from the affected-system model and effective design reasons already established for this task. State the approved outcome, constraints and what current capability cannot satisfy. If that understanding is missing, establish it before choosing a design; do not restart a completed investigation.
+2. Show how the user or calling module will use the change. Name realistic inputs, outputs, observable failure and cancellation behavior, and relevant state transitions. Derive data structures, signatures, dependencies and ownership from that usage. Name where external effects and validation occur and which complexity stays inside the module.
+3. When multiple viable shapes remain, compare structurally different candidates against the same goal, baseline, constraints and decision criteria. Use sketches or isolated prototypes only as needed to settle uncertainty. Evaluate behavior, interface clarity, invariants, migration and maintenance cost. A second variation of the same shape is not meaningful exploration; a settled design does not require a competition.
+4. Choose one coherent base. Record why it fits, what compatible ideas were adapted, what was rejected and the tradeoffs accepted. Reconcile incompatible state models instead of averaging them. Compare actual artifacts; agreement among models is a clue, not proof. Record failed or missing candidates and do not claim unperformed independent review. Use Assurance's experiment contract when a comparison needs reproducible measurements.
+5. Record the chosen usage, shape, reasons, preserved constraints and revisit conditions in the version technical design or existing decision owner. Use an ADR for a durable consequential decision, not every implementation detail. Proceed within existing authority; preserve an explicitly requested design checkpoint.
+6. Implement against the chosen design and verify the unified result. Repeated deviations of the same kind are evidence to reconsider the design. Explain whether the cause is a missing requirement, a wrong assumption or implementation overreach; redesign the affected boundary rather than adding unrelated patches. Update the decision record without rewriting historical reasons.
+
+For a small change, a short usage example and explanation can suffice. For a larger change, include the affected module map and interfaces. Do not generate placeholder bodies or extra files solely to prove that design happened.
 
 A capability replacement closes old state, entrypoints, paths, data/consumers, tests, and current docs in one Change Unit. When a multi-consumer public contract cannot switch atomically, use `expand -> migrate -> contract`: add compatibility; migrate consumers while observing old use/failures/rollback; remove only after no unhandled consumers, data, or automation remains. Every phase is deployable, verifiable, recoverable; compatibility has owner/exit. Atomic switches may combine phases but retain impact, evidence, and rollback.
 
@@ -81,7 +94,7 @@ A capability replacement closes old state, entrypoints, paths, data/consumers, t
 
 Engineering self-checks ordinary planning/implementation against REQ/acceptance, TD/ADR, task phase, and real code boundaries: requirement-to-design coverage, design-to-requirement source, task implementation/verification completeness, terminology/entity consistency, executable dependency order, and unplanned modules/interfaces/data/infrastructure.
 
-Record in `TECHNICAL_REVIEW.md`, TD, or current review owner—not a second technical plan. Implementer review is evidence-based self-review. Use Assurance with a frozen object/evidence scope for requested independence, cross-domain dispute, or formal G3-G4 independent approval; Engineering performs revisions.
+Record in `TECHNICAL_REVIEW.md`, TD, or current review owner—not a second technical plan. Implementer review is evidence-based self-review. Use Assurance for an explicit frozen-subject audit, cross-domain dispute or required independent verdict. State actual reviewer identity separately; Engineering performs revisions.
 
 ## 6. Change Budget and Task Splitting
 
@@ -99,7 +112,7 @@ Projects choose tools but declare which facts are machine-checked versus semanti
 - Baseline legacy projects; changed code must not worsen selected measures. Register debt instead of globally ignoring it.
 - Automated success does not replace semantic review of responsibility, invariants, error meaning, and duplicate implementation.
 
-The unified quality command includes applicable architecture checks. If automation is impossible, retain a repeatable human checklist and evidence location.
+Wire adopted dependency rules through the selected ecosystem tool into the quality command; verify allowed and forbidden fixtures. Review duplicate capabilities and change locality semantically. Without automation, retain a repeatable checklist and evidence.
 
 ## 8. Tests as Architecture Protection
 
@@ -115,27 +128,23 @@ Real-debt patches, global suppressions, compatibility branches, and TODOs refere
 
 ## 10. Existing-System Engineering and Debt Review
 
-Review read-only first; findings do not authorize refactoring:
+Choose scope first. Inspect a named module and necessary callers, not unrelated systems. Otherwise use actual change hotspots or recurring friction; missing history is a gap. Safety and correctness outrank frequency. Honor repository-wide requests; local findings do not establish global health.
 
-1. Confirm owner-approved authority root, Git root, branch, release units, runtime entrypoints.
-2. Check worktree, recent commits, VERSION, changelog, tags, document applicability, runtime version.
-3. Inventory languages, frameworks, modules, entrypoints, databases, dependencies, jobs, external services, deployment units.
-4. Read current requirements, design, quality, tests, deployment, version, logs; cross-check code.
-5. Run declared read-only quality, test, build, architecture commands and preserve failures without repairing baseline.
-6. Inspect responsibility, dependencies, ownership, duplication, cycles, hotspots, large files/functions, broad catches, dead code, gaps, legacy.
-7. In default `risk_based` mode, semantically sample core paths for invariants, permissions, transactions, idempotency, compensation, consistency at correct boundaries. Only an explicit per-file/function/comment request enters Assurance `exhaustive_source` with a durable completion ledger; sampling cannot claim exhaustive completion.
-8. Classify code quality, architecture, debt, test gates, release governance, and separately owned business/safety risks.
-9. Rank P0-P3 with location, evidence, impact, recommendation, verification; “refactor” alone is not actionable.
-10. Submit report and phased remediation first. Without authority, do not mass-format, move, replace frameworks, or rewrite business logic.
+Review read-only; findings do not authorize refactoring:
 
-Suggested report: `engineering/audits/ENGINEERING_GOVERNANCE_AND_TECH_DEBT_AUDIT_<YYYY-MM-DD>.md`.
+1. Confirm authority and Git roots, branch/commit, worktree and affected runtime/release boundaries. Reuse valid evidence.
+2. Cross-check relevant requirements, decisions, code and checks. Inventory stacks, stores, jobs, services, deployment and versions only as needed for the question or declared wider review.
+3. Inspect responsibilities, dependencies, ownership, duplication, cycles, error handling, dead/legacy paths and test gaps. Expand on evidence and state why. Connected money, data and authorization risks remain in scope; report inaccessible evidence rather than exceed authority.
+4. Run sufficient authorized read-only checks; preserve failures without baseline repair. Unrelated builds and unauthorized production or paid probes are not prerequisites.
+5. Use `risk_based` sampling for declared invariants and failure paths. Explicit per-file/function/comment requests retain Assurance `exhaustive_source` and durable coverage; sampling is not exhaustive.
+6. Report under section 11 and stop at agreed coverage with limits stated. Show before/after responsibilities, benefit, cost and verification. Separate supported changes from unproven candidates; a sentence may replace a diagram. Never invent savings.
+
+Use the existing report owner and `assets/architecture-governance/ENGINEERING_AUDIT_TASK.template.md`; exhaustive reviews use `EXHAUSTIVE_SOURCE_REVIEW_TASK.template.md` under Assurance.
 
 - **P0:** production, data/money/authorization, release, or rollback danger; block affected release.
 - **P1:** uncontrolled core architecture or conflicting version truth; prioritize governance.
 - **P2:** continuing quality/debt cost; schedule soon.
 - **P3:** optional style/low-risk improvement; not a blocker.
-
-Use `assets/architecture-governance/ENGINEERING_AUDIT_TASK.template.md` for risk sampling and `EXHAUSTIVE_SOURCE_REVIEW_TASK.template.md` for exhaustive source governance under Assurance.
 
 ## 11. Review and Remediation Closure
 

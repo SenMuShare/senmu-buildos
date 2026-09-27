@@ -1,35 +1,32 @@
 ---
 name: senmu-build-engineering
-description: "Designs and reviews architecture, technology choices, contracts, tests and upgrades when a technical decision is needed. Not for routine implementation covered by project rules, visual design or release authority."
+description: "Investigate subsystem behavior and design rationale; design or review architecture, contracts, tests and upgrades when engineering judgment is needed. Excludes covered routine work, visual design and release authority."
 ---
 
 # Software Engineering
 
-Use project rules first; continue for technical design, selection, contract gaps, conflicts, changes or review.
+Project rules prevail. Load guidance for gaps, conflicts or review; covered local work needs no Skill.
 
-## Route by Outcome
+## Routes
 
-- Quality, defects, AI collaboration, review: [Source Quality](references/source-code-quality-and-ai-collaboration.md).
-- Technology/framework/component choice: [Technology Selection](references/technology-and-component-selection.md).
-- Minimum correct implementation, reuse, overengineering: [Implementation Economy](references/implementation-economy-and-overengineering.md).
-- Architecture, dependencies, change budgets, debt: [Architecture](references/architecture-constraints-and-technical-debt.md).
-- Frontend state, navigation, forms, responsive/browser checks: [Frontend](references/frontend-engineering-contracts-and-validation.md).
-- APIs, services, data, transactions, caches, queues, jobs: [Backend](references/backend-services-and-data-contracts.md).
-- Test strategy, doubles, dependencies, data, flakiness: [Testing](references/software-testing-and-quality-verification.md).
-- Source modernization or stack upgrades: [Modernization](references/source-modernization-and-stack-upgrades.md).
-- Derive rules from an existing codebase: [Discovery](references/project-engineering-standard-discovery.md).
-- Only if local rules are absent/under review: [Python](references/python-engineering-profile.md), [TypeScript](references/typescript-engineering-profile.md), [Go](references/go-engineering-profile.md), [Java](references/java-engineering-profile.md), [Ant Design](references/frontend-ant-design-practice.md), [HTML/daisyUI](references/frontend-html-daisyui-practice.md).
+Choose in [Methods](references/source-code-quality-and-ai-collaboration.md#5-ai-implementation-debugging-and-review-loop): **explain** uses Understand/Read-Only; **debug** uses Fault Debugging; **change contracts** uses Design Change; **refactor** uses Behavior-Preserving Refactoring. Evidence/counterexamples: [Review](references/conditioned-code-review.md).
 
-Profiles guide selected stacks, not a language allowlist. Unlisted stacks use project rules and official guidance. Read matched references only. Frontend/backend are references, not child skills or job roles.
+Design: [Components](references/technology-and-component-selection.md), [Economy](references/implementation-economy-and-overengineering.md) or [Architecture](references/architecture-constraints-and-technical-debt.md). Verification: [Testing](references/software-testing-and-quality-verification.md); migrations: [Upgrades](references/source-modernization-and-stack-upgrades.md); [Project rules](references/project-engineering-standard-discovery.md) for local standards.
 
-## Fast Path
+Browser/state: [Frontend](references/frontend-engineering-contracts-and-validation.md). APIs/data/jobs: [Backend](references/backend-services-and-data-contracts.md). Public services, untrusted input or paid jobs: [Security](references/application-security-and-abuse.md). Frameworks: [Ant Design](references/frontend-ant-design-practice.md), [HTML/daisyUI](references/frontend-html-daisyui-practice.md).
 
-Once triggered for a contract decision/review, handle a reversible G1 change with one owner; clear local implementation needs no Skill. Do not create unrelated governance artifacts. Requested corrections to an existing document or navigation affected by the change remain in scope under [Implementation Economy](references/implementation-economy-and-overengineering.md#31-g1-contract-preserving-fast-path). Follow Kernel isolation, proportional verification, and authorized local commit. Check open-batch items narrowly; consolidate after test intent. Exclude security, privacy, permissions, payments, production data, paid/destructive actions, and releases.
+Missing/reviewed stack rules:
+[Python](references/python-engineering-profile.md), [TypeScript](references/typescript-engineering-profile.md), [Go](references/go-engineering-profile.md), [Java](references/java-engineering-profile.md), [Rust](references/stack-profiles/rust-engineering-profile.md), [JavaScript/Node](references/stack-profiles/javascript-node-engineering-profile.md), [C/C++](references/stack-profiles/c-cpp-engineering-profile.md), [Kotlin](references/stack-profiles/kotlin-engineering-profile.md), [Swift](references/stack-profiles/swift-engineering-profile.md), [PHP](references/stack-profiles/php-engineering-profile.md), [Dependencies/CI](references/stack-profiles/dependency-and-ci-review.md), [Schemas](references/stack-profiles/schema-and-migration-review.md).
 
-## Core Contract
+Use [Selection](references/stack-and-file-role-guidance.md) when the profile is unclear. Unlisted stacks use project rules and official guidance; profiles do not restrict language choice.
 
-- Preserve approved behavior and the symptom/call chain; locate the existing owner and reuse/variation boundary before coding. Share repeated behavior, use supported frameworks/SDKs, and remove verified obsolete wiring.
-- Implement small changes directly. Create TD/ADR/POC only for durable public-contract, data, infrastructure, or release-boundary changes. Return behavior/acceptance changes to Product.
-- Rerun the original path, then impact-based regressions. Report partial verification if the symptom was not covered. Never weaken types, tests, or security to pass.
+Frontend/backend are references, not child skills or job roles.
 
-Handoff real responsibility changes with scope, evidence, unknowns and authority.
+## Execution contract
+
+- Preserve approved behavior, original symptoms and ownership. Reuse supported capabilities; check consumers before retiring wiring. Product owns behavior and acceptance changes.
+- Design caller usage before public contract, state or data changes. Formal versions retain a technical account; ADRs/POCs serve real decisions, not ceremony.
+- Reversible G1 work follows Economy, Kernel isolation and authorized commits. Security, privacy, permissions, payments, production data, paid/destructive actions and release integrity never take that shortcut.
+- Check original failures and affected regressions during work; consolidate required checks at closeout. Reuse valid evidence, test real gaps and stop with sufficient evidence and no blockers. Never weaken types, tests or security to pass.
+
+Handoffs retain scope, evidence, authority and unfinished/unknown work.

@@ -41,7 +41,8 @@ class ZCodePluginManifestTest(unittest.TestCase):
         serialized = json.dumps(hooks)
         self.assertIn("CLAUDE_PLUGIN_ROOT", serialized)
         self.assertIn("ZCODE_PLUGIN_ROOT", serialized)
-        self.assertIn("${PLUGIN_ROOT}", serialized)
+        self.assertIn("process.env.PLUGIN_ROOT", serialized)
+        self.assertNotIn("${PLUGIN_ROOT}", serialized, "installation paths must not become JavaScript source")
         self.assertIn("/hooks/session-start.js", serialized)
         session = hooks["hooks"]["SessionStart"][0]["hooks"][0]
         self.assertEqual(session["type"], "command")

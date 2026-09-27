@@ -63,3 +63,5 @@ Keep project engineering standards scannable and executable:
 - Official external docs and open-source practice inform judgment but are not automatically adopted project rules.
 - Load only standards relevant to current module, risk, and change; expand evidence for whole-repository refactors, migrations, or formal reviews.
 - Use `senmu-build-assurance` when independent evidence sufficiency or a disputed conclusion is required; Engineering owns ordinary discovery and consistency self-checks.
+
+For a selected Python/TypeScript check gap, use the [adoption examples](../assets/code-quality/examples/README.md) as a narrow recipe. Keep implementation constraints reachable before coding; tool enforcement and later semantic review supplement them. Record the real config/command and valid-invalid-restored observations at the existing owner, not merely that a profile exists.

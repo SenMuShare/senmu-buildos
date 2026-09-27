@@ -17,7 +17,7 @@ Defaults:
 
 - Continue one `in_progress` unit for successive requirements in the same open batch with shared acceptance/release/rollback. One item is not batch completion.
 - Without test/closeout intent, remain in development; without release intent, remain unreleased. Implementation does not authorize seal, integration, full candidate gates, or release.
-- “Send for testing/close this batch/prepare release” freezes and forms a candidate without production authority. “Integrate into current version” permits integration only. “Release/go live” opens a bounded session for an exact candidate.
+- “Send for testing/review” fixes a review commit while the batch stays open. “Close this batch/prepare release” requests completed-scope closeout, not immediate sealing before repairs. Neither grants production authority. “Integrate into current version” permits integration only; “release/go live” opens a bounded session for an exact candidate.
 - Create a new unit only for another target version, independent acceptance/release/rollback, a sealed current unit, or required parallel isolation. Future unimplemented requirements go to Product, not empty branches.
 
 Read-only inspection:
@@ -42,9 +42,9 @@ python3 skills/senmu-build-delivery/scripts/manage_change_unit.py verify \
   --repo <returned-worktree> --unit <same-id>
 ```
 
-`prepare` branches/worktrees from a frozen commit and records identity in the Git common dir; mismatched, foreign, or sealed records fail closed. It does not replace Durable Task State.
+`prepare` records the frozen baseline in the Git common dir. Lifecycle commands share identity and ancestry checks, not task or acceptance state.
 
-Reuse frozen facts until HEAD, tree, surface or release scope changes. Explain facts, limits, rationale, exceptions and closeout. Diagnosis grants no deletion or new ledger; Engineering owns routine commits.
+Reuse unchanged source facts; reassess HEAD/tree/surface/scope changes. Diagnosis grants no deletion or new ledger; Engineering owns routine commits.
 
 ## 2. Branches and Commits
 
@@ -55,7 +55,6 @@ A short branch belongs to its Change Unit, not a session/item. Checkpoint within
 - When receiving changes to AGENTS, overrides or referenced policies, compare them with the receiving baseline and preserve current instruction ownership. Reconcile stale rules through Project only where needed; an ordinary code merge does not trigger a full Markdown audit.
 - Repair authority excludes merge, Tag, push, release.
 - User-visible behavior must trace to approved prior behavior, current Product decision, and candidate reality. PRD/code/tests agreeing on one branch does not self-authorize change.
-- The implementer develops/checkpoints during an open batch, freezes and verifies on test/closeout request, and the agent receiving explicit release intent closes that release. No permanent agent role.
 
 The project declares `main_mode` in policy/branch authority:
 
@@ -69,11 +68,10 @@ Without declaration, BuildOS may advise once but cannot auto-integrate until the
 - Integration lines are registered `current_line`, `successor_line`, necessary `maint/*`, or the one `release_source_root` for a release window.
 - Task branches start from frozen target-line commits and return to the same line. Later tasks start from the integrated line, not the preceding task branch.
 - Use a stacked unit only for a genuine dependency on an unintegrated parent; record parent ID, require parent sealed, and state integration order.
-- Successive additions within one target/acceptance/release/rollback boundary keep the unit `in_progress`; do not seal, integrate, run full gates, or add worktrees after every clarification/fix.
 
 `prepare` treats `--target` as integration line and fails if it is owned by another unit. Use `--target-role stacked-unit --parent-unit <id>` for dependency or `--target-role frozen-commit` for an exact baseline.
 
-Cross-session continuation passes the stable ID:
+For a known unit, `manage_change_unit.py inspect --repo <repo> --unit <same-id>` reads its registered path/head/state without restoring it. Missing paths do not prove deleted commits. Authorized continuation:
 
 ```bash
 python3 skills/senmu-build-delivery/scripts/manage_change_unit.py resume \
@@ -97,24 +95,29 @@ Projects may serialize when worktrees are prohibited/costly, baseline is unclear
 
 Record purpose, baseline, target, shared resources and exit. Keep business ledgers, databases, POC state, media and receipts at their unique owners, not copied into worktrees. Stop on an unclear authority root or competing active owners.
 
-One writer owns one open unit; a single writer may accept same-batch additions, while multiple writers isolate. For review, freeze and verify a stable commit in the open unit; review alone does not seal it. After the authorized batch is complete, verification and any required review/repair are closed, and the tree is clean, seal:
+One writer owns an open unit. Use `manage_change_unit.py review --repo <registered-worktree> --unit <same-id>` to capture a fixed review commit; optional `--since <previous-review-commit>` reports a repair delta. It does not seal, approve or run tests.
+
+Seal only after authorized batch scope, checks and required review/repairs are complete and the tree is clean:
 
 ```bash
 python3 skills/senmu-build-delivery/scripts/manage_change_unit.py seal \
   --repo <worktree> --unit <same-id>
 ```
 
-`seal` requires a clean tree and a post-baseline commit and permanently closes branch recovery. A later repair is a new unit.
-
-Later agents inspect intake without chat:
+`seal` checks a clean tree and a post-baseline commit and permanently closes branch recovery. These Git checks do not prove scope completion or business acceptance. A later repair uses a linked unit; do not seal merely to request review.
 
 ```bash
 python3 skills/senmu-build-delivery/scripts/manage_change_unit.py list --repo <repo>
+# Bounded v2: --state all, --offset N. Legacy JSON: --format full.
 ```
 
-It derives `pending_integration` for sealed units not reachable from target and `integrated` when reachable. For squash/rebase/cherry-pick or exclusion/supersession, first record disposition in task authority, then `close --disposition <integrated|excluded|superseded> --owner-ref <owner#section>`; `integrated` also requires `--integration-commit`. This receipt mirrors owner decisions and commit mapping; it is not task state.
+Full output retains v1: sealed units are `pending_integration`; `candidate_reachable` only hints at ancestry. After authorized reception, record the disposition with `close --disposition <integrated|excluded|superseded> --owner-ref <owner#section>`. Integrated closeout requires `--integration-commit <receipt>` on the registered target and an unchanged sealed source.
 
-Never auto-stash/reset/commit mixed dirty changes. After integration and target verification, inspect uncommitted/untracked/ignored assets, processes, and unique commits. With no unique fact and proper authority, remove the explicit worktree then `git branch -d`; remote deletion is separate. Never default to `-D`, `--force`, or raw directory deletion.
+`close` verifies either the exact sealed commit or the full frozen delta replayed onto the receiving base, comparing the entire resulting Git tree. Rewritten history defaults to the receipt's first parent; pass `--integration-base <target-before-reception>` for a multi-commit rebase/cherry-pick range. Clean ordinary merges, squash and exact-content rewrites are supported. Unrelated, partial or extra receipt changes fail. Conflicts, missing Git merge-tree capability or unproven semantic rewrites remain sealed; review a target-specific candidate rather than asserting equivalence.
+
+Replay may write Git objects, not branches, index or working files. The existing record stores `integration_proof`; legacy receipts gain no proof automatically. This proves reception at that commit, not current behavior, review, acceptance or release. Existing task authority and target verification remain necessary.
+
+Never auto-stash/reset/commit mixed dirt. After integration and target verification, use [Local Worktree Retirement](#7-local-worktree-retirement); preserve unique material and active work, and never default to force removal. Remote deletion remains separate.
 
 ## 4. Hotfix and Successor Line
 
@@ -130,6 +133,22 @@ Register propagation without interrupting other agents. A successor replaces the
 - Do not integrate with failed Hard Gates/quality commands or open blocking Findings.
 - Review approval binds the frozen head; a new commit requires candidate re-review. Continued task or release authority is decided by the [Authorization Protocol](release-authorization-and-production-truth.md#3-authorization-boundary).
 - Review belongs to the frozen set, not a permanent role. The integration/release closer may self-review low risk; required separation and risk/hard-gate independence still apply.
+
+### Review Identity at the Project Gate
+
+Engineering determines needed review separation from actual risk, duties and project policy. Delivery enforces that requirement for the frozen candidate; risk level alone is not a universal reviewer assignment. Keep routine checks in their domain. Use the structured review validator only when the project adopts that merge-record format, not on every edit.
+
+An adopted merge entrypoint passes its required identity with `--required-review self`, `--required-review peer` or `--required-review independent`. `self` permits evidence-based self-review or stronger separation; `peer` permits peer or independent review; `independent` permits only independent review. The existing record still identifies the actual author, reviewer and evidence. An exception inside the reviewed record cannot relax an explicit requirement. An explicit `--required-review` also requires `status=approved`; a draft or unfinished review cannot pass the merge gate.
+
+```bash
+python3 skills/senmu-build-delivery/scripts/validate_change_review.py \
+  --record <review.json> --repo <repo> --require-current-head \
+  --required-review <self|peer|independent>
+```
+
+Bind the argument in the trusted project merge/CI entrypoint from the approved policy, not from candidate-controlled data or an implementer's ad hoc choice. Review policy changes against the receiving baseline. Mandatory safety or separation controls cannot be waived by changing the argument to obtain green. The validator checks declared evidence and identities; it cannot authenticate reviewers or prove their independence.
+
+Omitting the argument validates structure, permits drafts, and preserves legacy identity checks on approved records: peer review, an owner-recorded self-review exception where allowed, and independent review for G4. Structure success is not merge readiness. This fallback protects existing installations; it is not a universal BuildOS task policy. Calibrate the existing project caller under governance authority to use the explicit mode. Do not automatically migrate project policies or weaken their gates on upgrade. Approval still rejects failed checks, stale heads and open/blocking findings.
 
 ## 6. Release Source and Parallel Exclusions
 

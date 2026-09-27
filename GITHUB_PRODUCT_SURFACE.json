@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "repository": "SenMuShare/senmu-buildos",
-  "reviewed_for_version": "2.16.0",
+  "reviewed_for_version": "2.23.2",
   "description": "AI-native BuildOS for Codex, Claude Code, Doubao, WorkBuddy and ZCode: product discovery, UI/UX design, software engineering, context-aware workflows, testing, Git and verifiable releases.",
   "topics": [
     "agent-skills",
@@ -27,16 +27,14 @@
   ],
   "readme_review": {
     "updated_sections": [
-      "release-summary-and-source-version",
-      "project-entrypoint-working-principles",
-      "project-and-workflow-capability-rows",
-      "github-readme-maintenance",
-      "release-channel-boundaries"
+      "structural-reference-contract-tests",
+      "scoped-architecture-review-example",
+      "release-summary-and-source-version"
     ],
     "summary": {
-      "zh": "本版完善发布文档与三语 README 维护：每次 GitHub 更新先判断文档影响，相关内容同步修改，无实质变化的部分保持原样。使用说明明确项目 `AGENTS.md` 可承载精炼工作原则，并区分项目指令治理与业务 Agent 内容治理。本版延续既有运行能力和修复，不新增自动迁移或效果承诺；源码版本与各渠道实际发布状态分别核对。详见[用户更新日志](RELEASE_NOTES.md)。",
-      "en": "This documentation and release-maintenance update adds README impact review to each GitHub-bound change. Synchronize affected Chinese, English and Japanese content; preserve sections that remain accurate. The usage guide clarifies concise working principles in project AGENTS.md and distinguishes project-instruction governance from business-agent content governance. Existing runtime capabilities and fixes are retained; no automatic migration or performance gain is introduced. Verify source version and channel availability separately. See [release notes](RELEASE_NOTES.md).",
-      "ja": "本版では、GitHub に反映する変更ごとに README への影響を確認し、中国語・英語・日本語の関連箇所を同期する保守方針を明確にします。変更不要な記述は維持します。プロジェクトの AGENTS.md に簡潔な作業原則を置くことと、業務 Agent の内容整理との違いも説明します。既存の実行機能と修正は継承し、自動移行や性能向上を新たに提供するものではありません。ソースのバージョンと各配布経路の公開状況は別々に確認してください。詳しくは[更新履歴](RELEASE_NOTES.md)を参照してください。"
+      "zh": "本版让前后端参考测试检查真实引用、唯一归属和平级结构，不再锁定英文原句。架构审查先区分局部问题和全局体检，按证据扩展，并提供简明的前后职责对照。保留八个 Skill、现有项目规则与授权边界；结构检查不等于模型语义理解或效果实测。详见[用户更新日志](RELEASE_NOTES.md)。",
+      "en": "This release checks domain references through actual links, unique ownership and peer Skill structure rather than fixed English wording. Architecture review distinguishes a local diagnosis from repository-wide assessment, expands on evidence and uses a concise before/after responsibility example. The eight Skills, existing project rules and authority boundaries remain; structural checks do not prove model understanding or performance. See [release notes](RELEASE_NOTES.md).",
+      "ja": "本版は、前後端の参照テストで固定の英文ではなく、実際のリンク、単一の管理元、並列の Skill 構造を検証します。局所的な設計診断とリポジトリ全体の評価を区別し、根拠に応じて範囲を広げ、変更前後の責任分担を簡潔に示します。8 つの Skill、既存ルールと権限境界を維持します。構造テストはモデルの理解や性能の証明ではありません。詳しくは[更新履歴](RELEASE_NOTES.md)を参照してください。"
     }
   },
   "readmes": {

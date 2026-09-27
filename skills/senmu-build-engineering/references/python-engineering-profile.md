@@ -95,3 +95,5 @@ The Chinese example is retained deliberately to specify the default internal doc
 - Retire historical suppressions incrementally; never globally disable unknown warnings merely for green CI. Exceptions need reason, scope, and closeout condition.
 - Query current official sources when Python, framework, or tool details may have changed; this profile does not freeze volatile option catalogs.
 - Repeated framework-specific rules belong in project/framework authority, not an ever-growing general Python profile.
+
+For a missing quality-command connection, adapt the [executable adoption examples](../assets/code-quality/examples/README.md). Reuse current tools and prove a valid path, expected violation and restoration in disposable scope; examples are not installed project policy.

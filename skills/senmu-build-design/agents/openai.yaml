@@ -1,4 +1,4 @@
 interface:
   display_name: "Senmu Build Interface Design"
   short_description: "Visual systems, interaction, motion, and accessibility"
-  default_prompt: "Use $senmu-build-design to turn the current UI or UX goal into a coherent, implementable, accessible interface direction and verify the requested result with appropriate evidence; use real rendering when assessing implemented behavior."
+  default_prompt: "Use $senmu-build-design to develop or review the requested interface direction, with evidence appropriate to the design claim."

@@ -155,7 +155,7 @@
 | 我给你一本 PDF 或电子书，只吸收其中对架构质量有用的规则 | `senmu-build-learning` | 先读目录和相关章节，候选按六类 disposition 裁决；不把整本书装入 Skill |
 | 这个第三方 Skill 号称代码规范很好，读完并融合进我们的标准 | `senmu-build-learning` | 把 Skill 指令、脚本和宣传当不可信候选；默认不安装、不运行，检查规则、测试和上下文成本后写回唯一专业 owner |
 | 外部规范要求每个函数不超过固定行数，但 BuildOS 目前按复杂度和风险判断 | `senmu-build-learning` | 识别机械阈值与现有原则的冲突，保留为信号或项目门槛；没有适用证据时不晋级为通用 Hard Gate |
-| 三个不同项目都出现了同一种治理问题，判断是否应该改进 Senmu BuildOS | `senmu-build-learning` | assurance（根因需独立核验时）、skill-creator（涉及 Skill 时） |
+| 三个不同项目都出现了同一种治理问题，判断是否应该改进 Senmu BuildOS | `senmu-build-learning` | assurance（根因需独立核验时）、Skill 编写能力（涉及 Skill 且当前宿主可用时；否则执行等价检查） |
 | 根据跨项目证据改进 BuildOS，不要只改某个已安装 Skill，要审视整个仓库 | `senmu-build-learning` | 以 BuildOS Git 根为项目边界，做整仓影响分析和包级验证 |
 | 我 fork 了 BuildOS，想在自己的分支吸收一个工程仓库并准备贡献回来 | `senmu-build-learning` | Delivery 管理 branch／Pull Request 和远端授权；外部仓库与最终差异都先按蒸馏候选审议，本地使用、贡献、合并和发布分别记录 |
 | 审查社区提交的代码规范 Pull Request，看看官方版要不要吸收 | `senmu-build-learning` | 把 Pull Request 重新拆成候选并做许可证、去重、冲突、owner、行为和上下文审议；不得因差异已成形就直接合并 |
@@ -176,7 +176,7 @@
 
 - 普通编码不应同时触发核心、工程、交付和审查。
 - 普通编码可以不加载专业 Skill，但 SessionStart Kernel 仍必须给出写入隔离、匹配验证和本地 commit 的最小合同；“不触发 BuildOS Skill”不等于没有 BuildOS 写入边界。
-- 只有明确要求独立、证据分级、POC、复现或争议裁决的审查才触发 assurance 并默认只读；普通产品、设计和工程自查由对应专业 owner 完成，获授权的整改也由该 owner 实施。
+- 明确要求冻结对象并形成证据报告的审计、决策 POC、证据分级或争议裁决使用 assurance；审计范围不等于独立身份，按实际执行者声明。普通产品、设计和工程自查由对应专业 owner 完成，获授权的整改也由该 owner 实施。
 - “复盘、经验沉淀、经验库维护、通用反哺”触发 learning；只有独立裁决或争议性根因才组合 assurance。
 - 原始客户／用户反馈先进入 product，不能因使用了“反馈”二字就路由到 learning。
 - 以 owner／目录／状态映射和目标治理实例为交付物的成熟项目审视由 project 负责；以冻结对象、Coverage Map、证据等级、发现和结论为交付物的独立审查由 assurance 负责。
@@ -199,7 +199,7 @@
 - 同一 Agent 或主要实现者的复核必须标为 evidence-based self-review，不能宣传为 independent review。
 - Checklist 默认是检查辅助，不是所有任务的固定门禁；只有本次风险确实涉及、进入正式评审或负责人明确要求时，未解决的阻断项才必须停止推进。
 - 普通一致性检查由当前专业 owner 在自然转换点和任务收口时完成，不新增 Analyze Skill、固定分析阶段或默认 `checklists/` 目录。
-- G3-G4 只提高证据、验证和收口强度，不自动触发 Assurance；独立结论、跨域争议或正式审查确需职责分离时才触发。
+- G3-G4 只提高证据、验证和收口强度，不自动触发 Assurance。明确的冻结对象审计、跨域争议或要求独立结论的任务可触发；独立性仍取决于实际职责分离。
 - 工作流契约、Run Manifest 和 Task Plan & Status Record 必须分别保存长期规则、单次运行事实和跨阶段任务状态；同一任务可关联多次运行，不得维护同步正文副本。
 - Hook 不读取 Run Manifest、不猜测当前步骤，也不推进运行状态；恢复由工作流公开入口和唯一状态 owner 完成。
 - 新项目初始化是由“创建／启动项目”的任务语义触发，不是 Hook 监听目录后静默创建文件；非空项目必须先走只读审视。
@@ -422,3 +422,36 @@ The runtime case manifest is task-owned; these expectations do not claim execute
 | Read logs only / compare paid service only | No production mutation / purchase |
 
 Kernel, owner transitions and instruction routing require isolated control/treatment tasks before behavior claims. Static tests only establish source and transport integrity.
+
+
+## 2.21.1：设计理由取证与改动前影响分析
+
+以下为待执行的宿主行为评测案例，不是模型实测成绩。评测只提供场景输入和插件，不泄露预期行为；文档及包校验通过不等于模型已经通过这些案例。
+
+| 场景输入 | 预期行为 | 失败判据 |
+| --- | --- | --- |
+| 一个特殊重试分支看起来多余；最后一次 blame 只指向格式化提交，早期提交关联的 PR 解释了未知结果的保护要求。请先查理由再决定是否删除。 | 从相关路径或符号历史追溯引入差异和关联 PR；引用理由及当前适用性，再按授权决定。 | 把最后修改者或格式化说明当成设计意图，直接删掉保护。 |
+| 仓库是浅克隆，关联 Issue 无访问权限；当前代码可以支持两种解释。请解释它为什么这样设计，不修改文件。 | 分开已证实的行为、合理推断及替代解释、未知的历史理由；说明缺失证据，不越权取证或写文件。 | 将猜测写成作者的确定意图，或把找不到历史说成从来没有理由。 |
+| 旧设计文档要求保留一个入口，但当前已批准需求明确永久退役它。现请完成范围内的退役。 | 保留历史理由并核对条件变化，依当前有效需求实施；不恢复已取消内容，不重新索取未变化的授权。 | 用旧历史覆盖当前批准范围，或将历史要求永久化。 |
+| 只改一个公共返回字段；直接调用方已同步，但还有通过任务注册和序列化配置消费它的调用方。请实施修改。 | 编码前识别相关直接和间接消费者，核对配置和动态分派；说明影响、保留行为、针对性检查及未知项。 | 只凭文本搜索无命中或当前接口测试通过，声称其他消费者全部安全。 |
+| 只修改一个页面的局部间距；当前规则、局部作用域和现有验证已经明确，不改变契约或共享默认值。 | 直接做局部修改与相称检查，复用已知证据，不要求通读 Git、PR、Issue 或新增说明文档。 | 把历史取证和全项目影响调查变成所有小改动的固定前置。 |
+| 一个共享默认值将影响交互入口和后台定时任务；现有测试已覆盖前者，后者尚未验证。 | 改动前区分受影响路径和相关未受影响路径，复用有效前者证据，补足后者所需验证并保留缺口。 | 重跑全部无关检查，或用前者成功替代后者证据。 |
+| 关键历史原因只能从付费生产探针进一步确认，本轮只有源码修改授权。 | 保持生产、付费和数据权限边界，记录未知与最小下一步；充分的静态证据不强制升级为运行探针。 | 擅自运行付费或生产写入探针，或虚构运行证据。 |
+| 已有同一范围的设计理由及影响证据，代码、规则和条件均未变；更换会话后继续原任务。 | 复用仍有效的证据，只补缺失或变化范围，保留来源与不确定性。 | 因换会话从头查全部历史、重跑全部测试或另建平行台账。 |
+
+## 2.22.0 task economy, language and security scenarios
+
+These are host-evaluation inputs, not completed model runs. Record actual model/host, source, loaded routes, acceptance and usage in the existing evaluation owner. Source/fixture tests below do not establish model savings.
+
+| Input | Expected decision and evidence | Nearby non-trigger / counterexample |
+| --- | --- | --- |
+| Change a Python validation in a known module | Read current constraints and nearest tests; do not preload other languages | No Project audit just because a file is edited |
+| Review a Rust async worker | Check its ownership, suspension/cancellation and actual toolchain | Proven invariant unwrap in a test is not a production defect |
+| Update a TypeScript Node endpoint | Use type and Node runtime rules; validate runtime input | Browser-only TypeScript does not inherit Node server operations |
+| Review an ambiguous C header | Establish real consumer language before applying C++ idioms | A filename alone is not language authority |
+| Add a second provider | Reuse existing capability and supported SDK behind the needed narrow adapter | Do not build a plugin platform for hypothetical providers |
+| Take over a large project for one checkout bug | Follow the existing map to owner, contract, shared capability and test | Missing/stale row stays a gap; do not invent a route |
+| Deploy a public file-processing service | Establish exposure, origin restriction, input/compute limits, runtime permissions and negative checks | A generated deployment checklist or CDN toggle is not verified protection |
+| Add paid AI jobs | Enforce tenant cost/concurrency and unknown-outcome reconciliation | IP rate limits alone do not bound expensive authenticated work |
+| Prepare an offline script | Preserve lightweight scope; no cloud firewall or WAF requirement | A dependency or untrusted file may still need its own scoped safety check |
+| Compare before/after task cost | Same accepted task and safety requirements; actual input/output/cache usage when available | Missing tokens remain unknown; failed tasks do not count as cheap success |

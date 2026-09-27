@@ -23,3 +23,5 @@ This profile owns only TypeScript-specific rules for types, runtime boundaries, 
 - Keep legacy-file diffs focused. Put behavior-neutral mass formatting, import sorting, or mechanical type migration in a separate commit or governance task.
 
 Before completion, confirm the affected `tsconfig` inheritance and module target, runtime validation of untrusted input, exhaustive new state, contained suppressions, and project-contracted format, lint, type, test, and build checks. Report omissions truthfully.
+
+When an adopted TypeScript boundary lacks a check, use the [quality-wiring example](../assets/code-quality/examples/README.md). Its explicit private-module rule and strict compilation are illustrative; retain the actual project layout and toolchain.

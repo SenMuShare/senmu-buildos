@@ -9,8 +9,9 @@ from dataclasses import dataclass
 from pathlib import Path
 
 
-ENTRY = re.compile(r"^###\s+(LES-\d{8}-\d{3})：(.+?)\s*$", re.MULTILINE)
-FIELD = re.compile(r"^-\s+([^：:\n]+)[：:]\s*(.*?)\s*$", re.MULTILINE)
+ENTRY = re.compile(r"^###[ \t]+(LES-\d{8}-\d{3})[：:][ \t]*(\S[^\n]*?)[ \t]*$", re.MULTILINE)
+CANDIDATE = re.compile(r"^[ \t]*#{1,6}[ \t]+(?:`)?LES-[^\n]*", re.MULTILINE | re.IGNORECASE)
+FIELD = re.compile(r"^-[ \t]+([^：:\n]+)[：:][ \t]*(.*?)[ \t]*$", re.MULTILINE)
 VALID_STATUSES = {"candidate", "active", "superseded", "retired"}
 VALID_TYPES = {"incident", "practice", "governance"}
 REQUIRED_FIELDS = {
@@ -79,7 +80,9 @@ def parse_lessons(text: str) -> list[Lesson]:
     for index, match in enumerate(matches):
         end = matches[index + 1].start() if index + 1 < len(matches) else len(text)
         body = text[match.end():end]
-        fields = {name.strip(): clean_value(value) for name, value in FIELD.findall(body)}
+        fields: dict[str, str] = {}
+        for name, value in FIELD.findall(body):
+            fields.setdefault(name.strip(), clean_value(value))
         lessons.append(Lesson(match.group(1), match.group(2).strip(), fields, body))
     return lessons
 
@@ -87,6 +90,29 @@ def parse_lessons(text: str) -> list[Lesson]:
 def validate(text: str) -> tuple[list[str], list[str], int]:
     errors: list[str] = []
     warnings: list[str] = []
+    # Ignore fenced examples, but never silently lose an apparent real entry.
+    visible = []
+    fence = None
+    fence_line = 0
+    for number, line in enumerate(text.splitlines(), 1):
+        match = re.match(r"^ {0,3}(`{3,}|~{3,})(.*)$", line)
+        if match and fence is None and (match[1][0] == "~" or "`" not in match[2]):
+            fence, fence_line = match[1], number
+            visible.append("")
+        elif (match and fence and match[1][0] == fence[0]
+              and len(match[1]) >= len(fence) and not match[2].strip()):
+            fence = None
+            visible.append("")
+        else:
+            visible.append(line if fence is None else "")
+    if fence is not None:
+        errors.append(f"经验台账示例代码块未闭合：第 {fence_line} 行；后续内容不能确认为示例")
+    text = "\n".join(visible)
+    valid_offsets = {match.start() for match in ENTRY.finditer(text)}
+    for candidate in CANDIDATE.finditer(text):
+        if candidate.start() not in valid_offsets:
+            number = text.count("\n", 0, candidate.start()) + 1
+            errors.append(f"经验条目格式无法识别：第 {number} 行；需要 ### LES-YYYYMMDD-NNN: 标题")
     lessons = parse_lessons(text)
     by_id: dict[str, Lesson] = {}
 
@@ -98,6 +124,12 @@ def validate(text: str) -> tuple[list[str], list[str], int]:
 
     for lesson in lessons:
         prefix = lesson.lesson_id
+        seen_fields: set[str] = set()
+        for name, _ in FIELD.findall(lesson.body):
+            key = name.strip()
+            if key in seen_fields:
+                errors.append(f"{prefix} 字段重复：{key}；请明确保留唯一值，不按顺序覆盖")
+            seen_fields.add(key)
         missing = sorted(REQUIRED_FIELDS - set(lesson.fields))
         if missing:
             errors.append(f"{prefix} 缺少字段：{', '.join(missing)}")

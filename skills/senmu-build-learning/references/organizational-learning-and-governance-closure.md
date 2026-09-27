@@ -95,7 +95,7 @@ This is normally G3-G4 governance, but does not impose heavy gates on all small 
 
 A Work Log is a timeline, not a durable rule index. When a conclusion is likely to recur, has a verified root cause, has a decidable action, and can be rechecked, use `senmu-build-learning` to create or update the project's Lessons Learned Register under its common schema. New default BuildOS projects use `governance/lessons/LESSONS_LEARNED.md` and IDs `LES-YYYYMMDD-NNN`. Synchronize stable business, architecture, implementation, workflow, or deployment rules into the matching specialist owner.
 
-A repeated verified root cause requires governance review (two unrelated slips do not prove recurrence): create/update the lesson, find the production step repeatedly creating the defect, and determine why the old rule failed. Correct requirements, architecture, interfaces, defaults, implementation, public entrypoints, or operations first. Add the smallest automatic detection or gate only for material residual risk worth controlling. “Be careful next time” is not closure; neither is adding checks without correcting a confirmed defect source.
+A repeated verified root cause requires governance review (two unrelated slips do not prove recurrence): create/update the lesson, find the production step repeatedly creating the defect, and determine why the old rule failed. Correct requirements, architecture, interfaces, defaults, implementation, public entrypoints, or operations first. When a rule already exists, check whether the agent could find it, understand its conditions and use the correct default path before adding text. Preserve a concrete failure example only when it clarifies a stable judgment. Add the smallest automatic detection or gate only for material residual risk worth controlling. “Be careful next time” is not closure; neither is adding checks without correcting a confirmed defect source.
 
 ## 6. Lesson Retrieval and Maintenance
 
@@ -107,6 +107,7 @@ Lessons matter only when later tasks can find relevant, trustworthy entries:
 4. After code, architecture, process, or platform changes, evaluate related lessons as Keep, Update, Consolidate, Supersede, or Retire.
 5. After a stable rule moves to authority, retain only trigger, cause, evidence, and index in the lesson; do not copy the authoritative body.
 6. Large registers may split by stable domain with a short index, but the project retains one Lessons Learned owner—not private knowledge bases per agent or Skill.
+7. For a repaired discovery/default-path gap, verify the affected route or implementation with the nearest useful case and its legitimate exception. Record that observation in the existing task. Claim that a later agent retrieved or obeyed the lesson only after observing that later task; a reachable link or updated sentence alone proves neither adherence nor reduced recurrence.
 
 ### 6.1 Mechanical Register Validation
 
@@ -142,7 +143,7 @@ When appending a retrospective to an existing Work Log, use [Retrospective Entry
 
 - Do not promote every issue into a general Skill rule; excessive general rules become unexecutable.
 - Do not default to a prompt, checklist, validator, or approval layer. Fix the production step first, then control residual risk if justified.
-- Do not bypass whole-repository analysis in BuildOS source or `$skill-creator` abstraction/structure/verification for Skill changes.
+- Preserve whole-repository analysis and Skill abstraction/structure/verification; use the [authoring capability policy](buildos-evolution-and-upstream-feedback.md#authoring-capability-policy) without requiring an unavailable host tool.
 - Do not claim a retrospective without root cause, classification, and resulting constraint.
 - Do not put project paths, customer-private data, secrets, or unpublished business facts in general Skills.
 - Do not use retrospectives in place of version, changelog, release verification, or rollback records.
@@ -160,4 +161,4 @@ Every formal retrospective must:
 - classify the issue as project-specific or general governance;
 - update the best project owner or explain why none changes;
 - decide whether to create/update a Lessons ID; a repeated verified root cause requires governance review within authorization, but a machine gate requires material residual risk;
-- for a general gap, create a cross-project candidate first, then—inside the BuildOS source project—perform whole-repository abstraction, layering, deduplication, and verification, using `$skill-creator` for Skill changes. Project-private facts remain only in the project.
+- for a general gap, create a cross-project candidate first, then—inside the BuildOS source project—perform whole-repository abstraction, layering, deduplication, and verification, using the authoring capability policy above for Skill changes. Project-private facts remain only in the project.

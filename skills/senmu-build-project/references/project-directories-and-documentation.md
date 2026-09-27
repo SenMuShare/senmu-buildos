@@ -66,7 +66,7 @@ For new product projects, create version paths only after the actual version is 
 product/USER_REQUIREMENTS.md
 product/PRODUCT_SPECIFICATION.md
 versions/<version>/PRD.md
-versions/<version>/TECHNICAL_DESIGN.md       # optional
+versions/<version>/TECHNICAL_DESIGN.md       # each formal development version; may be brief
 versions/<version>/TEST_CASES.md             # PRD-derived, risk-proportional
 engineering/SYSTEM_TECHNICAL_SPECIFICATION.md
 ```
@@ -89,4 +89,4 @@ Git excludes real secrets, production data, uploads, runtime databases, caches, 
 
 Private authority projects to public repositories through a one-way allowlist. The public repository is a reproducible release surface, not an editable second owner. Internal tasks, logs, customer data, run state, absolute paths, and private assets never enter it. Regenerate public revisions through the authority lifecycle.
 
-A governed layout must answer authoritative root, owner of each fact, minimum reading for the task, real commands, delivery entrypoint, and recovery entrypoint.
+A governed layout must answer authoritative root, owner of each fact, minimum reading for the task, real commands, delivery entrypoint, and recovery entrypoint. Verify this through [a representative task](task-entry-and-maintenance-economy.md), not a directory-count target.

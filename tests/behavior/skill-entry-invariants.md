@@ -316,3 +316,43 @@ These are source-review/forward-evaluation cases, not measured host recall. Use 
 | Repair a failed release preflight on main | Governed repair unit integrates back into the single candidate root; no direct integration-line edits. |
 | Edit but do not commit | Respect the explicit no-commit boundary; no generic repeated approval for otherwise covered work. |
 | Show Project or Workflow in the skill picker | Short description and default prompt represent current capabilities, without mandatory whole-project processing. |
+
+
+## Minimum-sufficient verification scenarios
+
+These are semantic review cases, not executed model benchmarks or daily mandatory checks. The former wording-only `test_test_first_is_conditional_not_mandatory` asserted prose substrings, not behavior; its intent is retained here. Parser, authorization, source-containment and runtime regressions remain executable.
+
+| Request / evidence | Expected decision |
+| --- | --- |
+| Fix a README typo with no executable meaning change | Relevant content checks, no invented behavior test or full suite solely for the edit. |
+| Change a business prompt inside Markdown | Assess behavior and consumers; the suffix does not classify it as harmless prose. |
+| A reproducible bug is already covered by a failing test | Use the existing regression and affected checks, not a duplicate permanent test. |
+| New stable rule with fast public behavior feedback | Prefer a failing behavior test, then minimum implementation; no internal-structure lock-in. |
+| Explore uncertain UI direction or an algorithm prototype | Validate a small example/prototype first; no compulsory test-first facility. |
+| One-line authorization or persistence change | Verify the actual risk boundary early, not only at batch closeout. |
+| Internal refactor preserves public behavior | Reuse behavior coverage; no snapshots of private names just for change detection. |
+| New session/commit, equivalent relevant source/tests/environment | Reuse available evidence; do not claim an old run executed on the new commit. |
+| Dependencies or test configuration changed | Recheck invalidated/dependent evidence, expanding as required. |
+| Source verified, same candidate enters packaging | Reuse source evidence; verify artifact identity/content independently. |
+| Required evidence complete, no unresolved blocker | Stop verification; no speculative test growth or repeated green runs. |
+| Full suite is fast and focused selection costs more | A relevant suite is acceptable; no universal maximum test count. |
+| Test still running, no new output | Wait appropriately; do not start another instance or repeatedly read full logs. |
+| Zero tests discovered, skipped critical cases or unexplained flakiness | Report the gap/instability, not success; no weakening assertions to pass. |
+| Existing CI contradicts focused-check instructions | Reconcile owning commands within authority; do not append a conflicting slogan. |
+| Governance requested twice without changed facts | Preserve language, commands, exceptions and equivalent principles; no text growth. |
+
+
+## Skill entry and invocation calibration
+
+These are source-review and future live-evaluation inputs, not evidence that a model selected the Skill. When run, record the actual loaded entry, actions, outcome and relevant cost; do not score a keyword match as recall. Keep explicit invocation, implicit intent, contextual variation and a nearby negative control distinct.
+
+| Request | Intended routing and boundary |
+| --- | --- |
+| Use `$senmu-build-project` to reconcile this project's AGENTS.md | Project; preserve existing language and scope, not business prompts. |
+| The existing workflow loses restart state; define a recovery contract | Workflow for the contract; do not start running the workflow. |
+| Correct this business prompt stored in a Python string | Workflow content governance; runtime implementation remains separate. |
+| Review a single screen's interaction direction | Design despite one-page scope; ordinary implementation under an accepted design needs no new design review. |
+| Explain whether a product proposal is worthwhile | Product can provide a decision without manufacturing a PRD or writing files. |
+| Commit these approved local edits under existing project rules | No automatic full Delivery process; use current authority and project entrypoints. |
+| Audit this frozen candidate, with no separate reviewer | Assurance declares evidence-based self-review, not independence implied by its UI label. |
+| Finish an authorized multi-part task across specialist methods | Same executor may continue; a handoff does not mandate a subagent or new approval. |

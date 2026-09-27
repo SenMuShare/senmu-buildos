@@ -4,11 +4,19 @@
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
 import re
 import subprocess
 from pathlib import Path
 from typing import Any
+
+
+_REVIEW_SPEC = importlib.util.spec_from_file_location(
+    "buildos_shared_review_inventory", Path(__file__).with_name("git_review_inventory.py"))
+assert _REVIEW_SPEC and _REVIEW_SPEC.loader
+_review_git = importlib.util.module_from_spec(_REVIEW_SPEC)
+_REVIEW_SPEC.loader.exec_module(_review_git)
 
 
 STATUSES = {"draft", "review_in_progress", "changes_requested", "approved", "superseded"}
@@ -40,6 +48,11 @@ CLOSED_FINDING_STATUSES = {"accepted_risk", "verified_resolved", "false_positive
 SEVERITIES = {"P0", "P1", "P2", "P3"}
 CHECK_STATUSES = {"pending", "passed", "failed", "not_applicable"}
 REVIEW_IDENTITIES = {"not_assessed", "peer", "independent", "evidence_based_self_review"}
+REQUIRED_REVIEW_IDENTITIES = {
+    "self": {"evidence_based_self_review", "peer", "independent"},
+    "peer": {"peer", "independent"},
+    "independent": {"independent"},
+}
 OUTCOMES = {"not_assessed", "changes_requested", "approved", "approved_with_conditions"}
 ID_PATTERN = re.compile(r"^[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+$")
 COMMIT_PATTERN = re.compile(r"^[0-9a-f]{7,64}$")
@@ -192,8 +205,10 @@ def validate_finding(finding: Any, errors: list[str]) -> tuple[str | None, set[s
     return label, {str(item) for item in locations}, str(severity), str(status)
 
 
-def validate_record(record: dict[str, Any]) -> list[str]:
+def validate_record(record: dict[str, Any], *, required_review: str | None = None) -> list[str]:
     errors: list[str] = []
+    if required_review is not None and required_review not in REQUIRED_REVIEW_IDENTITIES:
+        errors.append("required_review must be self, peer or independent")
     required = {
         "schema_version", "review_id", "status", "change", "inventory", "findings",
         "quality_checks", "approval",
@@ -209,6 +224,8 @@ def validate_record(record: dict[str, Any]) -> list[str]:
     if status not in STATUSES:
         errors.append("invalid status")
     approved = status == "approved"
+    if required_review is not None and not approved:
+        errors.append("explicit review gate requires approved status; omit --required-review for structure validation")
 
     change = require_object(record.get("change"), "change", errors)
     inventory = require_object(record.get("inventory"), "inventory", errors)
@@ -415,7 +432,14 @@ def validate_record(record: dict[str, Any]) -> list[str]:
         if outcome not in {"approved", "approved_with_conditions"}:
             errors.append("approved status requires approved outcome")
         exception = approval.get("exception")
-        if change_kind == "code":
+        if required_review is not None:
+            # The trusted merge entrypoint supplies policy; the record cannot relax it.
+            if review_identity not in REQUIRED_REVIEW_IDENTITIES.get(required_review, set()):
+                errors.append(f"approval.review_identity does not meet required review: {required_review}")
+            if review_identity in {"peer", "independent"} and approval.get("author") == approval.get("reviewer"):
+                errors.append("review author and reviewer must differ for peer or independent identity")
+        elif change_kind == "code":
+            # Preserve existing gates until the project explicitly calibrates its caller.
             if review_identity not in {"peer", "independent"}:
                 if not isinstance(exception, dict):
                     errors.append("code merge review requires peer or independent reviewer")
@@ -456,14 +480,41 @@ def git_output(repo: Path, *args: str) -> str:
         check=False,
         capture_output=True,
         text=True,
-    )
+     env=_review_git.git_environment())
     if result.returncode != 0:
         raise RuntimeError(result.stderr.strip() or result.stdout.strip() or "git command failed")
     return result.stdout.strip()
 
 
-def validate_git(record: dict[str, Any], repo: Path, require_current_head: bool) -> list[str]:
+def execution_inventory(record: dict[str, Any], repo: Path, execution_record: Path,
+                        rules_identity: str) -> list[dict[str, Any]]:
+    """Validate declared coverage against the approval target, without granting approval."""
+    source = Path(__file__).resolve().parents[2] / "senmu-build-assurance/scripts/manage_review_execution.py"
+    spec = importlib.util.spec_from_file_location("buildos_gate_execution", source)
+    if spec is None or spec.loader is None:
+        raise ValueError("review execution helper unavailable")
+    runtime = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(runtime)
+    execution = runtime.load(runtime.record_destination(execution_record, repo))
+    snapshot = execution.get("snapshot", {})
+    change = record.get("change", {})
+    if not isinstance(snapshot, dict) or not isinstance(change, dict):
+        raise ValueError("execution or approval target missing")
+    if (snapshot.get("review_base") != change.get("base_commit")
+            or snapshot.get("head") != change.get("head_commit")):
+        raise ValueError("approval target differs from execution snapshot")
+    runtime.validate_record(execution, repo, rules_identity)
+    if not runtime.summary(execution)["execution_complete"]:
+        raise ValueError("execution coverage is empty, pending or failed")
+    return execution["items"]
+
+
+def validate_git(record: dict[str, Any], repo: Path, require_current_head: bool,
+                 *, execution_record: Path | None = None,
+                 rules_identity: str | None = None) -> list[str]:
     errors: list[str] = []
+    if (execution_record is None) != (rules_identity is None) or (rules_identity is not None and not nonempty(rules_identity)):
+        return ["execution coverage requires both an execution record and effective rules identity"]
     change = record.get("change", {})
     base = str(change.get("base_commit") or "")
     head = str(change.get("head_commit") or "")
@@ -475,9 +526,13 @@ def validate_git(record: dict[str, Any], repo: Path, require_current_head: bool)
         errors.append(f"git identity validation failed: {exc}")
         return errors
     try:
-        changed_paths = set(filter(None, git_output(repo, "diff", "--name-only", resolved_base, resolved_head).splitlines()))
-    except RuntimeError as exc:
-        errors.append(f"git diff validation failed: {exc}")
+        items = (execution_inventory(record, repo, execution_record, rules_identity)
+                 if execution_record is not None else _review_git.inventory(repo, resolved_base, resolved_head))
+        changed_paths = {item["path"] for item in items}
+    except (RuntimeError, ValueError, OSError, KeyError, TypeError, IndexError,
+            ImportError, subprocess.TimeoutExpired) as exc:
+        errors.append("execution coverage validation failed: " + type(exc).__name__
+                      if execution_record is not None else f"git diff validation failed: {exc}")
         return errors
     recorded_paths = {
         str(item.get("path")) for item in record.get("inventory", {}).get("files", [])
@@ -503,7 +558,18 @@ def main() -> None:
     parser.add_argument("--record", required=True)
     parser.add_argument("--repo")
     parser.add_argument("--require-current-head", action="store_true")
+    parser.add_argument("--execution-record", type=Path,
+                        help="Adopt captured execution coverage from this retained record; requires --repo and --rules-identity.")
+    parser.add_argument("--rules-identity", help="Expected effective rules/context identity for adopted execution coverage.")
+    parser.add_argument(
+        "--required-review", choices=tuple(REQUIRED_REVIEW_IDENTITIES),
+        help="Require an approved record and this minimum identity; omission validates structure with legacy approval rules.",
+    )
     args = parser.parse_args()
+    if (args.execution_record is None) != (args.rules_identity is None):
+        parser.error("--execution-record and --rules-identity must be supplied together")
+    if args.execution_record is not None and (not args.repo or not nonempty(args.rules_identity)):
+        parser.error("adopted execution coverage requires --repo and a nonempty --rules-identity")
     record_path = Path(args.record).expanduser().resolve()
     try:
         record = json.loads(record_path.read_text(encoding="utf-8"))
@@ -511,11 +577,12 @@ def main() -> None:
         raise SystemExit(f"[ERROR] change review record is unreadable: {exc}")
     if not isinstance(record, dict):
         raise SystemExit("[ERROR] change review record must be a JSON object")
-    errors = validate_record(record)
+    errors = validate_record(record, required_review=args.required_review)
     if args.require_current_head and not args.repo:
         errors.append("--require-current-head requires --repo")
     if args.repo:
-        errors.extend(validate_git(record, Path(args.repo).expanduser().resolve(), args.require_current_head))
+        errors.extend(validate_git(record, Path(args.repo).expanduser().resolve(), args.require_current_head,
+                                   execution_record=args.execution_record, rules_identity=args.rules_identity))
     if errors:
         print("[ERROR] change review record is invalid:")
         for error in errors:
@@ -526,7 +593,8 @@ def main() -> None:
     comments = sum(len(item.get("changed_comments", {}).get("items", [])) for item in files if isinstance(item, dict))
     print(
         "[OK] change review record is valid: "
-        f"status={record.get('status')}, files={len(files)}, units={units}, comments={comments}"
+        f"status={record.get('status')}, files={len(files)}, units={units}, comments={comments}, "
+        f"required_review={args.required_review or 'legacy'}"
     )
 
 

@@ -1,6 +1,6 @@
 ---
 name: senmu-build-workflow
-description: "Defines or improves workflow and business-agent prompts, including image prompts, materials, human-operator-guide, recovery and retention. Excludes routine execution, runtime implementation, root AGENTS and releases."
+description: "Define or improve workflow contracts, operator guides and business-agent prompts, including image prompts, recovery and retention. Not for routine execution, runtime code or project AGENTS.md."
 ---
 
 # Workflow Governance
@@ -9,7 +9,8 @@ Define an executable contract across entrypoints, inputs, state, processing, out
 
 ## Route by Outcome
 
-- Missing cleanup entrypoints, retention conflicts, resource lifecycle, material roles, human guidance, delivery: [Workflow and Deliverables](references/workflow-materials-and-deliverables.md).
+- Missing cleanup entrypoints, retention conflicts, resource lifecycle, material roles or delivery: [Workflow and Deliverables](references/workflow-materials-and-deliverables.md).
+- Unclear human-only steps or secret/approval boundaries: [Human guide](references/workflow-materials-and-deliverables.md#21-human-operator-guide).
 - Run identity, idempotency, step state, recovery, minimum reruns: [Run State](references/workflow-run-state-and-recovery.md).
 - Attachment source, version, reading boundaries: [Reference Attachments](references/reference-attachment-governance.md).
 - Create a business agent/system prompt: [Agent Framework](references/agent-definition-and-system-prompt-framework.md).

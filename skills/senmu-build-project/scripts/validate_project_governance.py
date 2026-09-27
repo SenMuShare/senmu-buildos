@@ -54,6 +54,23 @@ TASK_FILE = re.compile(r"^TASK-\d{4}-[a-z0-9]+(?:-[a-z0-9]+)*\.md$")
 # fields. Strict validation only rejects human-facing Chinese placeholders.
 PLACEHOLDER = re.compile(r"<待确认(?:或不适用)?>|<[^>\n]*[\u4e00-\u9fff][^>\n]*>")
 PROJECT_MAP_REQUIRED_HEADINGS = ("## 责任与入口地图", "## 项目规范索引")
+
+
+def project_map_headings(policy: dict[str, Any] | None = None) -> tuple[str, str]:
+    """One section-role contract for map reading and scaffold validation."""
+    values = (policy or {}).get("project_map_sections")
+    if values is None:
+        return PROJECT_MAP_REQUIRED_HEADINGS
+    if not isinstance(values, dict) or set(values) - {"capabilities", "standards"}:
+        raise ValueError("project_map_sections must map capabilities and standards to headings")
+    headings = tuple(values.get(role, default) for role, default in
+                     zip(("capabilities", "standards"), PROJECT_MAP_REQUIRED_HEADINGS))
+    if any(not isinstance(value, str) or value != value.strip() or
+           not re.fullmatch(r"#{1,6} [^\r\n]{1,200}", value) for value in headings):
+        raise ValueError("project map headings must be bounded single-line Markdown headings")
+    if headings[0] == headings[1] or len(headings[0].split()[0]) != len(headings[1].split()[0]):
+        raise ValueError("project map roles require distinct headings at the same level")
+    return headings
 ABSOLUTE_PRIVATE_PATH = re.compile(
     r"(?:/Users/[A-Za-z0-9._-]+/|/home/[A-Za-z0-9._-]+/|[A-Za-z]:\\Users\\[A-Za-z0-9._-]+\\)"
 )
@@ -127,9 +144,9 @@ def parse_link_destination(content: str) -> str | None:
     return "".join(characters).strip() or None
 
 
-def extract_markdown_link_targets(text: str) -> list[str]:
-    visible = strip_fenced_code_blocks(text)
-    targets: list[str] = []
+def markdown_link_spans(visible: str) -> list[tuple[int, int, str]]:
+    """Return supported inline links with their complete display/destination spans."""
+    targets: list[tuple[int, int, str]] = []
     index = 0
     while index < len(visible):
         opening = visible.find("[", index)
@@ -150,9 +167,25 @@ def extract_markdown_link_targets(text: str) -> list[str]:
             continue
         target = parse_link_destination(visible[cursor + 1 : destination_end])
         if target is not None:
-            targets.append(target)
+            targets.append((opening, destination_end + 1, target))
         index = destination_end + 1
     return targets
+
+
+def extract_markdown_link_targets(text: str) -> list[str]:
+    return [target for _, _, target in markdown_link_spans(strip_fenced_code_blocks(text))]
+
+
+def extract_navigation_targets(text: str) -> tuple[list[str], list[str]]:
+    """Separate real link targets from standalone code; never treat a label as a route."""
+    visible = strip_fenced_code_blocks(text)
+    links = markdown_link_spans(visible)
+    standalone = list(visible)
+    for start, end, _ in links:
+        standalone[start:end] = " " * (end - start)
+    codes = re.findall(r"(?<!`)(`+)(.+?)\1(?!`)", "".join(standalone))
+    return (list(dict.fromkeys(target for _, _, target in links)),
+            list(dict.fromkeys(value for _, value in codes)))
 
 
 def markdown_section(text: str, heading: str) -> str:
@@ -220,9 +253,10 @@ def validate_project_map_index(
     errors: list[str],
     warnings: list[dict[str, str]],
     stats: dict[str, int],
+    headings: tuple[str, str] | None = None,
 ) -> None:
     relative_map = project_map_path.relative_to(root).as_posix()
-    section = markdown_section(text, "## 项目规范索引")
+    section = markdown_section(text, (headings or PROJECT_MAP_REQUIRED_HEADINGS)[1])
     rows = table_rows(section)
     stats["standards_rows"] = len(rows)
     seen_rows: set[tuple[str, ...]] = set()
@@ -253,8 +287,7 @@ def validate_project_map_index(
             continue
         stats["active_standards_rows"] += 1
         target_cell = cells[3]
-        link_targets = extract_markdown_link_targets(target_cell)
-        code_targets = re.findall(r"`([^`]+)`", target_cell)
+        link_targets, code_targets = extract_navigation_targets(target_cell)
         governed_targets: list[tuple[Path, str]] = []
         for target in link_targets:
             governed_targets.append((project_map_path.parent, target))
@@ -680,7 +713,8 @@ def validate(
                     elif "[WARNING]" in result.stdout:
                         for line in result.stdout.splitlines():
                             if line.startswith("[WARNING]"):
-                                print(f"[LESSONS] {line}")
+                                warnings.append(issue("lessons.validator_warning", line.removeprefix("[WARNING]").strip(),
+                                                      str(lessons_raw), "warning"))
 
     task_management = policy.get("task_management")
     requires_task_management = policy.get("profile") in {"standard", "release"}
@@ -740,11 +774,19 @@ def validate(
             errors.append("standard/release 档位必须提供有效 project_map_path")
         else:
             resolved_project_map_path = root / str(project_map_path)
-            project_map_text = resolved_project_map_path.read_text(encoding="utf-8")
-            for heading in PROJECT_MAP_REQUIRED_HEADINGS:
-                if heading not in project_map_text:
+            project_map_text = strip_fenced_code_blocks(resolved_project_map_path.read_text(encoding="utf-8"))
+            try:
+                headings = project_map_headings(policy)
+            except ValueError as exc:
+                errors.append(str(exc))
+                headings = ()
+            lines = [line.strip() for line in project_map_text.splitlines()]
+            for heading in headings:
+                if lines.count(heading) == 0:
                     errors.append(f"Project Map 缺少必要索引区：{heading}")
-            if all(heading in project_map_text for heading in PROJECT_MAP_REQUIRED_HEADINGS):
+                elif lines.count(heading) > 1:
+                    errors.append(f"Project Map 标题重复：{heading}")
+            if headings and all(lines.count(heading) == 1 for heading in headings):
                 validate_project_map_index(
                     root,
                     resolved_project_map_path,
@@ -752,6 +794,7 @@ def validate(
                     errors,
                     warnings,
                     stats,
+                    headings,
                 )
     elif project_map_path is not None:
         errors.append("core 档位的 project_map_path 必须为 null")
