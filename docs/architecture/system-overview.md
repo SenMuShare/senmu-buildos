@@ -4,6 +4,12 @@
 
 Senmu BuildOS 采用“一个插件、八个平级专业 Skill、插件级短通用底线、确定性工具和行为测试”的结构。专业 Skill 按当前任务职责加载，不按组织部门或现有 reference 数量机械拆分。BuildOS 是通用治理系统，每个项目通过选择、映射和演进形成自己的 Project Governance Instance。
 
+## 领域内的工程执行方法
+
+八个专业 Skill 保持平级。Engineering 在现有规范内提供调查、缺陷修复、设计变更和行为保持型重构的直接入口，不另设总调度 Skill，也不要求每个任务经过八个领域。适用任务先理解运行链路和仍有效的设计理由，再确定调用方式、数据与模块边界；具体步骤、例外与证据由原专业规范维护。
+
+正式开发版本保留需求和技术说明。小版本允许简写或使用原文档中职责分明的章节，不为每个局部修改生成文档链。版本文档保存变化及其理由，总规范保存验收后仍有效的当前事实。项目入口保留短原则和可用路径，具体政策见 [产品迭代](../../skills/senmu-build-product/references/product-requirements-and-iteration.md)与 [工程方法](../../skills/senmu-build-engineering/references/source-code-quality-and-ai-collaboration.md#5-ai-implementation-debugging-and-review-loop)。
+
 ## 源码项目、插件包与运行入口
 
 Senmu BuildOS 有一个内部权威 Git 库和一个白名单生成的公开 Git 投影。权威库保存完整源码、项目任务、工作日志和私有验证证据；公开投影只保存用户安装、理解和验证产品所需的源码面。`.codex-plugin/`、全部 Skills、Hooks、公开文档、脚本和测试共同构成一个统一版本的发布单元。Codex 安装后看到的八个 Skill 不是八个独立发布项目；安装或缓存目录也不是源码权威。

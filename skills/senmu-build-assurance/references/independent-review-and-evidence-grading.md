@@ -1,5 +1,7 @@
 # Independent Review and Evidence Grading
 
+**Read by decision:** [Reviewer identity](#1-review-identity) · [Scope](#2-review-charter) · [Evidence](#3-evidence-levels) · [Findings](#5-finding-state-and-priority) · [Conclusions](#7-conclusions).
+
 Use this standard for reviews of code, architecture, governance, workflows, delivery readiness, production facts, or whole projects. It governs scope, evidence, findings, and re-review; it does not authorize remediation, release, deletion, or production changes.
 
 ## 1. Review Identity
@@ -12,7 +14,7 @@ Declare one identity:
 
 Identity describes separation, not competence. If separation is unproven, use self-review. For a formal independent verdict, hand a frozen subject—not a prescribed answer—to another executor.
 
-Routine Product or Engineering consistency checks remain domain self-review. Assurance owns the frozen subject, Coverage Map, evidence, and verdict only when independence is requested, reviewer/implementer separation is required, a cross-domain dispute exists, or a G3-G4 gate explicitly requires independent evidence. Remediation stays with its domain owner.
+Use Assurance for an explicitly requested audit with a frozen subject and evidence-based report, a cross-domain dispute, or a required independent verdict. Ordinary consistency checks remain with the current domain. Audit scope and reviewer identity are separate: the same executor may conduct an audit but must label it evidence-based self-review. Risk level alone does not trigger Assurance or another agent. A required independent verdict still needs demonstrated separation; unavailable reviewers leave that verdict pending. Remediation stays with its domain owner.
 
 ## 2. Review Charter
 

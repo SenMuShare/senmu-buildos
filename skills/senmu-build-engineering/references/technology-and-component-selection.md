@@ -92,7 +92,7 @@ Use a focused POC when a material uncertainty about fit, failure, performance or
 
 Use the same representative scenario and acceptance across candidates. Record variables, failures, measurements, human evaluation, conclusion state, and reconstruction. An experiment conclusion is not production approval.
 
-For uncertainty in algorithms, state machines, business process, or data transformation, prefer a logic prototype: an isolated executable harness exposing inputs, state, transitions, outputs, errors, and two or three representative scenarios for repeatable comparison. Do not add production navigation, visual shells, or real data writes for appearance. Design owns visual/interaction prototypes; Assurance freezes formal reproducible POC objects/evidence.
+For uncertainty in algorithms, state machines, business process, or data transformation, prefer a logic prototype: an isolated executable harness exposing inputs, state, transitions, outputs, errors, and two or three representative scenarios for repeatable comparison. Do not add production navigation, visual shells, or real data writes for appearance. Design owns visual/interaction prototypes; Assurance freezes formal reproducible POC objects/evidence. For a business-state question, adapt the [offline state demo](../assets/logic-prototype/job-state.html): show the question, readable state, free actions, reset and guided normal/invalid/recovery scenarios. Keep the model independent of its display and use fake inputs. Record the chosen contract and unresolved real-system behavior at the existing decision owner; a demo is not acceptance or production code.
 
 ## 8. Project Decision Artifact
 

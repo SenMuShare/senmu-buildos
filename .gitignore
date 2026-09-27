@@ -4,3 +4,4 @@ __pycache__/
 
 # Temporary source checkouts used by integration research
 temporary/research/
+/tests/behavior/claude-evals/results/

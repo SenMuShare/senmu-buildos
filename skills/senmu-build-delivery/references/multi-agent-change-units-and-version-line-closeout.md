@@ -12,7 +12,7 @@ An in-progress handoff needs stable Change Unit ID, next action, and current aut
 
 `sealed` requires completed scope, verification to the stated limit, local commit, and no unit-owned uncommitted source. Dirty work is `in_progress`; releasers never guess it complete, commit unknown files, or include them. Write to an existing Durable Task State Owner rather than adding a ledger. Without a task system, short branch, commit, and concise handoff are the minimum fact chain.
 
-Sealing closes that branch's write window. An open batch accepting requests remains `in_progress`; do not seal after one item. A later repair becomes a new Change Unit explicitly linked to the corrected head.
+Sealing closes that branch's write window. For a requested review, use `manage_change_unit.py review` to capture the exact commit while keeping the batch `in_progress`; complete its related repairs before sealing. A later repair of already sealed work becomes a linked Change Unit. See [Review Repair Routing](#7-review-repair-routing).
 
 ## 2. Select an Execution Surface
 
@@ -57,7 +57,7 @@ Ordinary single-project/single-source work adds no coordinator. Only a formal re
 2. Mark each `include | exclude | blocked`. Include only line-matching sealed units with stable commit, evidence, and traceable scope. Exclude history, POCs, incomplete, superseded, unrelated. Block possibly in-scope dirty, unproven, or unresolved-conflict units.
 3. Integrate by shared foundations, dependencies, and conflicts—not session finish order. Preserve project merge/rebase/cherry-pick policy; otherwise retain traceable ancestry. An equivalent rewrite records source mapping.
 4. Review each frozen `base..head`: actual diff, user behavior, interfaces/data/effects, comments, tests. Low risk may use evidence-based self-review; use independent review only when project rules or G3-G4 require it.
-5. After each integration, run conflict-impact tests. After all inclusion, run full candidate gates in the one clean `release_source_root`. A new commit invalidates old review/candidate; review new diff and affected chains.
+5. After each integration, run conflict-impact tests. After all inclusion, run full candidate gates in the one clean `release_source_root`. A changed commit needs a renewed candidate conclusion over the new diff and affected chains; preserve unaffected review and test evidence, without relabeling old runs as executions on the new commit.
 6. Release Control records `version item/task -> source commit -> tests -> disposition -> integration commit`. Every version item and plausible unit needs disposition; zero local branches does not prove closure.
 
 Once integration begins, select one mutable `release_source_root`: either the target line or a temporary release train, never both. Unrelated branches after cutoff do not invalidate or require exclusion commits. Reopen only for release-root content, frozen scope, or shared production-resource change.
@@ -100,3 +100,17 @@ Prefer the original implementer for a Finding in an open unit. Do not interrupt 
 `resume`/`verify` does not prove writer exit. Require host-confirmed termination/exit or explicit release of write ownership with related background writes stopped. Silence, timeout, clean Git and changed registration are insufficient. If unproven, preserve the surface and continue independent authorized work. No global Agent scheduler is introduced.
 
 Before switching implementation context, preserve pending commitments and write boundaries. Never auto-stash/reset/checkout or move mixed dirt to make room. Escalate repeated unsuccessful repair by narrowing falsifiable evidence or clarifying the contract/capability, not an unbounded retry loop or random reassignment. Shared-layer or urgent incident work may explicitly change responsibility/priority without silently cancelling the original task.
+
+### 7.1 Read-Only Recovery and Review
+
+Inspect by unit ID from the same repository. Review from its registered worktree:
+
+```bash
+python3 skills/senmu-build-delivery/scripts/manage_change_unit.py review \
+  --repo <registered-worktree> --unit <same-id>
+# Repair delta: add --since <exact-previous-review-commit>
+```
+
+`inspect` reports location, head, dirt, identity issues and the lifecycle repair route. It does not restore paths or establish writer exit, authorization or acceptance. Retired closed-unit surfaces need no reconstruction; only authorized open work may resume.
+
+`review` requires a clean, matching open/sealed surface and reports baseline/head/tree and changed paths without writing state, approving or testing. `--since` must be an exact ancestor inside baseline..head. The delta does not prove consumer impact or unchanged test/environment inputs: Engineering owns evidence reuse and required review separation. Renew current-head approval where required; never relabel old tests as new runs or reopen sealed history.

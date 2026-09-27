@@ -1,5 +1,7 @@
 # Source-Level Refactoring and Technology-Stack Upgrades
 
+**Read as needed:** [Classify the Refactor](#1-classify-the-refactor) · [Sources of Truth](#2-sources-of-truth) · [Prohibited Methods](#3-prohibited-methods) · [Migration Matrices](#4-migration-matrices) · [Page Migration Loop](#5-page-migration-loop) · [Frontend Stack Migration](#6-frontend-stack-migration) · [Backend Source-Level Upgrade](#7-backend-source-level-upgrade) · [New Features](#8-new-features) · [Acceptance](#9-acceptance) · [Required Alignment](#10-required-alignment)
+
 Use this standard for restarting delivered legacy systems, modernization, stack upgrades, and admin-console rewrites when documentation, people, or business memory is incomplete; behavior must remain but framework/UI/structure may change; source contains business truth beyond PRD/chat; and hidden pages, dialogs, charts, permission controls, or API details can be missed.
 
 Core rule:

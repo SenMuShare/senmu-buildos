@@ -1,0 +1,8 @@
+[importlinter]
+root_package = sample_app
+
+[importlinter:contract:domain-independent]
+name = Domain stays independent of adapters
+type = forbidden
+source_modules = sample_app.domain
+forbidden_modules = sample_app.adapters

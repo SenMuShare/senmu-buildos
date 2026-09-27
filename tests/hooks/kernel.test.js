@@ -78,8 +78,8 @@ test('plugin hooks use Codex-native plugin paths and bounded context', () => {
   const subagent = codexHooksConfig.hooks.SubagentStart[0].hooks[0];
   const sessionContext = getSessionContext();
   const subagentContext = getSubagentContext();
-  assert.match(session.command, /\$\{PLUGIN_ROOT\}/);
-  assert.match(subagent.command, /\$\{PLUGIN_ROOT\}/);
+  assert.match(session.command, /process\.env\.PLUGIN_ROOT/);
+  assert.match(subagent.command, /process\.env\.PLUGIN_ROOT/);
   assert.ok(session.additionalContextLimit > 0);
   assert.ok(subagent.additionalContextLimit > 0);
   assert.ok(subagent.additionalContextLimit < session.additionalContextLimit);
@@ -104,12 +104,11 @@ test('Claude Code adapter is isolated and does not inspect user prompts', () => 
 test('shared plugin hooks resolve the plugin root across runtimes', () => {
   const session = codexHooksConfig.hooks.SessionStart[0].hooks[0];
   const subagent = codexHooksConfig.hooks.SubagentStart[0].hooks[0];
-  // The dispatch command must keep the Codex-native textual token and the
-  // ZCode/Claude Code environment variables, filtering unexpanded literals.
-  assert.match(session.command, /\$\{PLUGIN_ROOT\}/);
+  // Read host-provided paths as data; never interpolate them into executable code.
+  assert.match(session.command, /process\.env\.PLUGIN_ROOT/);
   assert.match(session.command, /process\.env\.CLAUDE_PLUGIN_ROOT/);
   assert.match(session.command, /process\.env\.ZCODE_PLUGIN_ROOT/);
-  assert.match(session.command, /charCodeAt\(0\)!==36/);
+  assert.doesNotMatch(session.command, /\$\{(?:PLUGIN_ROOT|CLAUDE_PLUGIN_ROOT|ZCODE_PLUGIN_ROOT)\}/);
   assert.match(session.command, /hooks\/session-start\.js/);
   assert.match(subagent.command, /hooks\/subagent-start\.js/);
   // No matcher so every runtime's SessionStart sources are covered.

@@ -15,29 +15,22 @@ def read(relative: str) -> str:
 
 
 class OperationRecipeContractTest(unittest.TestCase):
-    def test_debugging_and_review_have_observable_structure(self):
+    def test_debugging_and_review_routes_reach_unique_sections(self):
+        # Headings and anchor targets are navigation contracts. Ordinary prose
+        # is reviewed with behavior cases, not frozen as mandatory substrings.
         source = read(
             "skills/senmu-build-engineering/references/source-code-quality-and-ai-collaboration.md"
         )
-        for phrase in ("short, stable failing loop", "rank hypotheses", "Change one observation/variable at a time", "remove debug logs"):
-            self.assertIn(phrase, source)
-        for axis in ("Requirement/Spec", "Engineering/Standards"):
-            self.assertIn(axis, source)
-        self.assertIn("A Finding names axis", source)
-
-    def test_test_first_is_conditional_not_mandatory(self):
-        engineering_entry = read("skills/senmu-build-engineering/SKILL.md")
-        testing = read(
-            "skills/senmu-build-engineering/references/software-testing-and-quality-verification.md"
-        )
-        self.assertIn("Not for routine implementation", engineering_entry)
-        self.assertIn("visual design", engineering_entry)
-        self.assertIn("under review", engineering_entry)
-        self.assertIn("implementation review", read("skills/senmu-build-product/SKILL.md"))
-        self.assertIn("prototype validation", read("skills/senmu-build-design/SKILL.md"))
-        self.assertIn("When behavior is expressible before implementation", testing)
-        self.assertIn("Do not force test-first", testing)
-        self.assertIn("not an approval ritual", testing)
+        headings = [line[4:] for line in source.splitlines() if line.startswith("### ")]
+        for heading, anchor in (
+            ("Fault Debugging", "#fault-debugging"),
+            ("Implementer and Reviewer Responsibilities", "#implementer-and-reviewer-responsibilities"),
+        ):
+            self.assertEqual(headings.count(heading), 1)
+            self.assertIn(f"]({anchor})", source)
+        debugging = source.split("### Fault Debugging\n", 1)[1].split("\n### ", 1)[0]
+        self.assertTrue(debugging.strip())
+        self.assertIn("| Fault debugging |", source)
 
     def test_project_planning_keeps_vertical_value_and_honest_unknowns(self):
         tasks = read(

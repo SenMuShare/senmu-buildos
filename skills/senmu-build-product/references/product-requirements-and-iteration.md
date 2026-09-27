@@ -8,7 +8,7 @@ This standard governs how product documents are created, transitioned, frozen, a
 Optional user requirements
     -> owner assigns a version
 Version PRD
-    -> optional technical design
+    -> version technical design
     -> risk-based test cases
     -> current user-document walkthrough when usage contracts change
     -> development and acceptance
@@ -20,12 +20,12 @@ Current product specification
 | --- | --- | --- | --- |
 | `product/USER_REQUIREMENTS.md` | optional | durable ideas/feedback with adjacent status and target version | `USER_REQUIREMENTS.template.md` |
 | `versions/<version>/PRD.md` | version enters development | version goals, changes, behavior, acceptance | `PRD.template.md` |
-| `versions/<version>/TECHNICAL_DESIGN.md` | durable implementation decisions need explanation | how the version is implemented | `TECHNICAL_DESIGN.template.md` |
+| `versions/<version>/TECHNICAL_DESIGN.md` | every formal version entering development | how and why this version is implemented, including unchanged design carried forward | `TECHNICAL_DESIGN.template.md` |
 | `versions/<version>/TEST_CASES.md` | version-level test design must persist | risk-matched cases derived from PRD | `TEST_CASES.template.md` |
 | `product/PRODUCT_SPECIFICATION.md` | durable whole-product view is needed | complete current product facts | `PRODUCT_SPECIFICATION.template.md` |
 | `engineering/SYSTEM_TECHNICAL_SPECIFICATION.md` | long-lived code needs a durable system view | complete current technical facts | `SYSTEM_TECHNICAL_SPECIFICATION.template.md` |
 
-Map existing documents or external systems to these roles; never create a second truth set.
+Map existing documents or external systems to these roles; never create a second truth set. Every formal development version has identifiable requirements and a technical account. Existing combined version documents may carry both as distinct sections. Small versions state the approved change, inherited design, affected implementation and verification briefly; they do not omit the technical account or expand empty headings. An ordinary task updates its existing version, not a new document set. Unversioned exploration does not acquire a formal version merely to satisfy this rule.
 
 Get Started guides, tutorials, manuals, and CLI/SDK/API references remain with the project's documentation owner. When installation, configuration, public calls, or operating paths change, Product records the affected contract, acceptance entrypoint, and current official documentation location in the PRD without copying its text or creating a documentation site for a project with no durable user entrypoint.
 
@@ -55,6 +55,8 @@ Do not repeat questions or await separate approval when owners and context suffi
 
 When overloaded terms or inconsistent names would change behavior, permissions, billing, state or acceptance, resolve the concept against existing decisions and a concrete boundary scenario. For example, distinguish retrying the same intent from starting a new potentially billable intent when that distinction matters; do not invent the project's answer. Retrieve discoverable facts yourself and ask only for a material unresolved choice, with a recommendation and consequence. Group independently answerable questions rather than exhausting future branches. Record adopted meaning in the existing product/terminology owner within write authority, then reuse it in technical mappings. Do not create a new CONTEXT file, ADR or glossary service for each term, re-ask settled choices, or turn observed code into permission to change approved intent.
 
+When a term needs clarification, keep its canonical name, short meaning, easily confused alternative and one boundary example together at that existing owner. For example, distinguish submission from verified completion and same-intent retry from a new request; the project's approved contract determines the actual semantics. A settled glossary entry is reused, not re-interviewed. At intake, distinguish already implemented, rejected, deferred and awaiting evidence; retain the reason and revisit condition rather than treating every closed item as forbidden work.
+
 Assign implementation-ready work from product facts to the current open version, successor version, or uncommitted backlog. Add it to an open version when goal, acceptance, and delivery timing align. Ask only when placement would change scope/timing and cannot be inferred. Future unimplemented work records version intent without creating a code branch.
 
 Follow project version policy and approved change, not version numbers alone. Fixes, compatible features, and incompatible changes may suggest patch/minor/major candidates; retain product roles such as current patch batch, later feature version, or successor until scope stabilizes.
@@ -69,7 +71,7 @@ Each version in development has one PRD that removes material ambiguity for Prod
 
 Maintain one version requirement/defect list in the PRD or equivalent owner, not one per item, agent, or branch. Each entry needs type, target/acceptance, result state, and implementation/verification evidence or disposition. Use project states, or concise states distinguishing pending, analyzed, implementing, implemented-unverified, verified, and excluded. Execution steps remain in the task owner.
 
-A field, copy, or local behavior change may need only version, change, and acceptance. By default expand template areas for actual workflow, state, permission, billing, data, compliance, or release-unit risk. A fix that restores the current specification changes code/tests, not the PRD.
+A field, copy, or local behavior change may need only version, change, and acceptance. By default expand template areas for actual workflow, state, permission, billing, data, compliance, or release-unit risk. A fix that restores the current specification does not rewrite approved product behavior. Track it in the existing version requirement/defect record and keep its implementation and verification account in the version technical design.
 
 Resolve the object and intent of cancellation from the request and existing product decisions. Cancelling unimplemented work removes that work from the plan; stopping a run follows its cancellation contract; explicitly retiring an existing capability removes its executable entrypoints under the approved retirement scope. Do not infer permanent capability removal from the word cancel alone. Record replacement behavior and required historical-data, compliance, compatibility or rollback boundaries. Retirement of code never by itself authorizes destroying business data, audit records or recovery evidence.
 
@@ -77,7 +79,7 @@ Resolve the object and intent of cancellation from the request and existing prod
 
 The PRD is product input, not technical design or execution state:
 
-- Engineering creates `TECHNICAL_DESIGN.template.md` only when implementation decisions need durable explanation.
+- Engineering maintains the version technical design using `TECHNICAL_DESIGN.template.md` or its existing equivalent. Explain unchanged design by reference; record new decisions and their reasons before implementing the affected boundary.
 - Engineering creates `TEST_CASES.template.md` only when version-level tests must persist, matching PRD structure and risk.
 - The project's Durable Task State Owner stores decomposition and progress.
 
@@ -91,7 +93,7 @@ Implementation completion, passing tests, product acceptance, and release are fo
 
 ## 5. Reconcile Current Specifications
 
-After acceptance, record authority, candidate, and evidence; freeze the version PRD and any technical design/test cases, then:
+After acceptance, record authority, candidate, and evidence; freeze the version PRD, technical design and any test cases, then:
 
 - merge effective behavior into the relevant `PRODUCT_SPECIFICATION.md` section and remove superseded logic;
 - merge durable technical changes into `SYSTEM_TECHNICAL_SPECIFICATION.md` and remove superseded facts;
@@ -108,7 +110,7 @@ For new projects, these paths are default responsibility mappings, not mandatory
 product/USER_REQUIREMENTS.md              # optional
 product/PRODUCT_SPECIFICATION.md          # current product facts
 versions/<version>/PRD.md                 # current development version
-versions/<version>/TECHNICAL_DESIGN.md    # optional
+versions/<version>/TECHNICAL_DESIGN.md    # each formal development version; concise when unchanged
 versions/<version>/TEST_CASES.md          # optional, derived from PRD
 engineering/SYSTEM_TECHNICAL_SPECIFICATION.md # current technical facts
 ```

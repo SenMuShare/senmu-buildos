@@ -8,6 +8,7 @@ import hashlib
 import json
 import os
 import re
+import stat
 from collections import defaultdict
 from pathlib import Path
 from typing import Any
@@ -321,10 +322,84 @@ def assess_capability_signals(paths: list[Path], root: Path) -> dict[str, Any]:
     }
 
 
+def instruction_import_candidates(text: str) -> list[str]:
+    """Collect common Markdown @path candidates, never load their targets."""
+    visible = []
+    fence = ""
+    for line in text.splitlines(keepends=True):
+        marker = re.match(r"^ {0,3}(`{3,}|~{3,})(.*)$", line)
+        if fence:
+            if marker and marker[1][0] == fence[0] and len(marker[1]) >= len(fence) and not marker[2].strip():
+                fence = ""
+            visible.append("\n")
+        elif marker:
+            fence = marker[1]
+            visible.append("\n")
+        elif line.startswith(("    ", "\t")):
+            visible.append("\n")
+        else:
+            visible.append(line)
+    # Match equal-length inline delimiters, including spans across newlines.
+    prose = re.sub(r"(?<!`)(`+)(?!`)(.*?)(?<!`)\1(?!`)", " ", "".join(visible), flags=re.S)
+    candidates = re.findall(r"(?<![\w@\\])@([^\s`<>\"'(){}\[\],;]+)", prose)
+    return list(dict.fromkeys(value.rstrip(".:!?。") for value in candidates if value.rstrip(".:!?。")))
+
+
+def instruction_file_target(path: Path, root: Path) -> tuple[Path | None, str, str]:
+    """Resolve only in-root components; never stat an external link target.
+
+    This is a read-only inventory under a stable workspace, not a race-proof
+    sandbox or an implementation of a host's instruction-loading policy.
+    """
+    pending = list(path.relative_to(root).parts)
+    current = root
+    seen: set[Path] = set()
+    linked = False
+    while pending:
+        component = pending.pop(0)
+        if component == "..":
+            if current == root:
+                return None, "outside_root_not_read", "not_read"
+            current = current.parent
+            continue
+        current = current / component
+        try:
+            info = current.lstat()
+            if stat.S_ISLNK(info.st_mode):
+                linked = True
+                if current in seen or len(seen) >= 40:
+                    return None, "cycle_or_limit", "not_read"
+                seen.add(current)
+                target = Path(os.readlink(current))
+                if target.is_absolute():
+                    try:
+                        relative = target.relative_to(root)
+                    except ValueError:
+                        return None, "outside_root_not_read", "not_read"
+                    pending = list(relative.parts) + pending
+                    current = root
+                else:
+                    # Preserve .. until preceding links have been resolved.
+                    pending = list(target.parts) + pending
+                    current = current.parent
+            elif pending and not stat.S_ISDIR(info.st_mode):
+                return None, "broken" if linked else "not_a_link", "not_regular_file"
+            elif not pending and not stat.S_ISREG(info.st_mode):
+                return None, "inside_root" if linked else "not_a_link", "not_regular_file"
+        except FileNotFoundError:
+            return None, "broken" if linked else "not_a_link", "missing"
+        except (OSError, ValueError):
+            return None, "unresolved" if linked else "not_a_link", "unreadable"
+    try:
+        if not stat.S_ISREG(current.lstat().st_mode):
+            return None, "inside_root" if linked else "not_a_link", "not_regular_file"
+    except OSError:
+        return None, "unresolved" if linked else "not_a_link", "unreadable"
+    return current, "inside_root" if linked else "not_a_link", "readable"
+
+
 def instruction_metadata(path: Path, root: Path) -> dict[str, Any] | None:
     """Discover instruction candidates; host selection and imported scopes remain unverified."""
-    if path.is_symlink():
-        return None
     relative = path.relative_to(root)
     parts = relative.parts
     is_claude_rule = any(parts[i:i + 2] == (".claude", "rules") for i in range(len(parts) - 1)) and path.suffix == ".md"
@@ -339,16 +414,19 @@ def instruction_metadata(path: Path, root: Path) -> dict[str, Any] | None:
         "kind": "scoped_rule" if is_claude_rule else "override" if path.name == "AGENTS.override.md" else "instructions",
         "host": host, "load_status": "not_verified",
     }
+    target, link_status, read_status = instruction_file_target(path, root)
+    result.update(link_status=link_status, read_status=read_status)
+    if target is None:
+        return result
     try:
-        data = path.read_bytes()
+        data = target.read_bytes()
     except OSError:
         result["read_status"] = "unreadable"
         return result
     result["sha256"] = hashlib.sha256(data).hexdigest()
-    result["read_status"] = "readable"
-    # A locator is not an instruction-loader implementation. Do not follow imports
-    # outside the assessed root or evaluate path-glob precedence here.
-    result["import_candidates"] = re.findall(r"(?m)^\s*@([^\s]+)\s*$", data.decode("utf-8", errors="replace"))
+    result["import_parse_status"] = "candidates_only"
+    # No recursive imports, external reads, or claims about host precedence.
+    result["import_candidates"] = instruction_import_candidates(data.decode("utf-8", errors="replace"))
     return result
 
 
@@ -375,6 +453,11 @@ def assess(root: Path, max_depth: int, verbose: bool) -> dict[str, Any]:
                 continue
             relative = (current_path / dirname).relative_to(root).as_posix() + "/"
             reason = exclusion_reason(dirname)
+            if (current_path / dirname).is_symlink():
+                excluded["symlink_directory_not_followed"].append(relative)
+                if dirname in {"AGENTS.md", "AGENTS.override.md", "CLAUDE.md", "CLAUDE.local.md"}:
+                    scanned_files.append(current_path / dirname)
+                continue
             if reason:
                 excluded[reason].append(relative)
             elif depth < max_depth:
@@ -405,7 +488,7 @@ def assess(root: Path, max_depth: int, verbose: bool) -> dict[str, Any]:
         entrypoints = [
             path.relative_to(root).as_posix()
             for path in (unit_root / name for name in ("AGENTS.md", "README.md", "CLAUDE.md", "CLAUDE.local.md", ".claude/CLAUDE.md", ".claude/AGENTS.md"))
-            if path.is_file() and not path.is_symlink()
+            if path in scanned_files
         ]
         quality = [
             (unit_root / name).relative_to(root).as_posix()
@@ -531,7 +614,8 @@ def assess(root: Path, max_depth: int, verbose: bool) -> dict[str, Any]:
         "candidate_mappings": {role: compact(items) for role, items in sorted(candidates.items())},
         "capability_assessment": assess_capability_signals(scanned_files, root),
         "instruction_layering_review": {
-            "status": "semantic_review_required" if agent_entrypoints else "no_agents_entrypoint_found",
+            "status": ("semantic_review_required" if agent_entrypoints else "instruction_scope_not_scanned"
+                       if depth_limited or excluded.get("symlink_directory_not_followed") else "no_agents_entrypoint_found"),
             "entrypoints": agent_entrypoints,
             "inventory": instruction_inventory,
             "coverage": {
@@ -540,18 +624,24 @@ def assess(root: Path, max_depth: int, verbose: bool) -> dict[str, Any]:
                 "external_ancestor_and_host_instructions": "not_scanned",
                 "host_configuration_and_effective_loading": "not_verified",
                 "import_targets_and_rule_globs": "not_evaluated",
+                "symlink_targets": "in_root_files_only_external_targets_not_read",
+                "symlink_directories": "not_followed_see_excluded_evidence",
+                "import_syntax": "common_markdown_candidates_not_a_host_parser",
+                "concurrent_writers": "not_isolated",
                 "registered_worktrees": "assess_selected_active_root_separately",
                 "selection": "candidate_scopes_require_host_and_authority_confirmation",
             },
             "baseline": "senmu-buildos_if_adopted",
-            "required_actions": [
-                "retain_project_fact_command_path_or_explicit_override",
-                "compress_project_specific_body_to_canonical_owner_route",
-                "remove_buildos_duplicate",
-                "replace_unconditional_cross_domain_preload_with_signal_routing",
-                "remove_generic_skill_catalog_from_project_delta",
-                "reconcile_from_current_authority_then_escalate_unresolved_material_choice",
+            "required_actions": [],
+            "review_dimensions": [
+                "preserve_effective_principles_commands_and_exceptions",
+                "confirm_adoption_authority_and_actual_loading",
+                "check_duplication_and_reachable_replacement_without_losing_meaning",
+                "check_unconditional_preloads_against_task_applicability",
+                "identify_only_evidenced_changes_within_write_authority",
             ],
+            "change_recommendations": [],
+            "decision_rule": "Inventory alone establishes no deletion, compression or rewrite. Confirm semantic evidence, a usable owner and write authority before proposing a change; unchanged effective rules remain unchanged.",
             "write_default_agents_template": False,
             "runtime_validation": {
                 "status": "required_before_routing_claim",

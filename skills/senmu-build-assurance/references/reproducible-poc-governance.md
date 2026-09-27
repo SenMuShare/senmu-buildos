@@ -1,6 +1,8 @@
 # Reproducible POC Governance
 
-Use this standard when a prototype, model comparison, technology trial, performance test, algorithm tuning run, or experience comparison must support a decision. A POC must remain challengeable, reviewable, extendable, and reproducible instead of ending as a chat impression.
+**Read as needed:** [Applicability](#1-when-it-applies) · [Storage](#3-project-storage-contract) · [Experiment](#4-experiment-package) · [Comparisons](#7-human-blind-evaluation) · [Conclusions](#8-conclusion-states) · [Retention](#9-deletion-and-reproduction).
+
+Use for decision-supporting prototypes and comparisons. Keep POCs challengeable, reviewable, extendable and reproducible, not just chat impressions.
 
 ## 1. When It Applies
 
@@ -13,7 +15,7 @@ Use it when any of these is true:
 - the run is long or dependency-heavy and may need reproduction;
 - the project owner requests a durable ledger of reasoning, runs, and conclusions.
 
-Match evidence depth to the decision and risk. Lightweight exploration may use one short report in an existing experiment/task owner instead of a fixed document kit; comparative claims still need recorded variables, inputs and evidence. Do not invent repeated runs or a statistical test for a simple connectivity demo. Paid use and production effects retain their applicable controls.
+Match evidence to decision and risk. Lightweight exploration may use one existing report with variables, inputs and evidence. A connectivity demo needs no invented repetitions or statistical test. Preserve cost and production controls.
 
 ## 2. Gates and Guidance
 

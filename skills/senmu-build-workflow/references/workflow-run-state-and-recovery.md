@@ -1,5 +1,7 @@
 # Workflow Run State and Recovery
 
+**Read as needed:** [Separate Three Facts](#1-separate-three-facts) · [Run Identity and Input Snapshot](#2-run-identity-and-input-snapshot) · [State Model](#3-state-model) · [Transitions](#4-transitions) · [Recovery Decision](#5-recovery-decision) · [Minimum Run Manifest](#6-minimum-run-manifest) · [Multi-Agent and Harness Boundary](#7-multi-agent-and-harness-boundary) · [Closeout](#8-closeout)
+
 Use this protocol for multi-step, retryable, interruptible, cross-agent, or side-effecting workflows. It defines how one run is identified, recorded, verified, and recovered; it does not replace project task management, release ledgers, or conversation history.
 
 ## 1. Separate Three Facts

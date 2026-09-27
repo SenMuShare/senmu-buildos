@@ -39,7 +39,7 @@ Skip full discovery when an ordinary task can already find clear rules from proj
 7. After write authority, update the original domain owner. Select the closest existing document/configuration only when no owner exists; do not default to a new directory.
 8. Add a short index route. Never present an unconfirmed candidate as mandatory.
 
-For established `AGENTS.md`, retain approved project facts, actual commands, authority routes, concise adopted constraints and explicit overrides. Compress a rule to a route when its complete owner remains available to ordinary execution. Remove a duplicate body only after preserving its authoritative meaning and a usable consumer path; matching BuildOS wording does not cancel an adopted project contract. Reconcile stale/conflicting content from current owners and authorized superseding decisions. Ask only for an unresolved material choice. Never cover an existing entrypoint with a fresh BuildOS template or create a parallel instruction file.
+Preserve approved facts, commands, exceptions and scoped overrides in existing AGENTS. Replace a duplicate body with a route only when the full owner and adopted meaning remain reachable in ordinary work. Generic wording does not cancel adoption. Resolve conflicts from current owners and authorized decisions; ask only about material missing choices. Never overwrite established instructions with a template or create a parallel file.
 
 Engineering owns code-evidence discovery; each specialist decides its domain rules.
 
@@ -47,7 +47,7 @@ Engineering owns code-evidence discovery; each specialist decides its domain rul
 
 Reuse the project's existing navigation. `governance/PROJECT_MAP.md` is the standard/release default; a core project may use a short README or equivalent. Index capabilities and owning modules, not every file or function. Ordinary new files inherit a known module's ownership. Large modules may link existing local documentation; do not create a second catalog or require every task to read the full map.
 
-For each capability in the declared governance scope, make these facts discoverable: a recognizable purpose and owner; the real implementation entrypoint; the applicable rule/contract; and the relevant verification entrypoint. Retain state-source and delivery-unit boundaries where applicable. Reuse an existing check or documented observation; mark missing or unverified facts honestly. Planned modules have no verified implementation yet. Source/configuration shows observed behavior, while approved contracts define the target.
+For each governed capability, expose its purpose, owner, real implementation, applicable contract and verification entrypoint. Retain relevant state and delivery boundaries. Link effective design reasons through the same contract route without copying history. Reuse existing checks; mark missing or unverified facts. Planned modules have no verified implementation. Code shows behavior, not requirement authority.
 
 Navigation adoption also checks that ordinary execution can reach a sufficient engineering baseline for the selected stack and affected risks. Use the existing CODE_QUALITY, technical owner, framework configuration, representative implementation and verification entrypoint; repair a missing or contradictory local constraint within governance authority. A list of installed Skills or a link to unrelated guidance is not that baseline. Keep only useful adopted project constraints and conditional routes, not a copy of every language profile or a mandatory per-module checklist.
 
@@ -56,6 +56,8 @@ Build routes from current code and project owners during initialization or autho
 The implementer maintains affected navigation in the same authorized change when module responsibility, public/implementation entrypoint, contract location or verification entrypoint changes. If none changes, leave navigation alone. Update the actual owner before its route. Existing review checks the affected route against the receiving worktree and baseline; no new supervisor, per-edit form or whole-map gate is required. If write authority excludes the needed navigation update, report that specific remaining action.
 
 Keep standards-index entries distinct from full rules: domain, trigger, one-sentence decision summary, authoritative path, status and relevant calibration identity/date. Use project-root-relative code paths or map-relative Markdown links. Preserve meaningful paths and roles; do not copy source code, whole tool configurations or dynamic task state into the map. Generated symbol indexes are disposable retrieval aids, not approved project policy, and must be refreshed for the current worktree when stale.
+
+Use [Task Entry](task-entry-and-maintenance-economy.md) for selective lookup and real route verification, not claimed adoption or savings.
 
 Several triggers may share an owner; merge identical rows. Validators prove declared reachability, boundaries and structure, not semantic correctness, freshness or complete project coverage. Keep structural defects as errors and duplicate/unverified entries as warnings under the existing output contract. A script does not create a CI gate.
 
@@ -77,7 +79,7 @@ Audit effective nested AGENTS/overrides and active worktree entrypoints, not jus
 
 Distinguish preparation, semantic route validation and actual model behavior. Links and validators establish structural preparation. Following a capability route through current code, the applicable contract and the relevant check establishes a scoped semantic observation. Neither alone proves that a new session loads it automatically or that Token use falls.
 
-For a navigation/source correction, inspect the ordinary local task, relevant specialist boundary and release/rollback exception as applicable to the changed scope. Use current host loading behavior and actual generated entrypoints; do not require a paid A/B competition or new session experiment merely to finish bounded source work. Preserve separately approved safety and release checks.
+Review changed navigation against ordinary work, specialist boundaries and relevant release/recovery exceptions. Follow understanding/design routes to real requirements, effective reasons, code and a matching check. Include a local non-trigger and a changed historical condition that permits reconsideration. Inspect actual generated entrypoints and host semantics. Bounded source work needs no paid A/B test; retain approved safety and release checks.
 
 If actual session behavior or a reduction is claimed, obtain corresponding observations under available authority and disclose the compared scope, loaded sources and limits. Missing runtime access leaves that claim unverified; it is not permission to fabricate evidence or to reopen every unrelated document.
 
@@ -103,7 +105,7 @@ History belongs in Git; do not create AGENTS.new/old/v2/optimized/backup files o
 
 Reconcile affected instructions in place: remove stale dynamic state, route to its owner, preserve business constraints and explicit overrides, and eliminate conflicting test/permission defaults in referenced policies as well as AGENTS. For an upgrade with no relevant instruction changes, record no migration needed; never rewrite every project to match a template. During merge/promotion, review instruction diffs against the receiving baseline so an older branch cannot silently restore retired rules.
 
-Use one model-neutral contract for scope, autonomy, reuse, and evidence across supported models. Keep model-specific runtime settings in the host adapter; official prompt examples are tunable guidance, not an instruction to copy every example into every project. Record source/installed revision, affected owners, verification and unresolved behavior in the existing task/log. Do not create a second governance ledger, mandatory nightly job, or universal CI gate. Review the affected routing scenarios under section 6; distinguish source/route verification from any still-unverified fresh-session behavior.
+Use one model-neutral contract; keep model settings in host adapters. Official prompt examples are guidance, not mandatory project text. Record source/installed revisions, affected owners, checks and unresolved behavior in the existing task. Review affected routing under section 6 without a second ledger, nightly job or universal gate. Source checks do not prove fresh-session behavior.
 
 <a id="dual-track-instruction-authoring"></a>
 ### Dual-Track Instruction Authoring
@@ -121,4 +123,4 @@ Project repairs routing and ownership; it does not require every specialist to a
 | Design | Project theme/token entrypoint, representative composition, affected viewport/state expectations | Correct token use and good rendered UI are separate claims |
 | Delivery | Receiving baseline, open batch, candidate identity, reusable verification and release boundary | Instruction changes survive integration; local checks do not invent deployment facts |
 
-For the scoped governance outcome, follow a real project entrypoint to its implementation, current contract and relevant check; execute only available checks within authority. Record the exact observation and remaining uncertainty in the existing task. Hypothetical scenarios support semantic review, not a claim of executed model behavior. Comparative reading, testing, time or cost claims need comparable observations. Do not create a per-action scorecard, universal routing experiment or second ledger.
+Follow the affected entrypoint to real code, its current contract and a relevant check. Run only authorized available checks and record observations and gaps in the existing task. Hypothetical scenarios support source review, not executed model behavior. Comparative cost or performance claims need comparable observations; add no second ledger or universal routing experiment.

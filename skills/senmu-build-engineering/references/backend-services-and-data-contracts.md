@@ -6,7 +6,7 @@ Use this standard when server-side contracts for APIs, domain services, data, tr
 
 Start from the affected request, event, job, interface or failing check and its applicable contract. Expand to callers, schemas, migrations, authorization, configuration or logs when evidence or the declared scope requires them, not as a mandatory reading list. Identify which domain owner may change the relevant facts and which systems only read, derive, cache or deliver them; known location does not exempt a relevant safety or consistency boundary.
 
-API and event contracts define inputs, outputs, errors, authorization, compatibility, idempotency, timeouts, and observable results. Validate untrusted input and authorize at the real trust boundary. Hidden UI, disabled buttons, and caller conventions do not replace server protection.
+API and event contracts define inputs, outputs, errors, authorization, compatibility, idempotency, timeouts, and observable results. Validate untrusted input and authorize at the real trust boundary. Hidden UI, disabled buttons, and caller conventions do not replace server protection. For untrusted inputs, public services or paid jobs, apply [Application Security](application-security-and-abuse.md) at the relevant implementation boundary before release; do not wait for a separate security request.
 
 ## 2. Consistency and Side Effects
 

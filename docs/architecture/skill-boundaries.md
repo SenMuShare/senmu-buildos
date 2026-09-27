@@ -28,7 +28,7 @@ Project Governance（项目治理），负责单项放置建议、空白项目�
 
 ## `senmu-build-assurance`
 
-负责证据化的实验、冻结对象审查、债务盘点和争议性因果核验，输出证据等级、覆盖、发现和结论。每次审查必须声明 `independent`、`peer` 或 `evidence-based self-review` 身份；无法证明职责分离时不得称独立审查。普通一致性自查仍由 Product／Engineering 自己完成，只有明确要求证据化结论、跨域争议或 G3-G4 正式审查时才由 Assurance 主责。治理实例的 owner／目录／状态映射与演进仍由 `senmu-build-project` 负责。默认只读；同一请求已授权整改时，完成 Findings 后转对应专业 Owner 连续实施；否则不应用审查中发现的修复，也不直接拥有经验台账或通用规则晋级。
+负责证据化的实验、冻结对象审查、债务盘点和争议性因果核验，输出证据等级、覆盖、发现和结论。每次审查必须声明 `independent`、`peer` 或 `evidence-based self-review` 身份；无法证明职责分离时不得称独立审查。普通一致性自查仍由原专业领域完成；明确要求冻结对象并形成证据报告的审计、跨域争议或必须独立裁决的任务由 Assurance 主责。审计范围与审查者身份分开判断，同一执行者可以审计但必须标为有证据的自审；风险等级本身不触发 Assurance 或增加 Agent。治理实例的 owner／目录／状态映射与演进仍由 `senmu-build-project` 负责。默认只读；同一请求已授权整改时，完成 Findings 后转对应专业 Owner 连续实施；否则不应用审查中发现的修复，也不直接拥有经验台账或通用规则晋级。
 
 ## `senmu-build-learning`
 
@@ -65,6 +65,8 @@ Project Governance（项目治理），负责单项放置建议、空白项目�
 ## 选择与交接机制
 
 Senmu BuildOS 不设置第九个“总导演”Skill，也不要求 Agent 先读取总索引再决定路由。Codex 先根据八个平级 Skill 的 `description` 和用户期望结果选择主 Skill；用户也可以显式指定。`SKILL.md` 正文只在对应 Skill 已被选择后，按需指向本域 reference 和跨域交接对象。
+
+Skill 是可读取的方法，不是必须启动的另一个 Agent。职责切换可由同一执行者继续完成；只有存在独立工作、可用工具、授权和实际收益时才委派，不因 Handoff 字样强制开新会话或子 Agent。
 
 Handoff 不是固定流水线，也不是把整个上下文交给下一个 Skill。发生真实职责切换时，当前主 Skill 只传递最小任务包：任务／需求／run／finding／release 标识、当前阶段、范围与非目标、权威入口、已确认事实与证据、未决问题、下一项预期结果，以及仍然有效的授权边界。接收方成为下一结果的主责；原 Skill 只继续拥有自己的专业事实。
 

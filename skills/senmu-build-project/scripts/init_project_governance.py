@@ -474,6 +474,8 @@ def main() -> None:
     classification = dict(CLASSIFICATION_DEFAULTS[args.project_type])
     release_channels = list(dict.fromkeys(args.release_channel))
     artifact_kinds = list(dict.fromkeys(args.artifact_kind))
+    adoption_checks = (["verify_representative_capability_route", "confirm_stack_and_shared_capability_owner"] if "code" in selected_module_set else []) + (["establish_actual_exposure_and_security_evidence"] if set(release_channels) & {"managed_service", "container_image"} else [])
+    adoption_record_owner = "governance/tasks/TASK_REGISTER.md" if has_standard_owners else "README.md"
     if args.lifecycle_intent:
         classification["lifecycle_intent"] = args.lifecycle_intent
     if args.delivery_model:
@@ -654,10 +656,13 @@ def main() -> None:
                 "statuses": ["planned", "active", "blocked", "verifying", "completed", "cancelled", "archived"],
             } if has_standard_owners else None,
             "project_map_path": "governance/PROJECT_MAP.md" if args.profile in {"standard", "release"} else None,
+            "project_map_sections": None,  # Legacy defaults; set role headings explicitly when localizing.
             "validator": "python3 .senmu-buildos/validate.py --root .",
             "strict_validator": "python3 .senmu-buildos/validate.py --root . --strict",
             "release_units": [],
             "quality_commands": {},
+            "adoption_checks": adoption_checks,
+            "adoption_record_owner": adoption_record_owner,
             "product_management": {
                 "user_requirements_path": "product/USER_REQUIREMENTS.md",
                 "product_specification_path": "product/PRODUCT_SPECIFICATION.md",
@@ -709,9 +714,9 @@ def main() -> None:
     if args.commit_baseline and not args.dry_run:
         baseline_commit = create_baseline_commit(root, managed_paths)
 
-    print(json.dumps({"mode": args.mode, "workspace_root": str(workspace_root), "root": str(root), "layout": layout, "project_type": args.project_type, "classification": classification, "publication_model": args.publication_model, "release_channels": release_channels, "artifact_kinds": artifact_kinds, "profile": args.profile, "selected_modules": selected_modules, "planned": planned, "generated": generated, "skipped": skipped, "baseline_commit": baseline_commit}, ensure_ascii=False, indent=2))
+    print(json.dumps({"mode": args.mode, "workspace_root": str(workspace_root), "root": str(root), "layout": layout, "project_type": args.project_type, "classification": classification, "publication_model": args.publication_model, "release_channels": release_channels, "artifact_kinds": artifact_kinds, "profile": args.profile, "selected_modules": selected_modules, "planned": planned, "generated": generated, "skipped": skipped, "baseline_commit": baseline_commit, "adoption_status": "unverified", "adoption_checks": adoption_checks, "adoption_record_owner": adoption_record_owner}, ensure_ascii=False, indent=2))
     if not args.dry_run:
-        print("[NEXT] 先校准占位字段，再将 .senmu-buildos/config.json 的 initialization_status 改为 active 并运行 --strict。")
+        print("[NEXT] 校准占位字段并运行 --strict；active 只表示结构已校准。按配置中的 adoption_checks 验证实际路线，将已采用、无需变更和未完成项记录到 adoption_record_owner；结构通过不代表治理、安全或宿主加载已验证。")
 
 
 if __name__ == "__main__":

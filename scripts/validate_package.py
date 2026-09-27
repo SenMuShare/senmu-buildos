@@ -25,6 +25,18 @@ EXPECTED_SKILLS = {
 }
 
 REFERENCE_OWNERS = {
+    "application-security-and-abuse.md": "senmu-build-engineering",
+    "security/public-service-security-baseline.md": "senmu-build-delivery",
+    "stack-and-file-role-guidance.md": "senmu-build-engineering",
+    "stack-profiles/c-cpp-engineering-profile.md": "senmu-build-engineering",
+    "stack-profiles/dependency-and-ci-review.md": "senmu-build-engineering",
+    "stack-profiles/javascript-node-engineering-profile.md": "senmu-build-engineering",
+    "stack-profiles/kotlin-engineering-profile.md": "senmu-build-engineering",
+    "stack-profiles/php-engineering-profile.md": "senmu-build-engineering",
+    "stack-profiles/rust-engineering-profile.md": "senmu-build-engineering",
+    "stack-profiles/schema-and-migration-review.md": "senmu-build-engineering",
+    "stack-profiles/swift-engineering-profile.md": "senmu-build-engineering",
+    "task-entry-and-maintenance-economy.md": "senmu-build-project",
     "project-lifecycle-guide.md": "senmu-build-project",
     "task-execution-and-state-management.md": "senmu-build-project",
     "governance-levels-and-gates.md": "senmu-build-project",
@@ -55,10 +67,12 @@ REFERENCE_OWNERS = {
     "image-model-profiles/qwen-image.md": "senmu-build-workflow",
     "release-authorization-and-production-truth.md": "senmu-build-delivery",
     "independent-review-and-evidence-grading.md": "senmu-build-assurance",
+    "frozen-review-execution.md": "senmu-build-assurance",
     "technology-and-component-selection.md": "senmu-build-engineering",
     "implementation-economy-and-overengineering.md": "senmu-build-engineering",
     "architecture-constraints-and-technical-debt.md": "senmu-build-engineering",
     "source-code-quality-and-ai-collaboration.md": "senmu-build-engineering",
+    "conditioned-code-review.md": "senmu-build-engineering",
     "software-testing-and-quality-verification.md": "senmu-build-engineering",
     "frontend-engineering-contracts-and-validation.md": "senmu-build-engineering",
     "backend-services-and-data-contracts.md": "senmu-build-engineering",
@@ -100,7 +114,7 @@ MAX_SKILL_ENTRY_CHARS = 3_600
 MAX_SKILL_DESCRIPTION_CHARS = 400
 MAX_DESCRIPTION_CATALOG_CHARS = 2_400
 MAX_REFERENCE_CHARS = 19_000
-MAX_PROJECT_AGENTS_TEMPLATE_CHARS = 2_300
+PROJECT_AGENTS_REVIEW_CHARS = 2_300  # Editorial signal, not a runtime limit.
 MAX_SKILL_ENTRY_CONTEXT_UNITS = 1_050
 MAX_SKILL_DESCRIPTION_CONTEXT_UNITS = 90
 MAX_DESCRIPTION_CATALOG_CONTEXT_UNITS = 425
@@ -138,24 +152,38 @@ def is_valid_reference_path(relative: str) -> bool:
     return REFERENCE_PATH_PATTERN.fullmatch(relative) is not None
 
 
-def parse_skill_name(text: str) -> str:
+def parse_required_skill_scalar(text: str, field: str) -> str:
+    """Read BuildOS's simple single-line fields; not a general YAML parser."""
     match = re.match(r"^---\n([\s\S]*?)\n---\n", text)
     if not match:
         fail("SKILL.md missing YAML frontmatter")
-    name_match = re.search(r"^name:\s*([^\n]+)$", match.group(1), re.MULTILINE)
-    if not name_match:
-        fail("SKILL.md frontmatter missing name")
-    return name_match.group(1).strip().strip('"\'')
+    values = re.findall(rf"^{re.escape(field)}:[ \t]*([^\r\n]*)$", match.group(1), re.MULTILINE)
+    if len(values) != 1:
+        fail(f"SKILL.md frontmatter needs exactly one {field}")
+    value = values[0].strip()
+    if value.startswith(('"', "'")):
+        if len(value) < 2 or value[-1] != value[0]:
+            fail(f"SKILL.md frontmatter has an unterminated {field}")
+        if value[0] == '"':
+            try:
+                value = json.loads(value)
+            except json.JSONDecodeError:
+                fail(f"SKILL.md {field} must use valid quoted text")
+        else:
+            value = value[1:-1].replace("''", "'")
+    elif value in {"null", "Null", "NULL", "~", "true", "false", "True", "False"} or value.startswith(("#", "|", ">", "[", "{", "&", "*", "!")):
+        fail(f"SKILL.md {field} must be a nonempty single-line string")
+    if not value.strip():
+        fail(f"SKILL.md frontmatter has an empty {field}")
+    return value.strip()
+
+
+def parse_skill_name(text: str) -> str:
+    return parse_required_skill_scalar(text, "name")
 
 
 def parse_skill_description(text: str) -> str:
-    match = re.match(r"^---\n([\s\S]*?)\n---\n", text)
-    if not match:
-        fail("SKILL.md missing YAML frontmatter")
-    description_match = re.search(r"^description:\s*(.+)$", match.group(1), re.MULTILINE)
-    if not description_match:
-        fail("SKILL.md frontmatter missing description")
-    return description_match.group(1).strip().strip('"\'')
+    return parse_required_skill_scalar(text, "description")
 
 
 def reference_graph(skill_root: Path, references: list[Path]) -> dict[Path, set[Path]]:
@@ -165,8 +193,8 @@ def reference_graph(skill_root: Path, references: list[Path]) -> dict[Path, set[
     graph = {path: set() for path in (entry, *resolved_references)}
     for source in graph:
         text = source.read_text(encoding="utf-8")
-        for raw_target in re.findall(r"\[[^\]]+\]\(([^)]+)\)", text):
-            target = raw_target.split("#", 1)[0].strip()
+        for raw_target in extract_markdown_link_targets(text):
+            target = unquote(raw_target.split("#", 1)[0].split("?", 1)[0]).strip()
             if not target or "://" in target or target.startswith("mailto:"):
                 continue
             resolved = (source.parent / target).resolve()
@@ -273,8 +301,14 @@ def validate_plugins() -> None:
         fail(f"unexpected lifecycle hooks: {sorted(registered)}")
     if claude_manifest.get("name") != "senmu-buildos":
         fail("Claude Code plugin name must be senmu-buildos")
-    if claude_manifest.get("hooks") != "./adapters/claude-code/hooks/hooks.json":
-        fail("Claude Code plugin must route to its isolated Hook adapter")
+    if "hooks" in claude_manifest:
+        fail("Claude Code merges default Hooks; do not register the shared Kernel twice")
+    for event in expected_hooks:
+        handlers = [hook for group in hooks["hooks"][event] for hook in group.get("hooks", [])]
+        if len(handlers) != 1:
+            fail(f"{event} must have one shared packaged lifecycle handler")
+        if "CLAUDE_PLUGIN_ROOT" not in handlers[0].get("command", ""):
+            fail("Shared Hooks must retain Claude plugin-root resolution")
     claude_registered = set(claude_hooks.get("hooks", {}))
     if claude_registered != expected_hooks:
         fail(f"unexpected Claude Code lifecycle hooks: {sorted(claude_registered)}")
@@ -716,27 +750,30 @@ def validate_local_markdown_links() -> None:
 def validate_project_instruction_layer() -> None:
     template = ROOT / "skills/senmu-build-project/assets/project-governance-starter/AGENTS.template.md"
     text = template.read_text(encoding="utf-8")
-    if len(text) > MAX_PROJECT_AGENTS_TEMPLATE_CHARS:
-        fail(
-            "project AGENTS template exceeds delta-layer budget: "
-            f"{len(text)} > {MAX_PROJECT_AGENTS_TEMPLATE_CHARS} characters"
+    if len(text) > PROJECT_AGENTS_REVIEW_CHARS:
+        print(
+            "[REVIEW] project AGENTS starter is "
+            f"{len(text)} characters (editorial baseline {PROJECT_AGENTS_REVIEW_CHARS}); "
+            "review combined load, duplication and decision coverage. This is not a host limit."
         )
-    for legacy_heading in ("## 稳定规则", "## 完成输出", "## Stable Rules", "## Completion Output"):
-        if legacy_heading in text:
-            fail(f"project AGENTS template still carries copied governance section: {legacy_heading}")
-    peer_skill_catalog = EXPECTED_SKILLS - {"senmu-build-project"}
-    copied_skill_names = sorted(skill for skill in peer_skill_catalog if skill in text)
+    # Enforce the renderer's real contract, not particular human wording.
+    variables = {"PROJECT_NAME", "PROJECT_TYPE", "PROJECT_ROOT", "NAVIGATION_ENTRY", "POC_ENTRY"}
+    unknown = set(re.findall(r"\{\{([^{}\r\n]+)\}\}", text)) - variables
+    if unknown:
+        fail(f"project AGENTS starter has unknown renderer placeholders: {sorted(unknown)}")
+    for variable in sorted(variables):
+        placeholder = "{{" + variable + "}}"
+        if text.count(placeholder) != 1:
+            fail(f"project AGENTS starter needs one renderer placeholder: {placeholder}")
+    opening, closing = "<!-- engineering-only:start -->", "<!-- engineering-only:end -->"
+    if text.count(opening) != 1 or text.count(closing) != 1:
+        fail("project AGENTS starter needs one paired software-scope block")
+    start, end = text.index(opening), text.index(closing)
+    if start >= end or not text[start + len(opening):end].strip():
+        fail("project AGENTS software-scope block is reversed or empty")
+    copied_skill_names = sorted(skill for skill in EXPECTED_SKILLS - {"senmu-build-project"} if skill in text)
     if copied_skill_names:
-        fail(f"project AGENTS template copies the peer Skill catalog: {copied_skill_names}")
-    # The delta layer must still reject unconditional document preloads and copied
-    # BuildOS method text. Assert the current wording that carries those rules; the
-    # peer-Skill catalog check above is the structural half of the same invariant.
-    for required in ("not whole documents or Skills", "Keep full methods in BuildOS"):
-        if required not in text:
-            fail(
-                "project AGENTS template must reject unconditional document preloads "
-                f"and copied BuildOS method text: {required}"
-            )
+        fail(f"project AGENTS starter copies the peer Skill catalog: {copied_skill_names}")
     legacy_template = ROOT / "skills/senmu-build-engineering/assets/code-quality/AGENTS.template.md"
     if legacy_template.exists():
         fail("Engineering must not own a second project AGENTS template")
@@ -780,7 +817,7 @@ def main() -> None:
     print("[OK] no duplicated long instruction paragraphs found across active Skills")
     print("[OK] behavior invariant identifiers are unique")
     print("[OK] active local Markdown links resolve")
-    print(f"[OK] project AGENTS delta layer <= {MAX_PROJECT_AGENTS_TEMPLATE_CHARS} characters and has one template owner")
+    print("[OK] project AGENTS rendering markers, placeholders and single template owner are valid; meaning needs review")
     print("[OK] public package validation is independent from private project-state owners")
 
 

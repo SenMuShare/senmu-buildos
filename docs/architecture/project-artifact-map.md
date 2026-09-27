@@ -38,7 +38,7 @@
 | 工作流契约 | Workflow Contract | `workflows/<workflow-id>/WORKFLOW.md` 或项目既有定义入口 |
 | 运行清单 | Run Manifest | `state/runs/<run-id>.json`、运行数据库或编排系统 |
 | 运行回执 | Run Receipt | `evidence/runs/<run-id>/` 或项目既有证据系统 |
-| 版本技术设计 | Technical Design | `versions/<version>/TECHNICAL_DESIGN.md`；按需 |
+| 版本技术设计 | Technical Design | `versions/<version>/TECHNICAL_DESIGN.md`；每个正式开发版本，可简写 |
 | 版本测试用例 | Test Cases | `versions/<version>/TEST_CASES.md`；依据 PRD，深度按风险 |
 | 架构决策 | Architecture Decision Record | `engineering/decisions/ADR-<NNNN>-<slug>.md` |
 | 系统技术规格书 | System Technical Specification | `engineering/SYSTEM_TECHNICAL_SPECIFICATION.md`；当前完整技术事实 |
@@ -66,7 +66,7 @@
 | `senmu-build-product` | 可选用户需求、每版本 PRD、当前产品规格、跨页面界面内容标准和产品验收事实 | `product/`、项目既有设计系统与 `versions/<version>/PRD.md`；不为文案另建平行台账 | 技术实现决定、部署事实、任务执行状态副本 |
 | `senmu-build-design` | 视觉方向、设计 Token、组件表现、布局、响应式、交互、动效、可访问性和界面评审决定 | 项目已有设计系统、组件主题、原型入口或按需 `design/`；一次性调整留在现有实现 owner | 产品功能／文案、组件库 API、技术架构、独立审查结论或平行设计系统 |
 | `senmu-build-workflow` | 流程契约、项目 Agent 定义、schema/config、输入、工作区、运行状态、交付物、证据和归档 | 项目系统内 `workflows/`；启用时使用 `agents/`；物料型项目外部角色目录由 Project Map 映射 | 软件架构正文、版本发布计划、第二份任务登记表或根 `AGENTS.md` 的复制件 |
-| `senmu-build-engineering` | 当前系统技术规格、按需版本技术设计、测试用例、选型、代码质量、技术债、ADR、语言／框架规则和测试策略 | `engineering/`、`versions/<version>/`；测试代码与 fixtures 位于项目既有 `tests/` 或语言生态目录 | 产品优先级、发布批准、独立审查结论 |
+| `senmu-build-engineering` | 当前系统技术规格、各正式开发版本的技术设计、测试用例、选型、代码质量、技术债、ADR、语言／框架规则和测试策略 | `engineering/`、`versions/<version>/`；测试代码与 fixtures 位于项目既有 `tests/` 或语言生态目录 | 产品优先级、发布批准、独立审查结论 |
 | `senmu-build-delivery` | 分支与合并、发布单元、版本、changelog、制品、部署、回滚、线上验证 | `delivery/`、`operations/`、各发布单元及适用的发布证据 owner | 需求正文、工程设计副本、未发生的发布状态 |
 | `senmu-build-assurance` | POC 账本、实验 manifest、独立审查报告和可复查证据 | `experiments/`、`engineering/audits/`、适用的 `evidence/reviews/` | 未获授权的修复、第二份工程规范、经验台账或任务状态 |
 | `senmu-build-learning` | 复盘、经验与防回退条目、经验索引、状态和替代关系 | standard/release 默认 `governance/lessons/LESSONS_LEARNED.md`；core 按需晋级，成熟项目映射既有知识 owner | 工作日志副本、专业规则正文、未验证猜测或应用项目之外的自动修改 |
@@ -112,7 +112,7 @@ Durable Task State Owner             当前边界、阶段、进度、证据链�
 ├── design/...                       跨页面视觉、交互与设计系统事实（如项目需要）
 ├── workflows/...                    流程、运行和物料事实
 ├── agents/<agent-key>/AGENT.md       项目 Agent／Prompt 的稳定契约（如启用）
-├── versions/<version>/TECHNICAL_DESIGN.md  按需版本技术设计
+├── versions/<version>/TECHNICAL_DESIGN.md  各正式开发版本的技术设计
 ├── versions/<version>/TEST_CASES.md 依据 PRD 的版本测试用例
 ├── engineering/SYSTEM_TECHNICAL_SPECIFICATION.md 当前完整技术事实
 ├── engineering/decisions/ADR-...    长期架构取舍

@@ -1,0 +1,743 @@
+# Changelog
+
+## Unreleased
+
+## [2.20.5] - 2026-09-24
+
+### Fixed
+
+- Share Change Unit identity and ancestry checks across preparation, recovery, verification, review and closeout; reject ambiguous legacy IDs, foreign worktree paths and diverged baselines without rewriting records.
+- Bound default unit listings with counts, registration-anomaly samples and explicit pagination/filtering. Preserve the unfiltered schema-v1 contract through `list --format full` and migrate existing test consumers.
+- Retain legitimate missing-worktree recovery, frozen-source reception after surface retirement, dirty-work protection and independent business-acceptance boundaries.
+
+## [2.20.4] - 2026-09-24
+
+### Fixed
+
+- Enforce repository-scoped Change Unit ID uniqueness before creating branches or worktrees. Exact retries preserve the existing binding; conflicting names, paths, target bindings and reused closed IDs fail without creating a sibling.
+- Serialize preparation's check-and-create operation across linked worktrees with a nonblocking OS file lock. Keep ordinary development unlocked and retain legacy duplicate records for explicit reconciliation.
+- Add regression coverage for sequential and concurrent duplicates, exact retry, preserved uncommitted work, legacy ambiguity, failed preparation and process-exit lock recovery.
+
+## [2.20.3] - 2026-09-23
+
+### Fixed
+
+- Make fixed review commits distinct from batch sealing across Delivery entrypoints, branch templates and repair guidance; open-batch repairs retain their unit and required review protections.
+- Add read-only per-unit inspection and review-scope commands to the existing Change Unit tool. Resolve registered surfaces without reconstruction, and report exact repair deltas without approval or test-reuse claims.
+- Align development, batch and integrated-candidate verification timing; retain affected-consumer, environment and high-risk checks instead of restarting full reviews on every commit.
+- Exercise open review/repair and identity failures in real temporary Git repositories; extend synthetic model scenarios without claiming native-agent results.
+
+## [2.20.2] - 2026-09-23
+
+### Fixed
+
+- Require an approved review when a project invokes an explicit review gate; retain standalone draft structure validation and all approval blockers.
+- Verify Change Unit reception against its frozen source and receiving Git tree, rejecting unrelated or partial receipts while supporting clean merges and rewritten commit ranges.
+- Keep sealed intake pending until verified closeout; expose ancestry only as a hint, and retain sealed state when equivalence cannot be established.
+
+## [2.20.1] - 2026-09-22
+
+### Fixed
+
+- Align explicit audit routing across Assurance, domain guidance and project templates without conflating audit scope with reviewer independence.
+- Let adopted merge gates pass their approved review requirement to the change-review validator; record exceptions cannot bypass explicit separation. Preserve legacy restrictions when callers are not calibrated.
+- Limit governance-map reads and governance validators to affected scope or declared project requirements; keep design-only requests separate from implementation.
+- Remove redundant starter wording and duplicate README summaries; add direct navigation in long references while retaining eight peer Skills and all context budgets.
+
+## [2.20.0] - 2026-09-22
+
+### Changed
+
+- Make investigation, defect repair, caller-first design and behavior-preserving refactoring directly reachable within the existing Engineering owner; retain eight peer Skills and the local fast path.
+- Turn runtime understanding and design history into effective constraints, rejected alternatives and explicit unknowns before changing a system.
+- Keep requirements and a technical account for every formal development version. Allow brief records and equivalent combined owners without creating documents per edit.
+- Align architecture, templates, project instruction authoring and generated AGENTS guidance with caller usage, conditional design comparison and evidence-backed impact analysis.
+- Improve real verification recipes and lesson retrieval without new runtime dependencies, fixed agent counts, universal gates or automatic project migration.
+
+### Fixed
+
+- Remove conflicting optional-version-design guidance and synchronize current specifications, project routes and trilingual product explanations.
+- Preserve important comment rationale and valid behavioral assertions instead of deleting them by stylistic or assertion-name rules.
+- Replace one obsolete template-prose assertion with a check that the initializer installs the authoritative technical template; add explicit source-review scenarios without claiming live model results.
+
+## [2.19.1] - 2026-09-21
+
+### Changed
+
+- Clarify the existing authorized-completion principle: reconcile results with current requirements and accepted corrections, then complete necessary in-scope omissions without restoring cancelled work or adding goals.
+- Refine the existing mid-task steering review scenario; preserve all eight principles, proportional verification and governance behavior without new rules or workflows.
+
+## [2.19.0] - 2026-09-21
+
+### Changed
+
+- Align Skill descriptions and invocation prompts with specific outcomes and scope; preserve the eight public names and optional specialist loading.
+- Make optional design references directly reachable and add targeted section navigation for dense instructions.
+- Require a new unified version for each completed product-change delivery, including instruction/documentation changes, while keeping intermediate candidates and release authorization separate.
+
+### Fixed
+
+- Reject empty or duplicate required metadata rather than consuming the next field; do not count fenced reference examples as active routes.
+- Reject unknown project-starter variables before they leak into generated instructions; retain rendering, permission and scope safeguards.
+- Remove automatic artifact creation and implied independent-review claims from default invocation metadata.
+
+## [2.18.0] - 2026-09-21
+
+### Changed
+
+- Consolidate cross-project working principles into outcome alignment, evidence-led judgment, constrained cause repair, suitable reuse, preservation, outcome verification, authorized completion and learning.
+- Retain verification and reuse for non-code projects; keep software implementation and test details conditional and specialist-owned.
+- Align project governance with request mode, material uncertainty, informed tradeoffs and semantic no-op adoption, without another workflow or Skill.
+
+### Fixed
+
+- Clarify that root repair does not authorize a rewrite and bounded repair can be appropriate outside emergencies; disclose meaningful remaining limits.
+- Replace incidental prose/length gates with real template rendering and scope checks. Keep editorial footprint review distinct from host limits and safety controls.
+
+## [2.17.0] - 2026-09-21
+
+### Changed
+
+- Adopt minimum-sufficient verification in software-project instructions: reuse coverage, select checks by impact, retain high-risk checks and stop on sufficient evidence.
+- Reconcile verification guidance with project commands and CI during authorized governance; preserve language, exceptions and business-agent boundaries.
+- Separate test authoring, execution, reruns and waiting in existing Engineering guidance; Delivery reuses valid source evidence without losing artifact obligations.
+
+### Fixed
+
+- Move one prose-substring-only test to semantic evaluation scenarios instead of freezing incidental wording; preserve executable correctness and safety coverage.
+- Align documentation and candidate/release verification responsibilities without promising measured model or token gains.
+
+## [2.16.0] - 2026-09-20
+
+### Changed
+
+- Require README impact review for each GitHub-bound change, synchronizing affected Chinese, English and Japanese content while preserving unchanged sections and reusing the existing PR/task record.
+- Prepare the authorized 2.16.0 documentation and release-maintenance version; existing runtime Skills, Hooks, adapters, validators and tests are unchanged.
+
+### Fixed
+
+- Replace router-only AGENTS explanations and incomplete Project/Workflow capability rows with the already-supported working-principle and business-agent governance behavior.
+- Document the native version preparer's full metadata scope and distinguish source version from channel availability and local installation.
+
+
+## [2.15.0] - 2026-09-20
+
+### Fixed
+
+- Distinguish explicit unfinished agent-template slots from legal XML/HTML and runtime variables, including fenced examples.
+- Reconcile every unfenced Agent Key, Version and Status declaration; reject conflicts and empty values while accepting identical legacy aliases.
+- Align Engineering, Product, Design and Workflow entry boundaries and current picker/default-prompt metadata without forcing routine tasks through Skills.
+- Clarify authorized commits and repair-unit integration into one release root; expose conditional model references and short navigation in long references.
+
+### Changed
+
+- New business-agent starters use explicit BUILDOS_TODO authoring slots while retaining named legacy slot checks and localized structures.
+
+## [2.14.0] - 2026-09-20
+
+### Changed
+
+- Consolidate project working principles around independent judgment, evidence, source prevention, suitable reuse, clear code, protected work and proportionate delivery.
+- Distinguish goals, proposed means and assumptions; scrutinize the agent's assumptions too, explain material tradeoffs and respect informed choices without reflexive opposition.
+- Improve the correct execution path before adding gates, while preserving necessary controls and authorized urgent containment.
+
+### Fixed
+
+- Carry previously scattered core principles into project instruction adoption without adding a mandatory critique ceremony, duplicate manuals or business-agent behavior changes.
+- Preserve project language, approved exceptions and no-op repeated governance; package the already-integrated source improvements as a distinct 2.14.0 release.
+
+## [2.13.0] - 2026-09-20
+
+### Added
+
+- Business-agent content governance preserving approved business semantics, effective prompt assembly, I/O, model settings and authorization.
+- Conditional image-agent authoring guidance and current-source GPT Image 2/2.5 and hosted Qwen-Image 2.0/3.0 profiles.
+- English business-agent starter and language-neutral section labels with backwards-compatible structural validation.
+
+### Fixed
+
+- Project-level agent content review no longer stops at filenames or silently substitutes templates.
+- Root instruction governance, business-agent definition and actual model execution remain separate; source checks do not claim better generated output.
+
+## [2.12.0] - 2026-09-20
+
+### Added
+
+- Project instruction adoption now has two explicit outcomes: reconcile existing effective instructions and adopt concise shared working principles without requiring project uniqueness.
+- English AGENTS starters carry actionable default agreements; the initializer omits software-only principles for non-code modules. Adopting agents calibrate real facts and localize the draft before claiming completion.
+- Added structural/draft regressions and behavioral scenarios for language precedence, existing exceptions, audit-only authority, equivalent clauses and repeated governance without growth.
+
+### Changed
+
+- Existing instruction files keep their language unless explicitly changed; new files follow project collaboration language, then request language, then English fallback. Preserve modal strength, paths, commands and intentional multilingual structures without default bilingual duplication.
+- Authorized instruction optimization repairs original files and necessary consumers instead of ending at an audit verdict. Plugin updates do not rewrite project instances, expand Kernel injection or claim measured token savings.
+
+## [2.11.0] - 2026-09-20
+
+### Added
+
+- Opt-in project POC registration connects the existing AI entrypoint to experiment storage, protected worktrees, tracking and retention. A core project uses a short contract; established native owners remain authoritative.
+- Read-only project validation reports unconfigured POCs, missing or overlapping locations and incorrect Git tracking without creating experiments, evaluating results or cleaning resources.
+
+### Fixed
+
+- Align POC templates with registered storage and conclusion states; retain per-variant evidence, plan changes, failed runs, selection/rejection rationale, dates and reproduction limits.
+- Keep retained reports, necessary engine patches and representative media separate from disposable bulk groups. Archiving a conclusion does not claim resource cleanup or production approval.
+- Distinguish read-only audits from authorized isolated experiment writes. Preserve the already-integrated scoped execution recovery and subagent snapshot identity corrections.
+- Existing project records are not overwritten or migrated merely to adopt the new contract; legacy manifest locators remain readable historical data.
+
+## [2.10.0] - 2026-09-19
+
+### Added
+
+- Host-aware project instruction inventory covers Claude entries, scoped rules and import locators while keeping effective loading explicitly unverified. Add an on-demand Claude compatibility guide without a second rule body.
+- Feedback queries distinguish first-decision intake from follow-up work and can link new decisions to their existing issue/task. Preserve original candidates and decisions.
+
+### Fixed
+
+- Release cleanup separates planned, disabled, no-candidate, completed and failed results; validates full inventories before deletion, identifies the actual Docker engine, and preserves rollback, pins, repository metadata and shared/container references.
+- Release templates require actual driver wiring and per-resource receipts, not merely generated scripts. Plans and logical removals no longer claim measured disk reclamation.
+- Read-only subagents return findings rather than inheriting an unconditional commit obligation.
+- Author-side public delivery verifies complete candidate trees, resumes existing PR/tag stages, preserves unpushed work and rejects draft releases or stale validation evidence.
+
+
+## [2.9.0] - 2026-09-18
+
+### Changed
+
+- Separate the distributable product from author-private state. Product files are independently testable; selected feedback becomes source improvements without shipping raw records.
+- Resolve maintenance paths from workspace configuration and identify a source subtree with its actual repository commit and tree. Publication uses an explicit independent checkout rather than a permanent duplicate source directory.
+
+### Fixed
+
+- Keep installation, source identity and public-release evidence distinct after workspace relocation; preserve existing safety and recovery checks.
+- Ensure spaced-user-path test fixtures do not embed a blocked literal in the public source, and use the same path coverage during standalone public checks.
+- Resolve the WorkBuddy skills directory from the data root that actually exists instead of hardcoding the pre-rename `.workbuddy` name, and report the resolved path. Installing into a root the running app does not enumerate reported success while the skills were never loaded.
+- Keep the public-surface check effective after the product/maintainer split: treat `maintainer/` as a forbidden owner in a distributable tree and recognize the maintenance policy file as a private-root marker. Both checks had silently stopped matching the current layout.
+
+## [2.8.1] - 2026-09-18
+
+### Fixed
+
+- Build internal installation payloads from an explicit runtime allowlist instead of copying private tasks, evidence, frozen Skills and project configuration. Reject selected symlinks and private user paths; preserve the previous managed snapshot and leave unknown destinations untouched.
+- Align six UI short descriptions with the authoring bounds without changing Skill trigger descriptions. Reconcile scoped project constraints, Engineering fast-path documentation and Delivery sealed-parent exceptions.
+- Start frontend/backend investigation from the affected entrypoint and expand on evidence instead of reading a universal checklist.
+- Correct governance-validator interface attribution, stale task status and context-size estimates. Heuristic limits are not model Token measurements.
+
+### Maintenance
+
+- Private GitHub is the daily source-maintenance location; installation and public publication remain separate. The private workspace runs the existing package, Python, lifecycle-fixture and Hook checks.
+- This source version does not assert public release, local activation, native Trash recovery or measured model performance.
+
+## [2.8.0] - 2026-09-17
+
+### Added
+
+- Added a capability-level project navigation contract: every governed capability routes to its real implementation entrypoint, applicable rule/contract and verification entrypoint. Generated maps stay drafts until calibrated against real code, and planned capabilities are not reported as implemented routes.
+- Added claim-matched verification for BuildOS source corrections: a concrete component defect may enter the existing candidate path with one project's counterexample or fixture, without a universal A/B, multi-model or proof-of-cure prerequisite.
+- Added explicit async-lifecycle, transaction-ownership, unknown-outcome and recovery-failure rules for client rendering, external effects and rollback/compensation.
+- Added truthful-progress governance: an authorized remediation may legitimately have no changes yet, pending or failed verification stays visible, and resource disposition may be retained under existing policy without inventing a new approver.
+
+### Changed
+
+- Replaced renewed-approval wording with scoped existing authority across Project, Delivery, Learning and Engineering; workflow state now describes progress and evidence without granting or revoking permission.
+- Narrowed over-broad rules: per-dependency cards, Python data-model and ABC guidance, absolute retention/deletion bans, React client-side purity, and repetition-driven governance escalation.
+- Clarified that removing duplicated prose must preserve an adopted project contract and a usable consumer path, and that framework-specific reusable technique is not automatically project-only.
+- Aligned generated project entrypoints with the artifact each profile actually produces, and limited ordinary execution to the navigation it needs.
+- Re-tuned the packaging character ceilings to the current English-first corpus; the context-unit ceilings remained unchanged. Clarified in 2.8.1: these are heuristic size proxies, not tokenizer counts or host-enforced runtime budgets.
+
+### Fixed
+
+- Fixed governance validation treating a decision to remediate as proof of completion, and reporting retention as physical cleanup.
+- Fixed routing expectations that forced Engineering for contract-preserving consecutive UI adjustments.
+
+### Validation scope
+
+- Package, Python (243), Hook (16) and publication checks pass. Two assertions that pinned only sentences this release replaces now assert the replacement wording; the generated-artifact tests run the real initializer. A text walkthrough confirmed all eleven required scenario judgements have governing wording in the upgraded references. Navigation semantics, actual model routing and Token effects remain unverified.
+
+## [2.7.1] - 2026-09-12
+
+### Fixed
+
+- Reject bare Git storage and repository-like metadata during ordinary local cleanup planning while allowing ordinary caches inside a worktree and unrelated `HEAD` files.
+- Align Engineering's lightweight local-change routing, generated quality defaults, review expectations, and resource/lesson lifecycle wording with the current proportional-verification policy.
+
+## [2.7.0] - 2026-09-12
+
+### Added
+
+- Added a bounded local cleanup planner and macOS native Trash adapter with descendant protection, metadata revalidation and per-item partial-outcome receipts. Unsupported platforms fail closed without permanent-delete fallback.
+
+### Changed
+
+- Consolidated authorized task continuation, instruction ownership, technical baselines, read-only learning and project instruction maintenance.
+- Clarified resource retention at task boundaries, open/sealed/integrated repair routing, existing evidence reuse and public distribution checks.
+- Kept hook and bootstrap adapter contracts aligned within existing context budgets.
+
+### Validation scope
+
+- Package, Python, Hook and publication checks pass. Native Trash recovery and model behavior evaluation remain pending; Windows execution is not supported by the new cleanup helper.
+
+## [2.6.4] - 2026-09-08
+
+### Changed
+
+- Calibrated external Skill and engineering-knowledge intake against current model and host guidance. BuildOS now preserves useful domain techniques while rejecting obsolete prompting rituals, redundant confirmation, fixed multi-agent routines, and unsupported model-wide performance claims.
+- Clarified verification evidence reuse across Engineering and Delivery. Valid results now carry forward when their covered inputs remain equivalent; later stages run only checks invalidated by changes plus independent artifact, environment, runtime, and rollback obligations.
+
+## [2.6.3] - 2026-09-05
+
+### Changed
+
+- Added shared communication defaults across session/subagent hooks and bootstrap adapters: outcome-first prose, reader-appropriate detail, restrained formatting, and respect for user-requested language, style, and output contracts.
+- Clarified user authority over Skill defaults, concrete explanations for instruction-driven pauses, active nested-entrypoint audits, and risk-proportional testing.
+- Refined delegation around independent work and coordination cost within host permissions; added lifecycle delivery and adapter-parity checks for communication defaults.
+
+## [2.6.2] - 2026-09-05
+
+### Changed
+
+- Consolidated instruction reconciliation and phase continuation in Project, read-only logging boundaries in Delivery, and product-AI confirmation scope in Engineering; project entrypoints route to these owners without duplicating approval rules.
+
+- Clarified existing task authorization, candidate re-review, and release permission so authorized preparation and read-only diagnosis can continue without redundant approval.
+- Aligned completion, design assessment, risk-based verification, operator guides, and adapter kernels with the requested outcome; retained required checks and external-action boundaries.
+
+## [2.6.1] - 2026-09-04
+
+### Changed
+
+- Renamed all active runtime reference Markdown files to descriptive ASCII kebab-case paths and updated every Skill entrypoint, nested index, cross-reference, validator owner map, and behavioral fixture to the same path identity.
+- Added a package gate that rejects non-ASCII, spaced, or non-kebab-case active reference paths while preserving the conventional `INDEX.md` filename.
+
+## [2.6.0] - 2026-09-04
+
+### Changed
+
+- Rewrote all eight Skill entrypoints, their active runtime references, and Codex discovery metadata as native professional English specifications while preserving the existing owners, decision rules, authorization boundaries, safety gates, and progressive-disclosure routes.
+- Kept Chinese user prompts, multilingual output choices, and language-specific examples as supported interaction surfaces; English is now the sole normative runtime specification rather than a parallel translation.
+
+## [2.5.0] - 2026-09-04
+
+### Changed
+
+- Kernel 明确区分用户的目标／授权、项目当前事实与 Agent 的专业判断：实质分歧先说明理由和利弊，再服从不触碰红线的用户知情选择；禁止因换一种问法而无依据改口。
+
+## [2.4.0] - 2026-09-04
+
+### Added
+
+- 新增 WorkBuddy 适配器 `adapters/workbuddy/`：`senmu-build-kernel` 引导内核（替代生命周期 Hook 注入）与 `install_workbuddy.py`（支持用户级 `~/.workbuddy/skills/` 与项目级 `<workspace>/.workbuddy/skills/` 双作用域、`--target` 与 `--dry-run`，剔除 Codex 专属元数据，写入安装身份文件）；八个专业 Skill 与其他适配共用同一权威源。三语 README 同步 WorkBuddy 安装说明。
+- 新增 ZCode 适配：`.zcode-plugin/plugin.json` 插件清单（`skills: ./skills/`，Hook 走根 `hooks/hooks.json` 约定路径）与 `adapters/zcode/`（`install_zcode.py` 支持用户级 `~/.agents/skills/` 默认目标、项目级 `--scope project`、`--with-kernel` 可选引导内核、`--target` 与 `--dry-run`）及 `senmu-build-kernel` 引导内核。三语 README 与 GitHub 产品面同步 ZCode 安装说明。
+
+### Changed
+
+- 插件 Hook 命令改为运行时分发：同一条根 `hooks/hooks.json` 同时服务 Codex（`${PLUGIN_ROOT}` 文本替换或环境变量）、Claude Code 与 ZCode（`CLAUDE_PLUGIN_ROOT`／`ZCODE_PLUGIN_ROOT` 环境变量），未解析到插件根时静默退出；新增运行时中立的 `hooks/session-start.js` 与 `hooks/subagent-start.js` 入口，并移除 SessionStart matcher 以覆盖各运行时的全部会话来源。
+- 版本推进与包校验覆盖 `.zcode-plugin/plugin.json`；公开源白名单纳入 `.zcode-plugin`。
+
+## [2.3.0] - 2026-09-02
+
+### Added
+
+- Project Map 校验器新增 active 规范入口的可达性、越界、重复行、稳定 JSON 回执及 warning／error 边界；包级 Markdown 链接校验支持平衡括号、空格路径、代码围栏与根目录边界。
+
+### Changed
+
+- 以“宜疏不宜堵”统一源头治理和剩余风险门禁；Project 现在区分 Agent 持久指令与现行工程约束的准入，并允许不同任务信号路由到同一权威正文。
+- 三语 README 增加跨会话上下文衰减、项目事实归属和五层项目地图；八个 Skill 同步完成职责、路由与重复内容复审。
+
+## [2.2.0] - 2026-09-02
+
+### Added
+
+- 新增按稳定 Change Unit ID 恢复原分支／worktree 的 `resume` 入口，以及逐门留证、可中断恢复的 Release Control 模板与校验器。
+
+### Changed
+
+- 跨 Agent、换会话或重跑实验不再自动新建代码分支；发布收口必须逐项核对范围、候选、授权、发布回执和 Git 执行面，不以聊天记忆或任务“已完成”替代实物检查。
+
+## [2.1.3] - 2026-09-02
+
+### Changed
+
+- Engineering 统一从需求／职责、架构、端到端链路和业务逻辑回溯缺陷生产源；每个开发版本在唯一 PRD／等价 owner 中维护一张需求与缺陷清单，发布前与任务、Git、测试和候选一次核账，不新增逐条文档或平行台账。
+
+## [2.1.2] - 2026-09-01
+
+### Added
+
+- Design 新增“参考界面解析与还原”工作方法与渐进式设计资源库，把截图、URL、设计稿或现有页面转为可实施、可验证的设计规格。
+- Engineering 新增前端工程与后端服务／数据两个按需 Reference，不按岗位拆成父子 Skill；具备独立工作流的框架、组件和基础设施能力继续保持平级专项 Skill。
+
+### Changed
+
+- Project 的用户展示名称校准为 Project Governance，保持 `senmu-build-project` slug 与八个平级 Skill 结构不变；Assurance 明确区分 independent、peer 和 evidence-based self-review，自查不再被表述为独立审查。
+- 明确 Skill 以独立任务闭环而非组织岗位划分，Reference 承载同一工作流的技术变体，Plugin 只负责组合分发。
+- 已有项目不会因安装 BuildOS 自动生成设计上下文；先复用正式设计 owner，缺失时从真实页面与实现重建隐含基线，只有跨页面长期需要才建立最小项目 owner。
+- 嵌套设计资源现在同样接受唯一 owner、渐进可达、上下文链和重复段落校验；同时压缩 Skill description 与高占用入口并收紧预算，避免资源库成为防膨胀盲区。
+- 私有权威生成公开投影的项目新增 GitHub 贡献回流契约：公开 PR 先导入内部 Change Unit，经审查后重新投影并保留贡献归属，不直接把公开主线合入私有主线。
+- Engineering 补强复杂故障短反馈循环、条件式测试先行、需求／工程双轴审查、宽迁移三阶段和可观察逻辑原型；Project 用纵向价值切片和 `Not yet specified` 保留未知，Workflow 新增保护秘密、幂等恢复和不可逆确认的人机操作向导。
+- Skill 写法改为在现有 Reference 内提供有完成判断的短操作配方，并在 README 增加用户可以直接说出的自然语言入口，不增加新的平级 Skill。
+
+## [2.1.1] - 2026-09-01
+
+### Changed
+
+- 将受影响的 Get Started、用户手册与公开 Reference 纳入条件式产品验收，显式区分 Acceptance Authority、可委托验证、实现完成和发布授权。
+- 强化跨会话决策可追溯与轻量 Challenger Review：保存采用／拒绝方案的依据和 Revisit Trigger，后续 Agent 修改看似异常的实现前先核对原约束，审查主动证伪方向、假设、遗漏边界和更简单方案。
+- 将三语 README 产品叙事复审、GitHub Release 正文、项目简介与 Topics 纳入正式发布门禁；版本未复核或远端发现表面未同步时阻断 Tag。
+
+## [2.1.0] - 2026-09-01
+
+### Added
+
+- 新增 `senmu-build-design`：统一负责视觉方向、设计系统、布局、字体、色彩、响应式、交互、动效、可访问性、界面原型和 UI/UX 评审，并以三份按需 reference 保持渐进加载。
+
+### Changed
+
+- 将外部 UI/UX、官网设计翻译和设计工程方法蒸馏为 BuildOS 自有规则；不引入来源品牌、固定技术栈、大型样式目录、重复组件 API 或绝对化审美门槛。
+- BuildOS 当前架构、行为矩阵、README、包校验与豆包适配统一升级为八个平级专业 Skill，并明确 Design 与 Product、Engineering、Assurance、Ant Design、shadcn、GSAP 的边界。
+- 工程知识蒸馏新增旧版／候选 Skill 差分行为评测门：覆盖应触发、不应触发、例外和对抗场景，并阻断无改善、存在回归或基线污染的晋级结论。
+- 工程实践按不确定性和风险调整讨论与评审深度，补齐最小委派包、生产行为测试、证据调试和永久功能退役闭环，不强制普通低风险变更使用多 Agent 或固定仪式。
+
+## [2.0.8] - 2026-08-31
+
+### Changed
+
+- GitHub Release 改为发布简短的用户更新说明，只展示“主要更新”和“修复问题”；现有正式版本同步补齐用户可读正文。
+- 连续开发改为复用同一开放版本批次：单项完成不再重复建分支、封口或运行完整门禁，提测／收口时再集中检查；未明确授权时不发布。
+- 新增界面内容设计规范，统一按钮、状态、错误和模型生成内容；通用语义与中英文表达分层维护，以可观察问题取代模糊风格评价。同时明确四类项目入口，普通功能、Bug、单条文案和局部样式优先按项目规则执行。
+
+## [2.0.7] - 2026-08-31
+
+### Changed
+
+- 新增“正确产物优先于内部记账”原则：纯行政哈希、回执和进度记录不再单独使有效成果失效、扩大重跑或改变运行时身份；产品完整性、安全、授权、外部副作用和发布事实继续保留必要保护。
+- 收敛 Python 与 Ant Design 按需参考：删除跨语言重复规则、静态组件手册和易过期命令目录，保留语言／框架特有决策与当前官方知识查询边界；同时校准 Learning 和 Project 的界面职责说明。
+
+## [2.0.6] - 2026-08-30
+
+### Changed
+
+- BuildOS 收纳箱不再通过 `UserPromptSubmit` 自动抓取用户纠正；只有 Agent 在真实项目中发现具体 BuildOS 组件造成误导、难以落地、额外工作、低效率或差产物时，才经 Learning 和本机 CLI 主动提交组件、问题与影响。
+- 修复行为不变量重复编号，并将编号唯一性纳入包校验，避免后续引用歧义。
+- 区分内部权威库与公开投影的检查入口，更新安全支持范围、公开历史现状和贡献说明中的过期描述。
+- GitHub Actions 固定到精确提交，Tag 只触发发布工作流，并把仓库写权限收窄到验证通过后的 Release 创建步骤。
+- 收口已被后继版本吸收的历史任务，整理任务索引和已合并的临时 worktree。
+- 过度工程治理收敛为一条完整决策：“完美、长期、通用、不影响其他功能”不会自动授权平台、抽象、配置、兼容或计划外功能；用户指出“绣花”时立即回到最小方案，但不删除必要风险保护。
+- 诊断先围绕用户点名系统取证，同一业务验证由单一可信边界拥有；跨信任域、安全纵深和独立契约仍保留职责明确的必要复核。
+- 用户指定的 SSH、CLI、API 或浏览器访问路径成为任务边界；可用工具、运行中的应用和已登录会话不再被解释为替换路径或扩大外部操作的授权。
+- Engineering 先用原始失败路径和关键依赖的最小生产形态证明修复，再按影响扩大回归；未闭合专项证据时不提前进入 Delivery，也不让大量通用绿灯代替真实风险验证。
+- 正式发布只有在真实跨多个 Agent、仓库或生产单元时才临时集中协调一个候选、一次有限授权和一份回执；普通任务不增加角色，授权边界未变时不重复确认。
+- 重复读取、重复失败或无证据扩围时改为停止并重定最小下一步，不新增运行时计数台账、固定工具次数或 Token 限额。
+
+## [2.0.5] - 2026-08-30
+
+### Changed
+
+- 重写中／英／日三语 README 的公开信息结构，以“为什么需要、怎样工作、设计理念、适用场景、常见问题和使用边界”组织内容，让项目说明更符合正常开源项目的阅读习惯。
+- 删除“给人和 AI 的快速说明”“验证与当前边界”等内部视角标题，减少不必要的治理术语，并把维护者测试命令留给 `CONTRIBUTING.md`。
+
+## [2.0.4] - 2026-08-30
+
+### Changed
+
+- 重构中／英／日三语 GitHub README：首屏明确“规范执行、少犯错”和“复用项目／框架能力、减少无效代码与上下文浪费”两项核心价值，并前置安装、典型问题和从需求到发布的完整工程链。
+- Codex 与 Claude Code 插件发现元数据同步工程教练、代码质量、框架／组件复用和上下文效率语义；行为矩阵新增未批准功能不实现、框架公开能力优先和部分复用保留业务差异等约束。
+- GitHub About 简介与 Topics 校准到 AI coding governance、code quality、requirements、framework reuse、Codex、Claude Code、testing、Git 和 release management；Logo、图标与社交预览保持原状。
+
+## [2.0.3] - 2026-08-30
+
+### Changed
+
+- 意见箱审议新增有界摘要与分页读取：先取得数量、信号类型、来源宿主和时间范围，再按页展开候选；原有 `pending --json` 完整数组保持兼容。
+- 公开投影和生命周期同步默认只返回文件数量、身份摘要、Git 状态计数与有限预览；只有显式 `--verbose` 才展开完整文件与状态清单。
+
+## [2.0.2] - 2026-08-30
+
+### Changed
+
+- 真实任务中的上下文优化改为按“加载成本、实际决定变化、避免的重复实现／返工、正确性和长期维护面”综合判断；Token 不再单独充当优化目标。
+- 共享证据纪律新增工具输出边界：长 Reference、源码、diff、日志和治理检查先取有界摘要并按需展开，截断后只补缺失范围，不拼接多份长输出再重复读取。
+- 短 Kernel 提醒普通编码优先核对项目、框架和平台现有能力；Engineering 明确绕过公开扩展点或依赖内部 DOM／私有 API 需要可复查缺陷证据与退出边界。
+- Project 成熟项目 assessor 默认保持有界摘要，`--verbose` 只服务需要完整候选／排除登记的正式结果；高频版本与候选事实使用唯一机器 owner，避免手工同步多份文档页头。
+
+## [2.0.1] - 2026-08-30
+
+### Added
+
+- 新增跨项目工程证据规则：外部能力映射绑定真实接口及版本，后续测试通过不覆盖先前未解释失败，对话衍生结论按需核对相关原始轮次与项目事实。
+- 新增豆包（Doubao）适配器 `adapters/doubao/`：提供 `senmu-build-kernel` 引导内核 Skill 替代 Codex／Claude 的生命周期 Hook 注入，新增跨平台确定性安装脚本 `install_doubao.py` 把七个 Skill 与内核安装进豆包 `.user_skills`（自动探测常见平台路径，支持 `--target` 与 `--dry-run`），并新增 `tests/test_doubao_adapter.py` 校验适配器与安装往返。
+- README 简体中文、English、日本語 三语同步豆包支持说明：新增豆包安装章节（把仓库交给豆包 / clone 运行安装脚本两种方式）与"把仓库直接交给豆包"的安装提示词，供公开用户从 GitHub 拿到仓库后快速安装。
+
+### Changed
+
+- 反馈 Hook 在结构化提示词中只检查并保存用户本轮请求或批注，排除引用会话、选中的 Assistant 文本、附件包装和宿主生成建议，减少意见箱误采与无关内容留存。
+- 新增跨 Skill 的证据复用纪律：同一连续工作中复用仍有效的 Skill、reference、项目文件与工具证据，只补读缺失或变化范围；压缩、恢复、交接或来源变化后重新取得最小充分证据，不建立已读台账或全文缓存。
+
+## [2.0.0] - 2026-08-29
+
+### Changed
+
+- BuildOS 把“继续当前版本”“开一条长期继任线”“把这批收进主线”和“先不要发布”等产品语言翻译为项目级 Git 与发布行为，不再把 branch、worktree、merge 或 Tag 的选择题交给用户。
+- 项目必须声明当前主线是 `release_ready` 还是 `integration`；开发执行者封口后退出，任意收到自然语言收口请求的 Agent 可从项目 owner 和 Git 重建待接收视图。
+- 发布授权改为绑定精确候选、制品和环境的有限发布会话；“不要发布”作为项目持久约束，不会因换会话或 commit 自动失效。
+- 收紧 Change Unit 分支拓扑：默认只允许从登记集成线创建任务分支，真实依赖必须显式关联已 sealed 父单元；新增发布身份门禁，阻断审查、测试、发布源、Tag 和制品 commit 漂移。
+- 明确一个发布窗口只有一个可变 release source，完整 preflight 通过后才冻结最终候选；截止后无关分支只记录排除快照，不再为全局账本追加候选 commit。
+
+### Removed
+
+- 删除直接在主线修改 G1 小变更的例外；现在所有源码修改都使用任务分支，独占写入只决定是否额外创建 worktree。
+- 删除“正式 Tag 同时表示部署前候选”的双重语义；候选由 commit、候选编号和制品标识，正式 Tag 只在目标发布验证成功后创建。
+
+## [1.14.3] - 2026-08-28
+
+### Changed
+
+- BuildOS 现在把“多个会话并行修 Bug”自动翻译为每任务独立短分支和 worktree，并在单写、只读、脏工作区或共享资源场景选择更轻的安全执行面，不要求非技术用户选择 Git 机制。
+- “发布最新版本／把这批修复发布”现在触发有证据的发布收口，只纳入当前发布单元内已完成、已验证且有稳定 commit 的变化，阻止机械合并所有分支。
+- 修复会话在匹配验证通过后主动本地 commit；单一发布单元与标准入口明确时，“发布最新版本”授权 BuildOS 自动完成适用的版本、Tag、既有平台、部署和生产验证，不再让用户逐项选择技术动作。
+- 多 Agent 协作改为无固定 Team Leader 的 Change Unit 模型：Codex 写入默认按未来可新增会话隔离，任务按目标版本线动态分组；任意收到发布命令的 Agent 从任务与 Git 重建接收矩阵，并在继任版本发布前逐项汇流适用维护线修复。
+- 标准发布增加低 Token 快速通道：常规发布不加载 Assurance 或宽泛扫描 memory，复用 sealed commit 的匹配测试，版本候选冻结后只运行一次项目完整 preflight；版本线角色不再绑定任何示例数字或 SemVer。
+- 所有获准写源码的主会话与子 Agent 现在从短 Kernel 自动获得写入教练合同：保护现有改动、默认隔离任务、匹配验证并把完成范围封口为本地 commit；普通 Bug／文案修复不再因未触发 Delivery 而遗漏这些边界。
+- 新增机器可执行的 Change Unit 写前入口：未登记旧分支、跨任务分支复用、错误 worktree 和已封口分支默认阻断；封口后的新请求必须建立新单元。
+- 本机内部插件快照记录准确源码 commit，并由新会话 Kernel 回显 `version@commit`，不再仅凭可变的版本缓存目录判断实际加载内容。
+
+## [1.14.2] - 2026-08-28
+
+### Changed
+
+- 项目 `AGENTS.md` 改为按任务信号加载的真正差异层：禁止把基线、发布、worktree 等全局文档串成每个任务的固定前置，也不再复制安装中的 Skill 职责目录。
+- 成熟项目 assessor 现在要求对低风险单单元、专业边界和发布／回滚任务做全新会话路由验证；未验证时最多宣称结构已准备。
+
+## [1.14.1] - 2026-08-28
+
+### Changed
+
+- 七个 Skill 改为更短的发现描述、决策入口和按结果加载 reference；上下文预算只防止无意膨胀，不作为删减有效信息的 KPI。
+- 普通任务默认只加载一个能直接产出结果的主 Skill；契约保持型局部变更由 Engineering 单独处理，只有真实职责转换才交接 Product、Workflow 或 Delivery。
+- 项目根 `AGENTS.md` 收口为 BuildOS 之上的差异层：只保存项目事实、权威路径、真实命令、特有约束和明确覆盖，不复制通用 Skill 正文。
+- 脚本改为按必要性、灵活性和用户工作流分类：高频通用入口直达，专项 validator 由命中 reference 路由，生命周期底层实现与 helper 由上层命令间接拥有。
+- Codex 与 Claude Code 仍在本机收集明确纠正候选，但 `UserPromptSubmit` 不再向当前模型追加候选 ID 或处置提示。
+
+## [1.14.0] - 2026-08-28
+
+### Changed
+
+- 将日常开发、本机 Codex 刷新、公开投影和 GitHub 发布分离：内部权威库是唯一源码 owner，公开库由白名单重建。
+- 以清洁独立 Git 历史重置公开发布基线；旧 Release、Tag、Actions 和含内部记录的发布包不再作为公开发布链。
+
+### Security
+
+- 公开投影拒绝项目治理、任务、工作日志、内部评审、发布回执、本机绝对路径、私有实例标识、运行日志、数据库、环境文件、私钥和高置信度凭据形态。
+- AI 工作区路由和公开 pre-commit 门禁阻止在生成投影上直接修复或未授权提交。
+
+## [1.13.1] - 2026-08-27
+
+### Changed
+
+- 反馈收集改为静默后台协议：移除依赖用户可见候选标记的 `Stop` Hook，Agent 通过本机 CLI `--quiet` 提交高信号缺口，正常答复不暴露内部标记或 ID。
+- 收紧 `UserPromptSubmit` 的显式反馈匹配：只有“记录／提交／放入”等动作才投递，仅询问反馈机制不再误入箱。
+
+## [1.13.0] - 2026-08-27
+
+### Added
+
+- 新增穷尽式源码治理模式与可校验控制记录：显式要求逐个登记第一方源码文件、函数／方法和现有注释，并把审查全覆盖与整改后符合标准分开判定。
+- 新增日常代码变更合并门禁：完整候选变更集在进入集成基线前完成文件、函数／方法和注释审查，审批绑定准确 `base..head`，新 commit、漏记 diff、开放 Finding 或失败检查会阻止合并。
+
+### Changed
+
+- 区分专业事实 owner、语义／运行 owner 和 Durable Task State Owner；PRD、技术设计、实现与测试通过同一需求和验收合同保持一致，不再允许把跨产物追踪误述为“统一到同一个 owner”。
+
+## [1.12.0] - 2026-08-27
+
+### Changed
+
+- 蒸馏 GitHub、Git 与 Microsoft 的分支协作指导：互不相关且可独立验证、回滚的工作使用不同短分支，保持主线可集成；托管平台 PR、固定评审人数和 release 分支仍由项目现状决定，不升级为通用军规。
+- 多 Agent 协作改为按真实依赖和共享资源调度：等待中的阶段不阻塞其他已授权、无冲突工作；只剩外部结果时持久化检查点并释放空转执行链，优先由结果事件唤醒，用户暂时离线不撤销既有授权。
+
+## [1.11.0] - 2026-08-27
+
+### Added
+
+- 使用开放蒸馏飞轮吸收分布式超时、重试、退避、抖动和幂等的有效缺口，并增加 TypeScript、Go、Java 三份按需语言 Profile；外部资料、完整厂商 Style Guide 和项目专属参数不进入运行时 Skill。
+- 为语言路由和可靠性决策增加结构回归与行为场景，并用 BuildOS 源码项目实跑成熟项目治理控制记录，验证基线、Finding、授权、整改、复核、恢复和临时内容去留闭环。
+
+## [1.10.0] - 2026-08-27
+
+### Added
+
+- 增加成熟项目接管治理专项：以唯一持久任务 owner 串联只读基线、Coverage Map、Finding 裁决、用户授权、分波整改、复核、恢复和临时内容去留，不增加第八个 Skill。
+- 增加可选的接管任务／控制记录模板和确定性校验器，阻止未授权整改、未裁决 Finding、未复核阻断项或未决定临时内容去留的专项标记完成。
+
+## [1.9.0] - 2026-08-27
+
+### Changed
+
+- 重写三语 README 首屏和 GitHub 仓库元数据，用普通用户可理解的价值语言说明 AI Agent 项目治理、上下文接力、Git／发布防错和证据化交付；关键词自然覆盖，不作未经验证的 Token 节省或搜索排名承诺。
+- 用 Microsoft 工程 Playbook 的质量属性章节实跑开放迭代飞轮：七项候选仅合并一项，拒绝重复流程、组织专属 PR 规则和统一数字门槛；同时把零变化、默认合并和上下文成本明确为知识蒸馏不可突破的防膨胀约束。
+- 将知识蒸馏收口为“写回、整体验证、Skill 完整性复审、整改、复核、发布候选”闭环；正式版本会校验复审记录与当前 Skill 行为表面一致，阻止过期或带未关闭阻断 Finding 的候选发布。
+
+## [1.8.0] - 2026-08-27
+
+### Added
+
+- 建立网页、PDF、书、公开仓库和第三方 Skill 的统一工程知识蒸馏流程：外部内容只作为不可信临时候选，经查重、六类裁决和行为验证后写回唯一专业 owner。
+- 公布基于 clone、fork、短分支和 Pull Request 的开放迭代飞轮，让个人版本可以持续演进，并把成熟候选按同一蒸馏门禁回馈官方版本。
+
+### Changed
+
+- 将第一批公开工程实践内化到跨语言代码健康、评审裁决和 Python 专项规则；正式 Skill 不保留原始资料库、逐条出处或组织专属默认值。
+
+## [1.7.1] - 2026-08-27
+
+### Changed
+
+- 明确技术机制若改变用户动作、可见状态、生效／持久化时机、撤销／恢复或验收结果，必须作为产品行为变化交回 Product 决策，并比较尽量保持原行为的工程替代。
+- 为状态型、编辑型、多入口或跨视图能力增加风险匹配的行为不变量；防止实现分支仅凭同步修改代码、PRD 和测试完成自我授权。
+- 七个 Skill 入口统一先说明实际结果与用户影响，再解释专业机制；首次出现的非通用缩写、状态名或符号须用普通语言解释。
+
+## [1.7.0] - 2026-08-27
+
+### Added
+
+- 增加只读 Git 工作区诊断器，从分支可达性、worktree、脏状态和 Remote 生成治理候选分类，不自动删除或代替项目语义核对。
+
+### Changed
+
+- 将复杂项目治理明确为工程教练式判定：先核对现场和授权，再给出场景、建议、理由、例外与收口，普通小任务不扩展为长模板或新台账。
+- 补齐短分支与 worktree 合并后安全清理、POC 检查点基线、无关发布非打断和显式产品化晋级规则。
+- 将独立专家判断扩展到需求、产品方案、技术方案、架构和当前系统事实：用户决定目标与授权，AI 依据项目证据和适用的外部权威知识形成结论，未核验时明确不确定性。
+- 将 worktree 位置从固定目录规则改为权威项目边界驱动，并要求每个临时分支／worktree 以安全清理或有退出条件的保留完成闭环。
+- 将发布保留默认值校准为“当前已验证版本＋一个已验证回滚版本”，明确项目策略优先、Git Tag 不等于制品可复现，并分别收口本机构建端、生产运行端、远程制品库和本次 Git 执行面。
+- 加固发布收口脚本对镜像 digest／ID、同 ID 标签和全部容器引用的保护；清理继续限制在受管仓库，不使用强制或跨项目全局 prune。
+
+## [1.6.0] - 2026-08-27
+
+### Added
+
+- 增加 Codex 与 Claude Code 的低噪声反馈候选 Hook、本机去重脱敏收件箱，以及用户触发的查询、提交和集中审议入口。
+
+### Changed
+
+- 将组织学习飞轮明确为“自动收集候选、人工批量审议、授权后反哺”三道边界；单条反馈不自动生成规则、修改 Skill 或触发发布。
+
+## [1.5.3] - 2026-08-27
+
+### Changed
+
+- 明确当前需求不得由历史实现反向定义；布局任务不决定功能存在，能力替代需成组清理旧入口链，并以新入口唯一、旧入口不可达或兼容边界受控的回归证据防止旧功能复活。
+
+## [1.5.2] - 2026-08-26
+
+### Changed
+
+- 将 Hotfix 对继任版本线的传播责任与立即执行分离：按适用性和风险选择立即、项目检查点或发布门禁同步，并以稳定源身份和唯一传播记录避免跨 Agent 通知触发重复合并。
+
+## [1.5.1] - 2026-08-26
+
+### Fixed
+
+- 修复并行 POC 因实验台账占用产品发布工作树而阻塞无关版本的问题：POC 状态根与发布源分离，发布门禁按候选范围和共享生产资源判断。
+- 修复“同一发布单元存在已完成分支”被误解为必须全部纳入当前版本的问题；未承诺分支默认登记为后续版本或非阻塞并行工作。
+
+## [1.5.0] - 2026-08-26
+
+### Changed
+
+- 以功效、授权和专业 owner 优先复审七个 Skill：去除 Project 内的跨领域重复，将 Delivery 合并核对改为风险匹配，并将日志、Agent 和复盘模板收口到按需 assets。
+- 补齐七个 Skill 的语义保留不变量；Product、Engineering 和 Assurance 的专业规则经复审后保留，不以字数代替功能和风险边界。
+
+## [1.4.0] - 2026-08-26
+
+### Changed
+
+- 校准 Git、分支、Worktree、多 AI 接力、版本、Tag 与日志规则：默认本地 Git 和串行写入，Remote／PR／CI／GitHub／GitLab Release 仅按项目现状与明确授权启用。
+- 明确开发执行者的 commit 交接和当次发布收口职责，补充合并策略、受控历史重写、Worktree 成本评估与行为回归。
+
+## [1.3.1] - 2026-08-26
+
+### Fixed
+
+- 修复三份公开 README 的当前正式版本可能落后于 `VERSION` 的问题，并把该字段纳入版本准备与一致性校验。
+
+## [1.3.0] - 2026-08-26
+
+### Added
+
+- 增加单项文档／目录放置建议、空白项目零写入 `plan-new` 和显式模块裁剪能力。
+- 增加建议、规划、初始化和成熟项目迁移的行为回归与语义不变量。
+
+### Changed
+
+- 新项目初始化必须显式提供项目类型和治理档位，不再隐含采用 `software + standard`；实际写入与建议／规划分离。
+- 目录预设改为可解释候选，成熟项目仍先映射原 owner，迁移只在明确实施授权后进行。
+
+## [1.2.0] - 2026-08-26
+
+### Added
+
+- 增加 Senmu BuildOS 源码仓库自身的 Project Map、Durable Task State 和简洁 Work Log，并以项目严格校验验证自举治理。
+- 增加 Skill 入口、description catalog 和 reference 字符预算，以及压缩保真不变量复核表。
+
+### Changed
+
+- 收紧七个 Skill descriptions，并精简 Project 与 Engineering 入口；专业细则、安全边界和唯一 owner 仍保留在原 Skill、reference 或脚本。
+- 允许成熟项目通过 policy 限定严格占位符扫描范围，避免把 `TASK-<NNNN>` 和 `v<version>` 等通用格式误判为未校准实例。
+- 将仓库、Marketplace、安装命令和徽章统一到迁移后的权威地址 `SenMuShare/senmu-buildos`。
+
+## [1.1.0] - 2026-08-26
+
+### Added
+
+- 增加 Claude Code 官方插件 manifest、Marketplace 和独立 Hook 适配层，与 Codex 共用七个 Skill。
+- 增加 Codex／Claude Code 双适配结构、Hook 协议、副作用边界和统一版本元数据校验。
+- 在中文、英文、日文 README 中增加 Claude Code 安装、更新、卸载与安全边界说明。
+
+### Changed
+
+- 将 Codex Hook 执行脚本收口到 `adapters/codex/`，共用治理内核继续保持只读和短上下文。
+
+## [1.0.1] - 2026-08-25
+
+### Added
+
+- 增加仓库级 Git Marketplace 目录，使 Codex 能从 GitHub 地址发现并安装 Senmu BuildOS。
+- 在中文、英文、日文 README 中增加安装、更新、卸载、Hook 信任和“把仓库交给 Codex”说明。
+- 增加 `VERSION`、插件 manifest 与 Marketplace 正式版本指向的一致性校验。
+- 增加统一版本准备脚本，支持一致性检查、Tag 核对、零写入预演和受检写入。
+- 增加 Tag 驱动的 GitHub Release 工作流，重新验证源码并生成确定性发行包与 `SHA256SUMS`。
+- 增加版本升级、漂移、Tag 和空 Changelog 的自动化测试。
+
+### Changed
+
+- 明确 Codex 以整个插件为更新单元，七个 Skill 不分别版本化；更新后需刷新或重启并开启新对话。
+
+## [1.0.0] - 2026-08-25
+
+### Added
+
+- 建立 Senmu BuildOS Codex 插件清单、生命周期 Hooks 和自动化测试。
+- 建立 project、product、workflow、engineering、delivery、assurance、learning 七个平级专业 Skill。
+- 建立 Project Governance Instance 以及 Initialize New、Assess Existing、Evolve Existing 三种项目能力。
+- 建立需求、任务、Workflow Run、技术设计、审查 Finding、Release Record 和 Lessons Learned 的职责边界。
+- 建立新项目分级初始化器、成熟项目零写入审视器、项目治理 validator 和专业模板。
+- 建立产品身份、Skill 结构、reference 唯一 owner、重复内容、本地链接和 Hook 校验。
+- 增加简体中文、英文和日文三份完整 README，并提供互相切换的语言导航。
+- 采用 Apache License 2.0，补齐公开仓库、主页、许可证、Description 和 Topics 元数据。
+
+### Changed
+
+- 将 README 重构为完整的开源产品首页，明确真实痛点、解决方式、产品特点、工作路径、适用人群和当前边界。
+- 明确 BuildOS 专门面向 AI Agent／Agent Harness，当前首先为 Codex 设计和验证。
+- 将七个 Skill 保持为平级专业入口，按任务目标加载，不设置强制总入口或固定流水线。
+- 将成熟项目写入边界统一为“先识别真实入口和 owner，再经授权演进”，避免创建平行目录和事实源。
+- 将上下文效率、持久状态、证据驱动完成、风险分级和源头改进收口为核心设计原则。
+- 将 Hook 输出保持为短小的 `additionalContext`，不读取整个项目、不猜角色、不自动修改任务状态。
+- 增加 Senmu BuildOS 产品身份验证，确保公开产品树保持独立、清晰和可验证。
+
+### Current boundaries
+
+- `v1.0.0` 是首个面向 Codex 的正式源码发行版；安装、升级、卸载和 Hook trust review 在完成可复现验证前不作兼容性承诺。
+- Codex 之外其他 Agent Harness 的运行时兼容承诺。
+- 增长、指标和反馈运营等完整业务运营方法论。

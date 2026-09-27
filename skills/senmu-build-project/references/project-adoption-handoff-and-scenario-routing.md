@@ -46,8 +46,8 @@ Suggested owner paths:
 AGENTS.md or equivalent AI entrypoint
 README.md
 engineering/CODE_QUALITY.md
-engineering/SYSTEM_TECHNICAL_SPECIFICATION.md, established architecture owner,
-  or an as-needed TECHNICAL_DESIGN.md
+engineering/SYSTEM_TECHNICAL_SPECIFICATION.md or established current-system owner
+versions/<version>/PRD.md and TECHNICAL_DESIGN.md  # each formal development version
 engineering/TECH_DEBT.md                 # only when real debt exists
 engineering/languages/<LANGUAGE>.md
 governance/GOVERNANCE.md

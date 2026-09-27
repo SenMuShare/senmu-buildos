@@ -1,0 +1,13 @@
+{
+  "name": "buildos-quality-example",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "check": "depcruise --config .dependency-cruiser.cjs src && tsc && node --test tests/total.test.mjs"
+  },
+  "devDependencies": {
+    "dependency-cruiser": "16.10.4",
+    "typescript": "5.8.3"
+  }
+}

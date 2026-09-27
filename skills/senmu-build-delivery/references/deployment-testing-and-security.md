@@ -40,6 +40,10 @@ State affected paths, tested paths, untested paths and risks, and whether produc
 
 After a Bug/Hotfix passes Engineering checks, also determine version/changelog update; Work Log cause/fix/evidence/risk/next step; and, if releasing, Tag/artifact/production evidence/rollback point. If not releasing, record reason, code location, and future release condition.
 
+### Public-service exposure
+
+For a new service, first establish whether and how it is reachable. Public exposure or changes to network/runtime trust use the [public-service baseline](security/public-service-security-baseline.md). Keep actual control configuration and evidence in the deployment owner; an initialized document is not live protection. Source-only projects keep their existing path.
+
 ## 4. Security and Sensitive Information
 
 Do not commit `.env`/`.env.*`, API/access/secret/app keys, payment keys/certificates/private or SSH keys, user uploads, database files, real production data, local runtime data, or private server configuration.

@@ -56,8 +56,12 @@ class HostInstructionInventoryTests(unittest.TestCase):
             except OSError:
                 pass
             items = ASSESS.assess(root, 2, False)['instruction_layering_review']['inventory']
-            self.assertEqual(len(items), 1)
-            self.assertEqual(items[0]['import_candidates'], ['../private.txt'])
+            by_path = {item['path']: item for item in items}
+            self.assertEqual(by_path['CLAUDE.md']['import_candidates'], ['../private.txt'])
+            if (root / 'AGENTS.md').is_symlink():
+                self.assertEqual(by_path['AGENTS.md']['link_status'], 'outside_root_not_read')
+                self.assertEqual(by_path['AGENTS.md']['read_status'], 'not_read')
+                self.assertNotIn('sha256', by_path['AGENTS.md'])
             self.assertNotIn('must-not-enter-inventory', str(items))
 
     def test_depth_limit_does_not_become_loaded_scope(self):

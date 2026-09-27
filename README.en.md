@@ -8,9 +8,9 @@
   <a href="README.md">简体中文</a> · <a href="README.en.md">English</a> · <a href="README.ja.md">日本語</a>
 </p>
 
-<!-- product-surface-review: 2.16.0 -->
+<!-- product-surface-review: 2.23.2 -->
 
-This documentation and release-maintenance update adds README impact review to each GitHub-bound change. Synchronize affected Chinese, English and Japanese content; preserve sections that remain accurate. The usage guide clarifies concise working principles in project AGENTS.md and distinguishes project-instruction governance from business-agent content governance. Existing runtime capabilities and fixes are retained; no automatic migration or performance gain is introduced. Verify source version and channel availability separately. See [release notes](RELEASE_NOTES.md).
+This release checks domain references through actual links, unique ownership and peer Skill structure rather than fixed English wording. Architecture review distinguishes a local diagnosis from repository-wide assessment, expands on evidence and uses a concise before/after responsibility example. The eight Skills, existing project rules and authority boundaries remain; structural checks do not prove model understanding or performance. See [release notes](RELEASE_NOTES.md).
 
 <p align="center">
   <a href="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml"><img src="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml/badge.svg" alt="Validate Senmu BuildOS"></a>
@@ -156,7 +156,15 @@ Git, version, artifact, deployment, and production evidence
 Validated lessons become reusable guidance
 ```
 
-The chain is tailored to the task. A contract-preserving button style change does not need a PRD, ADR, and release report. A cross-module, permission, data, payment, or formal release change keeps the design, verification, and rollback evidence its risk requires.
+Tailor the chain to the task. A well-understood, contract-preserving button style change proceeds without a new document chain or multi-agent workflow. Cross-module, permission, data, payment and formal release changes retain the design, verification and recovery evidence their risk requires.
+
+### Understand the system and its reasons before changing it
+
+Engineering's [task entrypoints](skills/senmu-build-engineering/references/source-code-quality-and-ai-collaboration.md#5-ai-implementation-debugging-and-review-loop) distinguish read-only investigation, defect repair, design change and behavior-preserving refactoring. Trace unfamiliar modules and behavioral conflicts through the real runtime flow. Before changing an existing design, recover the effective requirements, technical decisions, rejected options and constraints to preserve. Code shows observed behavior, not automatic requirement authority. Historical decisions can be reconsidered when their conditions change.
+
+For key interfaces, data or state, design the structure and boundaries from the caller's usage first. Compare genuinely different viable options when needed, recording the chosen base, adopted ideas and rejections. State which facts a safety judgment depends on, with evidence or explicit uncertainty. Choose parallelism and test depth from the work boundaries and risk, not a fixed worker or lane count.
+
+Each formal development version retains requirements and a technical account. Small versions may briefly name the inherited design, changed implementation and verification. Existing combined documents can use distinct sections. Version documents preserve why and how a change was made; current specifications hold accepted current facts. Each local edit does not create another version document. Repair the relevant rule, navigation or default implementation so later tasks can find the proven approach.
 
 ### “Reuse before writing code” is executable
 
@@ -223,6 +231,18 @@ No. Read-only requests do not write to the project. When changes are authorized,
 
 No. Code changes, merges, pushes, and formal releases each follow user authorization and project rules. Installing the plugin does not grant production write access.
 
+### How do core principles complement Skills?
+
+Project `AGENTS.md` carries outcome alignment, independent judgment, constrained cause repair, suitable reuse, preservation, sufficient verification and complete delivery. It is not a mandatory sequence: discussion does not authorize implementation, clear work needs no new approval ritual, and bounded repairs disclose important limits. Existing Skills supply specialist methods on demand; non-code content, design and research work retain applicable principles.
+
+### How does it avoid wasteful testing?
+
+Separate test authoring, execution and reruns. Reuse behavior coverage and add tests for meaningful gaps. During development use focused feedback; expand for impact, unresolved risk or project requirements, checking high-risk boundaries early. A new session, commit or release stage alone does not invalidate evidence. Stop when required evidence is sufficient; disclose gaps and retain protections. Governance also reconciles real test commands and CI rather than merely appending a principle.
+
+### How are subsequent updates identified?
+
+Each completed BuildOS change delivery receives a new unified version, including prompt and documentation changes. Intermediate commits share an unpublished candidate. Check the release in your actual channel and the installed version; a source update is not proof of local activation.
+
 ### How many tokens will it save?
 
 BuildOS does not promise a fixed percentage. It reduces avoidable cost by preventing unnecessary features, duplicate code, repeated reading, and rework, while keeping correctness, safety, and maintainability ahead of token savings.
@@ -231,9 +251,9 @@ BuildOS does not promise a fixed percentage. It reduces avoidable cost by preven
 
 The source version below does not mean every distribution channel offers it. Check the Release/Tag in the channel you actually use; source updates, private releases, public releases and local installation are separate states.
 
-The current source version is Senmu BuildOS `v2.16.0`. It supports Codex, Claude Code, a Doubao adapter, a WorkBuddy adapter, and a ZCode adapter. Install the plugin as one unit; the eight Skills do not need separate downloads. Professional English is used for both the normative runtime specifications and all active Reference paths, while users can continue to work in Chinese or any other requested output language. When comparing external Skills, BuildOS calibrates them to the current model and host, retaining useful domain methods without copying obsolete process. Development and Delivery reuse verification evidence that remains valid, then add only checks invalidated by a change and independent artifact, environment, or runtime facts.
+The current source version is Senmu BuildOS `v2.23.2`. It supports Codex, Claude Code, a Doubao adapter, a WorkBuddy adapter, and a ZCode adapter. Install the plugin as one unit; the eight Skills do not need separate downloads. Professional English is used for both the normative runtime specifications and all active Reference paths, while users can continue to work in Chinese or any other requested output language. When comparing external Skills, BuildOS calibrates them to the current model and host, retaining useful domain methods without copying obsolete process. Development and Delivery reuse verification evidence that remains valid, then add only checks invalidated by a change and independent artifact, environment, or runtime facts.
 
-This documentation and release-maintenance update adds README impact review to each GitHub-bound change. Synchronize affected Chinese, English and Japanese content; preserve sections that remain accurate. The usage guide clarifies concise working principles in project AGENTS.md and distinguishes project-instruction governance from business-agent content governance. Existing runtime capabilities and fixes are retained; no automatic migration or performance gain is introduced. Verify source version and channel availability separately. See [release notes](RELEASE_NOTES.md).
+For changes in this version, see the opening summary and [release notes](RELEASE_NOTES.md).
 
 ### Update Codex
 

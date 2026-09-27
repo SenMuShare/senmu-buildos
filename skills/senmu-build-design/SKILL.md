@@ -1,6 +1,6 @@
 ---
 name: senmu-build-design
-description: "Define or review UI/UX direction, systems, layout, typography, color, data visualization, responsive behavior, interaction, motion, accessibility, and visual or interaction prototype validation. Not for product scope, routine implementation, library APIs, or independent audits."
+description: "Define or review UI/UX direction, layouts, visual systems and interaction quality, including reference adaptation. Not for routine implementation under an agreed design."
 ---
 
 # Interface Design
@@ -13,6 +13,7 @@ Turn experience goals into implementable decisions. Start from the interface, be
 - Analyze/adapt a screenshot, URL, design, or interface: [Reference Analysis](references/reference-interface-analysis-and-reconstruction.md).
 - Interaction, motion, accessibility, feel: [Interaction](references/interaction-motion-and-accessibility.md).
 - Alternatives, prototypes, UI/UX review: [Prototypes](references/prototype-exploration-and-interface-review.md).
+- Only for optional pattern inspiration: [Pages](references/design-library/page-structures-and-visual-directions.md) or [Components](references/design-library/component-design-patterns.md); [Index](references/design-library/INDEX.md) maps choices. These are not project facts or required pre-reads.
 
 Read only what is needed. Implement the selected or already-authorized direction under project/Engineering rules; use specialist skills for current APIs/methods only.
 
@@ -24,7 +25,6 @@ Read only what is needed. Implement the selected or already-authorized direction
 - Make frequent actions direct/predictable. Motion must explain feedback, state, space, or change, with reduced-motion/non-hover paths.
 - Design accessibility, responsiveness, and loading/empty/error/disabled states from the start; never rely on one sensory cue.
 - Deliver direction analysis with observed evidence, implementable decisions, and limits. To claim implemented visual/interaction quality, verify real rendering at affected viewports/states; code or static checks alone are insufficient.
-- Design-library content is optional inspiration, not project fact or a default.
 - Exploration is not a product decision. Write selected rules to the owner; isolate alternatives.
 
 Handoff behavior/content/acceptance to Product, implementation contracts to Engineering, verdicts to Assurance, and release facts to Delivery.

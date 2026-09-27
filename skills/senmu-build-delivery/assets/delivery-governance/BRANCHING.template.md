@@ -16,13 +16,13 @@
 - Remote／PR／MR／CI：`<未配置／已配置及授权边界；没有 Remote 不构成缺陷>`
 - 合并策略：`<squash／rebase／merge commit；pull --ff-only 不等于合并策略>`
 - 提交交接：开发执行者完成验证和本地 commit；推送与 PR／MR 仅在 Remote 存在且授权覆盖时执行。
-- Change Unit：`<任务／需求 ID、目标版本线、基线、分支／worktree、sealed commit、范围、测试、依赖／冲突、状态>`；已有任务 owner 时只写回该 owner。
+- Change Unit：`<任务／需求 ID、目标版本线、基线、分支／worktree、review head／sealed commit（按阶段）、范围、测试、依赖／冲突、状态>`；已有任务 owner 时只写回该 owner。
 - 待接收视图：由 `sealed` 且尚无最终 disposition 的 Change Unit 派生，不建立第二套任务台账。
 - 分支拓扑：任务分支默认从上述集成基线建立并回到该线；禁止隐式任务链。真实依赖堆叠登记 `<child unit -> sealed parent unit -> integration order>`。
-- 临时职责：实现者封口 Change Unit；收到合并／发布命令的当前 Agent 负责接收矩阵、审查、集成和候选收口，不登记固定 Team Leader。
+- 评审与封口：`manage_change_unit.py review` 固定评审提交，不结束开发批次；同批返修留在原单元。范围完成、检查及必要评审／返修闭合后才 seal，已封口历史不得重开。合并／发布仍按对应授权执行。
 - worktree 仅作为临时源码执行面；正式状态、台账、交付和发布入口归属项目登记的各自 owner。POC 使用独立
   `POC_ROOT`，不得因状态归属要求写入产品 `main` 或发布工作树。
-- 跨 Agent／会话续作传递稳定 Change Unit ID，并用 `manage_change_unit.py resume` 回到原分支和 worktree。
+- 跨 Agent／会话续作传递稳定 Change Unit ID；位置不明先用 `manage_change_unit.py inspect` 查现有登记，再在写入权限覆盖下 resume。只读检查不重建目录，也不证明其他写入者已退出。
 
 ## 发布收口控制
 
@@ -37,16 +37,17 @@
 
 - 审查对象：`<base_commit..head_commit>`
 - 审查记录 owner：`<PR／MR／审批系统／change-review.json>`
-- 审查身份：`<G2-G3 peer／人类／分离审查 Agent；G4 independent>`
+- 审查要求：`<按实际风险、职责分离和项目政策选择 self／peer／independent>`；记录实际审查身份，自审不得冒充同行或独立审查。
+- 若采用 `validate_change_review.py`，由受信任的合并／CI 入口传入 `--required-review <self|peer|independent>`，明确模式还要求审查状态为 approved，草稿不能放行；不得由被审记录自行降级。独立审查要求不能用记录内例外绕过。未传参数可校验草稿结构，并对已批准记录保留旧身份限制；结构成功不代表可以合并，项目校准前不自动放宽；该工具不是每次编辑的通用检查。
 - 变更清点：`<文件、函数／方法／顶层单元、被修改注释、排除理由>`
 - 必需检查：`<快速／完整质量、测试、构建、架构／安全检查>`
-- 批准失效：当前 `head_commit` 与 `reviewed_head` 不一致时必须复核，不允许沿用过期批准。
+- 批准失效：当前 `head_commit` 与 `reviewed_head` 不一致时复核新增差异和受影响链路，更新候选结论；无关检查证据可复用，不沿用过期批准，也不因新提交机械重跑全部检查。
 - 合并条件：变更文件／单元／注释 pending 和 blocked 为零，必需检查通过，开放 Finding 为零，P0／P1 不得接受风险。
 - 本地候选：没有 Remote 时仍由项目唯一 merge／promote 入口执行等价校验，不把未配置平台当豁免。
 
 ## Worktree 授权与位置
 
-- 只读任务不得创建分支或 worktree；写入任务始终创建短分支，未知并行默认增加 worktree，不等待用户预告并发数量。
+- 只读任务不得创建分支或 worktree；新的独立写入批次使用短分支，未知并行默认增加 worktree；同一未结束批次复用原分支和 worktree，不因返修或换会话另开一份。
 - worktree 依据：`<Codex 写入默认 parallel-capable／必须同时运行比较／独占写入保证／无；实现授权已覆盖本地可逆隔离，不要求用户选择 Git 术语>`
 - 创建前成本：`<源码／依赖／缓存／submodule／数据库／模型／媒体／非 Git 资产；不适用则写无>`
 - 受管 worktree 容器：`<按权威项目根、Git 仓库与现有约定确认；可为项目内 .worktrees/、仓库相邻目录或其他登记位置；不适用则写无>`

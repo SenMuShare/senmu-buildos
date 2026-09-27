@@ -33,11 +33,13 @@ The optional BuildOS implementation uses [Takeover Task](../assets/mature-projec
 
 ### B. Coverage and Findings
 
+For instruction updates, apply [delta adoption](project-instruction-authoring.md#adopting-a-buildos-update) at existing owners, not a whole-template rewrite.
+
 - Map the authorized coverage: real release units, primary journeys, owning modules, data/permission boundaries and executable entrypoints. For each capability governed in this task, establish a usable route to implementation, applicable rules and verification under the [Index Contract](project-standard-discovery-and-on-demand-loading.md#4-index-contract). Reuse existing navigation, inspect the destinations and mark uncovered domains or missing checks explicitly. A generated template or an existing path alone is not a verified route.
 - Each domain records current fact, target, retain/merge/move/add candidate, impact, recovery, and acceptance evidence for its owner.
 - Give findings stable IDs with evidence, P0-P3, status, impact, responsible owner, minimum remediation, and re-review conditions. Audit creates candidates, not write authority.
 
-If product documentation is missing, do not invent historical backlogs or PRDs. Product reconstructs the current product specification from interfaces, features, code, APIs, tests, runtime, and user confirmation; Engineering reconstructs the current system specification. Separate confirmed facts, reasonable inferences, conflicts, and unknowns. Use the standard version PRD and optional design/test artifacts for future versions.
+If product documentation is missing, do not invent historical backlogs or PRDs. Product reconstructs the current product specification from interfaces, features, code, APIs, tests, runtime, and user confirmation; Engineering reconstructs the current system specification. Separate confirmed facts, reasonable inferences, conflicts, and unknowns. For each future formal development version, keep its PRD and technical account; persist version test cases only when the risk needs them. Do not invent historical version documents.
 
 ### C. Decisions and Remediation Waves
 
