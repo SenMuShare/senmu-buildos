@@ -12,7 +12,7 @@ Turn experience goals into implementable decisions. Start from the interface, be
 - Pages, redesigns, visual systems, layout, type, color, responsive rules: [Visual Systems](references/visual-systems-and-design-language.md).
 - Analyze/adapt a screenshot, URL, design, or interface: [Reference Analysis](references/reference-interface-analysis-and-reconstruction.md).
 - Interaction, motion, accessibility, feel: [Interaction](references/interaction-motion-and-accessibility.md).
-- Alternatives, prototypes, UI/UX review: [Prototypes](references/prototype-exploration-and-interface-review.md).
+- Alternatives, prototypes, UI/UX review or design-asset adoption: [Prototypes](references/prototype-exploration-and-interface-review.md).
 - Only for optional pattern inspiration: [Pages](references/design-library/page-structures-and-visual-directions.md) or [Components](references/design-library/component-design-patterns.md); [Index](references/design-library/INDEX.md) maps choices. These are not project facts or required pre-reads.
 
 Read only what is needed. Implement the selected or already-authorized direction under project/Engineering rules; use specialist skills for current APIs/methods only.
@@ -25,6 +25,6 @@ Read only what is needed. Implement the selected or already-authorized direction
 - Make frequent actions direct/predictable. Motion must explain feedback, state, space, or change, with reduced-motion/non-hover paths.
 - Design accessibility, responsiveness, and loading/empty/error/disabled states from the start; never rely on one sensory cue.
 - Deliver direction analysis with observed evidence, implementable decisions, and limits. To claim implemented visual/interaction quality, verify real rendering at affected viewports/states; code or static checks alone are insufficient.
-- Exploration is not a product decision. Write selected rules to the owner; isolate alternatives.
+- Exploration is not a product decision. Write selected rules to the owner; isolate alternatives. Preserve requirement-related user/AI prototypes and UI drafts with explicit adoption scope and Product's version/feature linkage; chat-only images are not durable handoff.
 
 Handoff behavior/content/acceptance to Product, implementation contracts to Engineering, verdicts to Assurance, and release facts to Delivery.

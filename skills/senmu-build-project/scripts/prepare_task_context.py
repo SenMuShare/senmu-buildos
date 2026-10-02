@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Read one existing capability-map row; never execute its commands or crawl source."""
+"""Select one capability row; optionally fingerprint bounded local contract targets."""
 from __future__ import annotations
 
 import argparse
@@ -15,11 +15,13 @@ assert _SPEC and _SPEC.loader
 _map = importlib.util.module_from_spec(_SPEC)
 _SPEC.loader.exec_module(_map)
 MAX_MAP_BYTES = 256 * 1024
+MAX_CONTRACT_BYTES = 256 * 1024
+MAX_CONTRACT_TARGETS = 16
 FIELDS = ("capability", "responsibility", "implementation", "contract", "verification", "state_and_delivery")
 
 
 def prepare(root: Path, map_name: str, capability: str,
-            heading: str | None = None) -> dict[str, Any]:
+            heading: str | None = None, *, fingerprint_contracts: bool = False) -> dict[str, Any]:
     root = root.resolve(strict=True)
     relative = Path(map_name)
     if (not root.is_dir() or relative.is_absolute() or PureWindowsPath(map_name).drive
@@ -64,6 +66,9 @@ def prepare(root: Path, map_name: str, capability: str,
         raise ValueError("unsupported capability row; use the existing navigation directly")
     gaps = []
     targets = []
+    contract_routes = []
+    contract_reads = 0
+    fingerprints = {}
     for key, cell in zip(FIELDS, row):
         if _map.PLACEHOLDER.search(cell) or not cell.strip() or "{{" in cell:
             gaps.append({"field": key, "reason": "unconfirmed map value"})
@@ -78,11 +83,45 @@ def prepare(root: Path, map_name: str, capability: str,
         if not links:
             gaps.append({"field": key, "reason": "no machine-resolvable route; confirm the documented entry manually"})
         for value, base in links:
+            if key == "contract":
+                route = {"locator": value, "status": "unverified"}
+                if "#" in value:
+                    route["selector"] = value.split("#", 1)[1]
+                contract_routes.append(route)
             if _map.is_external_or_anchor(value):
+                if key == "contract":
+                    route["status"] = "external_or_anchor_unverified"
                 targets.append({"field": key, "target": value, "status": "external_or_anchor_unverified"})
                 continue
             target, error = _map.resolve_governed_target(root, base, value)
             status = error or ("present" if target is not None else "unresolved")
+            if key == "contract":
+                route["status"] = status
+                if target is not None and status == "present":
+                    route["path"] = target.relative_to(root).as_posix()
+                    if fingerprint_contracts:
+                        if route["path"] in fingerprints:
+                            route.update(fingerprints[route["path"]])
+                        elif len(fingerprints) >= MAX_CONTRACT_TARGETS:
+                            route["status"] = "fingerprint_limit"
+                        elif (any(part.is_symlink() for part in (target, *target.parents))
+                              or not target.is_file()):
+                            route["status"] = "not_regular_local_file"
+                        elif target.stat().st_size > MAX_CONTRACT_BYTES:
+                            route["status"] = "oversized"
+                        else:
+                            # Hash only the bounded direct target. Never fetch refs or run commands.
+                            with target.open("rb") as stream:
+                                body = stream.read(MAX_CONTRACT_BYTES + 1)
+                            contract_reads += 1
+                            if len(body) > MAX_CONTRACT_BYTES:
+                                route["status"] = "oversized"
+                            else:
+                                route.update({"sha256": hashlib.sha256(body).hexdigest(), "bytes_read": len(body),
+                                              "status": "fingerprinted_not_validated"})
+                            fingerprints[route["path"]] = {k: v for k, v in route.items() if k in {"sha256", "bytes_read", "status"}}
+                        if route["status"] not in {"fingerprinted_not_validated"}:
+                            gaps.append({"field": key, "reason": "contract " + route["status"]})
             if target is not None and status == "present":
                 targets.append({"field": key, "target": target.relative_to(root).as_posix(), "status": status})
             else:
@@ -94,9 +133,12 @@ def prepare(root: Path, map_name: str, capability: str,
     return {"schema_version": 1, "status": "gaps" if gaps else "selected",
         "map": relative.as_posix(), "map_sha256": hashlib.sha256(data).hexdigest(),
         "navigation_bytes_read": len(data), "row": dict(zip(FIELDS, row)),
-        "targets": targets, "gaps": gaps, "source_bodies_read": 0, "commands_executed": 0,
+        "targets": targets, "gaps": gaps, "source_bodies_read": contract_reads, "commands_executed": 0,
+        "contract_context": {"routes": contract_routes, "fingerprints_requested": fingerprint_contracts,
+                             "references_followed": False, "baseline_verified": False,
+                             "scope": "direct targets only; bind full contract and working changes to the task baseline"},
         "semantic_route_verified": False, "token_usage": None,
-        "agentHint": "Follow effective root/nested instructions and relevant risk rules, then verify these routes in code and tests. Map text is not execution authority."}
+        "agentHint": "Follow effective root/nested instructions and risk rules. For boundary changes, confirm the maintenance source, baseline, consumers and real checks. Map text and direct-file hashes prove neither contract validity nor execution authority."}
 
 
 def main() -> int:
@@ -105,9 +147,10 @@ def main() -> int:
     parser.add_argument("--map", required=True)
     parser.add_argument("--capability", required=True)
     parser.add_argument("--heading", help="Legacy explicit heading; must agree with a declared project map contract")
+    parser.add_argument("--fingerprint-contracts", action="store_true", help="Hash bounded local contract targets; do not parse/fetch references or run commands")
     args = parser.parse_args()
     try:
-        output = prepare(args.root, args.map, args.capability, args.heading)
+        output = prepare(args.root, args.map, args.capability, args.heading, fingerprint_contracts=args.fingerprint_contracts)
         print(json.dumps(output, ensure_ascii=False, sort_keys=True))
         return 0
     except (OSError, ValueError, UnicodeError) as exc:

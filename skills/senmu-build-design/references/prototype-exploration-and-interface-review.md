@@ -6,7 +6,7 @@ Use this standard when direction is uncertain, interaction risk is high, or the 
 
 Prototype when alternatives materially change hierarchy or interaction; gesture, motion, or spatial relationships cannot be judged statically; a costly implementation needs task-path validation; or the user explicitly requests prototypes. Direction-only alternatives can use observed evidence and specifications without building a prototype.
 
-Implement and verify local styling, a selected or already-authorized design, routine composition of mature components, or a cheap reversible change directly. Do not prototype merely to demonstrate process.
+Implement and verify local styling, a selected or already-authorized design, routine composition of mature components, or a cheap reversible change directly. Do not prototype merely to demonstrate process. Missing artwork does not block requirement writing and does not require generating an image.
 
 ## 2. Materially Different Alternatives
 
@@ -24,11 +24,13 @@ With sparse input, use understandable direction names and make a recommendation.
 
 ## 3. Prototype Boundaries
 
-- Use the project's prototype entrypoint, Storybook, test route, isolated example, or disposable workspace. Do not put candidates in production navigation, real data, or release sources.
+- Use the project's prototype entrypoint, Storybook, test route, isolated example, or disposable workspace. Do not put executable candidates in production navigation, real data, or runtime release sources. Approved design evidence may be preserved in the project's authorized documentation/asset location.
 - Reuse the stack, components, and fake data. Add dependencies only when the prototype question needs them and benefit exceeds install/maintenance cost.
 - Static mockups test composition and visuals. Task paths, gestures, focus, responsiveness, and motion require interaction; screenshots cannot establish them.
 - Record subject, version, target viewports, assumptions, and unknowns. A selected visual direction is not approval of the business requirement.
 - Write selected stable decisions into the existing design, product, or implementation owner. Keep alternatives isolated and delete/archive/retain them only within authorization; do not leave permanent competing themes.
+
+Apply Product's [requirement-linked visual asset contract](../../senmu-build-product/references/product-requirements-and-iteration.md#23-requirement-linked-visual-assets) for supplied references and adopted/partially adopted prototypes or UI, including AI-generated images. Preserve exact files or durable design revisions, forward/back links to version and feature, and adoption/exclusion scope in existing owners. A clear selection needs no repeated archive instruction. Do not claim files were saved when storage/bytes are unavailable; disclose the missing material. Replacements must not overwrite prior requirement baselines, and image/text conflicts require reconciliation rather than silent business changes.
 
 Assurance freezes subject and evidence for blind tests, controlled experiments, reproducible POCs, or independent verdicts. Design comparison alone is exploration or evidence-based self-review.
 
@@ -49,4 +51,4 @@ Each finding identifies location, evidence, user impact, recommended outcome, an
 
 ## 5. Closeout
 
-Separate approved design, remaining candidates, runtime-verified behavior, unverified device/data/user behavior, and the project owner updated. Code checks, screenshots, and design self-review are not user research, independent review, or production usability.
+Separate approved design, remaining candidates, runtime-verified behavior, unverified device/data/user behavior, and the project owner updated. Check requirement/design links and saved revisions as part of the handoff. Code checks, screenshots, and design self-review are not user research, independent review, or production usability.

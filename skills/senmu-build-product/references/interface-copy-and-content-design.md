@@ -19,6 +19,8 @@ When no content owner exists, store durable terminology, object names, and voice
 - **Match tone to fact.** State ordinary results without unrelated celebration, emotion, or unsupported promises. Clarity and truth precede brand voice.
 - **Do not rely on visuals alone.** Essential actions/states need text or an accessible name, not color, position, or icon alone.
 
+For substantive rewriting or proofreading, use [Writing](../../senmu-build-engineering/references/technical-documentation-writing.md) only when needed for editing scope, fact preservation or protected literals. Product retains content and behavior authority; a local meaning-preserving correction does not activate product governance.
+
 ## 3. Actions and Buttons
 
 Prefer a verb or verb plus object that identifies the result, such as “Save settings,” “Submit for review,” or “Delete project.” Avoid “Click here” and explanatory sentences used as actions.
@@ -35,7 +37,7 @@ Use generic navigation labels only when flow and consequences are clear:
 | OK | confirms known information only; use the business action when one exists |
 | Got it | acknowledges reading only; never saves, deletes, submits, or releases |
 
-For dangerous or irreversible actions, name the actual action and object and state the primary consequence. Never use “OK” as the sole primary label. Buttons, labels, headings, menus, and short column headers normally omit terminal punctuation.
+For dangerous or irreversible actions, name the actual action and object and state the primary consequence. Put required warnings before the risky action, not after it as a result-first explanation. Never use “OK” as the sole primary label. Buttons, labels, headings, menus, and short column headers normally omit terminal punctuation.
 
 ## 4. Status, Errors, and Feedback
 
@@ -46,6 +48,8 @@ For dangerous or irreversible actions, name the actual action and object and sta
 - **Confirmation:** interrupt only for material consequences, likely mistakes, or difficult recovery. Name object, consequence, and continuation; avoid confirmation for ordinary reversible actions.
 
 Primary messages use the product's approved terminology, including technical objects the user actually operates. Exclude secrets, raw internal prompts, stack traces and irrelevant implementation details. Put necessary diagnostics in a redacted, expandable, copyable area; do not hide an approved model, queue, API field or public price solely because it is technical or commercial.
+
+Distinguish transport success, business acceptance, job state and the displayed message. `Accepted` is not necessarily completed; `Pending` is not necessarily processing. Choose language from the approved state model, not a fixed word mapping. Timeout alone does not prove failure or absence of side effects. Preserve codes/enums and use only the supported recovery path; “暂不支持” must not invent a roadmap promise.
 
 ## 5. Generated Interface Content
 

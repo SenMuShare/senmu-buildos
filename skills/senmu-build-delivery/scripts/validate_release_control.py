@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
 from pathlib import Path
 from typing import Any
@@ -170,6 +171,8 @@ def validate_record(data: Any) -> list[str]:
         ):
             errors.append(f"{prefix} retained cleanup requires owner and exit_condition")
 
+    if gate_states.get("git_execution_closed") == "not_applicable" and included_units:
+        errors.append("git_execution_closed cannot be not_applicable while change units are included")
     if gate_states.get("git_execution_closed") == "passed":
         missing = sorted(included_units - cleanup_by_unit.keys())
         if missing:
@@ -198,21 +201,114 @@ def validate_record(data: Any) -> list[str]:
     return errors
 
 
+def validate_live_closeout(data: dict[str, Any], repo: Path) -> tuple[list[str], list[dict[str, Any]]]:
+    """Observe included units only; verify ledger/Git identity, not consent or acceptance."""
+    spec = importlib.util.spec_from_file_location(
+        "buildos_release_workspace", Path(__file__).with_name("inspect_git_workspace.py"))
+    assert spec and spec.loader
+    inspector = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(inspector)
+    errors, observations = [], []
+    cleanup = {item["unit"]: item for item in data["cleanup"]}
+    closed_claim = any(gate["id"] == "git_execution_closed" and gate["status"] == "passed"
+                       for gate in data["gates"])
+    target = data["release"]["target_line"]
+    target = target if target.startswith("refs/heads/") else "refs/heads/" + target
+    seen = set()
+    for item in data["change_units"]:
+        if item["disposition"] != "include":
+            continue
+        unit = item["unit"]
+        if unit in seen:
+            errors.append(f"{unit}: duplicate included unit")
+            continue
+        seen.add(unit)
+        try:
+            facts = inspector.unit_facts(repo, unit)
+        except (SystemExit, OSError, ValueError) as exc:
+            errors.append(f"{unit}: live unit observation failed: {exc}")
+            continue
+        observations.append(facts)
+        if facts["identity_issues"]:
+            errors.append(f"{unit}: {', '.join(facts['identity_issues'])}")
+        if not closed_claim:
+            continue
+        if facts["state"] != "integrated":
+            errors.append(f"{unit}: included unit is not registered integrated")
+        for field in ("branch", "source_commit", "integration_commit"):
+            if item[field] != facts[field]:
+                errors.append(f"{unit}: {field} differs from the registered receipt")
+        observed_target = facts["integration_target"]
+        if not isinstance(observed_target, str):
+            observed_target = ""
+        observed_target = (observed_target if observed_target.startswith("refs/heads/")
+                           else "refs/heads/" + observed_target)
+        if observed_target != target or facts["receipt_reachable"] is not True:
+            errors.append(f"{unit}: receiving line or receipt reachability does not match release")
+        proof = facts["integration_proof"]
+        if not isinstance(proof, dict) or any(
+            proof.get(field) != facts[fact_field]
+            for field, fact_field in (("source_head", "source_commit"), ("integration_commit", "integration_commit"))
+        ):
+            errors.append(f"{unit}: stored content proof does not identify this receipt")
+        if isinstance(proof, dict) and "receiving_target" in proof:
+            proof_target = proof["receiving_target"]
+            if not nonempty(proof_target):
+                errors.append(f"{unit}: stored proof receiving target is invalid")
+            else:
+                proof_target = (proof_target if proof_target.startswith("refs/heads/")
+                                else "refs/heads/" + proof_target)
+                if proof_target != observed_target:
+                    errors.append(f"{unit}: stored proof receiving target differs from the registered receipt")
+        if facts["head"] is not None and facts["head"] != facts["source_commit"]:
+            errors.append(f"{unit}: retained source branch moved after seal")
+        disposition = cleanup[unit]
+        if disposition.get("branch") is not None and disposition["branch"] != facts["branch"]:
+            errors.append(f"{unit}: cleanup branch differs from registered surface")
+        cleanup_path = disposition.get("worktree")
+        if cleanup_path is not None and (
+            not nonempty(cleanup_path) or Path(cleanup_path).expanduser().absolute()
+            != Path(facts["worktree"]).absolute()
+        ):
+            errors.append(f"{unit}: cleanup path differs from registered surface")
+        if disposition["disposition"] == "removed" and any(facts["physical"].values()):
+            errors.append(f"{unit}: cleanup says removed but branch/worktree still exists or is registered")
+    return errors, observations
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("record", type=Path)
+    parser.add_argument("--repo", type=Path, help="Opt-in readback of included units in this repository; never deletes resources.")
+    parser.add_argument("--json", action="store_true", help="Report structural and observed facts separately.")
     args = parser.parse_args()
     try:
         data = json.loads(args.record.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
-        print(f"[ERROR] {exc}")
-        return 1
-    errors = validate_record(data)
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        data = None
+        errors = [str(exc)]
+    else:
+        errors = validate_record(data)
+    structure_valid = not errors
+    observations = []
+    live_checked = args.repo is not None and structure_valid
+    if live_checked:
+        live_errors, observations = validate_live_closeout(data, args.repo)
+        errors.extend(live_errors)
+    if args.json:
+        print(json.dumps({"schema_version": 1, "kind": "release_control_check",
+                          "structure_valid": structure_valid, "git_state_checked": live_checked,
+                          "units": observations, "errors": errors,
+                          "scope": "included_registered_units_only",
+                          "limits": "Snapshot and stored proof identity only; no fresh content replay, approval, acceptance, writer-exit or deletion proof beyond observed presence."},
+                         ensure_ascii=False, indent=2))
+        return 1 if errors else 0
     if errors:
         for error in errors:
             print(f"[ERROR] {error}")
         return 1
-    print(f"[OK] release control valid: {args.record}")
+    scope = "included-unit Git readback" if live_checked else "structure only; Git not observed"
+    print(f"[OK] release control valid: {args.record} ({scope})")
     return 0
 
 

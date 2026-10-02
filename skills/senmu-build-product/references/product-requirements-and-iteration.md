@@ -19,7 +19,7 @@ Current product specification
 | Artifact | When | Sole responsibility | Template |
 | --- | --- | --- | --- |
 | `product/USER_REQUIREMENTS.md` | optional | durable ideas/feedback with adjacent status and target version | `USER_REQUIREMENTS.template.md` |
-| `versions/<version>/PRD.md` | version enters development | version goals, changes, behavior, acceptance | `PRD.template.md` |
+| `versions/<version>/PRD.md` | requirement drafting/planning and subsequent development | version goals, changes, behavior, acceptance | `PRD.template.md` |
 | `versions/<version>/TECHNICAL_DESIGN.md` | every formal version entering development | how and why this version is implemented, including unchanged design carried forward | `TECHNICAL_DESIGN.template.md` |
 | `versions/<version>/TEST_CASES.md` | version-level test design must persist | risk-matched cases derived from PRD | `TEST_CASES.template.md` |
 | `product/PRODUCT_SPECIFICATION.md` | durable whole-product view is needed | complete current product facts | `PRODUCT_SPECIFICATION.template.md` |
@@ -33,15 +33,52 @@ Public README, website, store listing, and repository description are current pr
 
 ## 2. Template Use
 
-After choosing to create an artifact, follow the user's requested format. For a complete template, retain sections and mark genuinely irrelevant content N/A; missing facts remain unknown. Otherwise copy its template and apply these defaults:
+Follow the user's requested format. Preserve it in the existing product owner and reuse it across sessions and updates unless the user explicitly replaces or localizes it. A complete requested template retains its sections, explaining genuine non-applicability; unknown facts are not invented. Otherwise retain required scope/result content and only relevant optional modules. Remove writing comments, empty tables and unused optional fields, not unresolved decisions in drafts. Optional modules may be renamed, merged or repeated without losing facts; required feature sections may not. Keep small changes brief without inventing pages, interfaces or performance targets.
 
-1. retain enough required content to identify the artifact, scope, and result; required does not mean every task needs the artifact;
-2. retain optional content only when the product, change, ambiguity, or risk needs it;
-3. remove writing comments, empty tables, `TBD`, and rows of `not applicable`;
-4. rename, merge, or repeat modules as useful without losing facts required for implementation/acceptance;
-5. keep small changes minimal; template prompts do not require expansion of every page, interface, permission, or performance topic.
+Templates outside an adopted format are outlines, not universal schemas, validators or approval flows. The following feature contract governs formal requirements by default; it does not force an artifact for every task.
 
-Standardize document responsibility and broad organization, not heading count, fields, or length. Treat templates as outlines, not schemas, validators, or approval flows.
+## 2.1 Per-feature Requirement Contract
+
+Use for formal requirement drafts, new-version planning and additions/updates during development. Ordinary discussion, exploration and raw-idea backlogs need no four-part reply or invented version. Do not rewrite accepted history merely to adopt this format.
+
+Each feature/capability has its own name or existing ID, `需求对应版本号`, and exactly four ordered sections:
+
+| Section | Required meaning |
+| --- | --- |
+| `1. 需求描述` | Usage scenario, background, problem, business goal and user need. |
+| `2. 功能描述` | What the capability does, for whom, its scope and intended result. |
+| `3. 功能逻辑` | Backend business behavior: triggers, rules, validation, decisions, state changes, data flow, boundaries, failure handling and observable results. |
+| `4. 前端交互描述` | Elements, operation paths, feedback copy and applicable exceptions: disabled/unselectable controls, errors, empty states, validation failure, permissions, timeout and recovery. Explain trigger, UI response, message and next action. |
+
+Version is metadata, not a fifth section, and means the target product version, not BuildOS's package version. One document-wide set cannot replace each feature's set. Small changes may use one sentence per part, never omit parts. Identify inherited backend rules when unchanged. Non-UI capabilities keep section 4 with a reason for non-applicability. Unknown versions remain explicit draft questions.
+
+Keep observable acceptance in sections 3/4 and shared acceptance authority at version level, not a fifth feature section. Reference shared rules precisely while explaining affected behavior. Components, functions, schemas and deployment belong in technical design; neither code nor images replace the written requirement.
+
+## 2.2 Clarification and Output Review
+
+For each feature, check scenario, goal, scope, normal flow, rules, permissions, state/data, frontend feedback, exceptions and recovery together; compare settled decisions and affected features for omissions or conflicts. Retrieve existing facts first. Discuss consequential unknowns in multiple rounds as needed, stating gap, impact, recommendation and choice. Reuse settled answers; distinguish decisions from assumptions/advice. Mark unresolved draft content in its relevant section and block only implementation whose outcome would otherwise be guessed.
+
+Review per-feature version, four ordered substantive sections, semantic consistency, exceptions and visual associations. For the default Chinese format, use the read-only [structure checker](../scripts/check_requirement_structure.py) at the actual installed Skill path:
+
+```bash
+python3 <product-skill-root>/scripts/check_requirement_structure.py --document <existing-PRD.md>
+# Allow an explicitly unresolved target version only in a draft:
+python3 <product-skill-root>/scripts/check_requirement_structure.py --document <existing-PRD.md> --draft
+```
+
+It checks recognizable feature blocks, versions, section order and nonempty content, not coverage, business correctness, meaningful exceptions, adoption, asset availability or archival completion. Review those from evidence. Do not apply it to a different user-adopted format or turn it into a universal Hook/approval gate.
+
+## 2.3 Requirement-linked Visual Assets
+
+Preserve requirement-related prototypes/UI supplied by the user or adopted from any human/AI source. Clear selection establishes adoption scope without another archive instruction. Record adopted, partially adopted, reference-only, superseded or unresolved disposition and what is included/excluded; choosing layout does not approve sample prices, copy, fields or business rules.
+
+Save available files in the project's existing authorized design/prototype location or document store, not only chat or the installed BuildOS package. Embed or reference them in section 4 of each affected feature, identifying requirement version and feature/ID, exact file or durable design revision/frame, disposition and scope. Use the existing asset index, design record or colocated note for a backlink to the requirement. Reuse one asset across multiple features or multiple state images per feature; do not copy a file for every relation or create a parallel registry.
+
+Read back saved artifacts and requirement anchors before claiming linkage. Temporary links require an authorized copy or revision-stable snapshot; a live editable URL is not a frozen baseline. Preserve source and usable snapshots under existing access/retention rules. Missing bytes, permission or durable storage must be recorded with their impact, never replaced with fictional paths or archival claims. Do not publish private material or delete originals/alternatives without authority.
+
+On replacement, update current forward/back links, disposition and scope while preserving prior requirements' exact design basis through existing revision history. Current specifications keep applicable adopted references; frozen PRDs keep historical ones. Reconcile image/text conflicts with approved business decisions and the owner, not automatically with the newest image. Images never replace written exceptional states and recovery.
+
+Without relevant assets, omit the attachment subsection: do not generate images, empty ledgers or blockers. Unrelated uploads and every intermediate AI variation need not become requirement evidence. Product owns requirement association/adoption meaning, Design owns design decisions, and the existing material owner retains custody.
 
 ## 3. From Requirement to Version PRD
 
@@ -66,12 +103,12 @@ When a backlog exists, put status and target version beside each item; do not ad
 Each version in development has one PRD that removes material ambiguity for Product, Engineering, testing, and AI:
 
 - organize UI products by page, capability, and concrete requirement;
-- organize non-UI capabilities by flow, trigger, rules, result, exceptions, and acceptance;
+- organize non-UI capabilities by flow, trigger, rules, result, exceptions, and acceptance within the same four feature sections;
 - state only user-observable or business-required behavior across frontend/backend; put components, functions, schemas, and deployment in technical design.
 
 Maintain one version requirement/defect list in the PRD or equivalent owner, not one per item, agent, or branch. Each entry needs type, target/acceptance, result state, and implementation/verification evidence or disposition. Use project states, or concise states distinguishing pending, analyzed, implementing, implemented-unverified, verified, and excluded. Execution steps remain in the task owner.
 
-A field, copy, or local behavior change may need only version, change, and acceptance. By default expand template areas for actual workflow, state, permission, billing, data, compliance, or release-unit risk. A fix that restores the current specification does not rewrite approved product behavior. Track it in the existing version requirement/defect record and keep its implementation and verification account in the version technical design.
+A field, copy, or local behavior change may need only a brief sentence in each required feature section, preserving version, change and acceptance. Expand details for actual workflow, state, permission, billing, data, compliance, or release-unit risk. A fix that restores the current specification does not rewrite approved product behavior. Track it in the existing version requirement/defect record and keep its implementation and verification account in the version technical design.
 
 Resolve the object and intent of cancellation from the request and existing product decisions. Cancelling unimplemented work removes that work from the plan; stopping a run follows its cancellation contract; explicitly retiring an existing capability removes its executable entrypoints under the approved retirement scope. Do not infer permanent capability removal from the word cancel alone. Record replacement behavior and required historical-data, compliance, compatibility or rollback boundaries. Retirement of code never by itself authorizes destroying business data, audit records or recovery evidence.
 
@@ -95,9 +132,9 @@ Implementation completion, passing tests, product acceptance, and release are fo
 
 After acceptance, record authority, candidate, and evidence; freeze the version PRD, technical design and any test cases, then:
 
-- merge effective behavior into the relevant `PRODUCT_SPECIFICATION.md` section and remove superseded logic;
+- merge effective behavior and applicable adopted-design references into the relevant `PRODUCT_SPECIFICATION.md` section and remove superseded current logic;
 - merge durable technical changes into `SYSTEM_TECHNICAL_SPECIFICATION.md` and remove superseded facts;
-- rely on Git/version documents for history rather than accumulating generations in current specifications;
+- rely on Git/version documents and preserved asset revisions for history rather than accumulating generations in current specifications;
 - continue reading deployment, production, and rollback from Delivery facts.
 
 Large products may split current specifications into indexes and page/module documents while retaining one logical current owner each.
@@ -109,7 +146,7 @@ For new projects, these paths are default responsibility mappings, not mandatory
 ```text
 product/USER_REQUIREMENTS.md              # optional
 product/PRODUCT_SPECIFICATION.md          # current product facts
-versions/<version>/PRD.md                 # current development version
+versions/<version>/PRD.md                 # requirement draft and current development version
 versions/<version>/TECHNICAL_DESIGN.md    # each formal development version; concise when unchanged
 versions/<version>/TEST_CASES.md          # optional, derived from PRD
 engineering/SYSTEM_TECHNICAL_SPECIFICATION.md # current technical facts

@@ -2,6 +2,8 @@
 
 Use this standard to calibrate browser/client implementation when frontend contracts are missing, conflicting, or changing. When project rules already guide ordinary implementation, follow them directly; “frontend development” does not justify loading a general textbook.
 
+Shared client/server interfaces: [Contract Governance](api-and-boundary-contract-governance.md).
+
 ## 1. Frontend Implementation Boundary
 
 Frontend Engineering turns approved product behavior and design specifications into observable interfaces: render/interaction state, browser routing, client data-fetch boundaries, form submission, public component contracts, responsive and accessible implementation, and browser verification. It does not redefine product capability, copy meaning, or visual direction.

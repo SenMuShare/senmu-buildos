@@ -4,6 +4,8 @@
 from __future__ import annotations
 
 import argparse
+import importlib.util
+import os
 import json
 import subprocess
 from pathlib import Path
@@ -160,13 +162,108 @@ def recommend_execution_surface(
     }
 
 
+def unit_facts(repo: Path, unit: str) -> dict[str, Any]:
+    """Read one registered unit and its physical surface; never restore or delete it."""
+    spec = importlib.util.spec_from_file_location(
+        "buildos_workspace_change_unit", Path(__file__).with_name("manage_change_unit.py"))
+    assert spec and spec.loader
+    manager = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(manager)
+    manager.validate_identity(unit)
+    repo = manager.git_root(repo)
+    _, record, observed = manager.observe_unit(repo, unit)
+    expected = Path(record["worktree"]).expanduser()
+    raw = manager.git(repo, "worktree", "list", "--porcelain", "-z")
+    registrations = []
+    for block in raw.split("\0\0"):
+        fields = dict(field.partition(" ")[::2] for field in block.split("\0") if field)
+        if "worktree" in fields:
+            registrations.append(fields)
+    expected_path = expected.resolve()
+    expected_branch = "refs/heads/" + record["branch"]
+    related_registrations = [
+        {"path": item["worktree"], "branch": item.get("branch")}
+        for item in registrations
+        if Path(item["worktree"]).resolve() == expected_path
+        or item.get("branch") == expected_branch]
+    registered = bool(related_registrations)
+    target = record.get("integration_target", record.get("target"))
+    receipt = record.get("integration_commit")
+    target_head, reachable = None, None
+    issues = list(observed["identity_issues"])
+    if any(Path(item["path"]).resolve() != expected_path or item["branch"] != expected_branch
+           for item in related_registrations):
+        if "worktree_registration_mismatch" not in issues:
+            issues.append("worktree_registration_mismatch")
+    if record["state"] == "integrated":
+        try:
+            if (not isinstance(target, str) or not target.strip()
+                    or not isinstance(receipt, str) or manager.COMMIT_PATTERN.fullmatch(receipt) is None):
+                raise SystemExit("invalid receiving identity")
+            target_head = manager.resolve_commit(repo, target)
+            reachable = bool(receipt and manager.is_ancestor(repo, receipt, target_head))
+        except SystemExit:
+            issues.append("receiving_line_or_receipt_unresolved")
+    _, final_record, final_observed = manager.observe_unit(repo, unit)
+    if final_record != record or final_observed != observed:
+        issues.append("unit_changed_during_observation")
+    if raw != manager.git(repo, "worktree", "list", "--porcelain", "-z"):
+        issues.append("worktree_registration_changed_during_observation")
+    if target_head is not None:
+        try:
+            if manager.resolve_commit(repo, target) != target_head:
+                issues.append("receiving_line_changed_during_observation")
+        except SystemExit:
+            issues.append("receiving_line_changed_during_observation")
+    return {
+        **observed, "identity_issues": issues,
+        "source_commit": record.get("head"), "integration_target": target,
+        "integration_commit": receipt, "integration_proof": record.get("integration_proof"),
+        "target_head": target_head, "receipt_reachable": reachable,
+        "worktree_registrations": related_registrations,
+        "physical": {"branch_exists": observed["head"] is not None,
+                     "worktree_registered": registered,
+                     "worktree_path_present": os.path.lexists(expected)},
+        "authority": "not_assessed", "writer_exit": "not_assessed",
+        "observation_scope": "registered_unit_snapshot_not_deletion_permission",
+    }
+
+
+def inspect_registered_unit(repo: Path, unit: str, intent: str) -> dict[str, Any]:
+    facts = unit_facts(repo, unit)
+    issues = set(facts["identity_issues"])
+    recoverable_absence = (
+        issues <= {"worktree_unavailable", "worktree_registration_mismatch"}
+        and not facts["physical"]["worktree_path_present"]
+        and not facts["physical"]["worktree_registered"])
+    if intent in {"read", "inventory", "release-closeout"}:
+        mode = "read_only_registered_unit"
+    elif issues and not recoverable_absence:
+        mode = "reconcile_registered_unit"
+    elif facts["state"] == "in_progress":
+        mode = "resume_existing_unit" if intent == "write" else "establish_existing_writer_handoff"
+    else:
+        mode = facts["repair_route"]
+    return {
+        "schema_version": 2, "kind": "registered_unit_workspace",
+        "repository_root": facts["repository_root"], "change_unit": facts,
+        "execution_recommendation": {
+            "mode": mode, "unit": unit, "worktree": facts["worktree"],
+            "reason": "Use the task owner's exact unit ID. Inspection neither grants writing nor proves the prior writer exited; do not create a sibling for a known unit.",
+        },
+    }
+
+
 def inspect(
     repo_arg: Path,
     target: str,
     protected: set[str],
     intent: str = "inventory",
     exclusive_writer: bool = False,
+    unit: str | None = None,
 ) -> dict[str, Any]:
+    if unit is not None:
+        return inspect_registered_unit(repo_arg, unit, intent)
     repo = Path(git(repo_arg, "rev-parse", "--show-toplevel")).resolve()
     target_head = git(repo, "rev-parse", "--verify", f"{target}^{{commit}}")
     worktrees = parse_worktrees(git(repo, "worktree", "list", "--porcelain"))
@@ -294,6 +391,7 @@ def main() -> int:
             "can appear for the entire edit window."
         ),
     )
+    parser.add_argument("--unit", help="Exact Change Unit ID recovered from the authoritative task; never inferred from a title.")
     parser.add_argument("--compact", action="store_true")
     args = parser.parse_args()
     report = inspect(
@@ -302,6 +400,7 @@ def main() -> int:
         set(args.protected),
         args.intent,
         args.exclusive_writer,
+        args.unit,
     )
     print(json.dumps(report, ensure_ascii=False, indent=None if args.compact else 2, sort_keys=True))
     return 0

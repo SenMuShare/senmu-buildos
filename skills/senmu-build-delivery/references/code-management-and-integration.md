@@ -42,7 +42,7 @@ python3 skills/senmu-build-delivery/scripts/manage_change_unit.py verify \
   --repo <returned-worktree> --unit <same-id>
 ```
 
-`prepare` records the frozen baseline in the Git common dir. Lifecycle commands share identity and ancestry checks, not task or acceptance state.
+Recover the task owner's existing unit ID first; `inspect_git_workspace.py --repo <repo> --unit <id> --intent write` returns its actual route without creating a sibling. `prepare` records the frozen baseline in the Git common dir; lifecycle identity is not task acceptance.
 
 Reuse unchanged source facts; reassess HEAD/tree/surface/scope changes. Diagnosis grants no deletion or new ledger; Engineering owns routine commits.
 
@@ -113,7 +113,7 @@ python3 skills/senmu-build-delivery/scripts/manage_change_unit.py list --repo <r
 
 Full output retains v1: sealed units are `pending_integration`; `candidate_reachable` only hints at ancestry. After authorized reception, record the disposition with `close --disposition <integrated|excluded|superseded> --owner-ref <owner#section>`. Integrated closeout requires `--integration-commit <receipt>` on the registered target and an unchanged sealed source.
 
-`close` verifies either the exact sealed commit or the full frozen delta replayed onto the receiving base, comparing the entire resulting Git tree. Rewritten history defaults to the receipt's first parent; pass `--integration-base <target-before-reception>` for a multi-commit rebase/cherry-pick range. Clean ordinary merges, squash and exact-content rewrites are supported. Unrelated, partial or extra receipt changes fail. Conflicts, missing Git merge-tree capability or unproven semantic rewrites remain sealed; review a target-specific candidate rather than asserting equivalence.
+`close` verifies the exact sealed commit or full frozen delta by entire-tree replay; rewrites use the first parent or `--integration-base <target-before-reception>`. Partial, extra, conflicting or unproven reception stays sealed. An approved final line may differ from a stacked development target: use `--integration-target` with `--target-authorization-ref` without moving sealed history. The existing target decision must cover this unit and line; original baseline and parent remain immutable.
 
 Replay may write Git objects, not branches, index or working files. The existing record stores `integration_proof`; legacy receipts gain no proof automatically. This proves reception at that commit, not current behavior, review, acceptance or release. Existing task authority and target verification remain necessary.
 
@@ -165,7 +165,7 @@ Interpret “release latest/everything just fixed” as release closeout, not me
 Instantiate `RELEASE_CONTROL.template.json` or equivalent for scope, intake matrix, gates, evidence, and recovery, closing `scope_accounted -> integration_complete -> candidate_verified -> release_authorized -> release_verified -> git_execution_closed` and validating:
 
 ```bash
-python3 skills/senmu-build-delivery/scripts/validate_release_control.py <release-control.json>
+python3 skills/senmu-build-delivery/scripts/validate_release_control.py <release-control.json> --repo <repo> --json
 ```
 
 Release Control owns what to check/current progress/recovery; Release Record owns actual external actions. Do not repeat full gates at intermediate checkpoints. Reuse unchanged candidate evidence; after change rerun affected checks and any entrypoint-required gate.

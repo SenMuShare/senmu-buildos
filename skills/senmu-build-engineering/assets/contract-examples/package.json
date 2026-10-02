@@ -1,0 +1,9 @@
+{
+  "private": true,
+  "description": "Optional isolated BuildOS contract examples; not plugin runtime dependencies",
+  "devDependencies": {
+    "@redocly/cli": "1.34.5",
+    "openapi-typescript": "7.10.1",
+    "typescript": "5.8.3"
+  }
+}

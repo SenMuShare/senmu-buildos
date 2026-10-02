@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "repository": "SenMuShare/senmu-buildos",
-  "reviewed_for_version": "2.23.2",
+  "reviewed_for_version": "2.24.1",
   "description": "AI-native BuildOS for Codex, Claude Code, Doubao, WorkBuddy and ZCode: product discovery, UI/UX design, software engineering, context-aware workflows, testing, Git and verifiable releases.",
   "topics": [
     "agent-skills",
@@ -27,14 +27,13 @@
   ],
   "readme_review": {
     "updated_sections": [
-      "structural-reference-contract-tests",
-      "scoped-architecture-review-example",
+      "executable-contract-examples",
       "release-summary-and-source-version"
     ],
     "summary": {
-      "zh": "本版让前后端参考测试检查真实引用、唯一归属和平级结构，不再锁定英文原句。架构审查先区分局部问题和全局体检，按证据扩展，并提供简明的前后职责对照。保留八个 Skill、现有项目规则与授权边界；结构检查不等于模型语义理解或效果实测。详见[用户更新日志](RELEASE_NOTES.md)。",
-      "en": "This release checks domain references through actual links, unique ownership and peer Skill structure rather than fixed English wording. Architecture review distinguishes a local diagnosis from repository-wide assessment, expands on evidence and uses a concise before/after responsibility example. The eight Skills, existing project rules and authority boundaries remain; structural checks do not prove model understanding or performance. See [release notes](RELEASE_NOTES.md).",
-      "ja": "本版は、前後端の参照テストで固定の英文ではなく、実際のリンク、単一の管理元、並列の Skill 構造を検証します。局所的な設計診断とリポジトリ全体の評価を区別し、根拠に応じて範囲を広げ、変更前後の責任分担を簡潔に示します。8 つの Skill、既存ルールと権限境界を維持します。構造テストはモデルの理解や性能の証明ではありません。詳しくは[更新履歴](RELEASE_NOTES.md)を参照してください。"
+      "zh": "本版修复需求检查器的三项漏检，并补齐两条可运行的接口契约链路：模块化定义与代码声明生成，连接类型生成、真实调用校验和 SQLite 数据验证。增加故障注入与恢复测试，保留草稿、自定义版本、有效列表和 2.24.0 的轻量治理能力；原生 Agent 表现与源码验证分开报告。详见[用户更新日志](RELEASE_NOTES.md)。",
+      "en": "This release repairs three requirement-checker omissions and adds two executable contract chains: modular definitions and code-owned declarations, connected to type generation, real consumer validation and SQLite outcome checks. Fault-injection and restoration cases preserve drafts, custom version labels, meaningful lists and the lightweight 2.24.0 governance model. Native Agent behavior remains separate from source evidence. See [release notes](RELEASE_NOTES.md).",
+      "ja": "本版は要件チェックの3つの見落としを修正し、分割定義とコード宣言からの生成という2つの実行可能な契約例を追加します。型生成、実際の呼び出しの検証、SQLite の結果確認をつなぎ、障害注入と復元も検証します。草稿、独自の版名、内容のあるリスト、2.24.0 の軽量な整備方法を維持し、Agent の実動作とソースの証拠を分けて報告します。詳細は[更新履歴](RELEASE_NOTES.md)をご覧ください。"
     }
   },
   "readmes": {

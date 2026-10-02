@@ -421,6 +421,7 @@ def resolve_commit(repo: Path, ref: str) -> str:
 
 def integration_proof(
     repo: Path, record: dict[str, Any], receipt: str, receiving_base: str | None,
+    *, receiving_target: str | None = None,
 ) -> dict[str, str]:
     """Prove frozen source reception, not product acceptance or current behavior."""
     for key in ("head", "baseline", "branch", "target"):
@@ -433,7 +434,8 @@ def integration_proof(
     branch = record["branch"]
     if branch_exists(repo, branch) and resolve_commit(repo, f"refs/heads/{branch}") != source:
         raise SystemExit("[BLOCKED] Change Unit branch moved after seal; reconcile the frozen candidate")
-    target = resolve_commit(repo, record["target"])
+    target_ref = receiving_target or record["target"]
+    target = resolve_commit(repo, target_ref)
     if not is_ancestor(repo, receipt, target):
         raise SystemExit("[BLOCKED] integration commit is not reachable from the registered target line")
 
@@ -478,7 +480,7 @@ def integration_proof(
             raise SystemExit("[BLOCKED] receiving range adds no source change; use the actual receipt or supersession")
         kind = "tree_replay"
     # Fail before changing a record when either observed ref moved during verification.
-    if resolve_commit(repo, record["target"]) != target:
+    if resolve_commit(repo, target_ref) != target:
         raise SystemExit("[BLOCKED] target moved during integration verification; retry against current facts")
     if branch_exists(repo, branch) and resolve_commit(repo, f"refs/heads/{branch}") != source:
         raise SystemExit("[BLOCKED] Change Unit branch moved during integration verification")
@@ -486,7 +488,28 @@ def integration_proof(
         "kind": kind, "source_baseline": baseline, "source_head": source,
         "receiving_base": before, "integration_commit": receipt,
         "receiving_tree": actual_tree, "observed_target_head": target,
+        "receiving_target": target_ref,
     }
+
+
+def approved_receiving_target(repo: Path, args: argparse.Namespace) -> str | None:
+    """Bind a caller-approved final line; a reference is not authentication of consent."""
+    requested = getattr(args, "integration_target", None)
+    authority = getattr(args, "target_authorization_ref", None)
+    if requested is None:
+        if authority is not None:
+            raise SystemExit("[BLOCKED] --target-authorization-ref requires --integration-target")
+        return None
+    if not requested.strip() or not authority or not authority.strip():
+        raise SystemExit("[BLOCKED] --integration-target requires --target-authorization-ref for its approved scope")
+    target = requested if requested.startswith("refs/heads/") else "refs/heads/" + requested
+    git(repo, "check-ref-format", target)
+    branch = target.removeprefix("refs/heads/")
+    if not branch_exists(repo, branch):
+        raise SystemExit("[BLOCKED] integration target must be an existing named local line")
+    if load_record(repo, branch) is not None:
+        raise SystemExit("[BLOCKED] final integration target cannot be a Change Unit branch")
+    return target
 
 
 def close(args: argparse.Namespace) -> dict[str, Any]:
@@ -504,8 +527,12 @@ def close(args: argparse.Namespace) -> dict[str, Any]:
         if not args.integration_commit:
             raise SystemExit("[BLOCKED] integrated disposition requires --integration-commit")
         integration_commit = resolve_commit(repo, args.integration_commit)
-        proof = integration_proof(repo, record, integration_commit, args.integration_base)
-    elif args.integration_commit or args.integration_base:
+        receiving_target = approved_receiving_target(repo, args)
+        proof = integration_proof(repo, record, integration_commit, args.integration_base,
+                                  receiving_target=receiving_target)
+    elif (args.integration_commit or args.integration_base
+          or getattr(args, "integration_target", None) is not None
+          or getattr(args, "target_authorization_ref", None) is not None):
         raise SystemExit("[BLOCKED] integration arguments are valid only for integrated disposition")
     else:
         integration_commit = None
@@ -518,6 +545,9 @@ def close(args: argparse.Namespace) -> dict[str, Any]:
     }
     if proof is not None:
         closed["integration_proof"] = proof
+        closed["integration_target"] = proof["receiving_target"]
+        if receiving_target is not None:
+            closed["target_authorization_ref"] = args.target_authorization_ref.strip()
     final_path, final_record, current = observe_unit(repo, args.unit)
     require_identity(current, absent_surface_issues(repo, current))
     if final_path != path or final_record != record or current != observed:
@@ -832,6 +862,8 @@ def main() -> int:
     close_parser.add_argument("--disposition", choices=("integrated", "excluded", "superseded"), required=True)
     close_parser.add_argument("--owner-ref", required=True)
     close_parser.add_argument("--integration-commit")
+    close_parser.add_argument("--integration-target", help="Approved final local line; original target and sealed parent stay unchanged.")
+    close_parser.add_argument("--target-authorization-ref", help="Existing decision authorizing the explicit receiving line; checked by the caller.")
     close_parser.add_argument(
         "--integration-base",
         help="Target commit before reception; defaults to the receipt's first parent for rewritten history.",

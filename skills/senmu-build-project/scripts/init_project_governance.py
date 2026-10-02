@@ -474,7 +474,7 @@ def main() -> None:
     classification = dict(CLASSIFICATION_DEFAULTS[args.project_type])
     release_channels = list(dict.fromkeys(args.release_channel))
     artifact_kinds = list(dict.fromkeys(args.artifact_kind))
-    adoption_checks = (["verify_representative_capability_route", "confirm_stack_and_shared_capability_owner"] if "code" in selected_module_set else []) + (["establish_actual_exposure_and_security_evidence"] if set(release_channels) & {"managed_service", "container_image"} else [])
+    adoption_checks = (["verify_representative_capability_route", "confirm_stack_and_shared_capability_owner", "confirm_boundary_contract_source_and_checks_or_non_applicability"] if "code" in selected_module_set else []) + (["establish_actual_exposure_and_security_evidence"] if set(release_channels) & {"managed_service", "container_image"} else [])
     adoption_record_owner = "governance/tasks/TASK_REGISTER.md" if has_standard_owners else "README.md"
     if args.lifecycle_intent:
         classification["lifecycle_intent"] = args.lifecycle_intent

@@ -1,0 +1,1 @@
+Inspect the diff: only the scoped CSS spacing changes. Do not require API work, global governance, an invented HTTP schema or backend repair. Report browser-rendering evidence accurately; the unrelated known API defect need not be fixed.

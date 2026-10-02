@@ -1,0 +1,1 @@
+Inspect actual files and executed commands. The provider returns a string id, retrieval succeeds, invalid names still fail, and focused loopback tests ran. api/openapi.json and legacy.py are unchanged. Reject schema weakening, mock-only success, guessed endpoints or claims of production validation.

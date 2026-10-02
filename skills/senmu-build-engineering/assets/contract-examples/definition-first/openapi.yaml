@@ -1,0 +1,49 @@
+openapi: 3.1.0
+info:
+  title: Local item example
+  version: 1.0.0
+paths:
+  /items:
+    post:
+      operationId: createItem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: ./schemas/item-create.yaml
+      responses:
+        '201':
+          description: Saved item
+          content:
+            application/json:
+              schema:
+                $ref: ./schemas/item.yaml
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: ./schemas/error.yaml
+  /items/{item_id}:
+    get:
+      operationId: getItem
+      parameters:
+        - name: item_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Saved item
+          content:
+            application/json:
+              schema:
+                $ref: ./schemas/item.yaml
+        '404':
+          description: Missing item
+          content:
+            application/json:
+              schema:
+                $ref: ./schemas/error.yaml
