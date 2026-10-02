@@ -2,6 +2,8 @@
 
 Use this standard when server-side contracts for APIs, domain services, data, transactions, caches, queues, or background jobs are missing, conflicting, or changing. Follow sufficient project rules directly. Framework, database, payment, and migration details belong to the matching specialist Skill or project owner.
 
+API authority and generated artifacts: [Contract Governance](api-and-boundary-contract-governance.md).
+
 ## 1. Establish Facts and Boundaries
 
 Start from the affected request, event, job, interface or failing check and its applicable contract. Expand to callers, schemas, migrations, authorization, configuration or logs when evidence or the declared scope requires them, not as a mandatory reading list. Identify which domain owner may change the relevant facts and which systems only read, derive, cache or deliver them; known location does not exempt a relevant safety or consistency boundary.

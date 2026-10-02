@@ -34,6 +34,8 @@ The workflow contract stores durable rules, never a run cursor. Put attempts, ch
 
 ### 2.1 Human-Operator Guide
 
+When writing or rewriting the guide, use [Writing](../../senmu-build-engineering/references/technical-documentation-writing.md) for expression and preservation boundaries only. Workflow still owns steps, effects and recovery; do not load another Skill or rebuild an existing reliable guide for a local correction.
+
 For login, secrets, codes, payment, approval, account ownership, or human-only irreversible judgment, compile a recoverable human-agent guide:
 
 - The agent first performs authorized reading, preparation, validation, and no-side-effect work; it does not dump the full setup process on the user.

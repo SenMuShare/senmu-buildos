@@ -1,269 +1,191 @@
-# Senmu BuildOS（森木 BuildOS）— AI 编程项目的工程教练与运行规范
+# Senmu BuildOS — Agent Skills for Codex & Claude Code
 
-<p align="center">
-  让 Codex、Claude Code、豆包、WorkBuddy 和 ZCode 先把事情做对，再用更少的无效代码把它做好。
-</p>
+**让 AI 先理解项目，再写对代码。**
 
-<p align="center">
-  <a href="README.md">简体中文</a> · <a href="README.en.md">English</a> · <a href="README.ja.md">日本語</a>
-</p>
+*Understand the project. Reuse what works. Verify the result.*
 
-<!-- product-surface-review: 2.23.2 -->
+[简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md)
 
-本版让前后端参考测试检查真实引用、唯一归属和平级结构，不再锁定英文原句。架构审查先区分局部问题和全局体检，按证据扩展，并提供简明的前后职责对照。保留八个 Skill、现有项目规则与授权边界；结构检查不等于模型语义理解或效果实测。详见[用户更新日志](RELEASE_NOTES.md)。
+森木 BuildOS 是一套面向真实项目的 AI 编程 Skills：帮助 Agent 看懂现有实现、厘清需求与约束，优先复用代码和成熟组件，再用匹配的测试与交付证据核对结果。从需求、UI/UX 和架构，到排障、代码评审和发布，按当前任务取用，不要求每次走完整流程。
 
-<p align="center">
-  <a href="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml"><img src="https://github.com/SenMuShare/senmu-buildos/actions/workflows/validate.yml/badge.svg" alt="Validate Senmu BuildOS"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/github/license/SenMuShare/senmu-buildos" alt="License"></a>
-  <a href="https://github.com/SenMuShare/senmu-buildos/stargazers"><img src="https://img.shields.io/github/stars/SenMuShare/senmu-buildos?style=social" alt="GitHub stars"></a>
-  <a href="https://github.com/SenMuShare/senmu-buildos/releases/latest"><img src="https://img.shields.io/github/v/release/SenMuShare/senmu-buildos" alt="Release"></a>
-</p>
+**一个插件，八项按需能力。已有项目先沿用，小改动保持轻量。**
 
-Senmu BuildOS 是一个面向 **AI coding agent** 的开源项目运行规范和软件工程教练。它覆盖需求、界面与体验设计、技术设计、框架与组件选型、前后端实现、测试、Git、版本发布和经验反馈，帮助 Agent 在真实项目里持续交付，而不是每次依靠一段越来越长的 Prompt 临场发挥。它让验收权威、用户文档和关键决策理由成为项目事实，使后续 Agent 知道什么应当改变、什么是有意保留的约束。
+[![License](https://img.shields.io/github/license/SenMuShare/senmu-buildos)](LICENSE) [![Public release](https://img.shields.io/github/v/release/SenMuShare/senmu-buildos?label=public%20release)](https://github.com/SenMuShare/senmu-buildos/releases/latest)
 
-它重点解决两件事：
+[快速开始](#quickstart) · [第一次怎么用](#first-use) · [八项能力](#skills) · [常见问题](#faq) · [更新与卸载](#maintenance)
 
-1. **让项目执行更规范，少犯错。** 先确认真实需求、项目事实和授权，再让设计、代码、测试、分支、版本与发布证据彼此对应。
-2. **提高代码质量，减少无效代码和上下文浪费。** 先判断需求是否真的需要实现，再依次复用项目已有能力、框架／组件公开 API、平台、标准库和成熟依赖；只有真实缺口才写边界清楚的最小自有代码。
+<a id="quickstart"></a>
+<a id="30-秒开始使用"></a>
+## 快速开始
 
-> BuildOS 追求的是“更少但正确的代码”，不是机械追求最少行数或最低 Token。安全、可访问性、业务语义、测试和可维护性不会为了省 Token 被删掉。
-
-## 更新亮点：GPT-6 Astra 最佳实践适配
-
-**让 GPT-6 Astra 的能力更充分地用于真实项目交付。** BuildOS 已参考 [OpenAI 官方提示词最佳实践](https://developers.openai.com/api/docs/guides/latest-model?model=gpt-6-astra#prompting-best-practices)，将五类协作建议融入运行规范、Skills 与 `AGENTS.md` 协作方式：
-
-- **主动推进与完成任务**：在已有授权内持续执行，减少不必要的重复确认。
-- **指令遵循**：明确用户指令与 Skill 建议的优先级，精简重复和冲突规则。
-- **表达与写作风格**：先讲重点、表达连贯、减少套话，并尊重用户指定的语言与格式。
-- **子代理委派**：在宿主允许且能节省时间或改善质量时拆分独立工作。
-- **测试与验证**：按变更影响和风险选择检查，让验证服务于可靠交付。
-
-这些改进旨在减少协作摩擦与无效上下文，让模型把更多精力用于理解问题、实现和交付。
-
-## 为什么需要 BuildOS
-
-AI 编程真正难的，往往不是这一轮能不能写出代码，而是项目能不能在几十轮修改之后还记得自己为什么变成今天这样。会话会结束，注意力会随着上下文变长而衰减；需求、约束、命令和决定如果散在聊天、README、Issue、代码注释和不同 Agent 的专用文件里，下一个 Agent 就只能重新猜一次。
-
-把所有内容塞进更长的 Prompt 并不能解决这个问题，只是把阅读成本推给下一轮。BuildOS 做的是另一件事：让项目自己保存当前事实、决定、进度和证据，再用短入口把 Agent 带到这次任务真正需要的部分。目录可以不同，工具可以不同，事实的归属和读取路线必须清楚。
-
-| AI 编程常见问题 | BuildOS 的工作方式 |
-| --- | --- |
-| 会话变长后注意力衰减，换 Agent 又从头猜规则和决定 | 用短项目入口路由到当前事实、需求、技术决定、任务状态和发布证据；只按任务读取，不把整套规范塞进上下文 |
-| 用户提出一个看似确定的方案，Agent 为了顺从直接赞同，换一种问法又改口 | 把用户主张和方案当作输入，依据项目事实独立判断；说明实质分歧与利弊，再按不触碰安全红线的知情决定和授权行动 |
-| 需求还没说清就开写，顺手增加一堆没有要求的功能 | 用范围、非目标和可验证验收约束实现；未批准想法留在需求候选，不进入本次代码 |
-| 不看旧代码就新建目录、服务和第二套状态 | 先识别项目入口、现有代码、调用链和唯一数据来源，优先扩展已有能力 |
-| 框架一个参数能解决，Agent 却手搓组件、监听 DOM、复制状态 | 先检查当前版本的公开 API 和组件能力；只有证据证明不满足时才做最小适配 |
-| 代码能跑，但职责混乱、难读、难测、越改越像“屎山” | 用唯一事实、模块边界、显式副作用、变化局部性、回归测试和可删除性约束实现 |
-| 为未来假设预建抽象、插件系统和通用平台 | 先闭合当前最小价值切片；第二个真实用例或明确路线图再触发扩展 |
-| 界面看起来像通用 AI 模板，信息层级、排版、交互和品牌意图彼此脱节 | 从真实任务、内容层级和设计系统出发，统一布局、字体、色彩、动效、响应式与可访问性，并在真实渲染中复核 |
-| 换会话后把有意约束当成 Bug，又恢复了早已拒绝的方案 | 保存关键决定的理由、拒绝方案、必须保持的边界和重评条件；条件变化时追加新裁决，不改写历史 |
-| Agent 交接后又从主线拉分支，整改建立在错误代码基线上 | 用稳定 Change Unit ID 恢复原分支和 worktree；重跑实验只增加运行记录，不改变代码单元 |
-| 多个需求和 Bug 排队后，上下文丢失，上线时才发现漏项 | 在一份现有版本文档中维护需求与缺陷清单，开发时更新结果状态，上线前与任务、Git、测试和候选一次核对 |
-| 测试通过、Tag 创建或命令成功就被说成“已经上线” | 区分实现、验收、制品、部署和生产事实，每个结论使用对应证据 |
-
-## 30 秒开始使用
+先准备支持插件的 Codex 或 Claude Code，以及本机可用的 Git 和 Node.js。启用前审阅 [Hooks](hooks/hooks.json) 与[安全说明](SECURITY.md)，只信任你确认过的来源。
 
 ### Codex
 
 ```bash
 codex plugin marketplace add SenMuShare/senmu-buildos
 codex plugin add senmu-buildos@senmu-buildos
+codex plugin list
 ```
 
-刷新 Codex 并开启新对话，然后直接说目标，例如：
-
-> 接手这个老项目。先识别现有需求、架构、框架能力和质量命令，再完成这个功能；能用项目或框架现有能力就不要手搓，不要增加需求里没有的功能。
+刷新客户端并新开项目对话，核对列表中的来源与版本，再试下面的任务。
 
 ### Claude Code
-
-首次接入或治理 Claude 项目时，参见[项目指令兼容说明](adapters/claude-code/README.md)；文件存在不等于宿主已经加载。
 
 ```bash
 claude plugin marketplace add SenMuShare/senmu-buildos
 claude plugin install senmu-buildos@senmu-buildos
+claude plugin list
 ```
 
-安装后可执行 `/reload-plugins`。
+新开会话，或在当前会话运行 `/reload-plugins`；在 `/plugin` 的已安装列表确认插件状态。项目指令兼容和排障见 [Claude Code 适配说明](adapters/claude-code/README.md)。
 
-### 豆包（Doubao）
+以上命令安装的是**公开市场提供的版本**，不保证与本文的源码版本相同；私有制品遵循对应授权与安装流程。安装成功、当前会话加载和任务实际执行分别确认。命令差异以已安装客户端的 `--help`、[Codex 文档](https://developers.openai.com/codex/cli/reference/)和 [Claude Code 文档](https://code.claude.com/docs/en/discover-plugins)为准。
+
+<details>
+<summary>豆包、WorkBuddy、ZCode 与纯 Skill 安装</summary>
+
+这些适配器共用八项专业能力，但纯 Skill 安装不等于完整插件的生命周期 Hook。先取得可信源码，在包含 `skills/` 和 `adapters/` 的产品根目录操作；Python 适配脚本需要 Python 3。以下 clone 命令取自公开仓库。
 
 ```bash
 git clone https://github.com/SenMuShare/senmu-buildos.git
 cd senmu-buildos
-python3 adapters/doubao/install_doubao.py --dry-run
-python3 adapters/doubao/install_doubao.py
 ```
 
-豆包适配说明见 [adapters/doubao/README.md](adapters/doubao/README.md)。
+| 宿主 | 先预览 | 确认后安装与说明 |
+| --- | --- | --- |
+| 豆包 | `python3 adapters/doubao/install_doubao.py --dry-run` | `python3 adapters/doubao/install_doubao.py`；[目标目录与卸载](adapters/doubao/README.md) |
+| WorkBuddy | `python3 adapters/workbuddy/install_workbuddy.py --dry-run` | `python3 adapters/workbuddy/install_workbuddy.py --scope user`；[项目级安装与卸载](adapters/workbuddy/README.md) |
+| ZCode | `python3 adapters/zcode/install_zcode.py --dry-run` | `python3 adapters/zcode/install_zcode.py --with-kernel`；[插件方式与卸载](adapters/zcode/README.md) |
 
-### WorkBuddy
+ZCode 也可在插件管理中添加市场 `https://github.com/SenMuShare/senmu-buildos`，安装后新开会话。豆包、WorkBuddy 和 ZCode 的纯 Skill 路径按适配方式提供可命中的引导能力，不承诺每次会话自动注入。不要重复安装多个副本。
 
-```bash
-git clone https://github.com/SenMuShare/senmu-buildos.git
-cd senmu-buildos
-python3 adapters/workbuddy/install_workbuddy.py --dry-run
-python3 adapters/workbuddy/install_workbuddy.py --scope user
-```
+</details>
 
-默认安装到用户级数据根下的 `skills/`（`~/.workbuddy-ai/skills/`，若只有旧版 `~/.workbuddy/` 则回退到该处）；仅当前项目可用时改用 `--scope project --workspace <工作区根目录>`。WorkBuddy 适配说明见 [adapters/workbuddy/README.md](adapters/workbuddy/README.md)。
+<a id="first-use"></a>
+## 第一次怎么用
 
-### ZCode
+打开项目，任选一个真实任务。你不需要记住八个 Skill 的名字；下面是输入示例，不是效果保证。
 
-在 ZCode 的 **设置 → 插件管理 → 发现** 中点 **`+`** 添加市场来源 `https://github.com/SenMuShare/senmu-buildos`，安装 **senmu-buildos** 后新开会话，治理内核经 `SessionStart` Hook 自动注入。
+### 1. 接手已有项目，先不改代码
 
-纯 Skill 方式（无 Hook，可选引导内核）：
+> 先只读了解这个项目，找出运行入口、现有规则和测试命令，说明这个需求可以复用什么，暂时不要改代码。
 
-```bash
-git clone https://github.com/SenMuShare/senmu-buildos.git
-cd senmu-buildos
-python3 adapters/zcode/install_zcode.py --dry-run
-python3 adapters/zcode/install_zcode.py --with-kernel
-```
+**检查结果：** 给出真实路径、当前约束、可复用能力和未知项；没有趁机初始化第二套目录或修改项目。
 
-默认安装到用户级 `~/.agents/skills/`。ZCode 适配说明见 [adapters/zcode/README.md](adapters/zcode/README.md)。
+### 2. 把反复出现的 Bug 查清楚
 
-## 它怎样工作
+> 把这个 Bug 查到底。先复现原始症状并查明原因，再做最小修复，最后验证原始场景和受影响的回归；无法复现的部分明确说明。
 
-先把 BuildOS 想成一张五层项目地图：
+**检查结果：** 区分推测与证据，说明修改位置、实际运行的检查和仍未验证的范围，而不只是说“应该修好了”。
+
+### 3. 在现有项目里增加功能
+
+> 先确认需求范围和完成标准，沿用现有结构与组件，分步实现并验证，不增加未要求的功能。
+
+**检查结果：** 需求与实际改动对应，已有实现得到复用，完成项和待验证项分开说明。
+
+形成或更新需求文档时，每个功能保留目标版本与“需求描述、功能描述、功能逻辑、前端交互描述”；异常必须写清，相关原型／UI 记录采用范围并关联到具体需求。没有设计稿不强制补图，用户明确指定的替代格式优先。详见[需求编写与原型关联](skills/senmu-build-product/references/product-requirements-and-iteration.md#21-per-feature-requirement-contract)。
+
+已有方案需要评审时，可以说“分别按需求是否做对、代码质量是否过关来审查”；需要人工操作第三方控制台时，可以说“把只能由我点击或填写的配置过程设计成可恢复的操作向导”。需要明确点名能力时，从[能力表](#skills)查看其入口。
+
+<a id="why"></a>
+<a id="为什么需要-buildos"></a>
+## 它解决什么问题
+
+| 你遇到的问题 | BuildOS 的工作方式 | 你应该看到什么 |
+| --- | --- | --- |
+| 需求没弄清就开写，最后做偏了 | 先厘清范围、非目标和完成标准 | 实现与需求对应，而不是额外功能清单 |
+| 不看旧代码，重复造组件和状态 | 先检查项目、框架与组件的现有能力 | 必要的小改动和明确的复用理由 |
+| 越修越复杂，代码能跑却难维护 | 追踪根因、职责和调用方，验证真实行为 | 有证据的修复、清楚的边界和回归结果 |
+| 换会话重新猜，测试通过就说已上线 | 把决定、进度和证据保存在项目已有位置 | 可继续的任务，以及实现、验收、发布的真实状态 |
+
+BuildOS 适合希望持续维护真实项目的独立开发者、产品构建者和小团队。它不是代码生成器、托管执行平台，也不以更多文件和审批代替工程判断。
+
+<a id="example"></a>
+## 一个可以检查的例子
+
+仓库内的 [Python／TypeScript 质量检查示例](skills/senmu-build-engineering/assets/code-quality/examples/README.md)演示了“规则如何变成可运行检查”，而不是只有一句“请遵守规范”。
+
+以现有 Python 价格计算示例为例：[`total()`](skills/senmu-build-engineering/assets/code-quality/examples/python/sample_app/domain.py)计算扣减后的金额，负结果报错；[`check.py`](skills/senmu-build-engineering/assets/code-quality/examples/python/check.py)把格式、静态规则、类型、依赖边界和业务测试接到同一入口。
 
 ```text
-项目入口
-  → 当前有效事实与工程约束
-  → 当前版本需求与技术决定
-  → 当前任务状态与恢复入口
-  → 发布、运行与生产证据
+正常实现 → 统一检查通过
+制造指定违规 → 对应检查失败
+恢复实现 → 统一检查重新通过
 ```
 
-项目入口保留精炼的工作原则、项目约束、必要命令和按需阅读入口，不复制完整专业手册；当前规范说明系统现在必须满足什么，需求与技术决定说明为什么改变，任务状态说明做到哪里，发布与运行证据说明什么才真的发生。BuildOS 不要求这些内容采用固定目录，也不要求小项目拆成五份文件；它要求的是每类事实有唯一 owner，后续 Agent 能沿最短路径找到它。
+例如，把返回值改成字符串用于验证类型检查，把减法改成加法用于验证业务测试。仅在临时副本中按示例说明运行，保留项目已有工具；这些是可重复的工具案例，不是客户证言，也不证明某个模型的提升幅度。
 
-进入实际工程后，BuildOS 不等到“写完代码再检查”，而是把错误尽量消化在更靠前的位置：
+可选的[接口契约运行示例](skills/senmu-build-engineering/assets/contract-examples/README.md)演示定义／代码声明到生成物、真实调用和业务验证的连接；依赖只用于示例，不强制改变项目技术栈。
 
-```text
-真实问题与已批准范围
-        ↓
-项目事实、架构边界与现有能力
-        ↓
-界面视觉、交互与设计系统
-        ↓
-技术路线、框架、组件与公共扩展点
-        ↓
-最小正确的前端／后端实现
-        ↓
-匹配风险的测试、用户文档走查与产品验收
-        ↓
-Git、版本、制品、部署与生产证据
-        ↓
-把验证过的经验沉淀为可复用规则
-```
-
-这条链路按任务裁剪。上下文明确、保持契约的按钮样式修改直接完成，不另起文档链或多 Agent 流程；跨模块、权限、数据、支付或正式发布保留相应的设计、验证和恢复证据。
-
-### 先理解系统与设计理由，再改变它
-
-Engineering 的[任务入口](skills/senmu-build-engineering/references/source-code-quality-and-ai-collaboration.md#5-ai-implementation-debugging-and-review-loop)区分只读调查、缺陷修复、设计变更和行为保持型重构。遇到不熟悉的模块或行为冲突，先追踪实际运行链路；改变既有设计前，查清有效需求、技术决定、被拒方案和需要保留的约束。当前代码说明实际行为，不自动代表正确需求；历史决定也可以在条件变化后重新评估。
-
-涉及关键接口、数据或状态时，先从调用者的使用方式确定结构与边界。确有不同可行方案时再比较，记录主方案、吸收和舍弃的内容。影响分析说明安全判断依赖哪些事实，并给出证据或明确的未知项。并行和测试深度取决于工作边界与风险，不设固定 Agent 人数或通道数。
-
-每个正式开发版本都有对应的需求和技术说明。小版本可以只记录沿用的设计、本次改动和验证；原有合并文档可保留职责分明的章节。版本文档保存为什么改、怎样改，总文档保存验收后的当前事实，不要求为每次局部编辑创建新版本文档。相关经验修回规则、导航或默认实现，使下次任务能够找到正确做法。
-
-### “先复用，再写代码”不是一句口号
-
-Agent 在新增实现前按以下顺序判断：
-
-1. 当前需求是否已经满足，或者根本没有批准这项能力；不需要就不实现。
-2. 项目是否已经有明确的数据来源、公共入口或可以安全扩展的实现。
-3. 当前框架、组件库、平台、标准库或已安装依赖是否完整满足语义。
-4. 成熟方案能否以更低的开发与长期维护成本补足真实缺口。
-5. 以上都不满足时，才编写范围清楚、可验证、维护面最小的自有代码。
-
-复用必须通过语义和风险判断。框架能力如果不满足业务规则、安全、权限、可访问性、兼容性或错误语义，BuildOS 会保留必要适配，而不会为了“零自研”扭曲需求。
-
-## 设计理念
-
-- **先理解项目，再修改项目。** README、代码、配置、测试、CI 和真实运行状态比通用建议更接近事实。
-- **先确认需求，再编写代码。** 没有进入批准范围的功能，不因为“顺手”或“以后可能需要”而进入本次实现。
-- **宜疏不宜堵。** 先治理制造缺陷的需求、职责、架构、接口、默认值和生产流程，让正确路径成为默认；测试与门禁只控制无法经济消除的重大剩余风险。原因明确的局部缺陷直接做最小修复，不把简单问题流程化。
-- **先复用，再自研。** 优先使用项目、框架、组件、平台和标准库的公开能力；确有缺口时再做最小适配。
-- **让设计有意图、可实现、可复核。** 从真实任务、内容层级和既有设计系统出发，协调布局、排版、色彩、交互、动效、响应式与可访问性；在真实渲染中验证，而不是用装饰堆砌或通用模板替代产品判断。
-- **任务越小，流程越轻。** 普通修改只做必要检查；数据、权限、支付、生产发布等高风险工作保留设计、验证和回滚依据。
-- **用证据说明完成。** 测试通过、产品验收、制品生成、部署成功和生产可用是不同的事实，不能互相替代。
-- **先理解为什么，再改变结果。** 重要决定保存理由、拒绝方案、必须保持的边界和重评条件；后续条件改变时追加新裁决，而不是把旧约束误删或永久化。
-- **让项目自己记住。** 重要决定、进度和恢复入口写回项目，而不是依赖某一次聊天一直存在。
-
-更完整的系统设计见[系统概览](docs/architecture/system-overview.md)、[Skill 边界](docs/architecture/skill-boundaries.md)和[项目产物映射](docs/architecture/project-artifact-map.md)。
-
-## 适合哪些场景
-
-- **新项目**：从目标出发建立最小需求、架构、质量与交付基线，不一次生成一座文档城堡。
-- **成熟老项目**：先只读识别已有 README、配置、代码、测试、CI 和发布事实，再补缺口，不重建第二套治理目录。
-- **普通功能或 Bug**：以项目本地规则为主，复用框架和现有实现，做最小改动与匹配验证。
-- **界面设计与改版**：把模糊审美转成可实现的视觉、交互、响应式和可访问性规则，并在真实渲染中复核。
-- **复杂长任务**：把阶段、决定、证据和恢复入口留在项目中，支持跨会话和多 Agent 接力。
-- **正式发布**：让范围、审查、测试、版本、制品、部署、生产核验和回滚身份一致。
-- **项目治理与学习**：审查技术债和重复实现，把经过验证、能够跨项目复用的经验沉淀为规则。
-
+<a id="skills"></a>
+<a id="一个插件八项能力"></a>
 ## 一个插件，八项能力
 
 | 能力 | 什么时候使用 |
 | --- | --- |
-| `senmu-build-project` | 需要初始化项目治理，或整理现有 `AGENTS.md`、融合共同工作原则、校准项目语言、规则与长期任务状态时 |
-| `senmu-build-product` | 需要明确需求、范围、优先级、界面内容规范或验收条件时 |
-| `senmu-build-design` | 需要设计、改版或评审视觉方向、设计系统、布局、交互、动效、响应式或可访问性时 |
-| `senmu-build-workflow` | 需要定义或整理业务 Agent／提示词、工作流、物料、恢复和交付约定时；图像节点按实际模型读取专项指导 |
-| `senmu-build-engineering` | 需要做技术设计、架构选型、代码质量、测试、重构或技术债治理时 |
-| `senmu-build-delivery` | 需要处理复杂 Git 协作、版本、制品、发布、回滚或生产核验时 |
-| `senmu-build-assurance` | 需要独立复现、POC、审查或证据充分性判断时 |
-| `senmu-build-learning` | 需要复盘问题、审议反馈或把外部知识沉淀成通用规则时 |
+| [Project · 项目](skills/senmu-build-project/SKILL.md) | 接手项目，整理 AGENTS.md、现有规则与长期任务状态 |
+| [Product · 产品](skills/senmu-build-product/SKILL.md) | 澄清需求、范围、优先级、界面内容和验收标准 |
+| [Design · 设计](skills/senmu-build-design/SKILL.md) | 设计或评审 UI/UX、布局、交互、响应式与可访问性 |
+| [Workflow · 工作流](skills/senmu-build-workflow/SKILL.md) | 定义业务 Agent、提示词、物料、恢复和交付约定 |
+| [Engineering · 工程](skills/senmu-build-engineering/SKILL.md) | 理解系统、排障、架构设计、分语言规范、测试和代码评审 |
+| [Delivery · 交付](skills/senmu-build-delivery/SKILL.md) | 复杂 Git 协作、版本、制品、获准的发布与回滚 |
+| [Assurance · 核验](skills/senmu-build-assurance/SKILL.md) | 复现、实验、审计和证据充分性判断；独立评审需真实独立执行者 |
+| [Learning · 学习](skills/senmu-build-learning/SKILL.md) | 复盘问题，将验证过的经验或外部方法写回适当规范 |
 
-普通代码修改如果已经被项目 `AGENTS.md`、框架和测试清楚约束，可以不加载 BuildOS 专业 Skill。需要时也只选择当前最匹配的 Skill 和 reference，而不是把八份手册一次塞进上下文。
+它们是平级能力，不是八个必须同时启动的代理。Python、TypeScript、Go、Java、Rust 等语言／运行时规范由 Engineering 按需读取，不把所有规范一起加载。入口名称即对应目录名，运行时说明采用英文；你可以用中文、英文、日文或其他语言协作。
 
-你不需要记 Skill 名称，可以直接说：
+<a id="how-it-works"></a>
+<a id="它怎样工作"></a>
+## 怎样与现有项目协作
 
-- “把这个 Bug 查到底，先证明根因再修。”
-- “把这项大需求拆成能逐步完成、每段都看得到结果的小任务。”
-- “分别按需求是否做对、代码质量是否过关来审查。”
-- “给我三种结构真正不同的界面方案，不要只换颜色。”
-- “把只能由我点击或填写的配置过程设计成可恢复的操作向导。”
+**接口协作按实际边界组织。** 全栈、多个全栈或前后端分工都可以按完整功能推进；先找到当前契约、调用方和验证入口，再决定实现顺序。初始化与授权治理会校准唯一维护源及导航，日常工作直接复用；纯前端局部修改不强制创建 HTTP 文档。详见[接口契约指导](skills/senmu-build-engineering/references/api-and-boundary-contract-governance.md)。
 
+会话会结束，注意力会随着上下文变长而衰减。BuildOS 的做法是让项目保存可恢复的事实，而不是不断加长提示词。
+
+```text
+项目入口
+  → 当前事实与工程约束
+  → 需求和设计决定
+  → 任务进度与恢复点
+  → 发布、运行与生产证据
+```
+
+这不是五份必建文件：小项目可以合并记录，成熟项目沿用已有 README、AGENTS.md、Issue、设计文档和质量命令。获得修改授权后，只补实际缺口，保留有效原则、项目例外和他人的工作。
+
+**宜疏不宜堵。** 优先修正制造错误的需求、职责、接口或默认流程，测试与门禁控制重大剩余风险；原因清楚的小问题直接做最小修复。复用也不能以牺牲业务语义、安全、权限或兼容性为代价。
+
+工作过程按需求理解、设计、实现、验证和交付衔接，任务越小，流程越轻。详细方法见[系统概览](docs/architecture/system-overview.md)、[Skill 边界](docs/architecture/skill-boundaries.md)和[项目产物映射](docs/architecture/project-artifact-map.md)。
+
+<a id="faq"></a>
+<a id="常见问题"></a>
 ## 常见问题
 
-### 每次修改都会加载全部 BuildOS 吗？
+**每次都加载整套规范吗？** 不需要。已被项目规则和测试覆盖的普通修改，可以不调用专业 Skill；需要时才读取相关参考。实际加载取决于客户端与任务，不能仅凭文件存在判断生效。
 
-不会。普通代码修改如果已经被项目规则、框架和测试清楚约束，可以不加载专业 Skill；需要时也只读取当前任务相关的能力和规则。
+**会自动改造项目、提交或发布吗？** 安装不授予这些权限。读取、修改、提交、推送和生产操作遵循用户授权与项目规则；只读请求保持只读，已批准的工作也不应被重复审批打断。
 
-### 会强制改造现有项目吗？
+**只是另一份 AGENTS.md 吗？** 不是。AGENTS.md 保存项目常用原则与导航，Skill 提供当前任务需要的方法，脚本和既有工具执行可确定的检查；它们各司其职，不互相复制整本手册。
 
-不会。只读请求不会写入项目；获得修改授权后，也会优先沿用现有目录、文档、代码入口和发布方式，只补真正缺失或冲突的部分。
+**能保证少用多少 Token、少出多少 Bug 吗？** 不能承诺固定比例。目标是减少重复实现、无关读取和返工；正确性、安全和可维护性优先。源码测试、宿主加载和模型效果是不同证据，验证边界见[评估说明](tests/behavior/host-evaluation.md)。
 
-### 会自动提交、推送或发布吗？
+**Hook 会做什么？** 受支持的完整插件入口在生命周期事件中提供简短治理提示；纯 Skill 适配没有相同的自动注入能力。反馈进入本机待审箱，不自动上传或改写项目规则。首次启用及 Hook 变化需要审阅，详见[生命周期说明](docs/architecture/hook-lifecycle.md)与[安全说明](SECURITY.md)。
 
-不会。代码修改、合并、推送和正式发布分别服从用户授权与项目规则。安装插件不等于授予生产写入权限。
+<a id="maintenance"></a>
+<a id="安装更新与卸载"></a>
+## 版本、更新与卸载
 
-### 核心原则如何与 Skill 配合？
+Senmu BuildOS 当前源码版本为 `v2.24.1`。源码、私有发布、公开市场版本和本机安装分别确认；上方徽章链接的是公开发布渠道，不能据此推断已安装版本。
 
-项目 `AGENTS.md` 保留先理解再行动、独立判断、现实约束下修复原因、适当复用、成果保护、充分验证和完整交付的共同取向。它不是每项任务都必须走完的清单；讨论不自动授权执行，小任务不必重新审批，有限修复要说明重要限制。专业方法由原 Skill 按需提供，内容、设计与研究等非代码项目也采用适用原则。
+<!-- product-surface-review: 2.24.1 -->
 
-### 怎样减少无效测试？
+本版修复需求检查器的三项漏检，并补齐两条可运行的接口契约链路：模块化定义与代码声明生成，连接类型生成、真实调用校验和 SQLite 数据验证。增加故障注入与恢复测试，保留草稿、自定义版本、有效列表和 2.24.0 的轻量治理能力；原生 Agent 表现与源码验证分开报告。详见[用户更新日志](RELEASE_NOTES.md)。
 
-区分新增测试、运行检查和重复验证。先复用已有行为覆盖，只为真实风险缺口补用例；开发中做受影响的快速检查，按实际影响、未解决风险或项目规定扩大范围。高风险边界及时验证。已有证据仍有效时，换会话、提交或发布阶段不自动重跑全部测试。必要证据齐备后停止，未验证部分如实说明，不弱化保护。治理时还会检查实际命令与 CI 是否一致，而不只追加一句原则。
+<details>
+<summary>更新已有安装</summary>
 
-### 怎样识别后续升级？
-
-每个完成并交付的 BuildOS 调整批次都有新的统一版本，包括提示词与文档调整；同一未发布批次的中间提交不重复升版。核对实际使用渠道的 Release 和安装版本，不能把源码已更新等同于本地已生效。
-
-### 能保证节省多少 Token？
-
-BuildOS 不承诺固定比例。它通过减少不必要的功能、重复代码、重复读取和返工来降低可避免成本，但正确性、安全和可维护性优先于单纯节省 Token。
-
-## 安装、更新与卸载
-
-下方为当前源码版本，不代表所有发布渠道都已提供该版本。请核对实际使用渠道的 Release／Tag；源码更新、私有发布、公开发布与本地安装分别确认。
-
-Senmu BuildOS 当前源码版本为 `v2.23.2`，支持 Codex、Claude Code、豆包、WorkBuddy 和 ZCode 适配。安装的是整个插件，不需要逐个下载八个 Skill。运行时规范正文与 active Reference 路径统一使用专业英文；用户仍可直接使用中文或其他语言提出需求并获得对应语言的产物。对标外部 Skill 时，系统会结合当前模型和宿主能力保留有价值的领域方法，避免照搬过时流程；开发与交付阶段会复用仍有效的验证证据，只补验因改动而失效的部分及制品、环境、运行状态等独立事实。
-
-本版变化见页首摘要与[用户更新日志](RELEASE_NOTES.md)。
-
-### 更新 Codex
+**Codex**
 
 ```bash
 codex plugin marketplace upgrade senmu-buildos
@@ -271,7 +193,7 @@ codex plugin add senmu-buildos@senmu-buildos
 codex plugin list
 ```
 
-### 更新 Claude Code
+**Claude Code**
 
 ```bash
 claude plugin marketplace update senmu-buildos
@@ -279,11 +201,12 @@ claude plugin update senmu-buildos@senmu-buildos
 claude plugin list
 ```
 
-### 更新 ZCode
+更新后新开会话；Claude Code 也可运行 `/reload-plugins`。确认实际来源、版本和启用状态，不把下载成功当成当前会话已更新。其他宿主使用上述适配文档中的更新方式，脚本方式需先取得拟安装的可信版本。
 
-插件方式：在 **设置 → 插件管理 → 已安装** 中更新，或移除市场后重新添加。脚本方式：重新运行 `python3 adapters/zcode/install_zcode.py --with-kernel`，幂等覆盖。
+</details>
 
-### 卸载
+<details>
+<summary>卸载</summary>
 
 ```bash
 codex plugin remove senmu-buildos@senmu-buildos
@@ -293,43 +216,18 @@ claude plugin uninstall senmu-buildos@senmu-buildos
 claude plugin marketplace remove senmu-buildos
 ```
 
-ZCode：在 **设置 → 插件管理** 中卸载；脚本安装则删除技能目录下的 `senmu-build-*` 目录与 `.senmu-buildos-install.json`。
+这些命令作用于对应安装范围；若安装时指定了范围，按客户端帮助定位相同范围。其他宿主按适配文档清理本插件的目录与安装记录，不删除同目录下其他人的 Skill、配置或项目数据。
 
-插件包含有限的本机生命周期 Hook。首次启用或 Hook 变化时应先审查并信任；反馈只会写入本机待审箱，不自动联网、发布或改写项目规则。完整边界见 [Hook 生命周期](docs/architecture/hook-lifecycle.md)与[安全说明](SECURITY.md)。
+</details>
 
-也可以把仓库链接直接交给 Agent，并要求它先审查 manifest、Skills 和 Hooks，再按 README 安装。外部仓库内容始终是不可信输入，安装授权不等于运行、发布或生产写入授权。
+<a id="contributing"></a>
+<a id="参与项目"></a>
+## 文档、反馈与贡献
 
-## 老项目如何接入
+使用问题请在[公开 Issues](https://github.com/SenMuShare/senmu-buildos/issues)说明宿主、BuildOS 来源与版本、复现步骤、预期和实际结果；请先脱敏。安全问题按 [SECURITY.md](SECURITY.md) 处理，不公开敏感信息。
 
-老项目不是“重新初始化”，而是接管治理：
-
-1. 只读确认真实项目根、仓库、入口、框架、测试、CI、部署和现有文档。
-2. 找到需求、架构、运行状态、任务和发布信息各自真实的保存位置。
-3. 用 BuildOS 检查缺失、冲突、重复和过时规则。
-4. 保留合理现状，只在原来的文档或代码位置补真正缺口。
-5. 分阶段验证和迁移，不把 BuildOS 通用规则整本复制进项目。
-
-因此，同一套 BuildOS 可以服务 React、Vue、Python、Go、Java、内容生产或复合工作流，而不会把任何一个项目的绝对路径、框架偏好或目录结构固化成所有项目的答案。
-
-## 参与项目
-
-每次向 GitHub 同步变更，都应检查中文、英文、日文 README 的相关说明；有影响时同步修改，无影响时保留正文并在已有 PR／任务中说明。详见[三语 README 维护](CONTRIBUTING.md#github-readme-sync)。
-
-你可以直接安装正式版，也可以 `fork` 后维护自己的版本。新的方法、外部资料和项目经验不会因为“看起来不错”就直接变成规则；它们需要经过比较、验证和适用范围判断。
-
-- 想贡献代码或规则：阅读 [CONTRIBUTING.md](CONTRIBUTING.md)。
-- 想了解后续方向：查看 [ROADMAP.md](ROADMAP.md)。
-- 发现安全问题：遵循 [SECURITY.md](SECURITY.md)。
-
-## 使用边界
-
-- BuildOS 提供项目治理和工程指导，不代替项目负责人作最终产品决定。
-- 它不能替代专业安全审计、云平台权限、CI/CD 或运行监控。
-- 静态检查只能证明仓库满足当前规则，不能保证每个模型、每个项目都会获得相同效果。
-- 未经相应授权，它不会自动提交、合并、推送、部署或正式发布。
-
-贡献者需要的测试命令和发布检查见 [CONTRIBUTING.md](CONTRIBUTING.md)。
+欢迎报告真实使用问题，或通过 Fork（派生仓库）与 Pull Request（合并请求）贡献改进。你不必先读完全部规范才开始使用；贡献和发布检查见 [CONTRIBUTING.md](CONTRIBUTING.md)，后续方向见 [ROADMAP.md](ROADMAP.md)。三语文档维护规则见[贡献说明](CONTRIBUTING.md#github-readme-sync)。
 
 ## 许可证
 
-[Apache License 2.0](LICENSE)
+[Apache License 2.0](LICENSE)。BuildOS 不能替代项目负责人、专业安全审计、云平台权限或 CI/CD；它也不是 OpenAI 或 Anthropic 的官方认证产品。

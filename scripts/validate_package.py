@@ -25,6 +25,8 @@ EXPECTED_SKILLS = {
 }
 
 REFERENCE_OWNERS = {
+    "api-and-boundary-contract-governance.md": "senmu-build-engineering",
+    "technical-documentation-writing.md": "senmu-build-engineering",
     "application-security-and-abuse.md": "senmu-build-engineering",
     "security/public-service-security-baseline.md": "senmu-build-delivery",
     "stack-and-file-role-guidance.md": "senmu-build-engineering",

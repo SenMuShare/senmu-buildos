@@ -30,7 +30,7 @@
 - 控制单按顺序登记需求、Change Unit 接收矩阵、候选、授权、发布验证和 Git 执行面清理；每一门附证据，未完成时保留 checkpoint 与下一动作。
 - 只有候选可达变化、本次承诺缺口或共享资源冲突阻断；历史、POC、未完成、来源不明和无关分支不得机械全合并。
 - 未提交源码只能是 `in_progress`，不能由收口者猜入候选。
-- 每个纳入单元的短分支／worktree 最终必须 `removed`，或以 owner 和退出条件明确 `retained`。
+- 每个纳入单元的短分支／worktree 最终必须 `removed`，或以 owner 和退出条件明确 `retained`。采用发布控制校验器时，通过 `validate_release_control.py <record> --repo <repo> --json` 分别回读主线接收、单元状态、分支、工作树登记与路径；不传 `--repo` 仅校验结构，不能证明实际清理。检查不授予删除权限。
 - 发布身份：`reviewed_commit = tested_commit = release_source_head = tag_commit = artifact_source_commit`；不适用阶段留空，已有阶段不得不一致。
 
 ## 代码变更审查门禁

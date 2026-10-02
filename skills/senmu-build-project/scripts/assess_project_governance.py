@@ -158,6 +158,10 @@ def candidate_roles(name: str, relative: str) -> list[tuple[str, str]]:
         roles.append(("quality_entrypoint", "recognized quality or build entrypoint"))
     if name in WORKFLOW_MARKERS or ("workflow" in lowered and lowered.endswith((".md", ".json", ".yaml", ".yml"))):
         roles.append(("workflow_contract", "workflow filename marker"))
+    if (lowered in {"openapi.yaml", "openapi.yml", "openapi.json", "swagger.yaml", "swagger.yml", "swagger.json",
+                    "asyncapi.yaml", "asyncapi.yml", "asyncapi.json", "interface_contract.md", "api_contract.md", "contracts.md"}
+            or lowered.endswith((".proto", ".graphql", ".gql", ".schema.json", ".openapi.yaml", ".openapi.json"))):
+        roles.append(("boundary_contract_candidate", "interface filename only; confirm source versus generated/history and actual consumers"))
     if name in PRODUCT_NAMES or "/product/" in f"/{relative_lower}/":
         roles.append(("product_governance", "product path or filename marker"))
     if name in ENGINEERING_NAMES or "/engineering/" in f"/{relative_lower}/":
@@ -613,6 +617,15 @@ def assess(root: Path, max_depth: int, verbose: bool) -> dict[str, Any]:
         },
         "candidate_mappings": {role: compact(items) for role, items in sorted(candidates.items())},
         "capability_assessment": assess_capability_signals(scanned_files, root),
+        "boundary_contract_review": {
+            "status": "semantic_confirmation_required",
+            "candidate_count": len(candidates.get("boundary_contract_candidate", [])),
+            "authority_confirmed": False,
+            "coverage": "bounded filename inventory; code declarations, generators, schema references and consumers not resolved",
+            "review_dimensions": ["applicable_boundaries_or_non_applicability", "one_maintenance_source_per_boundary_and_version",
+                                  "source_and_generated_direction", "current_operations_and_consumers", "real_verification_entrypoints"],
+            "required_actions": [],
+        },
         "instruction_layering_review": {
             "status": ("semantic_review_required" if agent_entrypoints else "instruction_scope_not_scanned"
                        if depth_limited or excluded.get("symlink_directory_not_followed") else "no_agents_entrypoint_found"),

@@ -1,0 +1,1 @@
+Update the item creation API so the input name is documented as "Display name". Keep business behavior unchanged. Find the existing maintenance source and verification command, synchronize derived artifacts and report what you actually verified. Do not install tools, commit or release.

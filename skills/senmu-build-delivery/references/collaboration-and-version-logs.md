@@ -37,6 +37,8 @@ Durable Task State owns progress/recovery; WORKLOG appends chronological facts. 
 
 ## 3. Changelog Rules
 
+For substantive document editing, apply [Writing](../../senmu-build-engineering/references/technical-documentation-writing.md) as needed without transferring release authority or running another mandatory pass. Preserve candidate identity, compatibility limits and the distinction between prepared source and an actual release.
+
 Each formal release unit maintains `VERSION` and `CHANGELOG.md`. When useful, separate:
 
 - Internal: implementation, interfaces, database, deployment, tests, risks, rollback.

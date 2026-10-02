@@ -1,0 +1,1 @@
+The answer distinguishes the effective definition from observed behavior, follows real project navigation, identifies the numeric-id response mismatch and concrete tests, and keeps missing consumer/host-loading facts unknown. No writes, new catalogs, forced relocation or claimed completed governance. Repeated unchanged audit should not prescribe accumulating instructions.

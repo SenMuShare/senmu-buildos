@@ -33,7 +33,7 @@ Review coverage, not a mandatory lifecycle. Add no per-action form, plan, approv
 
 Preserve outcomes, authority and protections. Root repair is not rewrite authority; small scope does not excuse inadequate repair. Bounded repair need not be an emergency. Recommend action on material remaining causes, limits and revisit conditions, not speculative risk lists. Track continuing limitations at the existing task/debt owner; govern authorized rules there, never bypass them.
 
-For software, trace unfamiliar/cross-module flows, recover reasons before design changes and design caller usage before key interface/state/data changes. Clear low-risk edits proceed directly. Engineering owns the [methods](../../senmu-build-engineering/references/source-code-quality-and-ai-collaboration.md#5-ai-implementation-debugging-and-review-loop); Product owns version documents. Missing routes remain explicit.
+For software, trace unfamiliar flows and recover design reasons. Use [Contracts](../../senmu-build-engineering/references/api-and-boundary-contract-governance.md) for interface authority, callers and checks; do not impose HTTP on local work. Engineering owns [methods](../../senmu-build-engineering/references/source-code-quality-and-ai-collaboration.md#5-ai-implementation-debugging-and-review-loop); Product owns version documents. Disclose missing routes.
 
 ## Adopting a BuildOS Update
 

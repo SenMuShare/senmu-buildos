@@ -58,6 +58,8 @@ Resolve project facts, precedence, freshness, and unresolved decisions through [
 
 Project selects owners, paths, and index relationships; it does not copy domain writing rules. Update equivalent owners in place and do not create empty ledgers.
 
+Artifact custody, semantic decision authority and run-state maintenance need not belong to one actor. For example, storage retains a deliverable, Product decides its accepted meaning, and the workflow state owner records its processing result. A task linking these artifacts coordinates progress; it does not take over their decisions or writable state.
+
 ### Default Product/Technical Roles
 
 For new product projects, create version paths only after the actual version is known:

@@ -4,6 +4,100 @@ Earlier entries are retained verbatim in [the history through 2.20.5](docs/relea
 
 ## Unreleased
 
+## [2.24.1] - 2026-09-30
+
+### Fixed
+
+- Integrate the three requirement-checker repairs against the current source: detect versioned named features without their four sections, reject unresolved non-draft versions, and reject empty numbered/task-list content. Keep custom version names, real list text, explicit drafts, and current interface-coaching behavior.
+- Cover the actual CLI exit codes, read-only handling, fenced examples and nested empty markers; do not reuse an older branch's test verdict.
+
+### Improved
+
+- Add opt-in definition-first and declaration-first examples using pinned mature tools: resolve multi-file OpenAPI, regenerate schema and TypeScript artifacts, check drift, compile a real consumer, validate captured request/response structures and verify file-backed SQLite results.
+- Add positive, fault-injection and restoration checks for missing fields, referenced types, invalid references, inactive rules, stale generation, caller types and missing persistence. Keep these dependencies outside plugin runtime.
+- Extend the existing contract method with change-kind and caller-baseline reconciliation, effective-rule checks and optional native-host cases; keep eight peer Skills and existing project entrypoints.
+
+### Evidence boundary
+
+- Source/fixture checks and native model/loading observations remain separate. New native cases are inputs, not recorded successes; no project-wide API platform, local installation or public publication is implied.
+
+## [2.24.0] - 2026-09-30
+
+### Added
+
+- Add an on-demand interface-contract coaching method and reusable outline covering authority, definition/declaration-first workflows, scoped functional slices, compatibility and real verification across frontend-only, full-stack and split-agent work.
+- Add candidate-only contract discovery and opt-in bounded local contract fingerprints with fragment locators in the existing task selector. No reference crawling, network fetches, command execution or inferred authority.
+- Add synthetic real-HTTP failure/repair/persistence controls, initializer/selector regression cases and three optional fresh-session evaluation inputs.
+
+### Changed
+
+- Connect the method to existing Project/Engineering entrypoints, adopted AGENTS principles, technical/map templates and pending initialization checks. Reuse existing project owners; upgrades never automatically rewrite projects.
+- Add concise boundary awareness to both lifecycle contexts and synchronize skills-only bootstrap copies within existing payload limits. Hints are not enforcement or proof of native loading.
+- Synchronize unified 2.24.0 metadata, all three README narratives and user release notes. Keep eight peer Skills; no mandatory backend-first ordering, HTTP schema for pure frontend work, API platform or new global gate.
+
+### Validation scope
+
+- Source and loopback-fixture checks do not establish native-model adherence, complete multi-file contract validity, whole-project adoption, production integration or local installation. Fresh-session evaluation remains separately observable.
+
+## [2.23.6] - 2026-09-30
+
+### Added
+
+- Add one on-demand technical-documentation writing reference: mode/scope, fact and literal preservation, document-type guidance, operations, state wording and project-specific Chinese defaults.
+- Add source-route and PRD-checker boundary regressions. Structural checks explicitly do not certify changed facts, design custody or product acceptance.
+
+### Changed
+
+- Route substantive documentation work through Engineering's existing entry and reuse the editing method from Product, Workflow and Delivery without transferring semantic ownership.
+- Clarify pre-action warnings, transport/business/job state distinctions and contextual Chinese units/spacing while preserving project conventions, requirement versions, four-part feature structure and design associations.
+- Synchronize source-version metadata and Chinese/English/Japanese release summaries. Keep eight peer Skills, covered local edits and existing release boundaries; add no universal copy gate or automatic repository-wide rewrite.
+
+### Validation scope
+
+- Source/package tests and synthetic boundary cases do not establish native host/model adherence, user-document acceptance or local installation.
+
+## [2.23.5] - 2026-09-30
+
+### Changed
+
+- Require each feature's target version and four-part requirements during drafting, version planning and development updates. Preserve iterative clarification, explicit user formats and explained non-applicability; small changes may be brief without losing required sections.
+- Link supplied or adopted prototype/UI assets to exact requirement versions and features, adoption/exclusion scope, durable revisions and reverse references. Preserve historical design baselines and the no-artwork path in the existing Product and Design owners.
+
+### Added
+
+- Add a read-only, format-specific Markdown structure checker with real CLI and multi-feature regression controls; do not install a universal Hook or approval gate.
+
+### Validation scope
+
+- Structural checks do not prove business correctness, exception completeness, asset custody, native host adherence or product acceptance. Source, private delivery, public publication and local installation remain distinct.
+
+## [2.23.4] - 2026-09-29
+
+### Fixed
+
+- Separate an explicitly approved final receiving line from a Change Unit's original development target. Preserve sealed parents, baseline ancestry, full-content reception checks and the legacy default.
+- Route known task-unit inspection through the registered surface instead of a generic new-worktree recommendation; distinguish observation from writer handoff and write authority.
+- Add opt-in release-control readback of included unit receipts, branches, worktree registrations and paths. Reject false removal claims without deleting resources or blocking unrelated retained work.
+
+### Changed
+
+- Clarify artifact custody, semantic authority and run-state responsibility with one existing-owner example. Reuse current scripts, templates and regression owners; no new Skill, ledger or universal gate.
+
+### Validation scope
+
+- Extend real temporary-Git lifecycle regressions for receiving targets, unchanged sealed parents, invalid reception, exact-unit recovery and physical closeout. Source/CI checks do not establish native host adherence or resolve unexported local incidents.
+
+## [2.23.3] - 2026-09-28
+
+### Changed
+
+- Rework the Chinese, English and Japanese README landing pages around project understanding, reuse and verified results; move quick installation and three first-task examples ahead of detailed guidance.
+- Link the eight existing capabilities and runnable quality-wiring examples, fold secondary host and maintenance instructions, and preserve project, authorization and evidence boundaries.
+
+### Fixed
+
+- Move release-specific maintenance summaries out of the introduction and distinguish public marketplace availability, source versions and active installations. Keep documentation changes separate from runtime and public-repository publication.
+
 ## [2.23.2] - 2026-09-27
 
 ### Fixed

@@ -58,3 +58,16 @@ jobs:
           npm install --prefix "$RUNNER_TEMP/buildos-node-tools" --ignore-scripts --no-audit --no-fund
           export PATH="$RUNNER_TEMP/buildos-python-tools/bin:$RUNNER_TEMP/buildos-node-tools/node_modules/.bin:$PATH"
           python tests/recipes/check_quality_wiring.py
+
+      - name: Verify executable contract pipelines
+        working-directory: .
+        run: |
+          set -euo pipefail
+          example="$PWD/skills/senmu-build-engineering/assets/contract-examples"
+          python3 -m venv "$RUNNER_TEMP/buildos-contract-python"
+          "$RUNNER_TEMP/buildos-contract-python/bin/python" -m pip install --disable-pip-version-check -r "$example/requirements-dev.lock"
+          mkdir -p "$RUNNER_TEMP/buildos-contract-node"
+          cp "$example/package.json" "$example/package-lock.json" "$RUNNER_TEMP/buildos-contract-node/"
+          npm ci --prefix "$RUNNER_TEMP/buildos-contract-node" --ignore-scripts --no-audit --no-fund
+          export PATH="$RUNNER_TEMP/buildos-contract-node/node_modules/.bin:$PATH"
+          "$RUNNER_TEMP/buildos-contract-python/bin/python" tests/recipes/check_contract_pipelines.py

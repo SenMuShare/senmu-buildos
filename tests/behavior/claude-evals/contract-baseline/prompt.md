@@ -1,0 +1,1 @@
+Continue the item consumer integration from TASK.md. Preserve the approved API behavior and verify the completed integration. Resolve inconsistencies from actual project evidence, without installing tools, committing or releasing.

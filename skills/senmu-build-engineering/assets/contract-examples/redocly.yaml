@@ -1,0 +1,4 @@
+extends:
+  - spec
+rules:
+  operation-operationId: error

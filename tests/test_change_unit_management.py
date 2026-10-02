@@ -1181,5 +1181,267 @@ with m.preparation_lock(Path(sys.argv[2])):
         self.assertEqual(page["next_offset"], 20)
 
 
+
+class FeedbackLifecycleTests(unittest.TestCase):
+    def setUp(self) -> None:
+        temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        self.root = Path(temporary.name)
+        self.repo = ChangeUnitManagementTests.make_repo(self, self.root)
+        self.scripts = ROOT / "skills/senmu-build-delivery/scripts"
+
+    def cli(self, name: str, *args: str) -> subprocess.CompletedProcess[str]:
+        return run(sys.executable, str(self.scripts / name), *map(str, args), cwd=ROOT, check=False)
+
+    def good(self, name: str, *args: str) -> dict:
+        result = self.cli(name, *args)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        return json.loads(result.stdout)
+
+    def prepare(self, slug: str, *extra: str) -> dict:
+        return self.good("manage_change_unit.py", "prepare", "--repo", self.repo,
+                         "--unit", "UNIT-" + slug, "--slug", slug,
+                         "--worktree", self.root / slug, *extra)
+
+    def commit(self, unit: dict, filename: str, text: str = "change\n") -> str:
+        worktree = Path(unit["worktree"])
+        (worktree / filename).write_text(text, encoding="utf-8")
+        run("git", "add", filename, cwd=worktree)
+        run("git", "commit", "-m", filename, cwd=worktree)
+        return run("git", "rev-parse", "HEAD", cwd=worktree).stdout.strip()
+
+    def seal(self, unit: dict) -> dict:
+        return self.good("manage_change_unit.py", "seal", "--repo", unit["worktree"], "--unit", unit["unit"])
+
+    def close(self, unit: dict, receipt: str, *extra: str) -> subprocess.CompletedProcess[str]:
+        return self.cli("manage_change_unit.py", "close", "--repo", self.repo,
+                        "--unit", unit["unit"], "--disposition", "integrated",
+                        "--owner-ref", "task:approved-integration", "--integration-commit", receipt, *extra)
+
+    def integrated_unit(self, slug: str = "normal") -> dict:
+        unit = self.prepare(slug)
+        self.commit(unit, slug + ".txt")
+        unit = self.seal(unit)
+        run("git", "merge", "--ff-only", unit["branch"], cwd=self.repo)
+        result = self.close(unit, unit["head"])
+        self.assertEqual(result.returncode, 0, result.stderr)
+        return json.loads(result.stdout)
+
+    def release_record(self, unit: dict, disposition: str = "retained") -> dict:
+        template = self.scripts.parent / "assets/delivery-governance/RELEASE_CONTROL.template.json"
+        data = json.loads(template.read_text(encoding="utf-8"))
+        data["release"].update(status="closed", target_line="main", release_source_root=str(self.repo),
+                               candidate_commit=unit["integration_commit"], authorization_ref="task:release",
+                               release_record_ref="release:receipt")
+        data["requirements"] = [{"id": "REQ-1", "disposition": "include", "evidence_refs": ["task:REQ-1"]}]
+        data["change_units"] = [{"unit": unit["unit"], "branch": unit["branch"],
+            "source_commit": unit["head"], "integration_commit": unit["integration_commit"],
+            "disposition": "include", "evidence_refs": ["task:unit"], "test_refs": ["test:unit"]}]
+        for gate in data["gates"]:
+            gate.update(status="passed", evidence_refs=["test:" + gate["id"]])
+        data["cleanup"] = [{"unit": unit["unit"], "branch": unit["branch"], "worktree": unit["worktree"],
+            "disposition": disposition, "evidence_refs": ["task:retention"],
+            "owner": "task:maintainer", "exit_condition": "after fixture observation"}]
+        return data
+
+    def check_release(self, data: dict, live: bool = True) -> tuple[subprocess.CompletedProcess[str], dict]:
+        path = self.root / "release-control.json"
+        path.write_text(json.dumps(data), encoding="utf-8")
+        args = [str(path), "--json"] + (["--repo", str(self.repo)] if live else [])
+        result = self.cli("validate_release_control.py", *args)
+        return result, json.loads(result.stdout)
+
+    def test_stacked_receipt_uses_approved_line_without_moving_parent(self) -> None:
+        parent = self.prepare("parent")
+        self.commit(parent, "parent.txt")
+        parent = self.seal(parent)
+        child = self.prepare("child", "--target", parent["branch"], "--target-role", "stacked-unit",
+                             "--parent-unit", parent["unit"])
+        self.commit(child, "child.txt")
+        child = self.seal(child)
+        parent_before = Path(parent["record"]).read_bytes()
+        child_before = Path(child["record"]).read_bytes()
+        run("git", "merge", "--ff-only", parent["branch"], cwd=self.repo)
+        run("git", "merge", "--no-ff", child["branch"], "-m", "receive child", cwd=self.repo)
+        receipt = run("git", "rev-parse", "HEAD", cwd=self.repo).stdout.strip()
+        rejected = self.close(child, receipt)
+        self.assertNotEqual(rejected.returncode, 0)
+        self.assertIn("not reachable from the registered target", rejected.stderr)
+        self.assertEqual(Path(child["record"]).read_bytes(), child_before)
+        result = self.close(child, receipt, "--integration-target", "main",
+                            "--target-authorization-ref", "task:approved-final-line")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        closed = json.loads(result.stdout)
+        self.assertEqual(closed["target"], parent["branch"])
+        self.assertEqual(closed["baseline"], parent["head"])
+        self.assertEqual(closed["integration_target"], "refs/heads/main")
+        self.assertEqual(closed["integration_proof"]["kind"], "tree_replay")
+        self.assertEqual(Path(parent["record"]).read_bytes(), parent_before)
+        self.assertEqual(run("git", "rev-parse", parent["branch"], cwd=self.repo).stdout.strip(), parent["head"])
+        checked, report = self.check_release(self.release_record(closed))
+        self.assertEqual(checked.returncode, 0, report)
+
+    def test_receiving_override_requires_decision_and_nonunit_local_line(self) -> None:
+        unit = self.prepare("target")
+        self.commit(unit, "target.txt")
+        unit = self.seal(unit)
+        run("git", "merge", "--ff-only", unit["branch"], cwd=self.repo)
+        before = Path(unit["record"]).read_bytes()
+        cases = [
+            ["--integration-target", "main"],
+            ["--target-authorization-ref", "task:approval"],
+            ["--integration-target", "missing", "--target-authorization-ref", "task:approval"],
+            ["--integration-target", unit["branch"], "--target-authorization-ref", "task:approval"],
+            ["--integration-target", "main", "--target-authorization-ref", " "],
+        ]
+        for flags in cases:
+            with self.subTest(flags=flags):
+                result = self.close(unit, unit["head"], *flags)
+                self.assertNotEqual(result.returncode, 0)
+                self.assertEqual(Path(unit["record"]).read_bytes(), before)
+        rejected = self.cli("manage_change_unit.py", "close", "--repo", self.repo, "--unit", unit["unit"],
+            "--disposition", "excluded", "--owner-ref", "task:exclude", "--integration-target", "main",
+            "--target-authorization-ref", "task:approval")
+        self.assertNotEqual(rejected.returncode, 0)
+        self.assertEqual(Path(unit["record"]).read_bytes(), before)
+
+    def test_final_line_does_not_accept_partial_or_extra_content(self) -> None:
+        unit = self.prepare("partial")
+        self.commit(unit, "first.txt")
+        self.commit(unit, "second.txt")
+        unit = self.seal(unit)
+        before = Path(unit["record"]).read_bytes()
+        (self.repo / "first.txt").write_text("change\n", encoding="utf-8")
+        run("git", "add", "first.txt", cwd=self.repo)
+        run("git", "commit", "-m", "partial", cwd=self.repo)
+        for stage in ("partial", "extra"):
+            if stage == "extra":
+                for name in ("second.txt", "unrelated.txt"):
+                    (self.repo / name).write_text("change\n", encoding="utf-8")
+                run("git", "add", "second.txt", "unrelated.txt", cwd=self.repo)
+                run("git", "commit", "-m", "extra", cwd=self.repo)
+            receipt = run("git", "rev-parse", "HEAD", cwd=self.repo).stdout.strip()
+            result = self.close(unit, receipt, "--integration-target", "main",
+                                "--target-authorization-ref", "task:approval")
+            self.assertNotEqual(result.returncode, 0, stage)
+            self.assertIn("does not match", result.stderr)
+            self.assertEqual(Path(unit["record"]).read_bytes(), before)
+
+    def test_known_dirty_unit_routes_to_same_surface_without_writes(self) -> None:
+        unit = self.prepare("continue")
+        (Path(unit["worktree"]) / "pending.txt").write_text("work in progress", encoding="utf-8")
+        before = Path(unit["record"]).read_bytes()
+        refs = run("git", "show-ref", cwd=self.repo).stdout
+        report = self.good("inspect_git_workspace.py", "--repo", self.repo, "--unit", unit["unit"], "--intent", "write")
+        self.assertEqual(report["execution_recommendation"]["mode"], "resume_existing_unit")
+        self.assertEqual(report["change_unit"]["worktree"], unit["worktree"])
+        self.assertTrue(report["change_unit"]["dirty"])
+        self.assertEqual(report["change_unit"]["writer_exit"], "not_assessed")
+        self.assertEqual(Path(unit["record"]).read_bytes(), before)
+        self.assertEqual(run("git", "show-ref", cwd=self.repo).stdout, refs)
+        parallel = self.good("inspect_git_workspace.py", "--repo", self.repo, "--unit", unit["unit"], "--intent", "parallel-write")
+        self.assertEqual(parallel["execution_recommendation"]["mode"], "establish_existing_writer_handoff")
+
+    def test_known_missing_surface_is_not_recreated_by_inspection(self) -> None:
+        unit = self.prepare("absent")
+        self.commit(unit, "saved.txt")
+        run("git", "worktree", "remove", unit["worktree"], cwd=self.repo)
+        report = self.good("inspect_git_workspace.py", "--repo", self.repo, "--unit", unit["unit"], "--intent", "write")
+        self.assertEqual(report["execution_recommendation"]["mode"], "resume_existing_unit")
+        self.assertFalse(Path(unit["worktree"]).exists())
+        self.assertFalse(report["change_unit"]["physical"]["worktree_registered"])
+        self.assertTrue(report["change_unit"]["physical"]["branch_exists"])
+
+    def test_unknown_duplicate_and_sealed_units_do_not_become_new_work(self) -> None:
+        unit = self.prepare("identity")
+        self.commit(unit, "identity.txt")
+        unit = self.seal(unit)
+        before = Path(unit["record"]).read_bytes()
+        report = self.good("inspect_git_workspace.py", "--repo", self.repo, "--unit", unit["unit"], "--intent", "write")
+        self.assertEqual(report["execution_recommendation"]["mode"], "linked_repair")
+        unknown = self.cli("inspect_git_workspace.py", "--repo", self.repo, "--unit", "UNIT-unknown", "--intent", "write")
+        self.assertNotEqual(unknown.returncode, 0)
+        duplicate = Path(unit["record"]).with_name("duplicate.json")
+        duplicate.write_bytes(before)
+        bad = self.cli("inspect_git_workspace.py", "--repo", self.repo, "--unit", unit["unit"], "--intent", "write")
+        self.assertNotEqual(bad.returncode, 0)
+        self.assertEqual(Path(unit["record"]).read_bytes(), before)
+
+    def test_structure_and_physical_retirement_are_separate(self) -> None:
+        unit = self.integrated_unit()
+        data = self.release_record(unit, "removed")
+        result, report = self.check_release(data, live=False)
+        self.assertEqual(result.returncode, 0, report)
+        self.assertFalse(report["git_state_checked"])
+        result, report = self.check_release(data)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertTrue(all(report["units"][0]["physical"].values()))
+        data["cleanup"][0]["disposition"] = "retained"
+        result, report = self.check_release(data)
+        self.assertEqual(result.returncode, 0, report)
+        data["cleanup"][0]["disposition"] = "removed"
+        run("git", "worktree", "remove", unit["worktree"], cwd=self.repo)
+        result, report = self.check_release(data)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertTrue(report["units"][0]["physical"]["branch_exists"])
+        self.assertFalse(report["units"][0]["physical"]["worktree_registered"])
+        run("git", "branch", "-d", unit["branch"], cwd=self.repo)
+        result, report = self.check_release(data)
+        self.assertEqual(result.returncode, 0, report)
+        self.assertFalse(any(report["units"][0]["physical"].values()))
+        Path(unit["worktree"]).symlink_to(self.root / "not-created", target_is_directory=True)
+        result, report = self.check_release(data)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertTrue(report["units"][0]["physical"]["worktree_path_present"])
+
+    def test_live_closeout_rejects_mismatched_receipt_and_surface(self) -> None:
+        unit = self.integrated_unit()
+        original = self.release_record(unit)
+        for section, field, value in (
+            ("change_units", "integration_commit", unit["baseline"]),
+            ("change_units", "source_commit", unit["baseline"]),
+            ("cleanup", "branch", "unrelated"),
+            ("cleanup", "worktree", str(self.root / "unrelated")),
+        ):
+            with self.subTest(section=section, field=field):
+                data = json.loads(json.dumps(original))
+                data[section][0][field] = value
+                result, report = self.check_release(data)
+                self.assertNotEqual(result.returncode, 0, report)
+        data = json.loads(json.dumps(original))
+        data["release"]["target_line"] = "elsewhere"
+        result, report = self.check_release(data)
+        self.assertNotEqual(result.returncode, 0, report)
+        stored = json.loads(Path(unit["record"]).read_text())
+        stored.pop("integration_proof")
+        Path(unit["record"]).write_text(json.dumps(stored), encoding="utf-8")
+        result, report = self.check_release(original)
+        self.assertNotEqual(result.returncode, 0, report)
+
+    def test_unrelated_active_work_does_not_block_retained_closeout(self) -> None:
+        unit = self.integrated_unit()
+        other = self.prepare("independent")
+        (Path(other["worktree"]) / "pending.txt").write_text("unrelated", encoding="utf-8")
+        result, report = self.check_release(self.release_record(unit))
+        self.assertEqual(result.returncode, 0, report)
+        self.assertEqual([item["unit"] for item in report["units"]], [unit["unit"]])
+        self.assertTrue((Path(other["worktree"]) / "pending.txt").exists())
+
+
+    def test_exact_unit_query_ignores_inherited_git_routing(self) -> None:
+        import os
+        unit = self.prepare("environment")
+        foreign_root = self.root / "foreign"
+        foreign_root.mkdir()
+        foreign = ChangeUnitManagementTests.make_repo(self, foreign_root)
+        env = dict(os.environ, GIT_DIR=str(foreign / ".git"), GIT_WORK_TREE=str(foreign))
+        result = subprocess.run([sys.executable, str(self.scripts / "inspect_git_workspace.py"),
+            "--repo", str(self.repo), "--unit", unit["unit"], "--intent", "write"],
+            cwd=ROOT, env=env, text=True, capture_output=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        report = json.loads(result.stdout)
+        self.assertEqual(report["change_unit"]["worktree"], unit["worktree"])
+        self.assertEqual(report["execution_recommendation"]["mode"], "resume_existing_unit")
+
 if __name__ == "__main__":
     unittest.main()
