@@ -172,11 +172,11 @@ Connect understanding, design, implementation, verification and delivery at the 
 <a id="installation-updates-and-removal"></a>
 ## Version, updates and removal
 
-The current source version is Senmu BuildOS `v2.24.1`. Source, private release, public marketplace availability and local installation are separate states. The badge above links to the public channel, not your installed version.
+The current source version is Senmu BuildOS `v2.25.4`. Source, private release, public marketplace availability and local installation are separate states. The badge above links to the public channel, not your installed version.
 
-<!-- product-surface-review: 2.24.1 -->
+<!-- product-surface-review: 2.25.4 -->
 
-This release repairs three requirement-checker omissions and adds two executable contract chains: modular definitions and code-owned declarations, connected to type generation, real consumer validation and SQLite outcome checks. Fault-injection and restoration cases preserve drafts, custom version labels, meaningful lists and the lightweight 2.24.0 governance model. Native Agent behavior remains separate from source evidence. See [release notes](RELEASE_NOTES.md).
+This release repairs retry receipts, parent-only cancellation and cross-enabled configurations in the scoped cleanup caller, and restores material-role routing. It freezes validated partitions, preserves each attempt and waits for the active helper after cancellation. Existing safety checks and context budgets remain unchanged; isolated tests do not prove project adoption or user disk recovery. See [release notes](RELEASE_NOTES.md).
 
 <details>
 <summary>Update an existing installation</summary>

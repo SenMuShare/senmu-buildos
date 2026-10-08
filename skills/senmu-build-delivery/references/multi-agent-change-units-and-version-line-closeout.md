@@ -1,6 +1,6 @@
 # Multi-Agent Change Units and Version-Line Integration
 
-Use this standard for AI development with no permanent team lead, unknown concurrency, and continuous requests across one or several version lines. Responsibility follows the current action and durable evidence, not session identity: the implementer writes a Change Unit; the agent receiving integration/release intent closes integration; the agent executing merge gates reviews. Any later agent must recover the same truth from project task authority and Git.
+Use for continuous AI work across version lines without a permanent lead. Responsibility follows actions and durable evidence, not session identity: implementers write Change Units; integration/release recipients close integration; merge-gate executors review. Successors recover the same facts from project task authority and Git.
 
 ## 1. Change Unit Contract
 
@@ -49,13 +49,13 @@ If a current-directory task later meets a second writer, stop sharing. Seal a co
 
 ## 3. Integration Without a Permanent Leader
 
-An implementer may hand off its completed authorized slice after verification and commit, sealing only when the batch is closed; the overall goal owner still reconciles remaining commitments. Sealed units without final disposition remain visible for intake. The agent receiving “finish this batch,” “integrate into current version,” “merge this work,” or “release latest” becomes the integration closer.
+Implementers hand off authorized, verified, committed slices, sealing only completed batches; the goal owner retains remaining commitments. Keep undisposed sealed units visible. Move eligible reviewed work through intake when authority, compatibility and real dependencies permit; unrelated governance or repeated evidence packaging is not a dependency. Receiving “finish this batch,” “integrate,” “merge” or “release latest” makes the agent the integration closer.
 
 Ordinary single-project/single-source work adds no coordinator. Only a formal release crossing agents, repositories, or production units creates a temporary release coordinator for that window. Release Control freezes the intake matrix/candidate and binds authority to candidate, scope, environment, and rollback. Unchanged boundaries need no repeat confirmation. New commits require refreshed candidate evidence; the [authorization protocol](release-authorization-and-production-truth.md) determines whether the existing scope still covers execution. Effects outside that authority require confirmation. The temporary role ends on release, rollback, or cancellation and creates no second ledger.
 
 1. Freeze intake cutoff and target line. Reconcile version requirements/defects, task owner, Harness-visible tasks, Git branches/worktrees/status/log, and branch register into one intake matrix. Include sealed units before cutoff; exclude continuing units unless required, in which case block. Never force partial commits for schedule.
 2. Mark each `include | exclude | blocked`. Include only line-matching sealed units with stable commit, evidence, and traceable scope. Exclude history, POCs, incomplete, superseded, unrelated. Block possibly in-scope dirty, unproven, or unresolved-conflict units.
-3. Integrate by shared foundations, dependencies, and conflicts—not session finish order. Preserve project merge/rebase/cherry-pick policy; otherwise retain traceable ancestry. An equivalent rewrite records source mapping.
+3. Integrate by shared foundations, dependencies, and conflicts—not session finish order. Preserve project merge/rebase/cherry-pick policy; otherwise retain traceable ancestry. Exact-commit proofs leave an unspecified receiving base `null`; rewritten commits require full-content replay.
 4. Review each frozen `base..head`: actual diff, user behavior, interfaces/data/effects, comments, tests. Low risk may use evidence-based self-review; use independent review only when project rules or G3-G4 require it.
 5. After each integration, run conflict-impact tests. After all inclusion, run full candidate gates in the one clean `release_source_root`. A changed commit needs a renewed candidate conclusion over the new diff and affected chains; preserve unaffected review and test evidence, without relabeling old runs as executions on the new commit.
 6. Release Control records `version item/task -> source commit -> tests -> disposition -> integration commit`. Every version item and plausible unit needs disposition; zero local branches does not prove closure.

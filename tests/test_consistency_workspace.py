@@ -5,6 +5,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 
 ROOT=Path(__file__).resolve().parents[1]
 p=ROOT/'tests/behavior/workspace_fixture.py'
@@ -40,6 +41,39 @@ class WorkspaceFixtureTests(unittest.TestCase):
             self.assertEqual((root/'CLAUDE.md').read_text(),'@AGENTS.md\n')
 
 class ExtendedWorkspaceFixtureTests(unittest.TestCase):
+    def test_non_git_probe_ignores_inherited_git_location_overrides(self):
+        with tempfile.TemporaryDirectory() as directory:
+            repo = Path(directory)
+            subprocess.run(['git', '-C', str(repo), 'init', '-q'], check=True)
+            root = repo / 'documents'
+            root.mkdir()
+            with patch.dict(f.os.environ, {'GIT_DIR': str(repo / 'missing'),
+                                           'GIT_CEILING_DIRECTORIES': str(repo)}):
+                with self.assertRaisesRegex(ValueError, 'outside any Git repository'):
+                    f.create(root, 'non-git')
+            self.assertEqual(list(root.iterdir()), [])
+
+    def test_non_git_case_refuses_a_repository_subdirectory_without_writes(self):
+        with tempfile.TemporaryDirectory() as directory:
+            repo = Path(directory)
+            subprocess.run(['git', '-C', str(repo), 'init', '-q'], check=True)
+            root = repo / 'documents'
+            root.mkdir()
+            with self.assertRaisesRegex(ValueError, 'outside any Git repository'):
+                f.create(root, 'non-git')
+            self.assertEqual(list(root.iterdir()), [])
+
+    def test_non_git_case_keeps_archive_and_has_no_repository(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            f.create(root, 'non-git')
+            self.assertFalse((root / '.git').exists())
+            self.assertEqual({p.relative_to(root).as_posix() for p in root.rglob('*') if p.is_file()},
+                             set(f.NON_GIT_FILES))
+            self.assertEqual((root / 'archive/previous.md').read_text(),
+                             f.NON_GIT_FILES['archive/previous.md'])
+            self.assertIn('handouts/current.md', (root / 'README.md').read_text())
+
     def check_repair(self, case, filename, before_text, after_text, test_name, failure_name):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -66,6 +100,21 @@ class ExtendedWorkspaceFixtureTests(unittest.TestCase):
                                  'test_*.py', 'test_zero')
         self.assertEqual(files['pricing/legacy_v1.py'], f.FILES['pricing/legacy_v1.py'])
         self.assertEqual(files['pricing/totals.py'], f.RESUME_FILES['pricing/totals.py'])
+
+    def test_local_repair_is_executable_while_external_scope_waits(self):
+        files = self.check_repair('waiting', 'pricing/receipt.py',
+                                 'return f"Total: {amount}" if amount else ""',
+                                 'return f"Total: {amount}"', 'test_*.py', 'test_zero')
+        self.assertEqual(files['pricing/legacy_v1.py'], f.FILES['pricing/legacy_v1.py'])
+        self.assertEqual(files['pricing/totals.py'], f.RESUME_FILES['pricing/totals.py'])
+
+    def test_release_entry_detects_skipped_local_cleanup_and_preserves_prerequisites(self):
+        self.check_repair('release-closeout', 'scripts/release.sh',
+                         'bash scripts/remote-cleanup.sh\nbash scripts/cleanup.sh retention.env apply > local-cleanup.receipt',
+                         'remote_rc=0\nbash scripts/remote-cleanup.sh || remote_rc=$?\n'
+                         'local_rc=0\nbash scripts/cleanup.sh retention.env apply > local-cleanup.receipt || local_rc=$?\n'
+                         'if (( local_rc )); then exit "$local_rc"; fi\nexit "$remote_rc"',
+                         'test_release.py', 'test_remote_retention_failure')
 
     def test_unknown_case_does_not_write_anything(self):
         with tempfile.TemporaryDirectory() as directory:

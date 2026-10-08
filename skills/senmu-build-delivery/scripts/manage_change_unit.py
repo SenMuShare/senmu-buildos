@@ -188,7 +188,12 @@ def validate_target_topology(
                 f"[BLOCKED] stacked parent is {target_record.get('unit')!r}, not {parent_unit!r}"
             )
         if target_record.get("state") != "sealed":
-            raise SystemExit("[BLOCKED] stacked-unit target must be sealed before a dependent unit starts")
+            raise SystemExit(
+                "[BLOCKED] stacked-unit target must be sealed before a dependent unit starts. "
+                "For repairs within the same acceptance batch, use the existing open unit "
+                "and review an exact commit; do not seal merely to request review. "
+                "A genuinely separate dependency needs its own approved boundary."
+            )
         if target_record.get("head") != target_head:
             raise SystemExit("[BLOCKED] stacked-unit target has moved after its recorded sealed head")
         _, _, observed = observe_unit(repo, parent_unit)
@@ -422,7 +427,7 @@ def resolve_commit(repo: Path, ref: str) -> str:
 def integration_proof(
     repo: Path, record: dict[str, Any], receipt: str, receiving_base: str | None,
     *, receiving_target: str | None = None,
-) -> dict[str, str]:
+) -> dict[str, str | None]:
     """Prove frozen source reception, not product acceptance or current behavior."""
     for key in ("head", "baseline", "branch", "target"):
         if not isinstance(record.get(key), str) or not record[key].strip():
@@ -443,20 +448,24 @@ def integration_proof(
     if receiving_base is not None:
         before = resolve_commit(repo, receiving_base)
     elif receipt == source:
-        before = baseline
+        # Object identity proves reception but says nothing about where the target
+        # pointed before it advanced. The source may already contain target merges.
+        before = None
     else:
         parents = git(repo, "rev-list", "--parents", "-n", "1", receipt).split()
         if len(parents) < 2:
             raise SystemExit("[BLOCKED] integration receipt has no receiving parent")
         before = parents[1]
-    if before == receipt or not is_ancestor(repo, before, receipt):
-        raise SystemExit("[BLOCKED] integration base must be a strict ancestor of the receipt")
-    if not is_ancestor(repo, baseline, before):
-        raise SystemExit("[BLOCKED] receiving base does not descend from the source baseline")
+    if before is not None:
+        if before == receipt or not is_ancestor(repo, before, receipt):
+            raise SystemExit("[BLOCKED] integration base must be a strict ancestor of the receipt")
+        if not is_ancestor(repo, baseline, before):
+            raise SystemExit("[BLOCKED] receiving base does not descend from the source baseline")
 
-    if receipt == source and before == baseline:
+    if receipt == source:
         kind = "exact_commit"
     else:
+        assert before is not None
         # Replay the full frozen delta. A squash/cherry-pick may have new commit IDs.
         # merge-tree writes Git objects, never the index, worktree or branch refs.
         merged = subprocess.run(

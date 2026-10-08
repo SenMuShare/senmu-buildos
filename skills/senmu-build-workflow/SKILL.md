@@ -9,7 +9,7 @@ Define an executable contract across entrypoints, inputs, state, processing, out
 
 ## Route by Outcome
 
-- Missing cleanup entrypoints, retention conflicts, resource lifecycle, material roles or delivery: [Workflow and Deliverables](references/workflow-materials-and-deliverables.md).
+- Cleanup gaps, storage pressure, retention, resource lifecycle, material roles or delivery: [Workflow and Deliverables](references/workflow-materials-and-deliverables.md).
 - Unclear human-only steps or secret/approval boundaries: [Human guide](references/workflow-materials-and-deliverables.md#21-human-operator-guide).
 - Run identity, idempotency, step state, recovery, minimum reruns: [Run State](references/workflow-run-state-and-recovery.md).
 - Attachment source, version, reading boundaries: [Reference Attachments](references/reference-attachment-governance.md).
