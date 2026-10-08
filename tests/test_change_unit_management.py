@@ -469,6 +469,47 @@ class ChangeUnitManagementTests(unittest.TestCase):
         self.assertEqual((repo / "base.txt").read_text(), "changed\n")
         self.assertEqual((repo / "unrelated.txt").read_text(), "keep\n")
 
+    def make_updated_fast_forward_fixture(self) -> tuple[Path, dict, str]:
+        temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        root = Path(temporary.name)
+        repo = self.make_repo(root)
+        worktree = root / "unit"
+        self.command("prepare", "--repo", str(repo), "--unit", "TASK-4001",
+                     "--slug", "updated-source", "--worktree", str(worktree), cwd=ROOT)
+        (worktree / "base.txt").write_text("base\nsource entry\n")
+        run("git", "commit", "-am", "source append", cwd=worktree)
+        (repo / "base.txt").write_text("base\ntarget entry\n")
+        run("git", "commit", "-am", "target append", cwd=repo)
+        before = run("git", "rev-parse", "HEAD", cwd=repo).stdout.strip()
+        merge = run("git", "merge", "main", cwd=worktree, check=False)
+        self.assertNotEqual(merge.returncode, 0)
+        (worktree / "base.txt").write_text("base\ntarget entry\nsource entry\n")
+        run("git", "commit", "-am", "resolve before sealing", cwd=worktree)
+        sealed = json.loads(self.command("seal", "--repo", str(worktree),
+                                         "--unit", "TASK-4001", cwd=ROOT).stdout)
+        run("git", "merge", "--ff-only", sealed["head"], cwd=repo)
+        return repo, sealed, before
+
+    def test_exact_receipt_accepts_target_already_resolved_inside_frozen_source(self) -> None:
+        repo, sealed, before = self.make_updated_fast_forward_fixture()
+        result = self.close_fixture(repo, sealed["head"], "--integration-base", before)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        proof = json.loads(result.stdout)["integration_proof"]
+        self.assertEqual(proof["kind"], "exact_commit")
+        self.assertEqual(proof["receiving_base"], before)
+        self.assertEqual((repo / "base.txt").read_text(), "base\ntarget entry\nsource entry\n")
+
+    def test_exact_receipt_does_not_invent_the_unrecorded_receiving_base(self) -> None:
+        repo, sealed, before = self.make_updated_fast_forward_fixture()
+        self.assertNotEqual(before, sealed["baseline"])
+        result = self.close_fixture(repo, sealed["head"])
+        self.assertEqual(result.returncode, 0, result.stderr)
+        proof = json.loads(result.stdout)["integration_proof"]
+        self.assertEqual(proof["kind"], "exact_commit")
+        self.assertEqual(proof["source_baseline"], sealed["baseline"])
+        self.assertIsNone(proof["receiving_base"])
+
     def test_ancestry_only_merge_cannot_claim_integration(self) -> None:
         repo, worktree, sealed = self.make_sealed_fixture()
         run("git", "merge", "--no-ff", "-s", "ours", sealed["head"], "-m", "discard source", cwd=repo)

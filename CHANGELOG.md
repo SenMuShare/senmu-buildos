@@ -4,6 +4,73 @@ Earlier entries are retained verbatim in [the history through 2.20.5](docs/relea
 
 ## Unreleased
 
+## [2.25.4] - 2026-10-07
+
+### Fixed
+
+- Preserve cleanup receipts in uniquely created attempt directories rather than overwrite destructive-action evidence on retry.
+- Supervise the active POSIX child process group on parent-only cancellation and wait for the helper before returning; do not start a later group or claim rollback.
+- Validate artifact-only/image-only partitions before either apply and execute frozen config bytes; reject mixed flags, duplicates and linked source configs.
+- Restore the explicit material-roles route alongside storage-pressure coaching.
+
+### Validation
+
+- Reproduce all four reported failures against 2.25.3 and exercise real disposable files, parent-only signals and a controlled leaf process. No user cleanup, real Docker, native model/loading or physical disk-recovery claim.
+
+## [2.25.3] - 2026-10-07
+
+### Improved
+
+- Add on-demand storage-pressure coaching at existing heavy-write entrypoints: identify actual volumes, peak/concurrent demand, reusable results and native cache controls without universal quotas or a new scheduler.
+- Add a tested caller example that closes independently authorized resource groups while preserving each helper plan's inventory, retention, cancellation and failure boundaries.
+
+### Fixed
+
+- Scope the bounded cleanup reminder to ordinary authorized discards; preserve unknown, active and recovery assets and route managed resources to their existing owners. Synchronize the three skills-only bootstraps within unchanged context budgets.
+
+### Evidence boundary
+
+- Coupled, independent and negative script controls use real disposable files and a fake Docker boundary. They do not modify business projects or establish native loading, sustained adherence or physical disk savings.
+
+## [2.25.2] - 2026-10-07
+
+### Fixed
+
+- Scope Kernel branch, worktree and Change Unit instructions to Git work in both lifecycle contexts and all three skills-only bootstraps. Preserve general edit scope, existing work, real repository protections and the existing context budgets.
+
+### Validation
+
+- Add a non-Git document control to the existing offline workspace generator and native evaluation guide. Grade actual edits, archive preservation and unnecessary repository requirements alongside the existing Git cases. Fixture checks remain distinct from host/model observations.
+
+## [2.25.1] - 2026-10-07
+
+### Fixed
+
+- Prove exact frozen-commit reception without replaying already resolved target changes against the old source baseline. Keep an omitted receiving base unknown; rewritten commits still require full-content proof.
+- Let classified feedback acquire idempotent tracking references without rewriting the original candidate or decision. Show missing follow-up links without claiming that linked work is resolved.
+
+### Improved
+
+- Add executable offline cases for local continuation during an external wait and release cleanup after a separate remote-retention failure. Exercise the actual release entry and preserve verification prerequisites and current/rollback artifacts.
+- Clarify that required recovery material needs controlled retention, and that space-recovery methods should account for actual savings and peak temporary storage.
+
+### Evidence boundary
+
+- Fixture and script checks establish bounded behavior. Native host activation, sustained model adherence, project adoption and physical disk recovery require their own observations.
+
+## [2.25.0] - 2026-10-04
+
+### Improved
+
+- Add outcome/evidence-driven course correction to the bounded Kernel, adopted project principles and existing task method. Preserve productive uncertainty reduction, unlisted causes, interrupted commitments, authority and safety without a fixed hierarchy or retry quota.
+- Extend the existing guidance selector with opt-in method concerns; preserve default routing and report unlisted concerns through a general investigation route rather than ignoring them.
+- Clarify native-tool reuse, sound oracles, real application-owned transitions, stage-aware verification and risk-based recovery. Keep open review/repair batches together and make the existing open-parent rejection actionable.
+- Add executable routing and real Git lifecycle controls plus five optional cross-domain native decision cases. No new runtime scheduler, wrapper mandate, ledger or project-specific detector.
+
+### Evidence boundary
+
+- Source checks prove tool behavior, not host activation or model adherence. Native cases are unexecuted inputs until actual traces are obtained; private delivery does not imply local adoption or public publication.
+
 ## [2.24.1] - 2026-09-30
 
 ### Fixed

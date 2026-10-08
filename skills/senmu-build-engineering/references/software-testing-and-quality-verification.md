@@ -16,7 +16,7 @@ A message, commit, formatting pass, handoff or new stage alone does not justify 
 
 ## 1. Strategy Inputs
 
-Base the strategy on approved acceptance and invariants, affected user docs/examples, modules/interfaces/data owners, dependencies and external effects. Include runtime/version compatibility, release/recovery, failure impact and likelihood, detectability, existing tests/CI/environments and defect history. Identify money, authorization, storage, network and messaging risks where present.
+Use approved acceptance/invariants, affected docs, modules/interfaces/data owners, dependencies and effects. Consider runtime compatibility, release/recovery, failure impact/likelihood/detectability, existing tests/CI/environments and defects; include money, authorization, storage, network and messaging risks.
 
 For low-impact changes, avoid implementation-mirroring or instruction-wording tests. Expand required checks only for changed inputs, failure or unresolved risk. Instruction audits also use Project's routing check; shorter text or valid links do not prove model performance.
 
@@ -24,7 +24,7 @@ Choose layers by risk. Unit/property tests may suffice for pure functions; trans
 
 Version `TEST_CASES.md` derives directly from that PRD's pages/features/capabilities, product behavior, interaction, errors, boundaries, and acceptance and mirrors its content structure. Shared version/sections provide linkage; do not create a traceability matrix. Retain an existing test-management owner. Templates are adaptable outlines: a low-risk change keeps only matching cases.
 
-When installation, configuration, user operation, public API, CLI, SDK, or recovery changes, treat affected current Get Started/tutorial/manual/reference paths as black-box acceptance input. From representative PRD starting points, execute real commands/examples and verify observable results/final state. Automate documentation code blocks in the unified quality entrypoint when possible; otherwise record environment, steps, result, and blind spots. Link checks, documentation builds, and syntax highlighting prove only document surface, not product behavior. Internal refactors with unchanged use contracts and one-off exploration with no durable entrypoint add no documentation tests.
+For installation, configuration, operation, API/CLI/SDK or recovery changes, use affected current user docs as black-box acceptance. Execute real commands/examples from representative PRD starting states to observable outcomes. Automate relevant code blocks in the existing quality entrypoint or record environment, steps, results and gaps. Links, doc builds and highlighting prove surface only. Unchanged-use refactors and one-off exploration without durable entrypoints need no documentation tests.
 
 ## 2. Layers and Responsibilities
 
@@ -46,7 +46,7 @@ For a multi-step user capability, derive the starting state and observable final
 
 Cover only relevant dimensions: normal/core outcomes; null/min/max/format/locale/time; invalid state, duplicate, reorder, timeout, cancellation, partial success; permissions, tenancy, ownership, sensitive data; commit/rollback, idempotency, race, retry effects; dependency failure, degradation, recovery, compensation, cleanup; schema/API/config/file/version compatibility; and legacy, migration equivalence, rollback.
 
-A defect needs a regression that fails before and passes after, or an explanation of alternate repeatable evidence. Do not duplicate equivalent cases for count. Judge whether a test observes the relevant contract and can fail for its defect; assertion names alone do not decide value. Definedness, emptiness, absence and negative assertions can be valid contracts. Never delete them mechanically or claim an assertion passes on an input without checking its semantics.
+A defect needs a failing-before/passing-after regression or explained repeatable alternative. Avoid equivalent cases for count. Evaluate contract observability and defect sensitivity, not assertion names. Definedness, emptiness, absence and negative checks can be valid; do not delete them mechanically or claim results without inspecting semantics.
 
 Prefer test-first when behavior is clear, feedback is fast and checks need no private internals: show failure, implement, then refactor. For exploratory algorithms, one-off POCs, visual choices or costly unstable environments, stabilize the problem or prototype first. Writing order is not a gate; the final check must observe real behavior and detect regression.
 
@@ -88,23 +88,23 @@ A local quick run cannot become a production-capacity conclusion. Record environ
 
 ## 7. Impact and Regression Selection
 
-Derive impact from diff, call chain, public contracts, data, and configuration. Check direct behavior, callers/consumers, shared state/effects, compatibility/migration/rollback, and analogous implementations/history. Name the few key facts on which the safety judgment depends. For each material fact, trace its failure path and use the closest affordable check against real code or the running artifact. State whether it is source-supported, experimentally verified or unproven. Search results and a plausible explanation do not prove absence of impact. Report confirmed risks, risks checked and cleared, and remaining uncertainty without inventing a probability.
+Derive impact from diff, call chains, public contracts, data and configuration. Check behavior, consumers, shared state/effects, compatibility/migration/rollback and analogous history. For each key safety fact, trace failure and use the nearest affordable real-code/artifact check. Label source support, experimental proof or uncertainty; search and plausibility do not prove no impact. Report confirmed, cleared and unknown risks without invented probabilities.
 
 For small changes, run targeted tests/checks. Cross-module, public interface, schema, dependency, or release-unit changes require impact-based checks and relevant real paths, plus any full gate required by the project. Once matching and required checks pass, expand or repeat only for new changes, failures, or unresolved concerns. One new test does not prove old behavior unaffected.
 
 First answer whether the original issue is fixed: close root cause with an original-path or production-shaped test that fails before and passes after. Then run impacted regressions, and run complete project gates only on a frozen candidate. Many generic regressions cannot replace the key dependency shape/current main path; a passing key path cannot replace its impacted regressions.
 
-Time checks by batch: implementation checks original failures and affected behavior; requested review/closeout checks complete scope and consumers; the frozen integrated candidate runs required full gates and unmet acceptance paths. Separate branch passes are not an integrated pass. Reuse valid evidence, not stale approval. New stages, sessions, commits or Git deltas alone do not determine reruns. Honor project commands; repair redundant entrypoints within authority, never bypass them.
+During implementation check original failures/affected behavior; at review/closeout cover scope and consumers; on the frozen integrated candidate run required full gates and unmet acceptance. Branch passes are not integration. Reuse valid evidence, not stale approval; stages, sessions or commits alone do not justify reruns. Repair redundant project commands within authority, never bypass them.
 
 Safety, data, authorization, billing, production, and irreversible boundaries receive checks with the first affected slice, not first at batch end. Presentation-equivalent edits may form one interaction batch; once semantics, hierarchy, operation, state, accessibility, or acceptance changes, reassess impact and batch.
 
 ### Evidence Reuse and Handoff
 
-Engineering owns what a check proves and when its evidence expires. Before repeating it, compare its covered behavior and relevant inputs: source and test code, resolved dependencies/toolchain, configuration, commands/options, fixtures/data and execution environment. A passing receipt is reusable only when those inputs remain equivalent, the result is available, and no unresolved failure or external-state drift undermines it. A matching commit alone does not prove equivalence; a different commit alone does not invalidate unrelated evidence.
+Engineering owns evidence scope and expiry. Reuse passing results only with equivalent behavior and inputs: source/tests, resolved dependencies/toolchain, configuration, commands/options, fixtures/data and environment. Results must remain available, without unresolved failure or external-state drift. A matching commit alone does not prove equivalence; a different one does not invalidate unrelated evidence.
 
-After a change, rerun checks for changed inputs and dependent behavior; retain unaffected results. Unknown impact warrants enough checking to resolve that uncertainty, not an automatic whole-suite rerun. External service health and other time-sensitive evidence need current observation. Reuse a build only when its relevant inputs and retained output integrity match; local and container builds are not interchangeable merely because both invoke the same command. Missing, altered or untraceable output requires rebuilding the affected artifact.
+Rerun changed inputs/dependent behavior and retain unaffected results. Resolve unknown impact without automatic whole-suite repetition. Refresh time-sensitive evidence such as service health. Reuse builds only with matching relevant inputs and retained output integrity; identical commands do not equate local/container builds. Rebuild affected artifacts when outputs are missing, altered or untraceable.
 
-Use the existing task/CI receipt to identify checked scope, input identity, environment, result, remaining gaps and reuse rationale. Do not require a new ledger, universal fingerprint framework or cache implementation. Delivery receives these facts, maps valid evidence to the current candidate, and checks only unmet release obligations. Renew the candidate-level conclusion after changes without pretending old runs executed on the new commit. Report reused and newly run checks separately; test totals do not establish requirements or visual acceptance.
+Existing task/CI receipts retain scope, input identity, environment, result, gaps and reuse rationale; no new ledger, universal fingerprints or cache. Delivery maps valid evidence to the candidate and checks unmet release obligations. Renew changed-candidate conclusions without relabelling old runs. Separate reused/new checks; totals prove neither requirements nor visual acceptance.
 
 ### Efficient Execution and Waiting
 
@@ -135,13 +135,21 @@ Unified commands should share configuration:
 
 ### Make the Real Verification Path Usable
 
-When no usable real check exists, document the smallest recipe in the existing testing owner. Reuse its commands and capability map, not a parallel catalog. Specify setup, readiness/version/auth checks, real user actions, observable results and side effects, evidence location, and cleanup. Keep cost, credentials, isolation and mutation boundaries explicit.
+Without a usable real check, add the smallest recipe to the existing testing owner/commands/map, not a parallel catalog. Specify setup, readiness/version/auth, real actions, results/effects, evidence and cleanup, with cost, credentials, isolation and mutation boundaries.
 
-Run a new or repaired recipe through one affected path before calling it verified. Observe the actual result and confirm evidence survives cleanup. Stop only processes and scratch state the run created. Missing access or a blocked environment leaves a draft, not a verified recipe. One exercised path does not prove every feature or environment.
+Exercise a new/repaired recipe on one affected path before calling it verified. Observe results and retain evidence after cleanup; stop only its own processes/scratch state. Missing access leaves a draft. One path proves neither all features nor all environments.
 
 Maintain affected recipes as behavior changes. Distinguish document drift, harness defects and product regressions; never rewrite expected behavior to conceal a regression. Diagnostic injection and external effects still need authority.
 
 Report commands, results, failures/skips, environment and remaining risk. Tool success is not acceptance, deployment or release.
+
+### Diagnose the Verification Method
+
+Repeated preparation failures or green tests with an unusable capability require method review, not more cases by default. Inspect native runner/framework APIs, actual schema, fixtures and observation boundary; exercise one representative setup-to-result path before expanding. Informative long checks are not inherently waste.
+
+Prefer supported tools to custom parsers/comparators. A justified helper must distinguish equivalent inputs from meaningful differences; normalization must not erase names, values, order or state. Green counts cannot rescue an unsound oracle. External fakes may be valid, but tests must not replace missing application dispatch, persistence or recovery by manually advancing internal steps.
+
+Expose setup/collection/execution/result, discovered/executed/skipped scope and failure location through existing receipts; classify product/test/environment/unknown from evidence. Rerun affected work before closeout gates. Choose safe resume or disposable-fixture reconstruction from actual state; reconcile uncertain effects first. Bind evidence to its claim, not every unchanged file after each edit.
 
 ## 10. Incremental Adoption in Legacy Projects
 

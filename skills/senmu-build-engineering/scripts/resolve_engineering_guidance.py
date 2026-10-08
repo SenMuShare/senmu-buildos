@@ -29,6 +29,14 @@ EXTENSIONS = {
     ".kt": "kotlin", ".kts": "kotlin", ".swift": "swift", ".php": "php", ".phtml": "php",
 }
 RISKS = ("public-service", "untrusted-input", "paid-api", "dependency", "public-contract")
+# Optional declared concerns select methods; they do not diagnose a project.
+GENERAL_EXECUTION = "skills/senmu-build-project/references/task-execution-and-state-management.md"
+CONCERN_ROUTES = {
+    "verification": ENGINEERING + "software-testing-and-quality-verification.md",
+    "complexity": ENGINEERING + "implementation-economy-and-overengineering.md",
+    "coordination": GENERAL_EXECUTION,
+    "integration": "skills/senmu-build-delivery/references/multi-agent-change-units-and-version-line-closeout.md",
+}
 MAX_REFERENCE_BYTES = 64 * 1024
 FILE_ROLES = ("compose", "kubernetes", "terraform")
 SUMMARY_EXAMPLES = 3
@@ -52,13 +60,20 @@ def path_name(value: str) -> PurePosixPath:
 def select(paths: list[str], risks: list[str], runtime: str | None = None,
            header_language: str | None = None, *, root: Path = ROOT,
            notebook_languages: dict[str, str] | None = None,
-           file_roles: dict[str, str] | None = None) -> dict[str, Any]:
+           file_roles: dict[str, str] | None = None,
+           concerns: list[str] | None = None) -> dict[str, Any]:
     if len(paths) > 200 or any(risk not in RISKS for risk in risks):
         raise ValueError("unsupported risk or oversized path list")
     if runtime not in {None, "node", "browser"} or header_language not in {None, "c", "cpp"}:
         raise ValueError("invalid runtime or header language")
-    if not paths and not risks:
-        raise ValueError("declare at least one path or risk")
+    concerns = [] if concerns is None else concerns
+    if (not isinstance(concerns, list) or len(concerns) > 8
+            or any(not isinstance(item, str) or not re.fullmatch(r"[a-z][a-z0-9-]{0,63}", item)
+                   for item in concerns)):
+        raise ValueError("concerns must be at most eight bounded lowercase names")
+    concerns = sorted(set(concerns))
+    if not paths and not risks and not concerns:
+        raise ValueError("declare at least one path, risk or concern")
     notebook_languages = notebook_languages or {}
     file_roles = file_roles or {}
     for declarations in (notebook_languages, file_roles):
@@ -79,6 +94,13 @@ def select(paths: list[str], risks: list[str], runtime: str | None = None,
         entry = selections.setdefault(reference, {"subjects": set(), "reasons": set()})
         entry["subjects"].add(subject)
         entry["reasons"].add(reason)
+
+    for concern in concerns:
+        add(CONCERN_ROUTES.get(concern, GENERAL_EXECUTION), concern,
+            "declared execution concern; investigate before changing the method")
+        if concern not in CONCERN_ROUTES:
+            unresolved.append({"concern": concern,
+                "reason": "unlisted concern: compare the goal, evidence and next action; investigate its actual cause"})
 
     for raw in sorted(set(paths)):
         path = path_name(raw)
@@ -148,10 +170,16 @@ def select(paths: list[str], risks: list[str], runtime: str | None = None,
                 "notebook_languages": dict(sorted(notebook_languages.items())),
                 "file_roles": dict(sorted(file_roles.items())),
                 "unresolved": unresolved}
+    if concerns:
+        identity["concerns"] = concerns
     return {**identity, "reference_selection_identity": fingerprint(identity),
         "status": "partial" if unresolved else "selected", "source_scanned": False,
         "project_rules_included": False, "token_usage": None,
-        "agentHint": "Read matching project rules first. These routes are not the complete effective review policy."}
+        "agentHint": ("Investigate the declared concern against the goal, evidence and next action. "
+                      "Consider unlisted causes; routes are not diagnosis, authority or a mandatory process. "
+                      "Preserve valid work and safety; healthy progress needs no new ceremony."
+                      if concerns else
+                      "Read matching project rules first. These routes are not the complete effective review policy.")}
 
 
 def summarize(result: dict[str, Any]) -> dict[str, Any]:
@@ -188,12 +216,15 @@ def main() -> int:
     parser.add_argument("--header-language", choices=("c", "cpp"))
     parser.add_argument("--notebook-language", action="append", default=[], metavar="PATH=LANGUAGE")
     parser.add_argument("--file-role", action="append", default=[], metavar="PATH=ROLE")
+    parser.add_argument("--concern", action="append", default=[], metavar="NAME",
+                        help="Optional method concern: verification, complexity, coordination, integration; other names retain an explicit investigation gap")
+
     parser.add_argument("--format", choices=("summary", "full"), default="summary")
     args = parser.parse_args()
     try:
         result = select(args.path, args.risk, args.runtime, args.header_language,
                         notebook_languages=declarations(args.notebook_language),
-                        file_roles=declarations(args.file_role))
+                        file_roles=declarations(args.file_role), concerns=args.concern)
         print(json.dumps(summarize(result) if args.format == "summary" else result,
                          ensure_ascii=False, sort_keys=True))
         return 0

@@ -176,3 +176,67 @@ test('decision IDs cannot traverse outside the feedback inbox', (t) => {
   assert.throws(() => decideCandidate('../outside', 'discard', 'no', env), /invalid candidate ID/);
   assert.equal(fs.existsSync(feedbackPaths(env).decisions), false);
 });
+
+test('legacy decisions can acquire idempotent tracking links without rewriting evidence', (t) => {
+  const env = temporaryEnvironment(t);
+  const candidate = createCandidate(env, 30);
+  const decision = decideCandidate(candidate.id, 'buildos_candidate', 'Accepted for investigation.', env);
+  const original = fs.readFileSync(decision.filePath);
+  const rawCandidate = fs.readFileSync(candidate.filePath);
+  const args = [cli, 'link', '--id', candidate.id, '--tracking-ref', 'tasks/repair.md',
+    '--note', 'Implementation has not been verified.'];
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    const linked = childProcess.spawnSync(process.execPath, args, {
+      encoding: 'utf8', env: { ...process.env, ...env },
+    });
+    assert.equal(linked.status, 0, linked.stderr);
+  }
+  assert.deepEqual(fs.readFileSync(decision.filePath), original);
+  assert.deepEqual(fs.readFileSync(candidate.filePath), rawCandidate);
+  const [item] = listCandidates(env, true);
+  assert.deepEqual(item.tracking_refs, ['tasks/repair.md']);
+  assert.equal(item.decision.disposition, 'buildos_candidate');
+  const summary = childProcess.spawnSync(process.execPath, [cli, 'followup', '--summary'], {
+    encoding: 'utf8', env: { ...process.env, ...env },
+  });
+  const payload = JSON.parse(summary.stdout);
+  assert.deepEqual(payload.followup_tracking, { required: 1, linked: 1, missing: 0 });
+  assert.equal(payload.queue_semantics, 'owner_status_not_queried');
+  assert.equal(payload.count, 1);
+});
+
+test('followup exposes missing links and retains both initial and later owners', (t) => {
+  const env = temporaryEnvironment(t);
+  const tracked = createCandidate(env, 31);
+  const missing = createCandidate(env, 32);
+  decideCandidate(tracked.id, 'project', 'Project repair.', env, { trackingRef: 'issues/31' });
+  decideCandidate(missing.id, 'needs_evidence', 'Reproduction pending.', env);
+  const linked = childProcess.spawnSync(process.execPath, [cli, 'link', '--id', tracked.id,
+    '--tracking-ref', 'tasks/followup.md'], { encoding: 'utf8', env: { ...process.env, ...env } });
+  assert.equal(linked.status, 0, linked.stderr);
+  const item = listCandidates(env, true).find(c => c.id === tracked.id);
+  assert.deepEqual(item.tracking_refs, ['issues/31', 'tasks/followup.md']);
+  const summary = childProcess.spawnSync(process.execPath, [cli, 'followup', '--summary'], {
+    encoding: 'utf8', env: { ...process.env, ...env },
+  });
+  assert.deepEqual(JSON.parse(summary.stdout).followup_tracking, { required: 2, linked: 1, missing: 1 });
+});
+
+test('tracking links require a classified existing candidate and nonempty reference', (t) => {
+  const env = temporaryEnvironment(t);
+  const candidate = createCandidate(env, 33);
+  for (const args of [
+    ['--id', candidate.id, '--tracking-ref', 'tasks/not-yet.md'],
+    ['--id', '../outside', '--tracking-ref', 'tasks/unsafe.md'],
+    ['--id', 'FB-0000000000000000', '--tracking-ref', 'tasks/missing.md'],
+  ]) {
+    const result = childProcess.spawnSync(process.execPath, [cli, 'link', ...args], {
+      encoding: 'utf8', env: { ...process.env, ...env },
+    });
+    assert.notEqual(result.status, 0);
+  }
+  decideCandidate(candidate.id, 'project', 'Project work.', env);
+  const blank = childProcess.spawnSync(process.execPath, [cli, 'link', '--id', candidate.id,
+    '--tracking-ref', '  '], { encoding: 'utf8', env: { ...process.env, ...env } });
+  assert.notEqual(blank.status, 0);
+});

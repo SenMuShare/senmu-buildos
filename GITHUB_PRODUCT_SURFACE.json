@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "repository": "SenMuShare/senmu-buildos",
-  "reviewed_for_version": "2.24.1",
+  "reviewed_for_version": "2.25.4",
   "description": "AI-native BuildOS for Codex, Claude Code, Doubao, WorkBuddy and ZCode: product discovery, UI/UX design, software engineering, context-aware workflows, testing, Git and verifiable releases.",
   "topics": [
     "agent-skills",
@@ -27,13 +27,12 @@
   ],
   "readme_review": {
     "updated_sections": [
-      "executable-contract-examples",
       "release-summary-and-source-version"
     ],
     "summary": {
-      "zh": "本版修复需求检查器的三项漏检，并补齐两条可运行的接口契约链路：模块化定义与代码声明生成，连接类型生成、真实调用校验和 SQLite 数据验证。增加故障注入与恢复测试，保留草稿、自定义版本、有效列表和 2.24.0 的轻量治理能力；原生 Agent 表现与源码验证分开报告。详见[用户更新日志](RELEASE_NOTES.md)。",
-      "en": "This release repairs three requirement-checker omissions and adds two executable contract chains: modular definitions and code-owned declarations, connected to type generation, real consumer validation and SQLite outcome checks. Fault-injection and restoration cases preserve drafts, custom version labels, meaningful lists and the lightweight 2.24.0 governance model. Native Agent behavior remains separate from source evidence. See [release notes](RELEASE_NOTES.md).",
-      "ja": "本版は要件チェックの3つの見落としを修正し、分割定義とコード宣言からの生成という2つの実行可能な契約例を追加します。型生成、実際の呼び出しの検証、SQLite の結果確認をつなぎ、障害注入と復元も検証します。草稿、独自の版名、内容のあるリスト、2.24.0 の軽量な整備方法を維持し、Agent の実動作とソースの証拠を分けて報告します。詳細は[更新履歴](RELEASE_NOTES.md)をご覧ください。"
+      "zh": "本版修复分组清理示例的重试回执、父进程取消及配置交叉启用问题，并恢复材料角色路由。实际执行前验证并冻结分组配置，保留每次回执，取消后等待助手退出。原清理安全逻辑和上下文预算不变；隔离验证不等于用户磁盘或项目接入已完成。详见[用户更新日志](RELEASE_NOTES.md)。",
+      "en": "This release repairs retry receipts, parent-only cancellation and cross-enabled configurations in the scoped cleanup caller, and restores material-role routing. It freezes validated partitions, preserves each attempt and waits for the active helper after cancellation. Existing safety checks and context budgets remain unchanged; isolated tests do not prove project adoption or user disk recovery. See [release notes](RELEASE_NOTES.md).",
+      "ja": "本版は分割クリーンアップ例の再試行記録、親プロセスのみの中断、設定の交差有効化を修正し、資料の役割への経路を復元します。実行前に設定を検証・固定し、各試行を保持して中断時には実行中の処理の終了を待ちます。既存の保護とコンテキスト予算は変更せず、隔離テストを利用者の空き容量改善や導入完了とは扱いません。詳細は[更新履歴](RELEASE_NOTES.md)をご覧ください。"
     }
   },
   "readmes": {

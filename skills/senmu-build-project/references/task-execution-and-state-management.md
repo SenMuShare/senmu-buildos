@@ -2,7 +2,7 @@
 
 **Read as needed:** [Create a task](#2-when-to-create-a-numbered-task-plan) · [Split and delegate](#4-split-plans-only-as-much-as-needed) · [Resume](#5-session-plans-and-authoritative-facts) · [Update status](#6-status-and-update-points) · [Close](#7-closeout-and-archive).
 
-Use this standard for work that spans meaningful steps, phases, or sessions. Task plans belong to the project, not chat memory or a specialist Skill. A project that needs recovery must declare a Durable Task State Owner. New BuildOS standard/release projects default to numbered task-plan files; core and mature projects may map a trusted README, issue tracker, database, plan file, or external system.
+Multi-step/session work uses a project-owned Durable Task State Owner, not chat or a specialist Skill. Standard/release starters use numbered plans; core and mature projects may retain a trusted README, issue tracker, database, plan or external system.
 
 ## 1. Default Location
 
@@ -44,11 +44,11 @@ At minimum, record:
 7. Research and verification summaries, unverified items, and residual risks.
 8. Recovery entrypoint, closeout, and release/delivery/rollback state.
 
-Write a task for its executor: the requested result, concrete scope, observable completion and unresolved facts. Reference context already owned elsewhere rather than retelling it. Do not fill a template with invented estimates, redundant background or obvious mechanical steps, and do not omit a real constraint merely to shorten the ticket.
+Give executors the result, scope, observable completion and unknowns; link existing context. Avoid invented estimates, repeated background and obvious steps without omitting real constraints.
 
-The plan is a coordination entrypoint. It does not duplicate formal requirements, technical design, code, runtime state, experiments, review reports, or release facts. Material product tradeoffs belong in REQ/PRD; durable technical decisions in TD/ADR; formal reviews, POCs, tests, and release evidence in their specialist owners.
+The plan coordinates without duplicating requirements, designs, code, runtime, experiments, reviews or release facts. Product tradeoffs stay in REQ/PRD, durable technical decisions in TD/ADR, and formal evidence at specialist owners.
 
-A key decision record must let a later agent distinguish a defect from an intentional constraint. Preserve `Decision Rationale`, `Rejected Alternatives`, `Preserved Constraints`, and `Revisit Trigger`: why the option won, which alternatives were rejected and why, what unchanged conditions prohibit silently restoring them, and what evidence or environmental change reopens the decision. Keep task-scoped decisions in the plan and promote durable product/architecture decisions to their original owner. Append a superseding decision when conditions change; do not rewrite history or make an old decision permanent.
+Preserve `Decision Rationale`, `Rejected Alternatives`, `Preserved Constraints`, and `Revisit Trigger`: why an option won, why alternatives lost, constraints against restoring them, and evidence that reopens the decision. This distinguishes defects from intended limits. Keep task decisions here and durable product/architecture decisions at their owners. Supersede changed decisions without rewriting history or making them permanent.
 
 ## 4. Split Plans Only as Much as Needed
 
@@ -70,14 +70,14 @@ Create a task package only when work is actually handed to another person or age
 
 - `Current Task`: the one required outcome, completion test, and explicit exclusions.
 - `Global Constraints`: still-valid user authority, prohibitions, risk gates, and stop conditions, with their source and applicable scope.
-- `Interfaces`: permitted read/write scope, inputs/outputs, shared state, dependencies, and contracts that must remain intact. Identify the accepted baseline and existing capability/API owners so handoffs do not mistake an old implementation or an unconnected consumer for a missing contract. Include the relevant implementation/contract/check locators, the critical invariants specific to this assignment and the inspected worktree or revision when needed for resumption. Pointers are retrieval aids, not permission or proof of current code. Send a concise applicable constraint when the assignee cannot otherwise retrieve it; do not paste the full repository map, every engineering rule or the exploration transcript.
+- `Interfaces`: read/write scope, inputs/outputs, shared state, dependencies and preserved contracts. Identify the accepted baseline, capability/API owners, relevant implementation/contract/check paths, assignment invariants and inspected worktree/revision. Do not mistake stale code or an unconnected consumer for a missing contract. Pointers aid retrieval, not authority or proof. Supply constraints the assignee cannot retrieve, not the full map, rulebook or transcript.
 - `Output Contract`: slice completion, artifacts, actual changes, development/closeout checks and integrator-owned checks, evidence, deviations, remaining work, repair owner, temporary-resource disposition, and next action.
 
 For controlled inputs, distinguish the registered worktree from shared resource roots; check both file existence and the required format/provenance before handing off a locator. A discovered path is a retrieval hint unless an explicit instruction makes it a binding input or access boundary. Within delegated read scope, an assignee may locate a candidate alternative, but must return a binding-input mismatch to the delegator with evidence rather than silently substitute it. The delegator may correct its own mistaken locator within existing user authority; an ordinary lookup correction is not a new product decision. User-pinned inputs, license requirements, access restrictions and cost limits remain binding; unresolved authority goes to the user, not around the boundary.
 
-For actual handoff or interruption, retain the useful navigation findings, unresolved questions and next action in the current task owner. The successor checks relevant worktree changes before reusing them and rereads only what is needed. Do not reopen project-wide discovery merely because the executor changed, and do not create a second recovery ledger.
+At handoff/interruption, retain useful navigation, unknowns and next action in the task owner. Successors check relevant worktree changes before reuse and reread only what is needed; changing executors warrants neither project-wide rediscovery nor a second recovery ledger.
 
-Send only facts needed for the current task, not the entire conversation, all BuildOS standards, or unrelated executor history. Read specialist rules through stable links and project entrypoints. Add overlap, shared-resource, and integration responsibility only for real parallel work. A package cannot expand original authority. Resolve apparent conflicts from current task decisions first; return only an uncovered decision to its owner. When responsibility changes, update the task owner and replace stale executor references in routes. A role title does not establish review independence: whoever implements the reviewed change, including a reviewer who takes over implementation, still needs separate evidence when independent acceptance is required.
+Send task-relevant facts and stable project/specialist routes, not full conversations, rulebooks or unrelated history. Describe overlap, shared resources and integration only for real parallel work. Packages never expand authority; resolve apparent conflicts from current decisions before escalating uncovered ones. Update ownership and stale executor routes on reassignment. Titles do not prove review independence: an implementer, including a reviewer taking over, still needs separate evidence when required.
 
 ### 4.2 Work-Preserving Dependency Scheduling
 
@@ -85,6 +85,18 @@ Send only facts needed for the current task, not the entire conversation, all Bu
 - Preserve productive work by default. Exhaust independently executable development, documentation, static checks, builds, and preparation within current authority; mark only steps that truly require the external result as waiting. Pause related work only when that result changes the solution, shared resources conflict, or the next action is irreversible.
 - A temporarily absent user, unanswered progress message, or lack of real-time supervision does not revoke existing authority. Continue work within the original scope when no new decision is needed. Stop only for an explicit pause or new authority concerning scope, permission, cost, release, production, or deletion.
 - When all independent work is complete, use the host’s supported bounded wait for the specific pending result. A wait timeout is not task completion: reassess available work and resume waiting without repeated unchanged updates. End the execution chain only for a real blocker or a confirmed automatic wakeup mechanism; writing a recovery entrypoint or sending an asynchronous message does not establish that mechanism. Record the checkpoint, awaited result, recovery action, and any actual blocker in the task owner. Do not invent a background continuation or create a scheduler without user authorization.
+
+### 4.3 Outcome-Driven Course Correction
+
+At meaningful results, failures, interruptions or handoffs, compare the approved outcome and next observable result with actual progress. Disproving a hypothesis, reducing relevant uncertainty and enabling a necessary dependency count; duration alone is not drift. Do not add a checkpoint to every tool call.
+
+If effort no longer helps, revisit goals, causal assumptions, evidence and real dependencies before repeating the method. Test preparation, product defects and stale bookkeeping differ. These examples are not exhaustive: investigate unfamiliar causes by the same comparison.
+
+Choose the smallest useful response at the existing owner: continue productive inquiry, reuse/repair a capability, change the observation boundary, integrate eligible work, resolve a dependency or request an uncovered decision. Load matching guidance when local methods are ineffective, not every Skill. No fixed hierarchy, retry/time/test quota, scheduler or new ledger is required.
+
+Retain acceptance, safety, permissions, unresolved failures and all pending commitments; never revive cancelled work. Preserve interrupted scope and next actions. Delegation must be executable under host permissions, not merely sent; blocked steps leave independent authorized work available.
+
+Check the next meaningful result for the predicted correction. A revised plan or acknowledgement is not proof of changed execution. Keep useful results and limitations; update only changed recovery facts. Healthy work needs no extra ceremony.
 
 ## 5. Session Plans and Authoritative Facts
 
@@ -112,7 +124,7 @@ Use these statuses: `planned`, `active`, `blocked`, `verifying`, `completed`, `c
 
 Use `blocked` only when no meaningful work remains within current scope and execution must await a user decision, new authority, or changed external fact. If one phase or runtime step is waiting, the task may stay `active`, but the plan must identify parallel work and the wakeup condition. Idle sessions are not progress. A progress question or incoming executor receipt updates the active task; answer the user’s question and then continue authorized work. An executor’s status message does not replace the user’s request.
 
-Update the task plan and Task Register when the task is created; scope, authority, or completion definition changes; a meaningful phase or review round completes; a POC reaches a phase conclusion; delegation, pause, or session transfer occurs; or status changes to verifying, completed, cancelled, or archived. Do not refresh the register for every small file edit.
+Update plan/register at creation, scope/authority/completion changes, meaningful phase/review/POC conclusions, delegation, pause, transfer or status transitions. Not every file edit needs a register update.
 
 Route newly discovered facts as follows:
 
@@ -124,9 +136,9 @@ Route newly discovered facts as follows:
 | Execution order, current phase, delegation, pause, or recovery point | Numbered task plan or established task system |
 | Local implementation detail that preserves all above contracts | Code, tests, and necessary comments |
 
-A Work Log records what happened; a numbered task plan records the current effective plan and state. Replace superseded current status and next actions instead of prepending another “latest” paragraph; preserve decision rationale and link historical evidence in its existing owner or Git history. Neither replaces the other.
+Work Logs record events; task plans retain effective state. Replace superseded status/next actions instead of adding “latest” paragraphs. Preserve rationale and link history at its owner or in Git; neither record replaces the other.
 
-When an explicit applicable decision supersedes a constraint, remove that constraint from the current execution section and retain its history with the superseding source. Do not require a successor to infer which of several contradictory current paragraphs wins. A newer timestamp, session, build or stage alone does not revoke authority or a prohibition. Keep implementation progress, product acceptance and deployment facts distinct through their existing owners: a deployed version may still have unfinished acceptance or an unreleased repair candidate. On resumption, recover the effective scope, remaining results and next action before continuing; reconcile a genuine authority conflict without blocking independent permitted work.
+An explicit applicable decision replaces the current constraint; retain history and its superseding source, not contradictory current paragraphs. Time, sessions, builds and stages alone revoke no authority or prohibition. Keep implementation, acceptance and deployment distinct at their owners; deployment may precede unfinished acceptance or a later repair. Resume from effective scope, remaining results and next action; resolve genuine authority conflicts without blocking independent permitted work.
 
 ## 7. Closeout and Archive
 
@@ -146,7 +158,7 @@ Hooks do not inject a complete task plan or turn chat inference into durable rul
 
 When a mature project already has a trusted task system, register its owner, object ID, status semantics, and recovery method; do not create a second `governance/tasks/`. Chat cannot be the only source of task state.
 
-A mature-project takeover task must also link the frozen baseline, assurance Finding, user decision, remediation task/change identity, re-review evidence, and disposition of temporary content. The mature-project takeover standard owns those semantics; do not duplicate its schema here.
+For mature takeovers, link the frozen baseline, Finding, user decision, remediation identity, re-review and temporary-content disposition under the existing takeover standard; do not duplicate its schema.
 
 ### Valid Work and Stale Bookkeeping
 

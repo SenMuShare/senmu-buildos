@@ -4,6 +4,7 @@ const {
   decideCandidate,
   feedbackPaths,
   listCandidates,
+  linkCandidate,
   persistCandidate,
 } = require('./feedback');
 
@@ -20,6 +21,7 @@ function usage() {
   senmu-feedback followup [--summary | --json [--limit <n>] [--offset <n>]]
   senmu-feedback submit --component <BuildOS component> --summary <problem> --impact <effect> [--project-root <path>] [--evidence <text>] [--workaround <text>] [--quiet]
   senmu-feedback decide --id <FB-id> --disposition <discard|project|buildos_candidate|needs_evidence> [--note <text>] [--tracking-ref <existing-issue-or-task>]
+  senmu-feedback link --id <FB-id> --tracking-ref <existing-issue-or-task> [--note <text>]
 
 pending (alias: unreviewed) means no first decision, not unresolved work.
 followup returns classified items whose actual status must be read from their
@@ -45,11 +47,15 @@ function summarizeCandidates(candidates, view) {
     return summary;
   }, Object.create(null));
   const captured = candidates.map((candidate) => candidate.captured_at).filter(Boolean).sort();
+  const followup = candidates.filter(candidate => candidate.decision
+    && ['project', 'buildos_candidate', 'needs_evidence'].includes(candidate.decision.disposition));
+  const linked = followup.filter(candidate => candidate.tracking_refs.length > 0).length;
   return {
     schema_version: 1,
     view,
     queue_semantics: queueSemantics(view),
     count: candidates.length,
+    followup_tracking: { required: followup.length, linked, missing: followup.length - linked },
     by_disposition: counts((candidate) => candidate.decision ? candidate.decision.disposition : 'unreviewed'),
     by_signal_kind: counts((candidate) => candidate.signal && candidate.signal.kind),
     by_source_host: counts((candidate) => candidate.source && candidate.source.host),
@@ -97,6 +103,9 @@ function printCandidates(candidates, { json, summary, limit, offset, view }) {
       + `  problem: ${candidate.signal.excerpt}\n`
       + `  impact: ${candidate.signal.impact || 'unknown'}\n`
       + `  source project: ${candidate.source.project_root}\n`,
+    );
+    if (candidate.decision) process.stdout.write(
+      `  tracking: ${candidate.tracking_refs.join(', ') || 'not linked'} (owner status not queried)\n`,
     );
   }
 }
@@ -156,6 +165,11 @@ function main(args = process.argv.slice(2)) {
     if (!id || !disposition) throw new Error('--id and --disposition are required');
     const result = decideCandidate(id, disposition, option(args, '--note'), process.env, { trackingRef: option(args, '--tracking-ref') });
     process.stdout.write(`${result.candidate_id} -> ${result.disposition}\n`);
+    return;
+  }
+  if (command === 'link') {
+    const result = linkCandidate(option(args, '--id'), option(args, '--tracking-ref'), option(args, '--note'));
+    process.stdout.write(`${result.candidate_id} -> ${result.tracking_ref}${result.created ? ' linked' : ' already linked'}\n`);
     return;
   }
   throw new Error(usage());

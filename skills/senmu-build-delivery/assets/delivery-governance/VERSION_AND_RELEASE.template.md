@@ -51,3 +51,145 @@
 “准备发布”或预检通过不授权 Tag、上传、部署、切流、通知或远端清理。
 
 正式发布授权包含本计划已经声明的项目级发布后收口；没有声明受管对象、回滚版本或清理边界时不得执行 apply。清理失败时记录为“已部署但收口未完成”，不得宣称本次发布完整结束。
+
+## 独立资源分组调用示例
+
+仅当项目负责人已确认各组的授权、保留集、写入排除和依赖边界独立时，才在原发布驱动中采用以下片段；它不是新的清理工具或默认全局策略。`retention-scope.txt` 示意已有项目决定，不能由执行者为了绕过失败临时改为 independent。共同依赖仍用一个完整计划，未知范围停止。先校验所有共同前提，再执行独立组；不要放宽清理助手的逐计划检查。
+
+以下 POSIX/Python 3 示例合入原发布驱动，不新增通用清理器。路径及 verify 命令映射到现有入口；RETENTION_RECEIPT_ROOT 必须是项目内已经存在的运行回执目录，每次调用在其下独占创建一个 attempt，不覆盖历史。配置和环境变量记录既有授权，不产生授权。分组不改变制品、数据、回滚或强制验证要求；取消不是可忽略的一般错误。
+
+<!-- independent-retention-example:start -->
+```python
+#!/usr/bin/env python3
+"""POSIX caller example; map paths/receipts to the existing exclusive project run."""
+import os
+import re
+import signal
+import stat
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
+
+
+def main():
+    root = Path.cwd().resolve()
+    if os.name != "posix" or os.environ.get("RELEASE_CLOSEOUT_AUTHORIZED") != "1":
+        return 2
+    if Path(os.environ.get("RETENTION_PROJECT_ROOT", str(root))).resolve() != root:
+        return 2
+    # Use a pre-existing project receipt owner, never a global or disposable directory.
+    receipts = Path(os.environ["RETENTION_RECEIPT_ROOT"])
+    if (not receipts.is_absolute() or receipts.is_symlink() or not receipts.is_dir()
+            or not receipts.resolve().is_relative_to(root) or receipts.resolve() == root):
+        return 2
+    os.umask(0o077)
+    attempt = Path(tempfile.mkdtemp(prefix="cleanup-", dir=receipts))
+    print("retention_attempt=" + str(attempt), flush=True)
+    active = None
+    cancelled = 0
+    outcomes = {}
+
+    def cancel(signum, frame):
+        nonlocal cancelled
+        cancelled = cancelled or signum
+        if active is not None:
+            try:
+                os.killpg(active.pid, signum)
+            except ProcessLookupError:
+                pass
+
+    signal.signal(signal.SIGINT, cancel)
+    signal.signal(signal.SIGTERM, cancel)
+
+    def run(name, command):
+        nonlocal active
+        if cancelled:
+            return 128 + cancelled
+        # Exclusive creation in this attempt preserves every earlier destructive-action receipt.
+        with (attempt / (name + "-cleanup.receipt")).open("xb") as out, \
+                (attempt / (name + ".stderr.log")).open("xb") as error:
+            active = subprocess.Popen(command, stdout=out, stderr=error, cwd=root,
+                                      env={**os.environ, "RETENTION_PROJECT_ROOT": str(root)},
+                                      start_new_session=True)
+            if cancelled:
+                cancel(cancelled, None)  # Also cover a signal delivered while Popen was starting.
+            code = active.wait()  # Do not report cancellation while the helper is still running.
+            active = None
+        outcomes[name] = code if code >= 0 else 128 - code
+        return 128 + cancelled if cancelled else outcomes[name]
+
+    def snapshot(name, expected=None):
+        # Read each known direct-child config once without following a substituted symlink.
+        with os.fdopen(os.open(root / name, os.O_RDONLY | os.O_NOFOLLOW), "rb") as stream:
+            if not stat.S_ISREG(os.fstat(stream.fileno()).st_mode):
+                raise ValueError("Retention configuration must be a regular file")
+            data = stream.read(65537)
+        if len(data) > 65536 or b"\0" in data:
+            raise ValueError("Retention configuration exceeds the bounded text format")
+        values = {}
+        for line in data.decode("utf-8").split("\n"):
+            line = line.removesuffix("\r")
+            if not line or line.startswith("#"):
+                continue
+            match = re.fullmatch(r"([A-Z][A-Z0-9_]*)=(.*)", line)
+            if not match or match[1] in values:
+                raise ValueError("Invalid or duplicate retention assignment")
+            values[match[1]] = match[2]
+        if expected is not None and (
+                values.get("ARTIFACT_CLEANUP_ENABLED", "0"),
+                values.get("DOCKER_IMAGE_CLEANUP_ENABLED", "0")) != expected:
+            raise ValueError("Independent groups must be artifact-only and image-only")
+        if values.get("ARTIFACT_CLEANUP_ENABLED", "0") == "1":
+            artifact_root = (root / values.get("ARTIFACT_ROOT", "")).resolve()
+            actual_attempt = attempt.resolve()
+            if actual_attempt.is_relative_to(artifact_root) or artifact_root.is_relative_to(actual_attempt):
+                raise ValueError("Cleanup receipts must not overlap the artifact cleanup root")
+        frozen = attempt / name
+        with frozen.open("xb") as stream:
+            stream.write(data)
+        frozen.chmod(0o400)
+        return str(frozen)
+
+    code = 2
+    try:
+        scope = (root / "retention-scope.txt").read_text().strip()
+        if scope == "coupled":
+            groups = [("coupled", snapshot("retention.env"))]
+        elif scope == "independent":
+            # Validate BOTH partitions before either apply. Helpers consume the exact frozen bytes.
+            groups = [("local", snapshot("retention-local.env", ("1", "0"))),
+                      ("image", snapshot("retention-images.env", ("0", "1")))]
+        else:
+            raise ValueError("Unresolved retention dependencies; no cleanup")
+        code = run("verify", ["bash", "scripts/verify.sh"])
+        if code == 0 and not cancelled:
+            first_error = 0
+            for name, config in groups:
+                result = run(name, ["bash", "scripts/cleanup.sh", config, "apply"])
+                first_error = first_error or result
+                if cancelled or result in (130, 143):
+                    first_error = 128 + cancelled if cancelled else result
+                    break
+            code = first_error
+    except (OSError, ValueError) as error:
+        print(str(error), file=sys.stderr)
+        code = 2
+    finally:
+        with (attempt / "retention-groups.receipt").open("x") as stream:
+            stream.write(" ".join(name + "_rc=" + str(outcomes.get(name, "not_called"))
+                                  for name in ("local", "image", "coupled", "verify"))
+                         + " cancel_signal=" + str(cancelled) + "\n")
+    return 128 + cancelled if cancelled else code
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+```
+<!-- independent-retention-example:end -->
+
+本地配置仅启用本组制品；镜像配置仅启用本组镜像，并分别列出真实当前/回滚/固定保留身份。一个配置内同时启用两类资源时，助手仍要求其必要盘点全部成功后才删除。成功组不掩盖失败组，也不把 no_candidates 或对象数量当成磁盘释放量。空间治理还应在受影响的同一卷测量前后变化，说明并发写入、快照/共享层等归因限制；助手的 not_measured 不能改写成释放成功。
+
+分组前校验两个配置的启用范围，并将经过检查的有限文本快照交给原清理助手；源配置变化不会改变当前调用，写入排除与授权仍由原项目保证。禁止为绕过共同失败而把决定改为 independent。脚本本身、verify 和 helper 应来自受控项目入口；此示例不为不可信代码提供沙箱。
+
+父进程收到 INT/TERM 时向当前子进程组转发，并等待助手终止后再返回取消状态，不启动下一组。子命令不得自行脱离该组或后台化；不自动强杀、不将中断解释为删除回滚。宿主强杀、掉电、远端已提交操作或无法完成的终止仍需沿原运行记录核实，不能仅凭退出码宣布远端任务已停止或所有资源完整保留。Windows 等环境应采用宿主既有受管进程能力，不照搬 POSIX 信号实现。

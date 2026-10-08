@@ -37,6 +37,7 @@ function feedbackPaths(env = process.env) {
     root,
     inbox: path.join(root, 'inbox'),
     decisions: path.join(root, 'decisions'),
+    tracking: path.join(root, 'tracking'),
   };
 }
 
@@ -133,9 +134,41 @@ function listCandidates(env = process.env, includeDecided = false) {
   const paths = feedbackPaths(env);
   const candidates = readJsonFiles(paths.inbox);
   const decisions = new Map(readJsonFiles(paths.decisions).map((item) => [item.candidate_id, item]));
+  const tracking = new Map();
+  for (const link of readJsonFiles(paths.tracking)) {
+    const refs = tracking.get(link.candidate_id) || [];
+    if (link.tracking_ref) refs.push(link.tracking_ref);
+    tracking.set(link.candidate_id, refs);
+  }
   return candidates
     .filter((candidate) => includeDecided || !decisions.has(candidate.id))
-    .map((candidate) => ({ ...candidate, decision: decisions.get(candidate.id) || null }));
+    .map((candidate) => {
+      const decision = decisions.get(candidate.id) || null;
+      return { ...candidate, decision,
+        tracking_refs: [...new Set([decision && decision.tracking_ref,
+          ...(tracking.get(candidate.id) || [])].filter(Boolean))] };
+    });
+}
+
+function linkCandidate(candidateId, trackingRef, note, env = process.env) {
+  if (!/^FB-[0-9a-f]{16}$/.test(candidateId)) throw new Error('invalid candidate ID');
+  const ref = redactSensitive(trackingRef);
+  if (!ref) throw new Error('--tracking-ref must be nonempty');
+  const paths = feedbackPaths(env);
+  if (!fs.existsSync(path.join(paths.inbox, `${candidateId}.json`))) {
+    throw new Error(`unknown candidate: ${candidateId}`);
+  }
+  const decisionPath = path.join(paths.decisions, `${candidateId}.json`);
+  if (!fs.existsSync(decisionPath)) throw new Error(`candidate needs a first decision: ${candidateId}`);
+  const decision = JSON.parse(fs.readFileSync(decisionPath, 'utf8'));
+  if (decision.tracking_ref === ref) return { candidate_id: candidateId, tracking_ref: ref, created: false };
+  const digest = crypto.createHash('sha256').update(ref).digest('hex');
+  const payload = { schema_version: SCHEMA_VERSION, candidate_id: candidateId,
+    tracking_ref: ref, note: redactSensitive(note), linked_at: new Date().toISOString() };
+  ensurePrivateDirectory(paths.tracking);
+  const filePath = path.join(paths.tracking, `${candidateId}-${digest}.json`);
+  const created = writeJsonOnce(filePath, payload);
+  return { ...payload, created, filePath };
 }
 
 function decideCandidate(candidateId, disposition, note, env = process.env, options = {}) {
@@ -167,6 +200,7 @@ module.exports = {
   decideCandidate,
   feedbackPaths,
   listCandidates,
+  linkCandidate,
   persistCandidate,
   redactSensitive,
   resolveDataRoot,
