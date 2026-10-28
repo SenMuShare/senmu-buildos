@@ -1,17 +1,17 @@
 # Project Instruction Authoring
 
-**Read as needed:** [Authoring](#dual-track-instruction-authoring) · [Principles](#distill-core-working-principles) · [Updates](#adopting-a-buildos-update) · [Verification](#verification-policy-adoption) · [Language](#project-instruction-language) · [Checks](#scoped-authoring-checks)
+**By task:** [Authoring](#dual-track-instruction-authoring) · [Principles](#distill-core-working-principles) · [Updates](#adopting-a-buildos-update) · [Verification](#verification-policy-adoption) · [Language](#project-instruction-language) · [Checks](#scoped-authoring-checks)
 
-Own project collaboration, not business-agent definitions. Specialists retain methods. Optimize correct delivery and total cost, not entry length.
+Own project collaboration, not business-agent definitions. Specialists keep methods. Optimize correct delivery and total cost, not length.
 
 ## Dual-Track Instruction Authoring
 
-Reconcile existing instructions and adopt missing applicable principles; inventory alone is insufficient.
+Reconcile instructions and adopt missing applicable principles; an inventory is insufficient.
 
 1. Find effective ancestors/overrides, host entrypoints and writable scope. Record unread/import candidates, not presumed loading. Assessment is not deletion authority. Protect global settings, history and others' work.
 2. Reconcile original owners; preserve meaning, commands and exceptions. Merge equivalents, route volatile facts, remove unconditional preloads—not constraints.
-3. Adapt the [AGENTS starter](../assets/project-governance-starter/AGENTS.template.md), not its headings. Keep general principles for non-code projects and applicable software clauses only.
-4. Add confirmed facts and conditional routes, never invented commands/authority or defects-as-policy. Entries keep decisions; owners keep methods/configuration. Principles need no extra Skill call.
+3. Adapt the [AGENTS starter](../assets/project-governance-starter/AGENTS.template.md), not headings. Keep general principles; limit software clauses to code and distinguish redundant guards from trust/state checks.
+4. Add confirmed facts and conditional routes, never invented commands/authority or defects-as-policy. For a governed capability, make the task signal, matching Skill and actual project procedure/command discoverable; name only available capabilities. Entries keep decisions; owners keep methods/configuration. Principles need no extra Skill call.
 5. Finish authorized repairs and affected consumers; audit-only remains read-only. Report changes, coverage, checks and gaps.
 
 Use one body with scoped differences. Inspect ancestor/global/Kernel inputs; keep necessary safety overlap, not full-template Hook injection or deduplication machinery. Preserve worktree reachability; files/imports prove neither loading nor permission.

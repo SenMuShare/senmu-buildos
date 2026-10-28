@@ -25,7 +25,7 @@ Do not submit or formally review spelling, formatting, or a one-off command typo
 
 ## 2. Retrospective Order
 
-A retrospective does not replace containment, repair, or owner decisions. Without repair authority, freeze facts and risk and hand off to the owner. With authority, review after required verification. Use `senmu-build-assurance` for an evidence-based verdict when root cause is disputed, impact is material, or independence is requested; ordinary project learning does not require Assurance.
+A retrospective does not replace containment, repair, or owner decisions. Without repair authority, freeze facts and risk and hand off to the owner. With authority, review after required verification. Use `senmu-build-assurance` for an explicit audit, disputed-cause review or required independent verdict; select actual reviewer identity separately. Material impact sets evidence depth, not automatic Assurance activation; ordinary project learning stays with its domain owner.
 
 Start this standard only when a candidate needs verification, a project rule needs correction, or promotion is being prepared:
 

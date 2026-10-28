@@ -31,7 +31,7 @@ New projects use [Initializer](scripts/init_project_governance.py); existing pro
 - Run `init_project_governance.py --mode plan-new` before authorized `initialize-new`; calibrate the draft and its language before adoption.
 - Inventory existing projects read-only; confirm semantic ownership. Evolve original owners within authority, without default overwrites or parallel truth.
 - Shape structure around actual capabilities and lifecycle, not speculative modules.
-- Map capabilities to implementation, rules and checks under [Index Contract](references/project-standard-discovery-and-on-demand-loading.md#4-index-contract). AGENTS holds concise adopted principles, constraints, commands and routes—not manuals. Shared principles need not be project-unique.
+- Map task signals to the matching Skill and real project owner/command under [Index Contract](references/project-standard-discovery-and-on-demand-loading.md#4-index-contract). AGENTS keeps useful principles, constraints and routes—not manuals. Shared principles need not be project-unique.
 - Use one Durable Task State Owner across stages; resuming a task does not reactivate Project.
 - Plan/audit first; authorized repair or initialization continues in scope, audit-only remains read-only. Preserve exceptions; merge equivalents without repeated growth. Source edits do not prove installation or model behavior.
 

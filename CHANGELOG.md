@@ -4,6 +4,146 @@ Earlier entries are retained verbatim in [the history through 2.20.5](docs/relea
 
 ## Unreleased
 
+## [2.29.0] - 2026-10-26
+
+- Clarify project AGENTS software defaults against speculative defensive code, redundant internal validation, premature abstractions and masked failures while preserving trust-boundary protections.
+- Align project instruction adoption, engineering guidance and code-quality starter; add paired behavioral review scenarios without adding a new governance gate.
+
+## [2.28.0] - 2026-10-23
+
+### Improved
+
+- Align instruction owners and their routing, templates and behavioral consumers. Keep solution selection, review identity, authoring tools and migration records proportionate to the actual decision instead of fixed sequences or universal gates.
+- Coordinate resource retirement against actual downstream script prerequisites, recovery objectives and verified payload custody across resource surfaces. Reuse existing owners and native lifecycle controls rather than default full copies.
+- Consolidate repeated evaluation caveats and remove speculative or historical instruction text while retaining case-specific safety and evidence boundaries.
+
+### Fixed
+
+- Accept explicit minimal module selections and nested workspace layouts consistently in generation and validation; reject malformed inputs as normal validation failures without rewriting project policy.
+- Preserve disputed findings during active review without permitting unresolved closeout, and stop generated work logs from claiming checks that never ran.
+- Distinguish cancellation from permanent capability retirement and preserve approved technical content in interfaces. Apply single-source identity checks only to single-source artifacts; compositions retain their original provenance.
+- Correct Foundation object output parameters and boxed-null handling in the macOS Trash bridge. Preserve bounded diagnostic receipts after process failure, verify destination identity and stop on exceptional or unknown outcomes without retry or purge fallback.
+
+### Validation scope
+
+- Exercise real isolated generation, validation and subprocess failure paths, negative controls and existing regressions. A disposable native macOS fixture verifies the repaired Trash call and destination identity; restoration workflows, installed activation, business-project adoption and physical disk recovery remain separate observations.
+
+## [2.27.1] - 2026-10-23
+
+### Fixed
+
+- Let an unchanged open Change Unit close through the existing command with `no_changes`, without an artificial commit or sealed candidate. Require a live matching clean worktree and exact recorded baseline; preserve existing sealing and integration proof requirements.
+- Recognize the new terminal state in inspection, summaries and project initialization/validation while accepting existing five-state policies unchanged. Source closeout proves neither task success nor permission to delete runtime materials.
+
+### Validation scope
+
+- Reproduce the old frozen-source failure in real temporary Git; exercise unchanged execution, dirty and changed history, identity drift, concurrent changes, retired-surface readback and legacy project policy compatibility. Source and isolated lifecycle checks do not establish installed activation or close existing business-project units automatically.
+
+## [2.27.0] - 2026-10-23
+
+### Improved
+
+- Clarify engineering coaching as context-sensitive judgment about approved outcomes, evidence, constraints and replaceable means. Compare meaningful options by fit, consequences, reversibility and lifecycle cost without mandatory investigation stages or a fixed solution order.
+- Select verification for the claim it supports; distinguish conformance from intended use without duplicating suites or inventing acceptance thresholds. Preserve requirement conditions when deriving product behavior.
+
+### Fixed
+
+- Limit project gate exceptions to the owner's actual authority and keep safety, authorization and evidence truth intact. Tailor ordinary engineering checks to effects, including read-only reviews and documentation.
+- Preserve delegated constraints' actual scope and align workflow waiting with confirmed continuation or a real blocker. A recovery entrypoint alone cannot establish automatic wakeup.
+
+### Validation scope
+
+- Review cross-project cases for preserved protection, legitimate alternatives and nearby non-triggers. Package, source and semantic checks do not establish host activation, autonomous compliance or comparative model performance.
+
+## [2.26.6] - 2026-10-23
+
+### Fixed
+
+- Reconcile resource closeout against producer-defined groups, including historical build copies and version payloads. Local image or dependency success cannot hide missing, disabled or unresolved groups; policy-protected retention remains valid with identity and exit evidence.
+- Extend the existing Release Control validator with optional managed-resource coverage and a trusted-caller requirement. Incomplete closeout cannot close a release; live deployment truth and source-only legacy records remain separate.
+
+### Improved
+
+- Trace accumulating resources from creation to their final consumer and native exit; use native cache GC, log rotation and backup expiry between releases. Keep small recovery evidence separate from reproducible large payloads where feasible.
+
+### Validation scope
+
+- Exercise omitted/disabled groups, legitimate retention, partial failure and source-only compatibility with isolated declarations. Existing repeated-release caller tests protect current, rollback and shared assets. Source checks do not establish project adoption, model behavior or physical disk recovery.
+
+## [2.26.5] - 2026-10-14
+
+### Fixed
+
+- Restore the existing language-profile route for standards reviews as well as missing rules, without making ordinary covered edits load all guidance.
+
+## [2.26.4] - 2026-10-14
+
+### Fixed
+
+- Preserve the existing Engineering upgrade trigger while adding comment governance.
+- Point the two-axis review invariant E-42 to its existing relocated owner, alongside E-34 and E-37.
+
+## [2.26.3] - 2026-10-14
+
+### Improved
+
+- Distinguish comment writing from scoped governance. Preserve useful internal rationale, complex explanations, API contracts and legal/tool-consumed text; add missing information as well as removing or correcting it.
+- Judge comment accuracy and implementation quality separately. Verify authorized root repairs and replacement protection, retain unknown claims as unverified rather than fact, and repair policy failures at their existing owner.
+- Route comment tasks through the existing Engineering entry and optional selector. Move unchanged review responsibilities to the existing review reference so implementation work does not preload them; retain all source budgets and peer Skills.
+
+### Fixed
+
+- Close the comment-specific routing gap without turning ordinary edits into audits or introducing comment quotas, blanket deletion or new governance registers.
+
+### Validation scope
+
+- Add selector routing, language/risk preservation and no-write controls. Align the generated quality template and extend semantic cases for missing explanations, valid directives, uncertain warnings and read-only scope. Source checks do not establish native model selection or comparative performance.
+
+## [2.26.2] - 2026-10-14
+
+### Improved
+
+- Make task-to-Skill-to-project procedure/command routes explicit in the existing Project adoption and instruction owners. Release/recovery entry follows its declared route; unchanged in-scope guidance and ordinary edits remain lightweight.
+- Maintain the smallest usable deployment script or CI at the existing owner, coordinating preparation, deployment, verification and authorized resource closeout. Reuse it across product versions; update it for process, compatibility or environment changes.
+
+### Fixed
+
+- Remove the blanket post-adoption invocation exception that could suppress release/recovery guidance merely because a document or script exists. Actual adoption needs matching execution evidence.
+
+### Validation scope
+
+- Extend the offline workspace fixture with project-entry release adoption and resumed closeout. Real regression checks detect skipped independent cleanup and repeated deployment, admit a minimal repair and preserve the shipped helper, current and rollback artifacts.
+- Verify the route from project entry through Skill, procedure and runner, with interruption and ordinary-edit controls. Scoped host observations remain separate from production recovery, long-term adherence and physical disk savings; no new approval system or project-specific policy.
+
+## [2.26.1] - 2026-10-13
+
+### Fixed
+
+- Choose build location from actual builder/runtime capacity, platform compatibility, reusable results and whole-path cost. A small runtime server no longer defaults to a local build or implies another cloud host is necessary; distinguish observations from peak/reserve estimates.
+
+### Validation scope
+
+- Extend the existing release caller regression with two normal rounds and a partial failure, real immutable bytes and target reuse, current/rollback consumers and distinct attempt receipts. Keep native cleanup protections unchanged and Docker offline.
+- Exercise three bounded fresh Codex source-guided cases for capacity reasoning, independent closeout and continuation. Preserve private traces outside the product; no comparative improvement, automatic candidate loading, production savings or historical incident closure is inferred.
+
+## [2.26.0] - 2026-10-12
+
+### Improved
+
+- Make ordinary changes, interrupted recovery and sustained resource use explicit architecture scenarios, using actual constraints and existing technical owners rather than new readiness registers or mandatory infrastructure.
+- Guide deployment design through the smallest safe whole-path change scope, measured stages, safe preparation before maintenance, real recovery commands and separate restoration/closeout facts.
+- Preserve mixed-release component provenance and reusable immutable assets through optional composition fields in the existing artifact template. Keep the single-source identity checker strict and unchanged; strict external manifest consumers require explicit adoption.
+- Protect active operations context through actual assignment/report routing and safe writer handoff without imposing fixed roles, staffing or response times.
+
+### Fixed
+
+- Remove the deployment template's unconditional runtime-before-builder cleanup-success dependency. Preserve verified-target prerequisites, independently established resource boundaries, every result and rollback protection.
+
+### Validation scope
+
+- Add two focused template-contract regressions and eight synthetic host-evaluation scenarios, including cheap coupled releases, incompatible data changes, covered local edits and unverified outcomes. Scenario definitions are not executed model results.
+- Preserve existing identity and native cleanup helpers and reuse their regression coverage. Source checks do not prove host activation, model adherence, project adoption, transfer savings or physical disk recovery.
+
 ## [2.25.4] - 2026-10-07
 
 ### Fixed

@@ -160,11 +160,49 @@ class ReleaseTests(unittest.TestCase):
 ''',
 }
 
+RELEASE_ADOPTION_FILES = {
+    **RELEASE_FILES,
+    'AGENTS.md': '''# Offline release workspace
+This is an exclusive disposable task workspace. For release readiness or interrupted release work, use $senmu-build-delivery and docs/OPERATIONS.md. Ordinary local edits use their existing checks without unrelated Skills.
+Local driver repair and focused tests are authorized, including removal of synthetic reproducible artifacts through scripts/cleanup.sh only. Preserve the helper, current and rollback artifacts. No network, real deployment, Docker, global cleanup, commits or production changes are authorized.
+''',
+    'README.md': '# Offline release workspace\nRelease operations: docs/OPERATIONS.md.\n',
+    'docs/OPERATIONS.md': '''# Release operations
+The existing public entrypoint is `bash scripts/release.sh`; interrupted work first reads governance/TASK.md, then uses `bash scripts/release.sh --resume`.
+This fixture uses deterministic offline deployment/verification and remote-retention substitutes. Local retention uses the shipped helper with retention.env. Current and verified rollback directories are protected. Remote retention and local artifacts have separate identity/authority and no shared resources; a remote failure must remain visible while independent local work continues. Target verification failure permits neither cleanup.
+The runner must reuse verified completed deployment on resume and retain unfinished results. Maintain this runner when the process changes; do not create one per product version. Check with `python3 -B -m unittest discover -s tests`. Any remaining step belongs in the existing task. These are synthetic exercise facts, not production acceptance or physical disk-recovery proof.
+''',
+    'scripts/release.sh': '#!/usr/bin/env bash\nset -euo pipefail\nbash scripts/deploy.sh\nbash scripts/verify.sh\nbash scripts/remote-cleanup.sh\nbash scripts/cleanup.sh retention.env apply > local-cleanup.receipt\n',
+    'scripts/deploy.sh': '#!/usr/bin/env bash\nset -euo pipefail\ncount=0\nif [ -f deploy.calls ]; then read -r count < deploy.calls; fi\nprintf "%s\\n" "$((count + 1))" > deploy.calls\nprintf "%s\\n" "fixture-next" > deployed.identity\n',
+    'scripts/verify.sh': '#!/usr/bin/env bash\nset -euo pipefail\n[ "$(<deployed.identity)" = fixture-next ] || exit 9\nexit "${VERIFY_STATUS:-0}"\n',
+    'tests/test_release.py': RELEASE_FILES['tests/test_release.py'].replace(
+        "        for name in ('current', 'rollback', 'old'):",
+        "        if resume:\n            (root / 'deploy.calls').write_text('1\\n')\n            (root / 'deployed.identity').write_text('fixture-next\\n')\n            (root / 'governance').mkdir()\n            shutil.copyfile(SOURCE / 'governance/TASK.md', root / 'governance/TASK.md')\n        for name in ('current', 'rollback', 'old'):",
+    ).replace('def check_run(self, remote=23, verify=0):', 'def check_run(self, remote=23, verify=0, resume=False):').replace(
+        "['bash', 'scripts/release.sh']", "['bash', 'scripts/release.sh', *(['--resume'] if resume else [])]"
+    ) + '''
+    def test_resume_does_not_redeploy_verified_target(self):
+        root, result = self.check_run(remote=0, resume=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual((root / 'deploy.calls').read_text().strip(), '1', 'verified deployment was replayed')
+        self.assertFalse((root / 'artifacts/old').exists())
+    def test_resume_partial_failure_is_truthful_without_redeploy(self):
+        root, result = self.check_run(resume=True)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertEqual((root / 'deploy.calls').read_text().strip(), '1')
+        self.assertFalse((root / 'artifacts/old').exists())
+''',
+    'governance/TASK.md': '''# Existing release checkpoint
+This synthetic target is deployed and verified as fixture-next; deploy.calls records one completed deployment. Remote retention and independent local artifact closeout remain unfinished. Resume the existing entrypoint without redeploying verified work. Reconcile target identity before cleanup. A remote failure stays pending with its result; it does not block independent local closeout. Keep current and rollback, and preserve this checkpoint's remaining obligations. This fixture has no production service.
+''',
+}
+
+
 def create(root: Path, case: str = "shop") -> None:
     root=root.resolve(strict=True)
     if not root.is_dir() or any(root.iterdir()):
         raise ValueError('fixture requires an empty disposable directory; nothing was overwritten')
-    if case not in ("shop", "hard-bug", "resume", "waiting", "release-closeout", "non-git"):
+    if case not in ("shop", "hard-bug", "resume", "waiting", "release-closeout", "release-adoption", "non-git"):
         raise ValueError("unknown fixture case")
     if case == "non-git":
         git_env = {key: value for key, value in os.environ.items() if not key.startswith('GIT_')}
@@ -184,8 +222,8 @@ def create(root: Path, case: str = "shop") -> None:
         files.update(WAITING_FILES)
     elif case == "non-git":
         files = dict(NON_GIT_FILES)
-    elif case == "release-closeout":
-        files = dict(RELEASE_FILES)
+    elif case in ("release-closeout", "release-adoption"):
+        files = dict(RELEASE_ADOPTION_FILES if case == "release-adoption" else RELEASE_FILES)
         helper = Path(__file__).resolve().parents[2] / 'skills/senmu-build-delivery/assets/delivery-governance/CLEANUP_RELEASE_ASSETS.template.sh'
         files['scripts/cleanup.sh'] = helper.read_text()
     for name,content in files.items():

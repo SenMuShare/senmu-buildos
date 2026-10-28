@@ -20,6 +20,7 @@
 - 待接收视图：由 `sealed` 且尚无最终 disposition 的 Change Unit 派生，不建立第二套任务台账。
 - 分支拓扑：任务分支默认从上述集成基线建立并回到该线；禁止隐式任务链。真实依赖堆叠登记 `<child unit -> sealed parent unit -> integration order>`。
 - 评审与封口：`manage_change_unit.py review` 固定评审提交，不结束开发批次；同批返修留在原单元。范围完成、检查及必要评审／返修闭合后才 seal，已封口历史不得重开。合并／发布仍按对应授权执行。
+- 无源码改动收尾：开放单元的登记工作树干净且 HEAD 精确等于原基线时，用 `close --disposition no_changes --owner-ref <现有Task/Run>` 直接关闭，不制造空提交或 sealed 候选。该终态不代表执行成功、验收或发布，不授予目录删除权限；继续保留仍有消费者的产物。
 - worktree 仅作为临时源码执行面；正式状态、台账、交付和发布入口归属项目登记的各自 owner。POC 使用独立
   `POC_ROOT`，不得因状态归属要求写入产品 `main` 或发布工作树。
 - 跨 Agent／会话续作传递稳定 Change Unit ID；位置不明先用 `manage_change_unit.py inspect` 查现有登记，再在写入权限覆盖下 resume。只读检查不重建目录，也不证明其他写入者已退出。
@@ -31,7 +32,7 @@
 - 只有候选可达变化、本次承诺缺口或共享资源冲突阻断；历史、POC、未完成、来源不明和无关分支不得机械全合并。
 - 未提交源码只能是 `in_progress`，不能由收口者猜入候选。
 - 每个纳入单元的短分支／worktree 最终必须 `removed`，或以 owner 和退出条件明确 `retained`。采用发布控制校验器时，通过 `validate_release_control.py <record> --repo <repo> --json` 分别回读主线接收、单元状态、分支、工作树登记与路径；不传 `--repo` 仅校验结构，不能证明实际清理。检查不授予删除权限。
-- 发布身份：`reviewed_commit = tested_commit = release_source_head = tag_commit = artifact_source_commit`；不适用阶段留空，已有阶段不得不一致。
+- 发布身份：单源制品要求 `reviewed_commit = tested_commit = release_source_head = tag_commit = artifact_source_commit`（不适用阶段留空）；组合按原 manifest／入口核验冻结组合及各自原始来源，不伪造共同 commit。
 
 ## 代码变更审查门禁
 

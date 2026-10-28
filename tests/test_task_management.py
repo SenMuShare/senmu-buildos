@@ -116,6 +116,53 @@ class ProjectGovernanceScaffoldTests(unittest.TestCase):
             self.assertIn("用户不负责决定合并", release)
             self.assertIn("不为每个机械 commit", changelog_policy)
 
+    def test_new_git_policy_declares_no_changes_terminal_state(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_root:
+            target = Path(temporary_root) / "project"
+            result = self.initialize(target, "software", "standard", "--modules", "code", "git")
+            self.assertEqual(result.returncode, 0, result.stderr or result.stdout)
+            policy = json.loads((target / ".senmu-buildos/config.json").read_text(encoding="utf-8"))
+            self.assertEqual(
+                policy["git_management"]["change_unit_states"],
+                ["in_progress", "sealed", "integrated", "excluded", "superseded", "no_changes"],
+            )
+
+    def test_validator_accepts_legacy_and_current_git_states_without_rewriting_policy(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_root:
+            target = Path(temporary_root) / "project"
+            result = self.initialize(target, "software", "standard", "--modules", "code", "git")
+            self.assertEqual(result.returncode, 0, result.stderr or result.stdout)
+            policy_path = target / ".senmu-buildos/config.json"
+            policy = json.loads(policy_path.read_text(encoding="utf-8"))
+            legacy = ["in_progress", "sealed", "integrated", "excluded", "superseded"]
+            for states in (legacy, legacy + ["no_changes"]):
+                with self.subTest(states=states):
+                    policy["git_management"]["change_unit_states"] = states
+                    before = (json.dumps(policy, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
+                    policy_path.write_bytes(before)
+                    validation = self.run_command("python3", str(VALIDATOR), "--root", str(target))
+                    self.assertEqual(validation.returncode, 0, validation.stderr or validation.stdout)
+                    self.assertEqual(policy_path.read_bytes(), before)
+
+    def test_validator_rejects_unknown_incomplete_and_malformed_git_states(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_root:
+            target = Path(temporary_root) / "project"
+            result = self.initialize(target, "software", "standard", "--modules", "code", "git")
+            self.assertEqual(result.returncode, 0, result.stderr or result.stdout)
+            policy_path = target / ".senmu-buildos/config.json"
+            policy = json.loads(policy_path.read_text(encoding="utf-8"))
+            legacy = ["in_progress", "sealed", "integrated", "excluded", "superseded"]
+            for states in (legacy + ["unknown"], legacy[:-1] + ["no_changes"], [], None, "no_changes", legacy + [[]]):
+                with self.subTest(states=states):
+                    policy["git_management"]["change_unit_states"] = states
+                    before = (json.dumps(policy, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
+                    policy_path.write_bytes(before)
+                    validation = self.run_command("python3", str(VALIDATOR), "--root", str(target))
+                    self.assertEqual(validation.returncode, 1, validation.stderr or validation.stdout)
+                    self.assertIn("git_management.change_unit_states", validation.stdout)
+                    self.assertNotIn("Traceback", validation.stderr)
+                    self.assertEqual(policy_path.read_bytes(), before)
+
     def test_empty_module_override_creates_only_profile_owners(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_root:
             target = Path(temporary_root) / "governance-only"
@@ -126,6 +173,29 @@ class ProjectGovernanceScaffoldTests(unittest.TestCase):
             self.assertTrue((target / "governance/GOVERNANCE.md").is_file())
             for directory in ("product", "engineering", "delivery", "workflows", "experiments", "agents"):
                 self.assertFalse((target / directory).exists())
+            policy_path = target / ".senmu-buildos/config.json"
+            before = policy_path.read_bytes()
+            validation = self.run_command("python3", str(VALIDATOR), "--root", str(target))
+            self.assertEqual(validation.returncode, 0, validation.stderr or validation.stdout)
+            self.assertEqual(policy_path.read_bytes(), before)
+
+    def test_empty_module_support_still_rejects_malformed_and_unknown_selections(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_root:
+            target = Path(temporary_root) / "governance-only"
+            result = self.initialize(target, "software", "core", "--modules")
+            self.assertEqual(result.returncode, 0, result.stderr or result.stdout)
+            policy_path = target / ".senmu-buildos/config.json"
+            policy = json.loads(policy_path.read_text(encoding="utf-8"))
+            for modules in (None, "code", {}, 1, True, ["unknown"], [[]], [1]):
+                with self.subTest(modules=modules):
+                    policy["selected_modules"] = modules
+                    before = (json.dumps(policy, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
+                    policy_path.write_bytes(before)
+                    validation = self.run_command("python3", str(VALIDATOR), "--root", str(target))
+                    self.assertEqual(validation.returncode, 1, validation.stderr or validation.stdout)
+                    self.assertIn("selected_modules", validation.stdout)
+                    self.assertNotIn("Traceback", validation.stderr)
+                    self.assertEqual(policy_path.read_bytes(), before)
 
     def test_navigation_pointer_matches_the_generated_profile(self):
         for profile in PROFILES:
@@ -451,6 +521,75 @@ class ProjectGovernanceScaffoldTests(unittest.TestCase):
                     except UnicodeDecodeError:
                         continue
                     self.assertNotIn(leaked_root, text, path)
+
+    def test_nested_governance_owners_preserve_the_declared_workspace(self) -> None:
+        cases = (
+            ("project-system", "ops/system", (
+                "--layout", "project-system", "--project-system-path", "ops/system",
+                "--sources-path", "data/sources", "--work-area-path", "data/work",
+                "--deliveries-path", "output/final", "--archive-path", "output/archive",
+            )),
+            ("publication-workspace", "private/source", (
+                "--publication-model", "private_authority_public_projection",
+                "--authority-path", "private/source", "--public-projection-path", "exported/open",
+                "--release-staging-path", "work/release",
+            )),
+        )
+        for layout, owner, extra in cases:
+            with self.subTest(layout=layout), tempfile.TemporaryDirectory() as temporary_root:
+                workspace = Path(temporary_root) / "workspace with spaces"
+                result = self.initialize(workspace, "software", "standard", *extra)
+                self.assertEqual(result.returncode, 0, result.stderr or result.stdout)
+                root = workspace / owner
+                policy_path = root / ".senmu-buildos/config.json"
+                before = policy_path.read_bytes()
+                policy = json.loads(before)
+                self.assertEqual((root / policy["workspace_root"]).resolve(), workspace.resolve())
+                self.assertEqual((workspace / policy["path_roles"]["authority_root"]).resolve(), root.resolve())
+                map_text = (root / "governance/PROJECT_MAP.md").read_text(encoding="utf-8")
+                workspace_line = next(line for line in map_text.splitlines() if "工作区根：" in line)
+                self.assertEqual((root / workspace_line.split("`", 2)[1]).resolve(), workspace.resolve())
+                if layout == "project-system":
+                    expected = {"sources": "data/sources", "workspace": "data/work",
+                                "deliveries": "output/final", "archive": "output/archive"}
+                    for role, path in expected.items():
+                        self.assertEqual((root / policy["external_directories"][role]).resolve(),
+                                         (workspace / path).resolve())
+                        self.assertTrue((workspace / path).is_dir())
+                else:
+                    self.assertTrue((workspace / policy["publication"]["public_projection_root"] / ".git").is_dir())
+                    self.assertTrue((workspace / policy["publication"]["release_staging_root"]).is_dir())
+                validation = self.run_command("python3", str(VALIDATOR), "--root", str(root))
+                self.assertEqual(validation.returncode, 0, validation.stderr or validation.stdout)
+                self.assertEqual(policy_path.read_bytes(), before)
+
+    def test_workspace_ancestor_support_rejects_malformed_or_mismatched_roots(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_root:
+            workspace = Path(temporary_root) / "workspace"
+            result = self.initialize(workspace, "software", "standard", "--layout", "project-system")
+            self.assertEqual(result.returncode, 0, result.stderr or result.stdout)
+            root = workspace / "00-project-system"
+            policy_path = root / ".senmu-buildos/config.json"
+            policy = json.loads(policy_path.read_text(encoding="utf-8"))
+            for relative in (None, [], "", "/", "../sibling", ".././..", "../../", "../.."):
+                with self.subTest(workspace_root=relative):
+                    policy["workspace_root"] = relative
+                    before = (json.dumps(policy, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
+                    policy_path.write_bytes(before)
+                    validation = self.run_command("python3", str(VALIDATOR), "--root", str(root))
+                    self.assertEqual(validation.returncode, 1, validation.stderr or validation.stdout)
+                    self.assertIn("workspace_root", validation.stdout)
+                    self.assertNotIn("Traceback", validation.stderr)
+                    self.assertEqual(policy_path.read_bytes(), before)
+            policy["workspace_root"] = ".."
+            policy["path_roles"]["authority_root"] = "invalid\x00owner"
+            before = (json.dumps(policy, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
+            policy_path.write_bytes(before)
+            validation = self.run_command("python3", str(VALIDATOR), "--root", str(root))
+            self.assertEqual(validation.returncode, 1, validation.stderr or validation.stdout)
+            self.assertIn("authority_root", validation.stdout)
+            self.assertNotIn("Traceback", validation.stderr)
+            self.assertEqual(policy_path.read_bytes(), before)
 
     def test_initializer_rejects_absolute_persisted_role_paths(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_root:

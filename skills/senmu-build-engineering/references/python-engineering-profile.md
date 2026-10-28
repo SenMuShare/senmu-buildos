@@ -24,7 +24,7 @@ Load this profile for `.py`, `.pyi`, notebooks, Python dependencies, or `pyproje
 
 ## 3. Data Model and Abstraction
 
-- Never use mutable defaults such as `items=[]`; default to `None` and create the object inside.
+- Avoid accidentally shared mutable defaults such as `items=[]`; use `None` and create per-call state inside. Deliberately shared state needs an explicit owner, lifetime and concurrency contract, not a blanket false-positive.
 - Model stable business parameters and results explicitly using existing project types. A lightweight dataclass or TypedDict may describe a fixed structure; genuine dynamic mappings may remain typed mappings. Use runtime parsing/validation at trust boundaries, with Pydantic or equivalent only when the selected framework or contract calls for it. Type annotations and TypedDict do not validate incoming data at runtime. Do not hide required business fields or incompatible state payloads in an unstructured dictionary, but do not wrap every local mapping in a new model class.
 - Prefer a small Protocol, callable or explicit interface for structural substitution. An abstract base class is also appropriate for a required nominal/framework contract, abstract-member instantiation enforcement, or shared implementation/state. Choose the existing ecosystem mechanism for the actual boundary, not an Interface/Impl ceremony or a fixed count of implementations.
 - Do not import Interface/Impl, Factory, or Manager ceremony mechanically. Metaclasses, descriptors, dynamic injection, and monkey patching require a framework contract or verified benefit and an isolated boundary.
@@ -69,7 +69,6 @@ def settle_order(order_id: str) -> SettlementResult:
     """
 ```
 
-The Chinese example is retained deliberately to specify the default internal documentation language, not as a parallel runtime rule.
 
 ## 6. Python Boundary Conditions
 

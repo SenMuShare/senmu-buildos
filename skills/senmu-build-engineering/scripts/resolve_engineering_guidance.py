@@ -32,6 +32,7 @@ RISKS = ("public-service", "untrusted-input", "paid-api", "dependency", "public-
 # Optional declared concerns select methods; they do not diagnose a project.
 GENERAL_EXECUTION = "skills/senmu-build-project/references/task-execution-and-state-management.md"
 CONCERN_ROUTES = {
+    "comments": ENGINEERING + "source-code-quality-and-ai-collaboration.md",
     "verification": ENGINEERING + "software-testing-and-quality-verification.md",
     "complexity": ENGINEERING + "implementation-economy-and-overengineering.md",
     "coordination": GENERAL_EXECUTION,
@@ -217,7 +218,7 @@ def main() -> int:
     parser.add_argument("--notebook-language", action="append", default=[], metavar="PATH=LANGUAGE")
     parser.add_argument("--file-role", action="append", default=[], metavar="PATH=ROLE")
     parser.add_argument("--concern", action="append", default=[], metavar="NAME",
-                        help="Optional method concern: verification, complexity, coordination, integration; other names retain an explicit investigation gap")
+                        help="Optional method concern: comments, verification, complexity, coordination, integration; other names retain an explicit investigation gap")
 
     parser.add_argument("--format", choices=("summary", "full"), default="summary")
     args = parser.parse_args()

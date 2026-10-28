@@ -2,17 +2,17 @@
 
 Use this standard to reduce unnecessary code, abstractions, dependencies, files, and maintenance while preserving requirement meaning, quality attributes, and risk gates. It applies to features, fixes, refactors, design review, and read-only engineering review. Minimum line count is not a substitute for correctness or quality.
 
-## 1. Decision Order
+## 1. Solution Selection
 
-Understand the real requirement, call path, data, and failure semantics, then find the smallest correct solution in this order:
+Understand the real requirement, call path, data, and failure semantics. Use these candidates to find the smallest correct solution:
 
 1. Determine whether current behavior already satisfies the requirement or the request is an unapproved hypothesis. Do not build unneeded capability.
 2. Reuse or repair an existing owner, public entrypoint, or safely extensible implementation; do not create a parallel capability.
 3. Evaluate whether the language standard library, platform primitive, or installed dependency fully satisfies semantics, compatibility, and quality attributes.
 4. Evaluate mature maintained open source, framework, component, or service when its total cost is below custom implementation.
-5. Otherwise build a bounded, verifiable custom implementation with minimum maintenance surface.
+5. Build a bounded, verifiable custom implementation when it best fits the requirement and maintenance needs.
 
-Semantic fit and risk gates precede cost at every level. Existing availability alone does not qualify a candidate.
+This is a search heuristic, not a mandatory sequence: reuse sufficient current evidence, discard inapplicable options early and compare only meaningful alternatives. Semantic fit and applicable risk constraints precede cost; existing availability alone does not qualify a candidate. Choose by total implementation, integration, operation, change and exit cost in the actual context, not a universal preference for an external or custom solution.
 
 Before coding, identify the approved outcome, existing owner, and real variation/reuse pressure. Search for the same capability, not only similar source text; differently written auth, request or job orchestration can still duplicate one responsibility. For a material new dependency or custom infrastructure decision, keep a short fit/maintenance/security/exit rationale at the existing technical owner, not a scorecard per function. Usually this is a brief inspection and implementation decision, not another architecture document. Shared business behavior across pages should have one owner for state transitions, requests, and recovery; extracting JSX alone does not remove duplicated orchestration. An approved second provider is sufficient evidence for a small application-owned contract and provider adapters. Prefer the provider's supported SDK inside its adapter; normalize only required inputs, outputs, errors, and cancellation. Do not build speculative plugin infrastructure.
 

@@ -47,7 +47,8 @@ VALID_ARTIFACT_KINDS = {
 VALID_ROOT_LOCATOR_KINDS = {"git_toplevel", "governance_policy_root"}
 VALID_LAYOUTS = {"software-repository", "project-system", "publication-workspace"}
 VALID_MAIN_MODES = {"integration", "release_ready"}
-CHANGE_UNIT_STATES = {"in_progress", "sealed", "integrated", "excluded", "superseded"}
+LEGACY_CHANGE_UNIT_STATES = {"in_progress", "sealed", "integrated", "excluded", "superseded"}
+CHANGE_UNIT_STATES = LEGACY_CHANGE_UNIT_STATES | {"no_changes"}
 TASK_FILE = re.compile(r"^TASK-\d{4}-[a-z0-9]+(?:-[a-z0-9]+)*\.md$")
 # Angle-bracket format tokens such as TASK-<NNNN>, v<version>, or
 # agents/{agent-key} are executable documentation, not uncalibrated instance
@@ -364,7 +365,8 @@ def validate_poc_registration(
     Older projects can point at their existing owner instead of migrating records.
     """
     registration = policy.get("poc_management")
-    if "poc" not in (policy.get("selected_modules") or []) and registration is None:
+    modules = policy.get("selected_modules")
+    if not (isinstance(modules, list) and "poc" in modules) and registration is None:
         return
 
     def pending(message: str) -> None:
@@ -590,12 +592,23 @@ def validate(
             if role_path.is_absolute() or ".." in role_path.parts:
                 errors.append(f"path_roles.{role} 必须是工作区内相对路径：{raw}")
 
-    if policy.get("workspace_root") not in {".", ".."}:
-        errors.append("workspace_root 只能保存相对定位 . 或 ..")
+    workspace_raw = policy.get("workspace_root")
+    if (not isinstance(workspace_raw, str)
+            or (workspace_raw != "." and re.fullmatch(r"\.\.(?:/\.\.)*", workspace_raw) is None)):
+        errors.append("workspace_root 必须是当前根或其祖先的规范相对路径：.、..、../.. 等")
+    elif isinstance(path_roles, dict) and isinstance(path_roles.get("authority_root"), str):
+        try:
+            declared_root = (root / workspace_raw / path_roles["authority_root"]).resolve()
+        except (OSError, ValueError, RuntimeError):
+            errors.append("workspace_root 无法核验 path_roles.authority_root 的位置")
+        else:
+            if declared_root != root:
+                errors.append("workspace_root 与声明的 path_roles.authority_root 不匹配")
 
     selected_modules = policy.get("selected_modules", [])
-    if not isinstance(selected_modules, list) or not selected_modules:
-        errors.append("selected_modules 必须是非空数组")
+    if (not isinstance(selected_modules, list)
+            or not all(isinstance(module, str) for module in selected_modules)):
+        errors.append("selected_modules 必须是字符串数组；[] 表示不启用专业模块")
         selected_modules = []
     unknown_modules = sorted(set(selected_modules) - VALID_MODULES)
     if unknown_modules:
@@ -613,7 +626,11 @@ def validate(
             worktree_root = Path(str(git_management.get("worktree_root", "")))
             if worktree_root.is_absolute() or ".." in worktree_root.parts or not worktree_root.parts:
                 errors.append("git_management.worktree_root 必须是项目受管相对路径")
-            if set(git_management.get("change_unit_states") or []) != CHANGE_UNIT_STATES:
+            states = git_management.get("change_unit_states")
+            # Existing project policies remain valid without an automatic migration.
+            if (not isinstance(states, list)
+                    or not all(isinstance(state, str) for state in states)
+                    or set(states) not in (LEGACY_CHANGE_UNIT_STATES, CHANGE_UNIT_STATES)):
                 errors.append("git_management.change_unit_states 必须使用统一 Change Unit 状态集合")
     elif git_management is not None:
         errors.append("未启用 git 模块时 git_management 必须为 null")

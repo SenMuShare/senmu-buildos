@@ -6,23 +6,25 @@ Select sufficient testing evidence from behavior, risk, boundaries and failure c
 
 ## 0. Minimum Sufficient Verification
 
-Distinguish authoring, execution and reruns. Optimize total task cost at unchanged acceptance, not test counts or zero checking. These decisions need no per-test form or approval ritual.
+Separate authoring, execution and reruns. Optimize total cost at unchanged acceptance, not test counts. No per-test form or approval ritual is required.
 
 - **Author:** reuse existing coverage; add or extend tests for a real behavior/risk gap, not merely a changed file. Avoid implementation-mirroring assertions; exact output, schema and security checks remain valid contracts.
 - **Execute:** use the least costly sufficient check at the boundary that observes the result. Code-hosted prompts and executable examples are not harmless prose. Refactors reuse behavior tests; visual changes need rendered evidence. High-risk boundaries are checked early. A fast suite may cost less than elaborate filtering.
 - **Expand or stop:** broaden for affected behavior, unresolved risk, failure or required gates. Reuse evidence under section 7. Stop when the agreed outcome and required evidence are supported and blockers resolved; disclose gaps, do not add speculative cases or rerun to obtain green.
 
-A message, commit, formatting pass, handoff or new stage alone does not justify a full cycle. Follow actual effects, not line counts or suffixes.
+Messages, commits, formatting, handoffs and stage changes alone do not justify full cycles. Follow effects, not line counts or suffixes.
 
 ## 1. Strategy Inputs
 
-Use approved acceptance/invariants, affected docs, modules/interfaces/data owners, dependencies and effects. Consider runtime compatibility, release/recovery, failure impact/likelihood/detectability, existing tests/CI/environments and defects; include money, authorization, storage, network and messaging risks.
+Use approved acceptance/invariants, affected docs and module/interface/data owners, dependencies and effects. Consider runtime, release/recovery, failure impact/likelihood/detectability, tests/CI/environments and defects, including money, authorization, storage, network and messaging risks.
 
-For low-impact changes, avoid implementation-mirroring or instruction-wording tests. Expand required checks only for changed inputs, failure or unresolved risk. Instruction audits also use Project's routing check; shorter text or valid links do not prove model performance.
+Match evidence to its claim; derive expected results from requirements, an independent oracle or justified properties. Specification conformance does not prove fitness for intended use; one check may support both. Return conflicts to Product, not silently change acceptance. Verify promised dependency quality and usable downstream results; do not invent thresholds.
+
+For low-impact changes, avoid implementation-mirroring or instruction-wording tests. Expand for changed inputs, failure or unresolved risk. Instruction audits use Project's routing check; brevity or valid links do not prove model performance.
 
 Choose layers by risk. Unit/property tests may suffice for pure functions; transactions and authorization need evidence at trust/persistence boundaries. Atomicity, forward migration and release rollback are distinct. A migration verifies transformation, order, constraints, rerun safety and final state, not an automatic rollback drill. Follow the approved recovery strategy. Probe concrete unresolved invariants or defects, not every possible write point.
 
-Version `TEST_CASES.md` derives directly from that PRD's pages/features/capabilities, product behavior, interaction, errors, boundaries, and acceptance and mirrors its content structure. Shared version/sections provide linkage; do not create a traceability matrix. Retain an existing test-management owner. Templates are adaptable outlines: a low-risk change keeps only matching cases.
+Version `TEST_CASES.md` follows its PRD's pages/features/capabilities, behavior, interaction, errors, boundaries and acceptance. Shared version/sections provide linkage without a traceability matrix. Retain existing test management. Templates are adaptable: low-risk changes keep matching cases.
 
 For installation, configuration, operation, API/CLI/SDK or recovery changes, use affected current user docs as black-box acceptance. Execute real commands/examples from representative PRD starting states to observable outcomes. Automate relevant code blocks in the existing quality entrypoint or record environment, steps, results and gaps. Links, doc builds and highlighting prove surface only. Unchanged-use refactors and one-off exploration without durable entrypoints need no documentation tests.
 
@@ -46,7 +48,7 @@ For a multi-step user capability, derive the starting state and observable final
 
 Cover only relevant dimensions: normal/core outcomes; null/min/max/format/locale/time; invalid state, duplicate, reorder, timeout, cancellation, partial success; permissions, tenancy, ownership, sensitive data; commit/rollback, idempotency, race, retry effects; dependency failure, degradation, recovery, compensation, cleanup; schema/API/config/file/version compatibility; and legacy, migration equivalence, rollback.
 
-A defect needs a failing-before/passing-after regression or explained repeatable alternative. Avoid equivalent cases for count. Evaluate contract observability and defect sensitivity, not assertion names. Definedness, emptiness, absence and negative checks can be valid; do not delete them mechanically or claim results without inspecting semantics.
+A defect needs failing-before/passing-after evidence or an explained repeatable alternative. Avoid duplicate cases for count. Evaluate contract observability and defect sensitivity, not assertion names. Definedness, emptiness, absence and negative checks can be valid; do not delete them mechanically or claim results without inspecting semantics.
 
 Prefer test-first when behavior is clear, feedback is fast and checks need no private internals: show failure, implement, then refactor. For exploratory algorithms, one-off POCs, visual choices or costly unstable environments, stabilize the problem or prototype first. Writing order is not a gate; the final check must observe real behavior and detect regression.
 
@@ -84,7 +86,7 @@ Load only for actual requirements/risks:
 - Accessibility: keyboard, semantics, focus, labels, contrast, assistive technology.
 - Observability: critical success/failure signals, structured logs, metrics, traces, alerts.
 
-A local quick run cannot become a production-capacity conclusion. Record environment/limits and distinguish measurement from inference.
+A quick local run cannot prove production capacity. Record environment/limits; distinguish measurement from inference.
 
 ## 7. Impact and Regression Selection
 
@@ -141,7 +143,7 @@ Exercise a new/repaired recipe on one affected path before calling it verified. 
 
 Maintain affected recipes as behavior changes. Distinguish document drift, harness defects and product regressions; never rewrite expected behavior to conceal a regression. Diagnostic injection and external effects still need authority.
 
-Report commands, results, failures/skips, environment and remaining risk. Tool success is not acceptance, deployment or release.
+Report commands, results, failures/skips, environment and risk. Tool success is not acceptance, deployment or release.
 
 ### Diagnose the Verification Method
 

@@ -43,7 +43,7 @@ Never rewrite from PRD alone; present a mock shell as completed migration; migra
 
 ## 4. Migration Matrices
 
-Create matrices before business code. Durable Task State owns overall progress/recovery; matrices own domain coverage of routes, APIs, data models, and pages, not task status.
+Before business implementation, map the affected legacy routes, APIs, data models and pages at the existing migration owner. Combine small scopes rather than create separate files for each category. Durable Task State owns overall progress/recovery; migration coverage does not duplicate it. A new project without an equivalent may use:
 
 ```text
 governance/migration/

@@ -7,7 +7,7 @@ This is the project's agent index, not a second prompt body. Register only actua
 
 ## Identity and Placement
 
-The default definition is `agents/{agent-key}/AGENT.md`; keep the stable lowercase kebab-case key when changing the display name. Existing projects may retain their registered authoritative layout. Use Git/version evidence and run records instead of parallel definition copies; versioned runtime artifacts need an actual parallel consumer.
+The default definition is `agents/{agent-key}/AGENT.md`; keep the stable lowercase kebab-case key when changing the display name. The bundled validator checks only the adopted `senmu_markdown` default layout; existing custom registries and non-Markdown owners retain their authoritative layout and equivalent project validation. Use Git/version evidence and run records instead of parallel definition copies; versioned runtime artifacts need an actual parallel consumer.
 
 | Agent Key | Agent Name | Agent Version | Status | Definition Path | Owner | Workflow / Runtime |
 | --- | --- | --- | --- | --- | --- | --- |

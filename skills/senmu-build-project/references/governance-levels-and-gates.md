@@ -36,7 +36,7 @@ Determine the governance level when entering a task. Escalate when investigation
 | --- | --- | --- |
 | G0 Lightweight inquiry/read | Explain code or process, organize ideas, no file changes | State the basis; no work log unless a project decision results |
 | G1 Contract-preserving local change | Local implementation or content adjustment that preserves product, runtime, and delivery contracts | Check contract and impact scope; run an available targeted quality check or disclose what was not verified |
-| G2 Ordinary engineering task | Small feature, ordinary bug, local refactor, read-only engineering governance review, documentation completion | Read relevant references; run formatting, lint, applicable type checks, and matching tests; for architecture review, report evidence without automatically expanding into refactoring; write a work log when needed |
+| G2 Ordinary engineering task | Small feature, ordinary bug, local refactor, read-only engineering governance review, documentation completion | Read relevant references; select applicable quality checks from actual effects and Engineering's Testing guidance; honor project-required gates. Read-only review reports evidence without modifying the subject or expanding into refactoring; write a work log when needed |
 | G3 Release or structural task | Hotfix, formal release, cross-module architecture change, public contract or data-structure change, deployment, versioning, rollback, production verification | Explain relevant architecture impact; run matching checks and project-required gates. For an authorized release, satisfy the applicable version, log, Tag, artifact, production-verification, and rollback contract |
 | G4 High-risk task | Material security, payment, permission, production-data, irreversible-migration or incident risk; cross-project policy change with comparable actual impact | Verify the actual high-risk path and recovery basis. Retrospect on material incidents/rework or explicit requests; update rules and feedback only when eligible |
 
@@ -50,7 +50,7 @@ Classify each rule as one of the following whenever possible.
 
 ### Hard Gate
 
-Completion cannot be claimed unless the gate passes or the project owner explicitly grants and records an exception.
+Completion requires satisfaction of the applicable gate or an authorized, recorded exception or change to a project-controlled requirement. A project owner may revise controls or accept bounded risk only within their authority; replacement evidence must still support the protected outcome. They cannot waive higher-priority security, privacy or permission constraints, grant another actor's authority, turn an unknown external result into success, or substitute risk acceptance for truthful evidence.
 
 Typical Hard Gates:
 
@@ -95,7 +95,7 @@ Prefer these practices, but adapt them to project stage, technology, or owner di
 | --- | --- | --- | --- | --- | --- | --- |
 | G0 | As the question requires | Usually none | No | No | No | No |
 | G1 | Relevant code/docs | Targeted checks | Usually no | No | Only after a notable failure | Usually no |
-| G2 | Relevant references | Format, lint, applicable types, matching tests; evidence-based structural review | Usually yes | For user-visible change or release | After rework/failure | By impact scope |
+| G2 | Relevant references | Effect-based checks and applicable project gates; evidence-based read-only review | Usually yes | For user-visible change or release | After rework/failure | By impact scope |
 | G3 | Affected architecture or delivery standards | Impact-based checks and project-required gates | By material work | For authorized release | For material incidents/rework or explicit request | For applicable release target or risky path |
 | G4 | Relevant risk standards; retrospective when triggered | G3 plus affected security, data, authorization, or real-path review | By material work | By release ownership | For material incidents/rework or explicit request | By risk path |
 

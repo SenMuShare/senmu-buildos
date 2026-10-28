@@ -2,6 +2,7 @@ import importlib.util
 from pathlib import Path
 import tempfile
 import subprocess
+import sys
 import unittest
 from unittest.mock import patch
 
@@ -164,6 +165,105 @@ class CleanupTests(unittest.TestCase):
         self.assertIn('NSURLVolumeIsLocalKey', m.JXA)
         self.assertNotIn('removeItem', m.JXA)
         self.assertNotIn('unlink', FILE.read_text().split('def native_trash')[1].split('def execute')[0].replace('remove/unlink/purge', ''))
+
+    @unittest.skipUnless(sys.platform == 'darwin' and Path('/usr/bin/osascript').is_file(), 'macOS JXA bridge required')
+    def test_native_object_out_parameters_with_readonly_foundation_calls(self):
+        # Exercise the production receipt code with real NSObject out values.
+        # Replace only the mutating call; this test never invokes native Trash.
+        source = self.file()
+        call = '$.NSFileManager.defaultManager.trashItemAtURLResultingItemURLError(url, destination, error)'
+        self.assertIn(call, m.JXA)
+        for readonly, expected in (
+            ('url.getResourceValueForKeyError(destination, $.NSURLParentDirectoryURLKey, error)',
+             {'ok': True, 'destination': str(source.parent), 'error': None, 'cancelled': False}),
+            ("!$.NSFileManager.defaultManager.attributesOfItemAtPathError(argv[0] + '.missing', error).isNil()",
+             {'ok': False, 'destination': None, 'error': 'native_error_260', 'cancelled': False}),
+        ):
+            with self.subTest(expected=expected), patch.object(m, 'JXA', m.JXA.replace(call, readonly)):
+                self.assertEqual(m.native_trash(source), expected)
+        self.assertTrue(source.exists())
+
+    def process_backend(self, mode):
+        """Exercise subprocess results using ordinary fixture moves, never Trash."""
+        real_run = subprocess.run
+        code = '''import json, os, signal, sys, time
+from pathlib import Path
+source, destination, mode = sys.argv[1:]
+Path(source).rename(destination)
+output = json.dumps({'ok': True, 'destination': destination})
+if mode in ('missing', 'timeout_missing'): output = ''
+if mode == 'malformed': output = '{'
+if mode == 'oversized': output = 'x' * 8193
+if mode == 'invalid_protocol': output = json.dumps({'ok': 'yes', 'destination': destination})
+if mode == 'mismatched_identity':
+    decoy = destination + '-decoy'
+    Path(decoy).write_text('fixture')
+    output = json.dumps({'ok': True, 'destination': decoy})
+print(output, flush=True)
+if mode.startswith('timeout'): time.sleep(5)
+if mode == 'signal': os.kill(os.getpid(), signal.SIGTERM)
+sys.exit(19)
+'''
+        def backend(path):
+            def run(command, **kwargs):
+                self.assertEqual(command[:3], ['/usr/bin/osascript', '-l', 'JavaScript'])
+                kwargs['timeout'] = 0.5 if mode.startswith('timeout') else 5
+                return real_run([sys.executable, '-c', code, str(path), str(self.trash / path.name), mode], **kwargs)
+            with patch.object(m.subprocess, 'run', side_effect=run):
+                return m.native_trash(path)
+        return backend
+
+    def test_nonzero_process_receipt_is_verified_but_stops_batch(self):
+        a, b = self.file('a'), self.file('b')
+        r = m.execute(self.plan(a, b), True, self.process_backend('nonzero'))
+        item = r['results'][0]
+        self.assertEqual([i['status'] for i in r['results']], ['confirmed_trashed', 'not_called'])
+        self.assertEqual(item['destination'], str(self.trash / 'a'))
+        self.assertEqual(item['backend_returncode'], 19)
+        self.assertFalse(item['backend_ok'])
+        self.assertFalse(r['complete'])
+        self.assertTrue(b.exists())
+
+    def test_signal_process_receipt_keeps_signal_and_stops_batch(self):
+        a, b = self.file('a'), self.file('b')
+        r = m.execute(self.plan(a, b), True, self.process_backend('signal'))
+        item = r['results'][0]
+        self.assertEqual([i['status'] for i in r['results']], ['confirmed_trashed', 'not_called'])
+        self.assertEqual(item['backend_returncode'], -15)
+        self.assertEqual(item['backend_signal'], 15)
+        self.assertFalse(item['backend_ok'])
+        self.assertFalse(r['complete'])
+
+    def test_timeout_complete_receipt_is_verified_but_stops_batch(self):
+        a, b = self.file('a'), self.file('b')
+        r = m.execute(self.plan(a, b), True, self.process_backend('timeout'))
+        item = r['results'][0]
+        self.assertEqual([i['status'] for i in r['results']], ['confirmed_trashed', 'not_called'])
+        self.assertTrue(item['backend_timeout'])
+        self.assertFalse(item['backend_ok'])
+        self.assertFalse(r['complete'])
+
+    def test_nonzero_process_without_valid_receipt_remains_unknown(self):
+        for mode in ('missing', 'malformed', 'oversized', 'invalid_protocol', 'mismatched_identity'):
+            with self.subTest(mode=mode):
+                a, b = self.file('a-' + mode), self.file('b-' + mode)
+                r = m.execute(self.plan(a, b), True, self.process_backend(mode))
+                item = r['results'][0]
+                self.assertEqual([i['status'] for i in r['results']], ['unknown', 'not_called'])
+                self.assertIsNone(item['destination'])
+                self.assertEqual(item['backend_returncode'], 19)
+                self.assertFalse(item['backend_ok'])
+                self.assertFalse(r['complete'])
+
+    def test_timeout_without_receipt_remains_unknown_and_stops_batch(self):
+        a, b = self.file('a'), self.file('b')
+        r = m.execute(self.plan(a, b), True, self.process_backend('timeout_missing'))
+        item = r['results'][0]
+        self.assertEqual([i['status'] for i in r['results']], ['unknown', 'not_called'])
+        self.assertIsNone(item['destination'])
+        self.assertTrue(item['backend_timeout'])
+        self.assertFalse(item['backend_ok'])
+        self.assertFalse(r['complete'])
 
     def init_git(self, path, bare=False):
         subprocess.run(['git', 'init', '-q'] + (['--bare'] if bare else []) + [str(path)], check=True)

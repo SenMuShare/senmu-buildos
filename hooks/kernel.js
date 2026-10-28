@@ -19,7 +19,7 @@ const SESSION_CONTEXT = `SENMU BUILDOS KERNEL
 - For shared boundaries find current contracts, consumers and checks; resolve gaps.
 - Before edits confirm scope/ownership and preserve existing work. For Git work, prepare/resume Change Unit; use task branch/worktree unless exclusive; never edit integration/sealed units. Verify; commit only as authorized.
 - Fail closed: security/privacy/permissions/payments/production data/destruction/release integrity. Tools confer no authority.
-- Send only BuildOS harm to feedback CLI; no private data/IDs.
+- Feedback CLI: BuildOS harm only; omit sensitive report text.
 - Keep unknown/active/recovery. Authorized discards: Trash for ordinary, owners for managed. No purge fallback.
 - Report proven results.`;
 

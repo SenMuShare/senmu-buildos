@@ -72,6 +72,44 @@ class ExecutionGuidanceTests(unittest.TestCase):
                 self.assertEqual(status, json.loads(run.stdout)["status"])
                 self.assertEqual([], list(Path(directory).iterdir()))
 
+    def test_comment_concern_selects_one_current_owner_without_scanning(self):
+        expected = GUIDE.ENGINEERING + "source-code-quality-and-ai-collaboration.md"
+        result = GUIDE.select([], [], concerns=["comments"])
+        self.assertEqual("selected", result["status"])
+        self.assertEqual([], result["unresolved"])
+        self.assertEqual([expected], [x["reference"] for x in result["references"]])
+        self.assertEqual(hashlib.sha256((ROOT / expected).read_bytes()).hexdigest(),
+                         result["references"][0]["sha256"])
+        self.assertFalse(result["source_scanned"])
+        self.assertFalse(result["project_rules_included"])
+        self.assertIsNone(result["token_usage"])
+
+    def test_comment_concern_preserves_language_and_safety_routes(self):
+        expected = GUIDE.ENGINEERING + "source-code-quality-and-ai-collaboration.md"
+        for filename in ("src/a.py", "web/a.ts", "src/a.rs"):
+            with self.subTest(filename=filename):
+                ordinary = GUIDE.select([filename], ["paid-api"])
+                with_comments = GUIDE.select([filename], ["paid-api"], concerns=["comments", "comments"])
+                old = {x["reference"] for x in ordinary["references"]}
+                new = {x["reference"] for x in with_comments["references"]}
+                self.assertEqual(old | {expected}, new)
+                self.assertNotIn(expected, old)
+                self.assertEqual(["comments"], with_comments["concerns"])
+
+    def test_comment_cli_summary_and_full_match_without_writing(self):
+        with tempfile.TemporaryDirectory() as directory:
+            values = []
+            for mode in ("summary", "full"):
+                run = subprocess.run([sys.executable, str(SCRIPT), "--concern", "comments", "--format", mode],
+                                     cwd=directory, capture_output=True, text=True)
+                self.assertEqual(0, run.returncode, run.stderr)
+                value = json.loads(run.stdout)
+                self.assertEqual("selected", value["status"])
+                self.assertEqual(1, len(value["references"]))
+                self.assertEqual([], list(Path(directory).iterdir()))
+                values.append(value["reference_selection_identity"])
+            self.assertEqual(values[0], values[1])
+
 class OpenBatchLifecycleTests(unittest.TestCase):
     def test_review_repair_and_seal_use_one_unit_without_weakening_guards(self):
         with tempfile.TemporaryDirectory() as directory:

@@ -40,7 +40,7 @@ Record evidence for each candidate:
 
 Source, configuration and runtime evidence describe observed behavior. They do not automatically override an approved target, and a document does not prove its implementation. If the intended behavior is unresolved, retain an explicit candidate and avoid silently changing business meaning.
 
-One file, occurrence frequency, or commit chronology never proves a standard alone.
+One file, occurrence frequency, or commit chronology never proves a standard alone. For comment-policy failures, compare required explanations, actual consumers and representative retained/removed cases. Repair an overbroad quota or deletion policy at its existing owner under authority; repeated workaround comments do not make the workaround a standard.
 
 ## 4. Write Back and Index
 

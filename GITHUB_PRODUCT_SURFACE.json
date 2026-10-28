@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "repository": "SenMuShare/senmu-buildos",
-  "reviewed_for_version": "2.25.4",
+  "reviewed_for_version": "2.29.0",
   "description": "AI-native BuildOS for Codex, Claude Code, Doubao, WorkBuddy and ZCode: product discovery, UI/UX design, software engineering, context-aware workflows, testing, Git and verifiable releases.",
   "topics": [
     "agent-skills",
@@ -27,12 +27,14 @@
   ],
   "readme_review": {
     "updated_sections": [
+      "bounded-software-implementation-principles",
+      "project-instruction-adoption-and-safeguards",
       "release-summary-and-source-version"
     ],
     "summary": {
-      "zh": "本版修复分组清理示例的重试回执、父进程取消及配置交叉启用问题，并恢复材料角色路由。实际执行前验证并冻结分组配置，保留每次回执，取消后等待助手退出。原清理安全逻辑和上下文预算不变；隔离验证不等于用户磁盘或项目接入已完成。详见[用户更新日志](RELEASE_NOTES.md)。",
-      "en": "This release repairs retry receipts, parent-only cancellation and cross-enabled configurations in the scoped cleanup caller, and restores material-role routing. It freezes validated partitions, preserves each attempt and waits for the active helper after cancellation. Existing safety checks and context budgets remain unchanged; isolated tests do not prove project adoption or user disk recovery. See [release notes](RELEASE_NOTES.md).",
-      "ja": "本版は分割クリーンアップ例の再試行記録、親プロセスのみの中断、設定の交差有効化を修正し、資料の役割への経路を復元します。実行前に設定を検証・固定し、各試行を保持して中断時には実行中の処理の終了を待ちます。既存の保護とコンテキスト予算は変更せず、隔離テストを利用者の空き容量改善や導入完了とは扱いません。詳細は[更新履歴](RELEASE_NOTES.md)をご覧ください。"
+      "zh": "本版细化项目 AGENTS 的软件实现原则：不为无依据的假想情况增加防御、重试或兼容机制，复用内部仍成立的校验保证，同时保留新信任边界、状态变化、授权和数据保护。简单单次逻辑不机械拆函数，异常不伪装成功。新项目使用更新模板，已有项目经授权原地合并等价条款；升级不会自动改写项目，也不承诺模型效果或 Token 节省比例。详见[用户更新日志](RELEASE_NOTES.md)。",
+      "en": "This version clarifies software implementation principles in project AGENTS: avoid defenses, retries and compatibility machinery for unsupported hypothetical cases, reuse internal validation guarantees that still hold, and retain checks for new trust boundaries, changed state, authorization and data protection. Simple one-use logic need not become extra helpers, and failures must not look like success. New projects use the updated starter; authorized governance merges equivalent rules in existing projects. Upgrading does not rewrite projects automatically or establish model-performance or token-savings claims. See [release notes](RELEASE_NOTES.md).",
+      "ja": "本版はプロジェクト AGENTS の実装原則を具体化します。根拠のない仮定だけで防御、再試行、互換機構を増やさず、内部で有効な検証済みの保証を再利用します。新たな信頼境界、状態変化、権限、データ保護に必要な検査は維持します。単純な一度限りの処理を機械的に関数へ分割せず、失敗を成功として扱いません。新規プロジェクトは更新した雛形を使い、既存プロジェクトでは許可された整備で同等の規則を統合します。更新だけでプロジェクトを自動変更せず、モデル性能や Token 削減率を保証しません。詳細は[更新履歴](RELEASE_NOTES.md)をご覧ください。"
     }
   },
   "readmes": {

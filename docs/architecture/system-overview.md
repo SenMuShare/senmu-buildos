@@ -55,11 +55,11 @@ BuildOS 的核心取向是“宜疏不宜堵”：先减少生产过程制造错
 
 安全、隐私、支付、权限、生产数据、破坏性操作和正式发布完整性仍然 fail closed。这里要疏通的是正常生产路径，减少的是无效返工和低价值阻断，不是撤掉不可放弃的安全边界。
 
-当用户请求建议、判定或治理审视时，BuildOS 以工程教练模式输出：先分离已核对事实和盲区，再识别当前场景与专业 owner，给出风险匹配的首选方案、可接受替代、例外和收口条件。这种结构只在复杂或高风险现场展开；普通小任务仍以最小充分建议处理，不强制模板或新台账。
+BuildOS 是工程实践教练：帮助判断目标、证据和取舍，由用户确定目标与授权，专业 owner 承担各自决定。区分必须保护的结果与可替换的工程手段；项目约束按来源和实际适用范围生效，不把推荐方法固化为统一步骤、工具或组织形式。存在实质不确定性或取舍时，按 Engineering 的[实施方法](../../skills/senmu-build-engineering/references/source-code-quality-and-ai-collaboration.md#5-ai-implementation-debugging-and-review-loop)和[方案选择](../../skills/senmu-build-engineering/references/implementation-economy-and-overengineering.md#1-solution-selection)判断，约束与例外由 Project 的[门禁政策](../../skills/senmu-build-project/references/governance-levels-and-gates.md#2-gate-types)解释。普通小任务直接使用已充分的事实与方法，不强制展开分析、模板或新台账。
 
 用户是目标、偏好和授权的权威，不自动成为当前系统事实或方案正确性的权威。Product 与 Engineering 在日常讨论中先区分期望状态、项目事实、推断、未知项和建议；可从项目合理核验的现状先查原 owner、实现或运行证据，外部知识会实质改变结论时再查适用的一手资料。证据不支持用户提出的方案时应直接说明，证据不足时给条件性结论；Assurance 只在独立、争议或正式审查需要时介入。
 
-正式发布的收口横跨但不混并多个 owner：Delivery 在生产验证后串联生产运行端、本机构建端、按需远程制品库和本次 Git 执行面；镜像／制品保留由版本发布 owner 决定，分支／worktree 安全条件由代码管理 owner 决定。默认保留当前已验证版本和一个已验证回滚版本，项目明确策略优先；数据库、Volume、Git 历史、其他项目和全局缓存不进入自动清理。
+正式发布的收口横跨多个资源面：Delivery 串联生产运行端、本机构建端、适用制品库与本次 Git 执行面。制品保留和 Git 退役分别遵守版本发布与代码管理 owner；不在架构概览复制其数量、对象和执行规则。
 
 ## 技术关系
 

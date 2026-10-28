@@ -20,7 +20,7 @@ SENMU BUILDOS KERNEL
 - For shared boundaries find current contracts, consumers and checks; resolve gaps.
 - Before edits confirm scope/ownership and preserve existing work. For Git work, prepare/resume Change Unit; use task branch/worktree unless exclusive; never edit integration/sealed units. Verify; commit only as authorized.
 - Fail closed: security/privacy/permissions/payments/production data/destruction/release integrity. Tools confer no authority.
-- Send only BuildOS harm to feedback CLI; no private data/IDs.
+- Feedback CLI: BuildOS harm only; omit sensitive report text.
 - Keep unknown/active/recovery. Authorized discards: Trash for ordinary, owners for managed. No purge fallback.
 - Report proven results.
 <!-- kernel-contract:end -->
@@ -47,7 +47,7 @@ COMMUNICATION DEFAULTS
 | `senmu-build-workflow` | 工作流契约、项目 Agent、物料流、运行状态 | 设计／修复流程契约与可恢复运行状态 |
 | `senmu-build-engineering` | 工程契约、架构、技术债、测试 | 建立／修复工程规范、选型、重构 |
 | `senmu-build-delivery` | Git／仓库边界、版本、制品、部署、发布 | 非例行 Git／发布决策与生产事实 |
-| `senmu-build-assurance` | 独立证据分级审查 | POC／审计／复现／争议结论 |
+| `senmu-build-assurance` | 冻结对象与证据化结论，声明审查身份 | POC／审计／复现／争议结论 |
 | `senmu-build-learning` | 复盘、经验晋级、知识蒸馏 | 正式复盘与规则晋级 |
 
 ## WorkBuddy 适配说明

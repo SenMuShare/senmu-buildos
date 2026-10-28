@@ -145,21 +145,57 @@ function run(argv) {
   const local = Ref(), checkError = Ref();
   if (!url.getResourceValueForKeyError(local, $.NSURLVolumeIsLocalKey, checkError) || !local[0].boolValue)
     return JSON.stringify({ok:false, error:'local volume not established'});
-  const destination = Ref(), error = Ref();
+  // NSObject out parameters use boxed nil; a boxed nil is truthy in JavaScript.
+  const destination = $(), error = $();
   const ok = $.NSFileManager.defaultManager.trashItemAtURLResultingItemURLError(url, destination, error);
-  return JSON.stringify({ok:!!ok, destination: destination[0] ? ObjC.unwrap(destination[0].path) : null,
-    error: error[0] ? 'native_error_' + Number(error[0].code) : null,
-    cancelled: error[0] ? Number(error[0].code) === 3072 : false});
+  const hasError = !error.isNil();
+  return JSON.stringify({ok:!!ok, destination: destination.isNil() ? null : ObjC.unwrap(destination.path),
+    error: hasError ? 'native_error_' + Number(error.code) : null,
+    cancelled: hasError ? Number(error.code) === 3072 : false});
 }'''
+
+
+def native_receipt(output):
+    """Accept only one bounded structured receipt, including captured timeout bytes."""
+    if not isinstance(output, (str, bytes)):
+        raise Rejected('missing backend receipt')
+    try:
+        raw = output.encode('utf-8') if isinstance(output, str) else output
+        if len(raw) > 8192:
+            raise Rejected('oversized backend receipt')
+        receipt = json.loads(raw.decode('utf-8'))
+    except (UnicodeError, ValueError, RecursionError) as error:
+        raise Rejected('invalid backend receipt') from error
+    if (not isinstance(receipt, dict) or not isinstance(receipt.get('ok'), bool)
+            or 'destination' not in receipt
+            or not (receipt['destination'] is None or isinstance(receipt['destination'], str))
+            or not (receipt.get('error') is None or isinstance(receipt['error'], str))
+            or not isinstance(receipt.get('cancelled', False), bool)):
+        raise Rejected('invalid backend receipt protocol')
+    return {key: receipt[key] for key in ('ok', 'destination', 'error', 'cancelled') if key in receipt}
 
 
 def native_trash(path):
     # No remove/unlink/purge API or permanent-delete fallback exists here.
-    result = subprocess.run(['/usr/bin/osascript', '-l', 'JavaScript', '-e', JXA, str(path)],
-                            text=True, capture_output=True, timeout=30, check=True)
-    if len(result.stdout) > 8192:
-        raise Rejected('oversized backend receipt')
-    return json.loads(result.stdout)
+    try:
+        result = subprocess.run(['/usr/bin/osascript', '-l', 'JavaScript', '-e', JXA, str(path)],
+                                text=True, capture_output=True, timeout=30, check=True)
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as error:
+        # A failed process can have moved the item and emitted a full receipt.
+        # Preserve that evidence for identity verification, never as backend success.
+        try:
+            receipt = native_receipt(error.stdout)
+        except Rejected:
+            receipt = {}
+        receipt['ok'] = False
+        if isinstance(error, subprocess.CalledProcessError):
+            receipt.update(error='backend_exit', backend_returncode=error.returncode)
+            if error.returncode < 0:
+                receipt['backend_signal'] = -error.returncode
+        else:
+            receipt.update(error='backend_timeout', backend_timeout=True)
+        return receipt
+    return native_receipt(result.stdout)
 
 
 def execute(plan, writers_stopped, backend=None):
@@ -208,9 +244,13 @@ def execute(plan, writers_stopped, backend=None):
                     status = 'confirmed_trashed'
         except (OSError, ValueError):
             pass
-        results.append({'path': str(p), 'status': status, 'called': True, 'error': error_kind or receipt.get('error'), 'backend_ok': receipt.get('ok') is True,
-                        'cancelled': receipt.get('cancelled') is True,
-                        'destination': receipt.get('destination') if status == 'confirmed_trashed' else None})
+        result = {'path': str(p), 'status': status, 'called': True, 'error': error_kind or receipt.get('error'), 'backend_ok': receipt.get('ok') is True,
+                  'cancelled': receipt.get('cancelled') is True,
+                  'destination': receipt.get('destination') if status == 'confirmed_trashed' else None}
+        for key in ('backend_returncode', 'backend_signal', 'backend_timeout'):
+            if key in receipt:
+                result[key] = receipt[key]
+        results.append(result)
         stopped = status != 'confirmed_trashed' or receipt.get('ok') is not True or receipt.get('cancelled') is True
     return {'results': results, 'complete': bool(results) and not stopped,
             'disk_bytes_reclaimed': 'not_measured',

@@ -106,18 +106,20 @@ python3 skills/senmu-build-delivery/scripts/manage_change_unit.py seal \
 
 `seal` checks a clean tree and a post-baseline commit and permanently closes branch recovery. These Git checks do not prove scope completion or business acceptance. A later repair uses a linked unit; do not seal merely to request review.
 
+A clean open unit with registered worktree and HEAD=recorded baseline closes with `close --disposition no_changes --owner-ref <Task/Run>`. No commit/seal or integration arguments. This proves no source increment, not execution success, acceptance or deletion authority. Keep needed outputs; older tools reject this state.
+
 ```bash
 python3 skills/senmu-build-delivery/scripts/manage_change_unit.py list --repo <repo>
 # Bounded v2: --state all, --offset N. Legacy JSON: --format full.
 ```
 
-Full output retains v1: sealed units are `pending_integration`; `candidate_reachable` only hints at ancestry. After authorized reception, record the disposition with `close --disposition <integrated|excluded|superseded> --owner-ref <owner#section>`. Integrated closeout requires `--integration-commit <receipt>` on the registered target and an unchanged sealed source.
+Full output retains v1; sealed units remain `pending_integration`, with `candidate_reachable` only an ancestry hint. Close sealed units with `close --disposition <integrated|excluded|superseded> --owner-ref <owner#section>`. Integration needs `--integration-commit <receipt>` on the registered target and unchanged sealed source.
 
-`close` verifies the exact sealed commit or full frozen delta by entire-tree replay; rewrites use the first parent or `--integration-base <target-before-reception>`. Partial, extra, conflicting or unproven reception stays sealed. An approved final line may differ from a stacked development target: use `--integration-target` with `--target-authorization-ref` without moving sealed history. The existing target decision must cover this unit and line; original baseline and parent remain immutable.
+Integrated closeout proves the exact sealed commit or full frozen delta by whole-tree replay; rewrites use the first parent or `--integration-base <target-before-reception>`. Partial, extra, conflicting or unproven reception stays sealed. An approved final line uses `--integration-target` and `--target-authorization-ref`, covering this unit/line without changing sealed history, original baseline or parent.
 
-Replay may write Git objects, not branches, index or working files. The existing record stores `integration_proof`; legacy receipts gain no proof automatically. This proves reception at that commit, not current behavior, review, acceptance or release. Existing task authority and target verification remain necessary.
+Replay writes only Git objects. Recorded `integration_proof` proves reception, not behavior, review, acceptance or release; legacy receipts gain no proof automatically. Task authority and target verification still apply.
 
-Never auto-stash/reset/commit mixed dirt. After integration and target verification, use [Local Worktree Retirement](#7-local-worktree-retirement); preserve unique material and active work, and never default to force removal. Remote deletion remains separate.
+Never auto-stash/reset/commit mixed dirt. After applicable closeout, use [Local Worktree Retirement](#7-local-worktree-retirement); preserve unique material and active work, and never default to force removal. Remote deletion remains separate.
 
 ## 4. Hotfix and Successor Line
 
@@ -197,8 +199,8 @@ One release has one mutable integration root. If a `release/*` worktree is used,
 - Cutoff snapshots accepted units, not future branch prohibition. Later candidate-unreachable/no-shared-resource tasks are automatically excluded; record `branch@HEAD` without candidate commits.
 - Version/changelog/candidate state may be mutable release-train preparation before full preflight; only a passing head freezes.
 - Fix preflight failures through the registered repair unit and integrate back into the sole release root; invalidate the old candidate and rerun affected checks and required preflight before freezing. Reuse scoped authority; ask only for uncovered effects.
-- Before candidate/artifact, run `verify_release_identity.py` to establish `reviewed_commit = tested_commit = release_source_head = artifact_source_commit`. A formal Tag is not candidate input. After target verification, the promotion entrypoint verifies the exact commit receipt before creating/pushing the Tag.
+- For candidate checks, single-source artifacts use `verify_release_identity.py`; compositions verify the frozen manifest and each item’s original provenance through their existing top-level check. After target verification, verify the receipt before creating/pushing a formal Tag; Tags are not candidate inputs.
 
 ## 7. Local Worktree Retirement
 
-Retire only after integration or explicit exclusion/supersession with recovery evidence and covered authorization. Check tracked dirt, untracked/ignored files, nested repos, unique commits/materials and active writers/processes. Preserve needed review/repair/handoff resources first; clean Git alone is insufficient. Use `git worktree remove <registered-path>`, never directory deletion or `--force`. Retire branches through governed Git; squash ancestry alone is not disposal proof. Local retirement excludes remote deletion, history changes and release. Pending retention does not block unrelated delivery.
+Retire only after integration, explicit exclusion/supersession or verified `no_changes` closeout, with recovery evidence and covered authorization. Check tracked dirt, untracked/ignored files, nested repos, unique commits/materials and active writers/processes. Preserve needed review/repair/handoff resources first; clean Git alone is insufficient. Use `git worktree remove <registered-path>`, never directory deletion or `--force`. Retire branches through governed Git; squash ancestry alone is not disposal proof. Local retirement excludes remote deletion, history changes and release. Pending retention does not block unrelated delivery.
