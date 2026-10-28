@@ -4,6 +4,8 @@ No real Docker, host model, user data or disk-pressure measurement is involved.
 The existing helper remains unmodified; its per-plan safety boundary is tested.
 """
 import importlib.util
+import hashlib
+import json
 import os
 import re
 import signal
@@ -105,7 +107,7 @@ else:
             if name == "current" and self.expect_missing_current:
                 self.assertFalse(path.exists())
                 continue
-            self.assertEqual(path.read_text(), name)
+            self.assertEqual(path.read_text(), getattr(self, "expected_manifests", {}).get(name, name))
         return result
 
     def receipt_path(self, name):
@@ -216,6 +218,65 @@ else:
         self.assertIn("release_retention_status=no_candidates", self.receipt("local-cleanup.receipt"))
         self.assertIn("local_rc=0 image_rc=2", self.receipt("retention-groups.receipt"))
 
+
+    def test_two_reused_releases_and_partial_failure_through_actual_caller(self):
+        # Test-only producer/target: real bytes and consumers, not a new release engine.
+        blob = b"synthetic immutable shared input\n" * 1024
+        digest = hashlib.sha256(blob).hexdigest()
+        owner = self.root / "fixed"
+        owner.mkdir()
+        source = owner / digest
+        source.write_bytes(blob)
+        before = source.stat()
+        (self.root / "target").mkdir()
+        (self.root / "scripts/verify.sh").write_text(
+            "#!/usr/bin/env bash\nexec " + sys.executable + " scripts/verify_fixture.py\n")
+        (self.root / "scripts/verify_fixture.py").write_text("""import hashlib, json, shutil
+from pathlib import Path
+refs = {}
+sent = 0
+for role in ("current", "rollback"):
+    manifest = json.loads(Path("artifacts", role, "manifest").read_text())
+    shared = manifest["shared"]
+    source = Path(shared["location"])
+    assert hashlib.sha256(source.read_bytes()).hexdigest() == shared["sha256"]
+    destination = Path("target", shared["sha256"])
+    if destination.exists():
+        assert hashlib.sha256(destination.read_bytes()).hexdigest() == shared["sha256"]
+    else:
+        shutil.copyfile(source, destination)
+        sent += destination.stat().st_size
+    assert destination.read_bytes() == source.read_bytes()
+    refs[role] = manifest
+Path("stage-receipt.json").write_text(json.dumps({"transfer_bytes": sent, "consumers": refs}))
+""")
+        for round_number, engine_status in ((1, "0"), (2, "0"), (3, "23")):
+            manifests = {}
+            for role, version in (("current", round_number), ("rollback", round_number - 1)):
+                manifests[role] = json.dumps({
+                    "component_revision": f"source-{version}",
+                    "shared": {"location": f"fixed/{digest}", "sha256": digest,
+                               "provenance": "fixed-source-1", "selection": "reuse"}})
+                (self.root / "artifacts" / role / "manifest").write_text(manifests[role])
+            old = self.root / "artifacts/old"
+            old.mkdir(exist_ok=True)
+            (old / "manifest").write_text(f"disposable-{round_number}")
+            self.expected_manifests = manifests
+            result = self.run_driver(FIXTURE_DOCKER_STATUS=engine_status)
+            stage = json.loads((self.root / "stage-receipt.json").read_text())
+            self.assertEqual(stage["transfer_bytes"], len(blob) if round_number == 1 else 0)
+            self.assertEqual(stage["consumers"]["current"]["shared"]["provenance"], "fixed-source-1")
+            self.assertEqual(stage["consumers"]["rollback"]["shared"]["sha256"], digest)
+            self.assertFalse(old.exists())
+            self.assertEqual(result.returncode == 0, engine_status == "0", result.stderr)
+            self.assertIn(f"local_rc=0 image_rc={'0' if engine_status == '0' else '2'}",
+                          self.receipt("retention-groups.receipt"))
+            self.assertEqual(source.read_bytes(), blob)
+            self.assertEqual(source.stat().st_ino, before.st_ino)
+            self.assertEqual(source.stat().st_mtime_ns, before.st_mtime_ns)
+        self.assertEqual(len(list(self.receipts_root.iterdir())), 3)
+        self.assertEqual(len(list(owner.iterdir())), 1)
+        self.assertEqual(len(list((self.root / "target").iterdir())), 1)
 
     def test_material_role_route_remains_explicit(self):
         route = (ROOT / "skills/senmu-build-workflow/SKILL.md").read_text()

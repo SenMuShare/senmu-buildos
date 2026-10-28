@@ -106,7 +106,7 @@ When the user provides material for absorption, execute this loop without reopen
 4. Assign one of the six dispositions; merge related candidates before resolving conflicts and gaps.
 5. Write only `merge`, `replace`, and `add` into formal owners; synchronize necessary routing, templates, validators, and behavior tests.
 6. Compare common load, duplication, and decision coverage before and after. More rules are not success.
-7. Run relevant package, script and behavioral checks. Use Skill Creator for Skill changes and project-bootstrap checks only when bootstrap behavior is affected. Test real decisions, not keyword presence.
+7. Run relevant package, script and behavioral checks. Use a trusted available authoring capability or equivalent checks for Skill changes; report unrun host checks without installing tools or expanding authority. Test real decisions; run bootstrap checks only for affected bootstrap behavior.
 8. Review Skill integrity: product position, boundaries, description routing, progressive disclosure, unique ownership, duplicate/conflict status, common load, Harness compatibility, and authority. Return defects to original owners and recheck affected paths. Review the changed surface and actual consumers; reserve whole-package review for a release or demonstrated cross-package impact.
 9. Remove temporary source/candidate files and record absorbed, rejected, unresolved, review identity, conclusion, and verification. Source changes and scoped local commits use the existing improvement authority; installation and publication retain their own authorization boundaries.
 

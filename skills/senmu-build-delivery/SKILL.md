@@ -1,11 +1,11 @@
 ---
 name: senmu-build-delivery
-description: "Plan or perform authorized releases, rollback, repository changes or non-routine Git work. Routine edits and commits covered by project rules need no reload."
+description: "Design or run deployments, releases and rollback; resume operations; manage non-routine Git. Reuse adopted workflows."
 ---
 
 # Delivery Management
 
-Match authorized Git/release actions to production and rollback facts. Routine commits do not activate.
+Follow project release/recovery routes; reuse unchanged guidance in scope. Tie authorized actions to production and rollback facts. Routine commits do not activate.
 
 ## Route by Outcome
 
@@ -14,9 +14,9 @@ Match authorized Git/release actions to production and rollback facts. Routine c
 - Resumable review coverage: [Review Execution](../senmu-build-assurance/references/frozen-review-execution.md).
 - Topology, projections, release units: [Repositories](references/repository-boundaries-and-release-units.md).
 - Work/version logs, handoffs: [Logs](references/collaboration-and-version-logs.md).
-- Versions, tags, artifacts: [Artifacts](references/version-artifacts-and-release.md).
+- Versions, composition, retention: [Artifacts](references/version-artifacts-and-release.md).
 - Authority, production, rollback: [Authorization](references/release-authorization-and-production-truth.md).
-- Deployment, secrets, post-release: [Security](references/deployment-testing-and-security.md). Before public exposure: [Public-service baseline](references/security/public-service-security-baseline.md).
+- Deployment design, recovery, secrets: [Deployments](references/deployment-testing-and-security.md). Public exposure: [Security baseline](references/security/public-service-security-baseline.md).
 
 Read-only advice never merges, tags or deploys. Release entrypoints must be executable. Assurance handles explicit audits, disputes or required independent verdicts, not routine checks.
 

@@ -3,6 +3,9 @@ from __future__ import annotations
 import copy
 import importlib.util
 import json
+import subprocess
+import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -19,6 +22,8 @@ SPEC.loader.exec_module(MODULE)
 class ReleaseControlTests(unittest.TestCase):
     def valid_closed_record(self) -> dict:
         record = json.loads(TEMPLATE.read_text(encoding="utf-8"))
+        # Legacy source-only releases do not opt into resource closeout.
+        record.pop("resource_closeout", None)
         record["release"].update(
             {
                 "candidate_commit": "abc123",
@@ -101,6 +106,179 @@ class ReleaseControlTests(unittest.TestCase):
         )
         errors = MODULE.validate_record(record)
         self.assertTrue(any("unfinished cleanup rows" in error for error in errors))
+
+    def resource_record(self) -> dict:
+        record = self.valid_closed_record()
+        group_ids = ["images", "dependencies", "historical_directories"]
+        record["resource_closeout"] = {
+            "scope_ref": "policy:release-assets",
+            "required_groups": group_ids,
+            "status": "complete",
+            "groups": [
+                {
+                    "id": group_id,
+                    "scope": "synthetic application only",
+                    "surface": f"inventory:{group_id}",
+                    "status": "completed",
+                    "evidence_refs": [f"receipt:{group_id}"],
+                    "owner": "release owner",
+                    "retention_ref": f"policy:{group_id}",
+                }
+                for group_id in group_ids
+            ],
+        }
+        return record
+
+    def test_resource_complete_accepts_exact_accounted_scope(self) -> None:
+        record = self.resource_record()
+        record["resource_closeout"]["groups"][1]["status"] = "no_candidates"
+        self.assertEqual(MODULE.validate_record(record), [])
+
+    def test_resource_complete_rejects_held_directories_and_disabled_groups(self) -> None:
+        for status in ("pending", "planned", "disabled", "blocked", "failed", "unknown"):
+            with self.subTest(status=status):
+                record = self.resource_record()
+                record["resource_closeout"]["groups"][2].update(
+                    status=status, reason="held for reconciliation", next_action="identify consumers"
+                )
+                errors = MODULE.validate_record(record)
+                self.assertTrue(any("cannot be complete" in error for error in errors), errors)
+
+    def test_resource_closed_rejects_partial_but_released_can_resume(self) -> None:
+        record = self.resource_record()
+        record["resource_closeout"]["status"] = "partial"
+        record["resource_closeout"]["groups"][2].update(
+            status="pending", reason="consumer identity unresolved", next_action="inspect consumer identity"
+        )
+        errors = MODULE.validate_record(record)
+        self.assertTrue(any("closed requires resource_closeout" in error for error in errors), errors)
+        record["release"]["status"] = "released"
+        self.assertEqual(MODULE.validate_record(record), [])
+
+    def test_resource_complete_rejects_missing_duplicate_extra_or_invalid_groups(self) -> None:
+        mutations = {
+            "missing": lambda block: block["groups"].pop(),
+            "duplicate": lambda block: block["groups"].append(copy.deepcopy(block["groups"][0])),
+            "extra": lambda block: block["groups"].append(dict(block["groups"][0], id="undeclared")),
+            "invalid": lambda block: block["groups"].append("not an object"),
+            "empty": lambda block: block.update(groups=[]),
+        }
+        for case, mutate in mutations.items():
+            with self.subTest(case=case):
+                record = self.resource_record()
+                mutate(record["resource_closeout"])
+                self.assertTrue(MODULE.validate_record(record))
+
+    def test_resource_required_groups_must_be_nonempty_unique_strings(self) -> None:
+        for required_groups in ([], ["images", "images"], [""], [7], "images", ["images", []]):
+            with self.subTest(required_groups=required_groups):
+                record = self.resource_record()
+                record["resource_closeout"]["required_groups"] = required_groups
+                self.assertTrue(MODULE.validate_record(record))
+
+    def test_resource_complete_requires_scope_policy_owner_and_evidence(self) -> None:
+        for field in ("scope", "surface", "owner", "retention_ref", "evidence_refs"):
+            with self.subTest(field=field):
+                record = self.resource_record()
+                record["resource_closeout"]["groups"][0][field] = [] if field == "evidence_refs" else ""
+                self.assertTrue(MODULE.validate_record(record))
+        record = self.resource_record()
+        record["resource_closeout"]["scope_ref"] = ""
+        self.assertTrue(MODULE.validate_record(record))
+
+    def test_resource_retained_requires_declared_policy_basis_and_exit(self) -> None:
+        for basis in ("current", "rollback", "pin", "recovery", "evidence", "approved_policy"):
+            with self.subTest(basis=basis):
+                record = self.resource_record()
+                group = record["resource_closeout"]["groups"][0]
+                group.update(status="retained", retention_basis=basis, reason="policy protection",
+                             exit_condition="protection expires after review", next_action="review protection")
+                self.assertEqual(MODULE.validate_record(record), [])
+                for field in ("reason", "exit_condition", "next_action", "retention_basis"):
+                    with self.subTest(missing=field):
+                        malformed = copy.deepcopy(record)
+                        malformed["resource_closeout"]["groups"][0].pop(field)
+                        self.assertTrue(MODULE.validate_record(malformed))
+        record["resource_closeout"]["groups"][0]["retention_basis"] = "held"
+        self.assertTrue(MODULE.validate_record(record))
+
+    def test_resource_unfinished_groups_require_recovery_fields(self) -> None:
+        for status in ("pending", "planned", "disabled", "blocked", "failed", "unknown"):
+            record = self.resource_record()
+            record["release"]["status"] = "released"
+            block = record["resource_closeout"]
+            block["status"] = "partial"
+            block["groups"][0].update(status=status, reason="awaiting assessment", next_action="inspect inventory")
+            self.assertEqual(MODULE.validate_record(record), [])
+            for field in ("reason", "next_action", "owner"):
+                with self.subTest(status=status, field=field):
+                    malformed = copy.deepcopy(record)
+                    malformed["resource_closeout"]["groups"][0].pop(field)
+                    self.assertTrue(MODULE.validate_record(malformed))
+
+    def test_resource_not_applicable_requires_full_reasoned_coverage(self) -> None:
+        record = self.resource_record()
+        block = record["resource_closeout"]
+        block["status"] = "not_applicable"
+        for group in block["groups"]:
+            group.update(status="not_applicable", reason="this surface is not produced")
+            group.pop("retention_ref")
+        self.assertEqual(MODULE.validate_record(record), [])
+        for case in ("missing_reason", "missing_evidence", "missing_group", "non_na_group"):
+            with self.subTest(case=case):
+                malformed = copy.deepcopy(record)
+                broken = malformed["resource_closeout"]
+                if case == "missing_reason":
+                    broken["groups"][0].pop("reason")
+                elif case == "missing_evidence":
+                    broken["groups"][0]["evidence_refs"] = []
+                elif case == "missing_group":
+                    broken["groups"].pop()
+                else:
+                    broken["groups"][0].update(status="completed", retention_ref="policy:images")
+                self.assertTrue(MODULE.validate_record(malformed))
+
+    def test_resource_malformed_values_are_diagnostic(self) -> None:
+        malformed_blocks = [None, [], "invalid", {"status": []}, {"groups": [None]}]
+        for block in malformed_blocks:
+            with self.subTest(block=block):
+                record = self.resource_record()
+                record["resource_closeout"] = block
+                self.assertTrue(MODULE.validate_record(record))
+        for field in ("id", "status", "retention_basis", "evidence_refs"):
+            with self.subTest(field=field):
+                record = self.resource_record()
+                record["resource_closeout"]["groups"][0][field] = {"unexpected": "object"}
+                self.assertTrue(MODULE.validate_record(record))
+
+    def test_source_only_legacy_requires_resource_block_only_when_requested(self) -> None:
+        record = self.valid_closed_record()
+        self.assertEqual(MODULE.validate_record(record), [])
+        errors = MODULE.validate_record(record, require_resource_closeout=True)
+        self.assertTrue(any("resource_closeout is required" in error for error in errors), errors)
+        self.assertEqual(MODULE.validate_record(self.resource_record(), require_resource_closeout=True), [])
+
+    def test_resource_requirement_cli_and_json_keep_declarations_read_only(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            record_path = Path(temp) / "release.json"
+            for record, required, expected in (
+                (self.valid_closed_record(), False, 0),
+                (self.valid_closed_record(), True, 1),
+                (self.resource_record(), True, 0),
+            ):
+                with self.subTest(required=required, expected=expected):
+                    before = json.dumps(record).encode()
+                    record_path.write_bytes(before)
+                    args = [sys.executable, str(SCRIPT), str(record_path), "--json"]
+                    if required:
+                        args.append("--require-resource-closeout")
+                    result = subprocess.run(args, capture_output=True, text=True, check=False)
+                    self.assertEqual(result.returncode, expected, result.stderr)
+                    self.assertNotIn("Traceback", result.stderr)
+                    report = json.loads(result.stdout)
+                    self.assertFalse(report["git_state_checked"])
+                    self.assertIn("Resource closeout declarations", report["limits"])
+                    self.assertEqual(record_path.read_bytes(), before)
 
 
 class LiveReleaseControlReviewTests(unittest.TestCase):

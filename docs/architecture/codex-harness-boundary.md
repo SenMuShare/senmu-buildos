@@ -22,7 +22,7 @@ Senmu BuildOS 使用 Codex 已有的发现、上下文和生命周期能力，�
 
 - `AGENTS.md` 是 Codex 自动读取的短入口，不是完整项目手册。
 - `agents/<agent-key>/AGENT.md` 是项目业务 Agent 的稳定契约；Skill 内 `agents/openai.yaml` 只是 Skill 展示元数据。两者都不替代 Codex 对根 `AGENTS.md` 的作用域发现。
-- `governance-policy.json` 是 validator 的静态机器配置，不保存当前任务状态。
+- `.senmu-buildos/config.json` 是 validator 的静态机器配置，不保存当前任务状态。
 - `PROJECT_MAP.md` 只保存模块、目录、状态源、owner 和项目规范入口导航；完整规范仍归专业 owner。
 - 需要跨阶段或跨会话恢复的项目必须声明 Durable Task State Owner；`TASK_REGISTER.md` 与 `TASK-<NNNN>-<slug>.md` 编号计划只是 standard/release 新项目默认实现，core 可沿用 README、Issue 或外部任务系统。
 - `WORKLOG.md` 是由 Project 管理的追加时间线；`LESSONS_LEARNED.md` 是由 Learning 管理的经验证长期经验。
@@ -33,9 +33,9 @@ Senmu BuildOS 使用 Codex 已有的发现、上下文和生命周期能力，�
 
 ## 模型与指令适配
 
-依据 [GPT-6 Astra 官方指南](https://developers.openai.com/api/docs/guides/latest-model?model=gpt-6-astra)（2026-09-05 核验）：项目入口按需读取，Skill 默认建议服从用户当前意图和已有授权，验证强度随实际风险变化。具体规则归 Project 的标准发现与 Engineering 的测试 reference，不重复注入 Hook。
+项目入口按需读取，Skill 指导服从用户当前意图和已有授权，验证强度随实际风险变化。具体规则归 Project 的标准发现与 Engineering 的测试 reference，不重复注入 Hook。
 
-异步工具、途中用户补充、子代理调度、模型与推理参数由宿主提供。仅在宿主允许且有独立、有益的子任务时委派；不会为提高 Astra 使用率强制创建代理、指定固定轮数或改业务 API 模型。用户补充要求沿既有任务继续，已完成工作和授权范围由原任务 owner 恢复。
+异步工具、途中用户补充、子代理调度、模型与推理参数由宿主提供。仅在宿主允许且有独立、有益的子任务时委派；不因模型偏好强制创建代理、指定轮数或改业务 API 模型。用户补充要求沿既有任务继续，已完成工作和授权范围由原任务 owner 恢复。
 
 源码、安装快照与活跃会话分别核验；提示词精简只证明输入负担变化，性能提升需要相同任务、模型配置与可比较结果的运行证据。
 
@@ -43,7 +43,7 @@ Senmu BuildOS 使用 Codex 已有的发现、上下文和生命周期能力，�
 
 通用写作风格由 `hooks/kernel.js` 的 `COMMUNICATION_CONTEXT` 主写：先说结果、连贯简洁的段落、读者适配的技术细节、必要才用列表/表格、减少套话和自造术语，代理间消息也保持易读。用户指定的语言、格式和文风优先；这些规则不擅自改写项目品牌、创作文案或结构化输出合同。
 
-SessionStart 与 SubagentStart 使用同一段固定英文规则；无 Hook 的三种引导 Skill 承载等价安装文本，由一致性回归校验，项目 AGENTS 不复制。为使规则真正到达执行上下文，输出上限从 1000/500 调整为 1700/1200 字符；原治理底线不删减，无新增动态项目读取或审批流程。
+SessionStart 与 SubagentStart 使用同一段固定英文规则；无 Hook 的引导 Skill 承载等价文本，由一致性回归校验，项目 AGENTS 不复制。输出预算由 `hooks/config.js` 与各宿主 Hook 定义共同约束。
 
 ## 引入新治理文件前的检查
 
@@ -55,4 +55,4 @@ SessionStart 与 SubagentStart 使用同一段固定英文规则；无 Hook 的�
 
 只有宿主没有提供持久项目事实，且项目确实需要审计、协作或恢复时，才增加项目本地治理产物。
 
-Kernel Core 的当前语义由 hooks/kernel.js 拥有；bootstrap Adapter 的 kernel-contract 区块通过输出一致性测试消费同一合同。开放批次和门禁时机由 Delivery／Engineering 拥有，有效成果与过时记账的处理由 Project Task State 拥有；迁移不代表这些保护退出。
+Kernel 语义由 `hooks/kernel.js` 拥有；引导 Adapter 的 `kernel-contract` 区块通过一致性测试消费同一合同。开放批次与门禁时机归 Delivery／Engineering，任务记账归 Project。

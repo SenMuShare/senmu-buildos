@@ -22,6 +22,13 @@ GATE_STATES = {"pending", "passed", "blocked", "not_applicable"}
 ITEM_STATES = {"pending", "include", "exclude", "blocked"}
 CLEANUP_STATES = {"pending", "removed", "retained", "blocked"}
 RELEASE_STATES = {"planning", "candidate", "authorized", "released", "closed", "failed", "cancelled"}
+RESOURCE_CLOSEOUT_STATES = {"pending", "partial", "complete", "not_applicable"}
+RESOURCE_GROUP_STATES = {
+    "pending", "planned", "disabled", "completed", "no_candidates", "retained",
+    "not_applicable", "blocked", "failed", "unknown",
+}
+RESOURCE_FINISHED_STATES = {"completed", "no_candidates", "retained", "not_applicable"}
+RETENTION_BASES = {"current", "rollback", "pin", "recovery", "evidence", "approved_policy"}
 
 
 def nonempty(value: Any) -> bool:
@@ -32,7 +39,89 @@ def refs(value: Any) -> bool:
     return isinstance(value, list) and all(nonempty(item) for item in value)
 
 
-def validate_record(data: Any) -> list[str]:
+def validate_resource_closeout(block: Any) -> list[str]:
+    """Check declared scope and dispositions only; never read references or clean resources."""
+    prefix = "resource_closeout"
+    if not isinstance(block, dict):
+        return [f"{prefix} must be an object"]
+    errors: list[str] = []
+    if not nonempty(block.get("scope_ref")):
+        errors.append(f"{prefix}.scope_ref must be a non-empty string")
+    aggregate_status = block.get("status")
+    if not isinstance(aggregate_status, str) or aggregate_status not in RESOURCE_CLOSEOUT_STATES:
+        errors.append(f"{prefix}.status must be one of {sorted(RESOURCE_CLOSEOUT_STATES)}")
+
+    required = block.get("required_groups")
+    required_ids: set[str] = set()
+    if not isinstance(required, list) or not required:
+        errors.append(f"{prefix}.required_groups must be a non-empty list of unique non-empty strings")
+    else:
+        for index, group_id in enumerate(required):
+            if not nonempty(group_id):
+                errors.append(f"{prefix}.required_groups[{index}] must be a non-empty string")
+            elif group_id in required_ids:
+                errors.append(f"{prefix}.required_groups[{index}] duplicates {group_id}")
+            else:
+                required_ids.add(group_id)
+
+    groups = block.get("groups")
+    if not isinstance(groups, list) or not groups:
+        errors.append(f"{prefix}.groups must be a non-empty list")
+        groups = []
+    group_ids: set[str] = set()
+    for index, group in enumerate(groups):
+        row = f"{prefix}.groups[{index}]"
+        if not isinstance(group, dict):
+            errors.append(f"{row} must be an object")
+            continue
+        group_id = group.get("id")
+        if not nonempty(group_id):
+            errors.append(f"{row}.id must be a non-empty string")
+        elif group_id in group_ids:
+            errors.append(f"{row}.id duplicates {group_id}")
+        else:
+            group_ids.add(group_id)
+        for key in ("scope", "surface", "owner"):
+            if not nonempty(group.get(key)):
+                errors.append(f"{row}.{key} must be a non-empty string")
+        status = group.get("status")
+        status_valid = isinstance(status, str) and status in RESOURCE_GROUP_STATES
+        if not status_valid:
+            errors.append(f"{row}.status must be one of {sorted(RESOURCE_GROUP_STATES)}")
+        if not refs(group.get("evidence_refs")):
+            errors.append(f"{row}.evidence_refs must be a list of non-empty strings")
+        if status != "not_applicable" and not nonempty(group.get("retention_ref")):
+            errors.append(f"{row}.retention_ref must identify the retention policy")
+        if status_valid and status in RESOURCE_FINISHED_STATES:
+            if not group.get("evidence_refs"):
+                errors.append(f"{row}.evidence_refs is required when status is {status}")
+        if status_valid and status not in {"completed", "no_candidates"}:
+            if not nonempty(group.get("reason")):
+                errors.append(f"{row}.reason is required when status is {status}")
+        if status_valid and (status not in RESOURCE_FINISHED_STATES or status == "retained"):
+            if not nonempty(group.get("next_action")):
+                errors.append(f"{row}.next_action is required when status is {status}")
+        if status == "retained" or "retention_basis" in group:
+            basis = group.get("retention_basis")
+            if not isinstance(basis, str) or basis not in RETENTION_BASES:
+                errors.append(f"{row}.retention_basis must be one of {sorted(RETENTION_BASES)}")
+        if status == "retained":
+            if not nonempty(group.get("exit_condition")):
+                errors.append(f"{row}.exit_condition is required for retained resources")
+        if aggregate_status == "complete" and (not status_valid or status not in RESOURCE_FINISHED_STATES):
+            errors.append(f"{prefix} cannot be complete while {row} is unfinished")
+        if aggregate_status == "not_applicable" and status != "not_applicable":
+            errors.append(f"{prefix} not_applicable requires every group to be not_applicable")
+
+    if aggregate_status in ("complete", "not_applicable") and required_ids != group_ids:
+        errors.append(
+            f"{prefix} {aggregate_status} requires exact required_groups coverage; "
+            f"missing: {sorted(required_ids - group_ids)}, extra: {sorted(group_ids - required_ids)}"
+        )
+    return errors
+
+
+def validate_record(data: Any, *, require_resource_closeout: bool = False) -> list[str]:
     errors: list[str] = []
     if not isinstance(data, dict):
         return ["root must be an object"]
@@ -191,6 +280,14 @@ def validate_record(data: Any) -> list[str]:
         gate_states.get(gate_id) not in {"passed", "not_applicable"} for gate_id in GATE_ORDER
     ):
         errors.append("release.status closed requires every gate to be passed or not_applicable")
+    if "resource_closeout" in data:
+        errors.extend(validate_resource_closeout(data["resource_closeout"]))
+    elif require_resource_closeout:
+        errors.append("resource_closeout is required by this release entry point")
+    if release.get("status") == "closed" and ("resource_closeout" in data or require_resource_closeout):
+        block = data.get("resource_closeout")
+        if not isinstance(block, dict) or block.get("status") not in ("complete", "not_applicable"):
+            errors.append("release.status closed requires resource_closeout complete or not_applicable")
     recovery = data.get("recovery")
     if release.get("status") != "closed" and not (
         isinstance(recovery, dict)
@@ -280,6 +377,8 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("record", type=Path)
     parser.add_argument("--repo", type=Path, help="Opt-in readback of included units in this repository; never deletes resources.")
+    parser.add_argument("--require-resource-closeout", action="store_true",
+                        help="Require declared resource scope and dispositions; no cleanup is performed or verified.")
     parser.add_argument("--json", action="store_true", help="Report structural and observed facts separately.")
     args = parser.parse_args()
     try:
@@ -288,7 +387,7 @@ def main() -> int:
         data = None
         errors = [str(exc)]
     else:
-        errors = validate_record(data)
+        errors = validate_record(data, require_resource_closeout=args.require_resource_closeout)
     structure_valid = not errors
     observations = []
     live_checked = args.repo is not None and structure_valid
@@ -300,7 +399,7 @@ def main() -> int:
                           "structure_valid": structure_valid, "git_state_checked": live_checked,
                           "units": observations, "errors": errors,
                           "scope": "included_registered_units_only",
-                          "limits": "Snapshot and stored proof identity only; no fresh content replay, approval, acceptance, writer-exit or deletion proof beyond observed presence."},
+                          "limits": "Snapshot and stored proof identity only; no fresh content replay, approval, acceptance, writer-exit or deletion proof beyond observed presence. Resource closeout declarations are structure-only; references are not read and actual cleanup is not verified."},
                          ensure_ascii=False, indent=2))
         return 1 if errors else 0
     if errors:

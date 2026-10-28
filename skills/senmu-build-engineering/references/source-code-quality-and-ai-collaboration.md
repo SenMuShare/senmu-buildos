@@ -1,27 +1,28 @@
 # Source-Code Quality and AI Collaboration
 
-Approved contracts define the target; code, configuration and checks show observed behavior. Resolve conflicts at their owner, not by changing requirements to fit code. Read stack guidance for a rule gap or standards review.
+Approved contracts define the target; code and checks show observed behavior. Resolve conflicts at their owner, not by rewriting requirements to fit code. Read stack guidance for rule gaps or standards review.
 
-**Read by task:** [Understand the system](#understand-the-affected-system) · [Investigate](#read-only-investigation) · [Fix a defect](#fault-debugging) · [Change a design](#design-change) · [Refactor](#behavior-preserving-refactoring) · [Review and hand off](#implementer-and-reviewer-responsibilities).
+**By task:** [Comments](#4-comments-tools-and-tests) · [Understand](#understand-the-affected-system) · [Investigate](#read-only-investigation) · [Debug](#fault-debugging) · [Design](#design-change) · [Refactor](#behavior-preserving-refactoring) · [Review](#implementer-and-reviewer-responsibilities).
 
 ## 1. Quality Model and Authority
 
-Quality is not format compliance. It includes correctness, security, local comprehensibility, locality of change, one source of truth, explicit side effects, testability, and deletability.
+Quality includes correctness, security, clarity, local change, one source of truth, explicit effects, testability and deletability—not just format.
 
 Precedence: safety and non-reducible Hard Gates > current project rules/machine configuration > applicable language/framework rules > this standard > community defaults.
 
-AGENTS carries adopted principles, project differences, commands and routes. `CODE_QUALITY` owns quality decisions and exceptions; architecture, debt and testing keep their owners. Shared principles impose no vendor, framework or line count. Keep full methods with their owner. Resolve stale guidance from current owners and authorized decisions; ask only about consequential unknowns or authority. Preserve privacy, safety, permissions, payments, production-data and release boundaries.
+AGENTS keeps principles, project differences, commands and routes. `CODE_QUALITY` owns quality decisions and exceptions; methods, architecture, debt and testing retain their owners. Resolve stale guidance from those owners and authorized decisions. Ask only about consequential unknowns or authority. Impose no vendor, framework or line count. Preserve privacy, safety, permissions, payments, production data and release boundaries.
 
 ## 2. Cross-Language Principles
 
-- Each business fact, state, side effect, and invariant has one owner. Cache, derived UI, and compatibility layers never become silent second sources.
-- Model mutually exclusive phases with their required data so invalid combinations are rejected at the relevant boundary. Genuinely independent booleans remain valid. Use the project language and model, not a compulsory state-machine library, engine or document per state.
-- Keep knowledge in its owning module. Unrelated modules changing for one small request signal boundary erosion.
-- Name modules and functions by responsibility, not length. Distinguish reading, computing, submitting and applying results. Keep related rules together; avoid one-function-per-step layers and whole-codebase style renames.
-- Expose inputs, outputs, errors and effects. Do not hide network, database, cancellation or irreversible work behind a pure-looking query. Preserve the difference between asynchronous submission and confirmed completion using project conventions.
-- Abstract for known variation, isolation, or testing value; similarity and hypothetical futures do not require a layer.
-- Compare standard library, existing dependencies, and platform capability before adding a dependency, including maintenance, security, deployment, and exit cost.
-- Temporary compatibility surfaces record consumers, exit conditions, and verification; they are not templates for new work.
+- Each business fact, state, effect and invariant has one owner. Caches, derived UI and compatibility layers must not become competing sources.
+- Model exclusive phases with their required data; reject invalid combinations at the responsible boundary. Independent booleans remain valid. Use project conventions, not a compulsory state-machine library, engine or document per state.
+- Keep related knowledge with its owner. A small request changing unrelated modules signals boundary erosion. Name functions and modules by responsibility; avoid one-function-per-step layers or whole-codebase style renames.
+- Make inputs, outputs, errors and effects explicit. Distinguish reading, computing, submitting and applying results. Network, database, cancellation and irreversible work must not look pure; asynchronous submission must not imply completion.
+- Abstract for real variation, isolation, testing or a clear concept/complex boundary; otherwise keep simple one-use logic inline. Similarity alone does not justify a layer.
+- Omit speculative guards, retries and compatibility paths without a reachable failure and proportionate benefit. Use existing authority for consequential scope or cost changes; retain required protections.
+- Validate untrusted input at its boundary; reuse still-valid guarantees internally. New trust boundaries, changed state and distinct business invariants need checks. Type annotations and casts alone are not runtime validation.
+- Before adding a dependency, compare standard, installed and platform capabilities, including maintenance, security, deployment and exit cost.
+- Record temporary compatibility consumers, exit conditions and checks; do not copy it into new work.
 - A replacement closes old state, entrypoints, call chains, tests, and docs as one unit, proving the new entrypoint is unique and the old one unreachable or explicitly approved as compatibility.
 - When Product permanently retires a capability, remove frontend entrypoints, routes/APIs, jobs/events, service branches, flags/configuration, permission exposure, read/write paths, invalid tests, and current docs. Prove UI, direct calls, automation, and restart defaults cannot restore it. CSS hiding, disconnected controls, disabled-by-default flags, fixed failures, and live backend code retained “for later” are not removal. Retain only approved compatibility, rollback, data-retention, or legal boundaries with owner, consumer, non-default entry, exit condition, and verification. Destruction of historical data requires separate authority.
 
@@ -41,15 +42,30 @@ AGENTS carries adopted principles, project differences, commands and routes. `CO
 
 ## 4. Comments, Tools, and Tests
 
-Identifiers follow ecosystem conventions. Unless project rules differ, use Simplified Chinese business comments to explain non-obvious intent, constraints and prohibited changes, not narrate code. Explain relevant compatibility, transactions, idempotency, concurrency, security and performance. Remove stale/dead comments and sensitive data. Before deleting a business warning, trace its reason and current applicability. Preserve useful intent nearby or link the decision; uncertainty requires investigation, not deletion.
+### Writing comments
 
-Formal code projects declare format/autofix, fast quality, full quality, test, and real/integration entrypoints, with scope, cost, and external-system effects. Local and CI reuse configuration. Suppressions record scope, reason, and exit condition.
+- Follow project language and ecosystem conventions. Without a project override, business comments default to Simplified Chinese. Never include secrets. No per-function quota or deletion target.
+- Make names and structure clear before adding narration. Keep non-obvious reasons and internal business constraints, not just external limitations. Explain complex algorithms or regex mechanics when useful; “why, not what” is not a ban on explanation.
+- Public API documentation states purpose, usage, inputs, results, failures and effects. Preserve legal notices and necessary nearby rationale; link substantial decisions to their existing owner. Add missing guidance for correct use or safe changes, not invented history.
+- Explain a temporary workaround’s reason, scope and exit condition or link its issue. Do not normalize a defect with a confident explanation or require a new debt record for every note.
+- Inspect consumers of suppressions, build/generator directives, docstrings and executable examples before changing them. A negative type test can legitimately use `@ts-expect-error`; its presence alone is not a defect. Keep suppressions scoped and justified; temporary ones need an exit condition.
+
+### Governing existing comments
+
+1. Review changed code and affected nearby comments during ordinary work; honor the declared scope of a dedicated audit. Read-only review does not edit. Cleanup does not authorize behavior redesign or unrelated sweeps. Govern vendor/generated content at its authorized source.
+2. Check consequential claims against code, contracts, tests and design history. Long explanations and warning words are leads, not defects. Judge text and implementation separately. Investigate concrete gaps; trivial narration needs no history search.
+3. Delete redundant/stale text, correct inaccuracies, add missing information and keep useful explanation. Repair exposed implementation defects within authority and verify them before closure. Deleting an explanation is not fixing its defect. Keep justified interim constraints pending repair.
+4. If reasons remain unknown, keep the necessary warning as unverified information, not fact or a permanent veto. Record missing evidence and the next check in the existing task. Pause only the dependent consequential change; continue independent work.
+5. Prefer correct structure or existing enforcement over repeated warnings. Add protection only for a real gap; verify replacement protection before removing a safety warning. Tests do not erase useful rationale or require a new check per comment.
+6. Verify affected behavior, tool directives and documented/generated contracts; reuse valid evidence. Separate unresolved implementation risks from text cleanup, not by deletion counts. For recurring policy failures, use existing Learning and project-standard maintenance to distinguish wrong rules, missing routes and bad defaults. Repair the original owner without a new comment register.
+
+Formal code projects declare format/autofix, fast quality, full quality, test, and real/integration entrypoints, with scope, cost, and external-system effects. Local and CI reuse configuration.
 
 Tests observe business contracts, not private implementation. Reuse regressions; add coverage for meaningful success, boundary or failure gaps. External-call tests follow relevant deadline, retry, idempotency, late-result and unknown-outcome risks in section 3. Coverage percentages do not replace evidence for money, permissions, data and core flows.
 
 ## 5. AI Implementation, Debugging, and Review Loop
 
-Choose the requested result. These methods do not themselves require extra Skills, agents, approvals or registers. Use project rules and sufficient understanding for clear low-risk work. Select Architecture or Testing from the Engineering entry as needed; do not preload their manuals through a language profile.
+Use project rules and sufficient evidence for clear low-risk work. For material uncertainty, tradeoffs or rework, distinguish approved outcomes, constraints, assumptions and replaceable means. Compare meaningful options by fit, consequences, reversibility and lifecycle cost; obtain evidence when its decision value warrants cost or delay. Take a useful step, assess and adapt. This requires no fixed stages, reports, extra Skills, agents, approvals or registers. Select Architecture or Testing from Engineering as needed, not via language-profile preloads.
 
 | Task | Completion evidence |
 | --- | --- |
@@ -63,14 +79,14 @@ Choose the requested result. These methods do not themselves require extra Skill
 Use for unfamiliar systems, cross-module or critical data/state changes, and code/contract conflicts. Reuse sufficient current understanding.
 
 1. Start at the known entrypoint, symbol, error or failing test, else local navigation. Read requirements, constraints and checks. Known locations skip navigation, not constraints; fill missing stack/risk rules from specialist guidance.
-2. Trace inputs, outputs, control flow, decorators, state, errors, effects, owners and invariants. Before changing public contracts, shared state, defaults or cross-module calls, identify direct/indirect consumers, configuration and runtime dispatch. State affected paths, why others stay safe with evidence, and checks or gaps. Expand only as justified; use worktree-matched indexes. An empty search does not rule out dynamic consumers. Reuse sufficient evidence; extra checks follow impact or uncertainty.
-3. Recover Decision Rationale, Rejected Alternatives, Preserved Constraints and Revisit Trigger from requirements/design/specifications. Resolve gaps using path/symbol history, introducing diffs and linked PRs, Issues or decisions; other authorized sources need relevant leads. Blame locates changes, not intent. Separate verified (direct evidence/ref), inferred (facts and alternatives) and unknown (missing, inaccessible or conflicting evidence). Commit messages alone do not prove intent; shallow history cannot prove no rationale existed.
+2. Trace inputs, outputs, control flow, decorators, state, errors, effects, owners and invariants. Before changing public contracts, shared state, defaults or cross-module calls, identify direct/indirect consumers, configuration and runtime dispatch. State affected paths, safety evidence, checks and gaps. Expand for impact or uncertainty; reuse sufficient evidence and worktree-matched indexes. Empty searches do not rule out dynamic consumers.
+3. Recover Decision Rationale, Rejected Alternatives, Preserved Constraints and Revisit Trigger from requirements/design/specifications. Fill gaps from relevant path/symbol history, introducing diffs, PRs, Issues or decisions; other authorized sources need leads. Blame locates changes, not intent. Distinguish verified (direct evidence), inferred (facts/alternatives) and unknown (missing, inaccessible or conflicting). Commit messages alone cannot prove intent; shallow history cannot prove no rationale existed.
 4. Recheck historical conditions. State what to preserve, change within authority, avoid restoring and leave unproven. History cannot freeze decisions or excuse safety defects. Approved contracts define the target; resolve code conflicts at their owner.
 5. Stop with sufficient evidence for the next step. Explain entry, flow, owners, effects, constraints and checks with sources. Keep useful findings in existing task/design records, not new documents. Missing reasons stay unknown.
 
 ### Read-Only Investigation
 
-Scope the question, trace the system, then explain its mechanism and tradeoffs with sources. A file list is not an explanation. Preserve uncertainty about history.
+Scope the question, trace the system and explain mechanisms/tradeoffs with sources, preserving historical uncertainty. A file list is not an explanation.
 
 Investigation does not authorize edits, runtime injection, external writes or paid probes. Report unavailable evidence and the smallest useful next check. A recommendation stays a recommendation unless the same request already authorizes implementation.
 
@@ -80,14 +96,14 @@ Use the original symptom as the completion test.
 
 1. Establish intended behavior and the symptom; distinguish `confirmed`, `likely_unreproduced`, `expected_behavior`, `duplicate` and `out_of_scope`. Preserve dirty work.
 2. Use a repeatable regression, replay, CLI/browser script, differential run or controlled observation of the exact symptom on the original or production-shaped path. Run cheap failing tests before repair. If environment, state or authority prevents reproduction, state the evidence and missing observation; continue independently testable work without claiming reproduction.
-3. Reduce inputs, configuration and steps one at a time while retaining the failure and potentially causal production conditions. Compare healthy and failing paths with current system knowledge and relevant history. Name discriminating predictions for competing causes and run the cheapest useful probe. Change one variable at a time; discard refuted hypotheses and temporary edits. If probes add no evidence, reassess the premise rather than adding guards.
+3. Reduce inputs, configuration and steps one at a time, retaining failure and potentially causal production conditions. Compare healthy/failing paths using current knowledge and relevant history. Predict what distinguishes competing causes; run the cheapest useful probe, changing one variable at a time. Discard refuted hypotheses and temporary edits. Without new evidence, reassess the premise rather than add guards.
 4. Repair the cause at its owner within scope; inspect analogous paths when evidence shows a shared pattern. Bounded repair or containment can be appropriate: disclose remaining causes and revisit conditions. Root repair grants no redesign authority.
 5. Verify the original scenario as well as any minimized repro, then affected regressions under Testing. Preserve dependency shape, error and cancellation semantics. Generic green tests cannot replace original-path evidence; production-only state does not authorize production changes.
 6. Remove task-owned debug logs, flags and unsupported workarounds. Report symptom, cause evidence, fix, before/after checks and gaps; unproven causes remain unverified. Continue with scoped review.
 
 ### Design Change
 
-Confirm whether the request ends at a design or includes implementation. Establish the approved outcome and affected-system model, then use Architecture to design caller usage, data, interfaces, state and ownership. Compare alternatives only for a real choice. A design-only request ends with the proposal, reasons and unverified questions; it does not authorize code changes or runtime claims. With implementation authority, investigate repeated deviations instead of patching a wrong design, then verify the behavior and affected consumers and review.
+Confirm design-only or implementation scope. Establish the approved outcome and affected-system model; use Architecture for caller usage, data, interfaces, state and ownership. Compare alternatives for real choices. Design-only ends with proposal, reasons and unverified questions, not code changes or runtime claims. With implementation authority, investigate repeated deviations rather than patch a wrong design; verify behavior and affected consumers, then review.
 
 ### Behavior-Preserving Refactoring
 
@@ -97,27 +113,17 @@ State the target ownership and shape. Use Architecture for boundary decisions, n
 
 ### Scoped Review and Closeout
 
-State the behavior change, scope, risk, checks and owners to synchronize. Complete the smallest end-to-end slice. During an open batch, run focused checks for credibility and early risk detection. Testing owns expansion, stopping and evidence reuse; do not run full gates after each item.
+State the behavior change, scope, risk, checks and owners to synchronize. Complete the smallest end-to-end slice; use focused open-batch checks for credibility and early risk detection. Testing owns expansion, stopping and evidence reuse; do not run full gates after each item.
 
 Product owns behavior and acceptance, design records own technical decisions, and tasks own progress. Each formal version retains a technical account under [Product Iteration](../../senmu-build-product/references/product-requirements-and-iteration.md), not another document per edit. Maintain changed responsibility, entrypoint, contract or verification routes under Project's [Index Contract](../../senmu-build-project/references/project-standard-discovery-and-on-demand-loading.md#4-index-contract). Trace affected routes in the receiving worktree to their real destinations; unchanged routes need no update.
 
-Review the whole scoped diff, changed functions and existing comments against approved intent. Check types, valid states, transactions/effects, failure/recovery, reuse and necessary seams. Preserve outputs, errors, state and order. Paths and test totals are not semantic proof. A synchronization outside write authority remains an explicit open action.
+Review the whole scoped diff, changed functions and comments against approved intent: types, valid states, transactions/effects, failure/recovery, reuse and necessary seams. Preserve outputs, errors, state and order. Paths/test totals are not semantic proof; synchronization outside write authority remains open.
 
 Checkpoint commits and review heads may remain `in_progress`. Delivery seals only authorized, checked and reviewed batch closeout. Incomplete scope, failures or mixed work cannot close. Distinguish implementation, verification, acceptance and release. Record important decisions and remaining work, not every tool call.
 
 ### Implementer and Reviewer Responsibilities
 
-Low-risk work may use evidence-based self-review. Delegate for useful independent exploration, disjoint edits or required review separation. Prefer existing deterministic tools when sufficient. Do not fix model, agent or round counts. Missing host capability permits authorized sequential work, not claims of independent review.
-
-Isolate writers and serialize genuine shared mutation. Account for every slice as a result, blocker, failure or cancellation. Inspect artifacts, not just summaries. When rules, risk or the owner requires separate review:
-
-1. **Implementer Brief:** give the goal, baseline, Task/requirement, `Global Constraints`, `Interfaces`, writable/forbidden paths, inputs, outputs, acceptance, checks, permissions and stop conditions. Do not copy full chats or unrelated standards.
-2. **Implementer Report:** identify behavior, changed files/interfaces, exact head, actual checks, deviations and gaps. A claim of completion is not evidence.
-3. **Task Review:** challenge assumptions, direction, missing boundaries and simpler alternatives. Trace shared causes. Judge `Requirement/Spec` against approved behavior, scope, non-goals and acceptance. Judge `Engineering/Standards` against correctness, safety, data, compatibility, retirement, tests and maintenance. Include applicable functional and nonfunctional requirements, cohesion, coupling, reuse and framework/design rules. Neither axis substitutes for the other. A Finding names axis, location, trigger, impact, severity and recheck condition. Challenger is a method, not an extra job; same-executor review stays self-review. Assurance owns independent conclusions.
-4. **Scoped Re-review:** batch ordinary findings within the agreed scope; interrupt for urgent safety issues. Route repairs by Delivery's [Review Repair Routing](../../senmu-build-delivery/references/multi-agent-change-units-and-version-line-closeout.md#7-review-repair-routing). Recheck findings, delta and affected behavior, not unchanged scope; track unrelated issues separately. Open blockers prevent approval.
-5. **Final Review:** summarize both axes over `base..head`, closed findings, checks and blind spots. A new commit renews the candidate conclusion over changed and affected scope; unchanged evidence remains reusable. Delivery may reuse a verdict for the unchanged frozen candidate. Model agreement is not proof or independence.
-
-An internal cache, performance, transaction, queue, consistency or version design that changes user actions, visible state, persistence, recovery or acceptance returns to Product. Compare options preserving approved behavior; never implement first and rewrite the PRD to authorize it.
+For self-checks, useful delegation or required separation, select Review from Engineering, retaining evidence and repair boundaries. Implementation-only tasks do not preload it.
 
 ## 6. Risk Proportion and Legacy Projects
 
@@ -127,4 +133,4 @@ G2-G4 progressively need stronger evidence for types, behavior, builds, architec
 
 Derive legacy-project rules from configuration, representative code and frequent changes. Preserve the stack; use official ecosystem guidance when no language Profile exists. Put stable executable differences in original owners.
 
-Record an exception's reason, scope, impact, owner and exit condition. Keep each complete rule with one owner; entrypoints and task briefs carry only useful scoped summaries and a working route. Source review and executed evidence remain distinct.
+Exceptions retain reason, scope, impact, owner and exit conditions. Keep full rules at one owner; entries and task briefs summarize and link. Distinguish source review from executed evidence.

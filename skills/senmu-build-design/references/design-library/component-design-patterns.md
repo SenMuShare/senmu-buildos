@@ -10,6 +10,6 @@ Choose patterns for the actual task—not popularity. First determine whether us
 | Comparison matrix | compare alternatives, versions, or metrics on shared dimensions | fixed row/column semantics, visible differences and bases, narrow-screen alternative | many cards that require users to remember values across views |
 | Step flow | work with real order, checkpoints, or irreversible submission | explicit progress, saved state, back effects, failure recovery | splitting a short direct form into artificial steps |
 | Metric + context | monitor results, trends, anomalies | value includes time, basis, change, next action; anomaly supports drill-down | isolated large numbers or color-only meaning |
-| Preview + commit | generate, publish, import, or batch edit | input, preview, diff, confirmation, execution, recovery form one chain | preview and execution using different data/defaults |
+| Preview + commit | generate, publish, import, or batch edit | align input, preview/diff, execution commitment and recovery; confirm according to consequences, without a mandatory second dialog | preview and execution using different data/defaults |
 
 Design only states the task actually has. Common states are prompts, not a reason to invent hover, selection, or batch behavior. Critical states must be observable in implementation and real verification.

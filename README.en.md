@@ -164,6 +164,8 @@ Connect understanding, design, implementation, verification and delivery at the 
 
 **Is this just another AGENTS.md?** No. AGENTS.md keeps frequently used project principles and navigation; skills provide task-specific methods; scripts and existing tools perform deterministic checks. They complement one another rather than copy the full manual.
 
+The project entrypoint can route release/recovery to Delivery and its existing procedure/command; files alone do not prove adoption. Put stable actions in the existing script or CI, leaving applicability, necessary maintenance and outcome checks to the agent. Reuse the runner across versions and update it when the process changes; ordinary edits do not load the whole rulebook.
+
 **How many tokens or bugs will it save?** There is no fixed percentage promise. The goal is less duplicate implementation, unrelated reading and rework, with correctness, security and maintainability first. Source tests, host activation and model performance require different evidence; see the [evaluation notes](tests/behavior/host-evaluation.md).
 
 **What do the hooks do?** Supported full-plugin entrypoints supply a short governance prompt at lifecycle events. Skills-only adapters do not offer the same automatic injection. Feedback goes to a local review inbox, without automatic upload or project-rule rewriting. Review hooks on first enablement and when they change; see the [lifecycle notes](docs/architecture/hook-lifecycle.md) and [security notes](SECURITY.md).
@@ -172,11 +174,11 @@ Connect understanding, design, implementation, verification and delivery at the 
 <a id="installation-updates-and-removal"></a>
 ## Version, updates and removal
 
-The current source version is Senmu BuildOS `v2.25.4`. Source, private release, public marketplace availability and local installation are separate states. The badge above links to the public channel, not your installed version.
+The current source version is Senmu BuildOS `v2.29.0`. Source, private release, public marketplace availability and local installation are separate states. The badge above links to the public channel, not your installed version.
 
-<!-- product-surface-review: 2.25.4 -->
+<!-- product-surface-review: 2.29.0 -->
 
-This release repairs retry receipts, parent-only cancellation and cross-enabled configurations in the scoped cleanup caller, and restores material-role routing. It freezes validated partitions, preserves each attempt and waits for the active helper after cancellation. Existing safety checks and context budgets remain unchanged; isolated tests do not prove project adoption or user disk recovery. See [release notes](RELEASE_NOTES.md).
+This version clarifies software implementation principles in project AGENTS: avoid defenses, retries and compatibility machinery for unsupported hypothetical cases, reuse internal validation guarantees that still hold, and retain checks for new trust boundaries, changed state, authorization and data protection. Simple one-use logic need not become extra helpers, and failures must not look like success. New projects use the updated starter; authorized governance merges equivalent rules in existing projects. Upgrading does not rewrite projects automatically or establish model-performance or token-savings claims. See [release notes](RELEASE_NOTES.md).
 
 <details>
 <summary>Update an existing installation</summary>

@@ -1,14 +1,14 @@
 # Multi-Agent Change Units and Version-Line Integration
 
-Use for continuous AI work across version lines without a permanent lead. Responsibility follows actions and durable evidence, not session identity: implementers write Change Units; integration/release recipients close integration; merge-gate executors review. Successors recover the same facts from project task authority and Git.
+Use across version lines. Implementers write units; recipients close integration/release; merge-gate executors review. Successors recover authority and evidence from task owners and Git, independent of sessions or a permanent lead.
 
 ## 1. Change Unit Contract
 
-Acceptance, release/rollback boundary, and write ownership define a Change Unit—not message count. An independently deliverable bug, feature slice, or migration step may be one unit. One writer may keep a shared-acceptance/release/rollback batch `in_progress`. One release may include several parallel units.
+Acceptance, release/rollback boundaries and write ownership define units, not message count. A deliverable bug, feature slice or migration may be one unit; a shared acceptance/release/rollback batch may remain `in_progress` with one writer. A release may include parallel units.
 
-At closeout, record target release unit/line, task/requirement ID, baseline commit; branch/worktree, sealed commit, actual scope/paths; matching tests/results, omissions, dependencies, conflicts, residual risk; and `in_progress | sealed | integrated | excluded | superseded`.
+At closeout retain task/requirement, target release unit/line, baseline, branch/worktree, sealed commit if applicable, actual scope/paths, tests/results/gaps, dependencies/conflicts, residual risk and `in_progress | sealed | integrated | excluded | superseded | no_changes`.
 
-An in-progress handoff needs stable Change Unit ID, next action, and current authority. The successor uses `manage_change_unit.py resume`; it does not reconstruct a branch from prose.
+Open-unit handoff retains ID, next action and authority. Use `manage_change_unit.py resume`, not a branch reconstructed from prose.
 
 `sealed` requires completed scope, verification to the stated limit, local commit, and no unit-owned uncommitted source. Dirty work is `in_progress`; releasers never guess it complete, commit unknown files, or include them. Write to an existing Durable Task State Owner rather than adding a ledger. Without a task system, short branch, commit, and concise handoff are the minimum fact chain.
 
@@ -96,6 +96,7 @@ Prefer the original implementer for a Finding in an open unit. Do not interrupt 
 | Original writer exited, unit open | Establish exit/handoff and no concurrent writers, then existing `resume`/`verify` |
 | Sealed, not integrated | New linked repair unit; use existing explicit stacked dependency on corrected head when target lacks parent changes, with integration order |
 | Integrated | New repair from the current receiving target line; reference original Finding, never revive stale branch history |
+| no_changes | Closed source stays closed; further authorized work uses a new unit |
 
 `resume`/`verify` does not prove writer exit. Require host-confirmed termination/exit or explicit release of write ownership with related background writes stopped. Silence, timeout, clean Git and changed registration are insufficient. If unproven, preserve the surface and continue independent authorized work. No global Agent scheduler is introduced.
 

@@ -29,6 +29,18 @@ class InstructionAdoptionTests(unittest.TestCase):
             self.assertEqual(policy['initialization_status'], 'draft')
             self.assertEqual(out['adoption_status'], 'unverified')
 
+    def test_quality_template_reaches_project_and_preserves_its_local_policy(self):
+        template = ROOT/'skills/senmu-build-engineering/assets/code-quality/CODE_QUALITY.template.md'
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)/'project'
+            self.run_init(root)
+            owner = root/'engineering/CODE_QUALITY.md'
+            self.assertEqual(template.read_bytes(), owner.read_bytes())
+            adopted = owner.read_bytes() + b"\nLocal exception: keep public SDK examples in English.\n"
+            owner.write_bytes(adopted)
+            self.run_init(root)
+            self.assertEqual(adopted, owner.read_bytes())
+
     def test_noncode_core_has_no_software_or_security_adoption_and_no_extra_ledger(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)/'project'

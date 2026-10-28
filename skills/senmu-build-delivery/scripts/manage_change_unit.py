@@ -30,9 +30,9 @@ COMMIT_PATTERN = re.compile(r"[0-9a-f]{40}|[0-9a-f]{64}")
 REPAIR_ROUTES = {
     "in_progress": "existing_unit", "sealed": "linked_repair",
     "integrated": "current_target", "excluded": "new_authorized_scope",
-    "superseded": "current_task_owner",
+    "superseded": "current_task_owner", "no_changes": "current_task_owner",
 }
-RETIRED_STATES = {"integrated", "excluded", "superseded"}
+RETIRED_STATES = {"integrated", "excluded", "superseded", "no_changes"}
 
 
 
@@ -527,10 +527,20 @@ def close(args: argparse.Namespace) -> dict[str, Any]:
         raise SystemExit("[BLOCKED] --owner-ref must identify the project task owner decision")
     repo = git_root(args.repo)
     path, record, observed = observe_unit(repo, args.unit)
-    require_identity(observed, absent_surface_issues(repo, observed))
-    if record.get("state") != "sealed":
-        raise SystemExit("[BLOCKED] only a sealed Change Unit can receive a final disposition")
     disposition = args.disposition
+    # An unchanged open unit has no sealed candidate or integration to prove.
+    # Unlike reception of frozen objects, it requires a live, inspectable source.
+    allowed = set() if disposition == "no_changes" else absent_surface_issues(repo, observed)
+    require_identity(observed, allowed)
+    if disposition == "no_changes":
+        if record.get("state") != "in_progress":
+            raise SystemExit("[BLOCKED] no_changes requires an in_progress Change Unit")
+        if observed["dirty"] is not False:
+            raise SystemExit("[BLOCKED] no_changes requires a clean registered worktree")
+        if observed["head"] != resolve_commit(repo, record["baseline"]):
+            raise SystemExit("[BLOCKED] no_changes requires HEAD to equal the recorded baseline")
+    elif record.get("state") != "sealed":
+        raise SystemExit("[BLOCKED] only a sealed Change Unit can receive a final disposition")
     proof = None
     if disposition == "integrated":
         if not args.integration_commit:
@@ -552,13 +562,15 @@ def close(args: argparse.Namespace) -> dict[str, Any]:
         "integration_commit": integration_commit,
         "closed_at": now(),
     }
+    if disposition == "no_changes":
+        closed["head"] = observed["head"]
     if proof is not None:
         closed["integration_proof"] = proof
         closed["integration_target"] = proof["receiving_target"]
         if receiving_target is not None:
             closed["target_authorization_ref"] = args.target_authorization_ref.strip()
     final_path, final_record, current = observe_unit(repo, args.unit)
-    require_identity(current, absent_surface_issues(repo, current))
+    require_identity(current, set() if disposition == "no_changes" else absent_surface_issues(repo, current))
     if final_path != path or final_record != record or current != observed:
         raise SystemExit("[BLOCKED] Change Unit record or source changed during closeout")
     write_record(repo, str(record["branch"]), closed)
@@ -708,6 +720,8 @@ def registration_issues(path: Path, record: dict[str, Any]) -> list[str]:
         head = record.get("head")
         if not isinstance(head, str) or COMMIT_PATTERN.fullmatch(head) is None:
             issues.append("sealed_head_invalid")
+    if record.get("state") == "no_changes" and record.get("head") != baseline:
+        issues.append("no_changes_baseline_mismatch")
     return issues
 
 
@@ -754,6 +768,8 @@ def observe_unit(repo: Path, unit: str) -> tuple[Path, dict[str, Any], dict[str,
         issues.append("baseline_or_sealed_head_unresolved")
     if state == "sealed" and head is not None and head != record.get("head"):
         issues.append("sealed_head_changed")
+    if state == "no_changes" and head is not None and head != record.get("head"):
+        issues.append("no_changes_head_changed")
     observed = {
         "unit": unit, "state": state, "record": str(path),
         "repository_root": str(repo), "branch": branch, "worktree": str(expected),
@@ -868,7 +884,7 @@ def main() -> int:
     close_parser = subparsers.add_parser("close")
     close_parser.add_argument("--repo", type=Path, required=True)
     close_parser.add_argument("--unit", required=True)
-    close_parser.add_argument("--disposition", choices=("integrated", "excluded", "superseded"), required=True)
+    close_parser.add_argument("--disposition", choices=("integrated", "excluded", "superseded", "no_changes"), required=True)
     close_parser.add_argument("--owner-ref", required=True)
     close_parser.add_argument("--integration-commit")
     close_parser.add_argument("--integration-target", help="Approved final local line; original target and sealed parent stay unchanged.")

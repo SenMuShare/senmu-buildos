@@ -28,12 +28,15 @@
 - Release Record：`<evidence/releases/ 或外部发布系统>`
 - 生产事实验证：`<运行身份、健康和受影响主流程>`
 - 回滚入口：`<待确认>`
-- 数据／配置恢复边界：`<待确认或不适用>`
+- 数据／配置恢复边界：`<恢复目标、所需载荷的现有保全与取回依据；或不适用>`
 - 制品保留策略来源：`<无独立制品／用户／项目既有规则／BuildOS 默认>`；只有确认存在独立制品时才启用，默认当前已验证版本＋一个已验证可回滚版本。
 - 收口资源面：`<源码发布／本机构建端／生产运行端／远程镜像或制品库／不适用项>`；只登记真实存在的资源面。
 - 自动收口：存在受管制品时，复用项目已有原生入口，或校准 `operations/scripts/cleanup-release-assets.sh`；实际发布驱动应在目标验证通过后调用。治理时核对调用链及隔离成功/失败回执，不能把生成文件当作完成接线；没有独立制品时不伪造清理动作。
 - 保留身份更新：每次发布由真实制品事实派生当前版、已验证回滚版和 Pin，不能沿用初始化占位值。每个配置/回执标明实际资源面和 Docker context/engine；本机结果不替代服务器/远端仓库。
-- 收口结果：区分 planned、disabled、no_candidates、completed、blocked、failed；计划数量不计为实际移除数量。缺证据或错误留下原因和继续入口，不将未知当零对象。
+- 收口范围：按创建者覆盖各资源面的构建副本／依赖、版本／传输包、镜像／容器、builder 缓存、日志／备份；记录原 owner、保留政策与最后消费者，包括清理／备份／发布脚本前提。跨端先协调保全与退出，不绕过既有门禁。
+- 收口结果：区分 planned、disabled、no_candidates、completed、blocked、failed；计划数量不计为实际移除数量。对照预定分组汇总，漏项、禁用、未决 held 或 unknown 保持 pending/partial；空目标不是不适用证明。合法保留当前／回滚／Pin 等须有身份、理由与复核／退出条件。
+- 完成判定：沿原 Release Record 汇总；采用 Release Control 的受管资源项目可由可信入口固定使用 `validate_release_control.py <record> --require-resource-closeout`。`resource_closeout` 的声明校验不能替代真实对象盘点、证据回读或磁盘测量；等价既有 owner 无须迁移。源码项目不强加制品清理。
+- 持续增长：构建缓存、日志和备份复用原生 GC／轮转／到期策略，按项目容量与恢复需求校准数量、期限及总量，不能只靠发布后钩子。
 - Git 执行面收口：本次纳入的短分支／worktree 按代码管理规范安全清理或登记保留；并行排除项不强制归零。
 - 更早版本恢复等级：`<保留不可变制品／可复现重建及证据／不承诺>`。
 
@@ -51,6 +54,38 @@
 “准备发布”或预检通过不授权 Tag、上传、部署、切流、通知或远端清理。
 
 正式发布授权包含本计划已经声明的项目级发布后收口；没有声明受管对象、回滚版本或清理边界时不得执行 apply。清理失败时记录为“已部署但收口未完成”，不得宣称本次发布完整结束。
+
+## 受管资源的汇总声明
+
+已有等价发布记录直接沿用。采用 Release Control 时，可在原记录中加入下例的 `resource_closeout` 对象，并让可信调用方固定传入 `--require-resource-closeout`。`scope_ref` 指向执行前由创建者和项目政策确定的分组，不能由清理结果反推；变更范围在原 owner 审议，不为凑齐完成状态删组。源码项目省略该对象，显式 null 不是合法资源声明。
+
+```json
+{
+  "resource_closeout": {
+    "scope_ref": "operations/resource-policy#builder-groups",
+    "status": "partial",
+    "required_groups": ["images", "build-copies"],
+    "groups": [
+      {
+        "id": "images", "surface": "builder", "scope": "managed image repositories",
+        "status": "completed", "owner": "release operator",
+        "retention_ref": "operations/resource-policy#verified-images",
+        "evidence_refs": ["runs/current/images.receipt"]
+      },
+      {
+        "id": "build-copies", "surface": "builder", "scope": "registered historical build copies",
+        "status": "pending", "owner": "build lifecycle owner",
+        "retention_ref": "operations/resource-policy#build-copies",
+        "reason": "Final consumer and recovery dependencies still unresolved",
+        "next_action": "Reconcile consumers at the existing lifecycle entrypoint",
+        "evidence_refs": []
+      }
+    ]
+  }
+}
+```
+
+每组需 id、surface、scope、owner、status、retention_ref 与 evidence_refs；not_applicable 可省政策引用但需理由和证据。未完成组需 reason、next_action。合法 `retained` 另需 `retention_basis`（current、rollback、pin、recovery、evidence 或 approved_policy）、reason、exit_condition、next_action 及身份／消费者证据引用；未决 held 保持 pending/blocked/unknown，不能改名冒充政策保留。complete/not_applicable 要求预定与实际分组精确一致；released 可保留 partial，closed 不可。校验器不访问引用或验证真假，不检测未声明的创建者；项目实际接线、源政策、对象回读和容量结果仍需验证。
 
 ## 独立资源分组调用示例
 

@@ -106,6 +106,34 @@ class MatureProjectGovernanceValidatorTests(unittest.TestCase):
         result = self.validate(record)
         self.assertEqual(result.returncode, 0, result.stdout or result.stderr)
 
+    def test_active_record_preserves_disputed_finding_without_fabricating_resolution(self) -> None:
+        record = json.loads(TEMPLATE.read_text(encoding="utf-8"))
+        record["findings"] = [{
+            "id": "FND-0001", "severity": "P2", "status": "disputed", "owner": "engineering",
+            "evidence_refs": ["reviews/source-dispute"], "decision": {"status": "pending"},
+        }]
+        result = self.validate(record)
+        self.assertEqual(result.returncode, 0, result.stdout or result.stderr)
+
+    def test_disputed_finding_does_not_satisfy_completed_closeout(self) -> None:
+        record = completed_record()
+        record["findings"][0]["status"] = "disputed"
+        record["findings"][0]["decision"] = {"status": "pending"}
+        result = self.validate(record)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("has no user or owner decision", result.stdout)
+        self.assertIn("is not closed or accepted", result.stdout)
+
+    def test_active_record_rejects_unknown_finding_state(self) -> None:
+        record = json.loads(TEMPLATE.read_text(encoding="utf-8"))
+        record["findings"] = [{
+            "id": "FND-0001", "severity": "P2", "status": "unknown", "owner": "engineering",
+            "evidence_refs": ["reviews/source-dispute"], "decision": {"status": "pending"},
+        }]
+        result = self.validate(record)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("has invalid status", result.stdout)
+
     def test_completed_record_requires_full_trace_and_passes(self) -> None:
         result = self.validate(completed_record())
         self.assertEqual(result.returncode, 0, result.stdout or result.stderr)

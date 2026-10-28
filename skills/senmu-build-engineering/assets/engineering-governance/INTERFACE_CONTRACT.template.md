@@ -20,7 +20,7 @@ Operation/type index: <native identifiers, references and examples; do not recop
 
 <Explain only applicable cross-operation semantics: effects, errors, trust, units, retries, duplicate requests, asynchronous states and cancellation. Reference existing business and engineering owners.>
 
-<Identify affected callers, preserved old behavior, migration order and retirement conditions. Keep proposed changes distinct from the effective contract.>
+<Identify added/modified/removed/renamed behavior, affected callers, preserved behavior, migration order and retirement conditions. Keep proposed changes distinct from the effective contract; progress and decisions remain in the existing task.>
 
 ## Verification
 
@@ -28,7 +28,3 @@ Definition/generation: <existing check entrypoint or explicit gap>
 Real interaction: <provider/consumer integration checks or explicit gap>
 Business outcome: <approved acceptance and matching evidence>
 Baseline/evidence: <Git commit or equivalent identity; relevant working changes; limitations>
-
-<!-- Use existing task/decision records for progress and history. A source path or passing schema check alone does not prove runtime behavior or adoption. -->
-
-<!-- In the existing change/task record, classify added/modified/removed/renamed behavior and link the baseline, affected operation, real consumers, verification and remaining compatibility. Do not maintain a second history or infer completion from task checkboxes. -->

@@ -16,6 +16,7 @@ SEVERITIES = {"P0", "P1", "P2", "P3"}
 FINDING_STATUSES = {
     "suspected",
     "confirmed",
+    "disputed",
     "accepted_risk",
     "resolved_unverified",
     "verified_resolved",

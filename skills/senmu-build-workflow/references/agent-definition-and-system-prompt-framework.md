@@ -154,7 +154,7 @@ python3 .senmu-buildos/validate_agents.py --root .
 python3 .senmu-buildos/validate_agents.py --root . --strict
 ```
 
-For established projects, map existing agent/prompt owners, run entrypoints, and version evidence. Preserve a reliable structure. Create `agents/` only after an authorized migration; never maintain parallel definitions.
+For established projects, map existing agent/prompt owners, run entrypoints, and version evidence. Preserve a reliable structure. The supplied `validate_agents.py` checks only the adopted `senmu_markdown` default layout; custom registries and non-Markdown stores keep their project-owned equivalent validation. Do not migrate merely to run this validator or maintain parallel definitions; create `agents/` only after an authorized migration.
 
 ## 9. Project Adoption
 

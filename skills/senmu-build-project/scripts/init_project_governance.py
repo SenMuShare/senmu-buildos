@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import shutil
 import subprocess
 from datetime import date
@@ -193,7 +194,7 @@ def render(
     values = {
         "{{PROJECT_NAME}}": project_name,
         "{{PROJECT_ROOT}}": "Git toplevel (resolved at runtime)" if (root / ".git").exists() else "Project root containing .senmu-buildos/config.json (resolved at runtime)",
-        "{{WORKSPACE_ROOT}}": ".." if root != workspace_root else ".",
+        "{{WORKSPACE_ROOT}}": Path(os.path.relpath(workspace_root, root)).as_posix(),
         "{{LAYOUT}}": layout,
         "{{PROFILE}}": profile,
 
@@ -617,7 +618,7 @@ def main() -> None:
                 "direct_main_writes": False,
                 "worktree_root": ".worktrees",
                 "change_unit_states": [
-                    "in_progress", "sealed", "integrated", "excluded", "superseded",
+                    "in_progress", "sealed", "integrated", "excluded", "superseded", "no_changes",
                 ],
             } if "git" in selected_module_set else None,
             "release_policy": {
@@ -632,14 +633,15 @@ def main() -> None:
             },
             "required_paths": sorted(required_paths),
             "placeholder_scan_paths": sorted(required_paths),
-            "workspace_root": ".." if layout in {"project-system", "publication-workspace"} else ".",
+            "workspace_root": Path(os.path.relpath(workspace_root, root)).as_posix(),
             "path_roles": {
                 "authority_root": authority_path if layout == "publication-workspace" else (project_system_path if layout == "project-system" else "."),
                 "public_projection_root": public_projection_path if args.publication_model == "private_authority_public_projection" else None,
                 "release_staging_root": release_staging_path if args.publication_model == "private_authority_public_projection" else None,
             },
             "external_directories": {
-                key: f"../{value}" for key, value in external_role_paths.items()
+                key: Path(os.path.relpath(workspace_root / value, root)).as_posix()
+                for key, value in external_role_paths.items()
             } if layout == "project-system" else {},
             "worklog_path": "governance/logs/WORKLOG.md" if has_standard_owners else None,
             "lessons_path": "governance/lessons/LESSONS_LEARNED.md" if has_standard_owners else None,

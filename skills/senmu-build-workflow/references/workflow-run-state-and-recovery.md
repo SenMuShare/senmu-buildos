@@ -54,7 +54,7 @@ Recommended step states: `pending`, `running`, `succeeded`, `failed`, `skipped`,
 - Use public entrypoints, controlled commands, or transactions; do not bypass the owner by editing database/JSON state manually.
 - After tool success, verify output identity, integrity, count, format, and business conditions before `succeeded`.
 - Preserve partial success at step level. Do not mark the whole run successful or erase valid outputs.
-- `waiting` is recoverable state, not perpetual polling. Only dependent steps wait; other ready steps continue. When all remaining work waits, store checkpoint, awaited event/result identity, timeout, and wake entrypoint, then release the worker. Prefer event wakeups; never poll without bounds.
+- `waiting` is recoverable state, not perpetual polling. Only dependent steps wait; other ready steps continue. Store the checkpoint, awaited event/result identity, timeout and recovery entrypoint. Release the worker only for a real blocker or confirmed automatic wakeup, following Project's [dependency scheduling](../../senmu-build-project/references/task-execution-and-state-management.md#42-work-preserving-dependency-scheduling); a written entrypoint alone does not establish continuation. Prefer supported event wakeups; never poll without bounds.
 - Around external side effects, record intent, authorization, idempotency key, and receipt. Mark uncertain outcomes for reconciliation; do not retry blindly.
 - Write JSON state atomically or through an equivalent transaction.
 
@@ -106,4 +106,4 @@ Use the [Run Manifest template](../assets/workflow-governance/WORKFLOW_RUN_MANIF
 - Run identity, input snapshot, and step evidence agree.
 - Retries did not duplicate irreversible side effects; uncertain results remain pending reconciliation.
 - Run completion, product acceptance, delivery, and release remain distinct.
-- Superseded, failed, and cancelled runs remain auditable but never current.
+- Superseded, failed, and cancelled runs remain auditable, not current successful outputs or new-run candidates; recovery or reconciliation may still target the original failed run under its existing contract.

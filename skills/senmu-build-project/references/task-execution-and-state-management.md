@@ -1,6 +1,6 @@
 # Task Execution, Planning, and State Management
 
-**Read as needed:** [Create a task](#2-when-to-create-a-numbered-task-plan) · [Split and delegate](#4-split-plans-only-as-much-as-needed) · [Resume](#5-session-plans-and-authoritative-facts) · [Update status](#6-status-and-update-points) · [Close](#7-closeout-and-archive).
+**Read as needed:** [Create a task](#2-when-to-create-a-numbered-task-plan) · [Split and delegate](#4-split-plans-only-as-much-as-needed) · [Incident boundary](#44-incident-execution-boundary) · [Resume](#5-session-plans-and-authoritative-facts) · [Update status](#6-status-and-update-points) · [Close](#7-closeout-and-archive).
 
 Multi-step/session work uses a project-owned Durable Task State Owner, not chat or a specialist Skill. Standard/release starters use numbered plans; core and mature projects may retain a trusted README, issue tracker, database, plan or external system.
 
@@ -60,20 +60,18 @@ Preserve `Decision Rationale`, `Rejected Alternatives`, `Preserved Constraints`,
 - Express requirements, fixes, workflow changes, media delivery, POCs, and governance tasks in their natural form; do not force them into user stories.
 - Do not create fixed Setup, Foundation, or Polish phases, and do not put scaffolding, generic platforms, or gate construction ahead of the value loop.
 
-When the host permits delegation, delegate independent bounded work if it can save time or improve quality after coordination cost. Otherwise continue locally; do not create agents or review rounds for their own sake. Agent messages must be readable by people, with clear grammar and proper spacing.
-
-Describe parallel boundaries only when work will actually be assigned to several executors. First define each result, shared state, overlapping write scope, and integration owner. Apply Delivery isolation within the authorized task; tool availability or delegation does not expand its scope.
+Delegate bounded independent work only when the host permits it and benefit exceeds coordination cost; otherwise continue locally. Do not invent agents/review rounds. Messages remain human-readable. For actual parallel work, define outcomes, shared state, overlapping writes and integration ownership. Apply Delivery isolation within authority; delegation or tool availability does not expand scope.
 
 ### 4.1 Minimum Package for Actual Delegation
 
 Create a task package only when work is actually handed to another person or agent. It references existing owners and enables execution without the full chat:
 
 - `Current Task`: the one required outcome, completion test, and explicit exclusions.
-- `Global Constraints`: still-valid user authority, prohibitions, risk gates, and stop conditions, with their source and applicable scope.
+- `Global Constraints`: still-valid user authority, prohibitions, risk gates and stop conditions applicable to this assignment, with source and scope. The label cannot extend unrelated restrictions or narrow global policy.
 - `Interfaces`: read/write scope, inputs/outputs, shared state, dependencies and preserved contracts. Identify the accepted baseline, capability/API owners, relevant implementation/contract/check paths, assignment invariants and inspected worktree/revision. Do not mistake stale code or an unconnected consumer for a missing contract. Pointers aid retrieval, not authority or proof. Supply constraints the assignee cannot retrieve, not the full map, rulebook or transcript.
 - `Output Contract`: slice completion, artifacts, actual changes, development/closeout checks and integrator-owned checks, evidence, deviations, remaining work, repair owner, temporary-resource disposition, and next action.
 
-For controlled inputs, distinguish the registered worktree from shared resource roots; check both file existence and the required format/provenance before handing off a locator. A discovered path is a retrieval hint unless an explicit instruction makes it a binding input or access boundary. Within delegated read scope, an assignee may locate a candidate alternative, but must return a binding-input mismatch to the delegator with evidence rather than silently substitute it. The delegator may correct its own mistaken locator within existing user authority; an ordinary lookup correction is not a new product decision. User-pinned inputs, license requirements, access restrictions and cost limits remain binding; unresolved authority goes to the user, not around the boundary.
+For controlled inputs, distinguish registered worktrees from shared roots and check existence, format and provenance before handoff. Discovered paths are hints unless explicitly binding. Within delegated read scope, an assignee may find alternatives but returns binding-input mismatches with evidence rather than substituting silently. The delegator may correct its mistaken locator within existing authority without a new product decision. User-pinned inputs, licenses, access and cost limits remain binding; unresolved authority goes to the user.
 
 At handoff/interruption, retain useful navigation, unknowns and next action in the task owner. Successors check relevant worktree changes before reuse and reread only what is needed; changing executors warrants neither project-wide rediscovery nor a second recovery ledger.
 
@@ -84,23 +82,29 @@ Send task-relevant facts and stable project/specialist routes, not full conversa
 - When another agent, CI, human acceptance, or external system is incomplete, identify the exact downstream step blocked and whether it competes for the same branch, file, database, port, deployment directory, or production object. “Someone else is not done” is not a dependency description.
 - Preserve productive work by default. Exhaust independently executable development, documentation, static checks, builds, and preparation within current authority; mark only steps that truly require the external result as waiting. Pause related work only when that result changes the solution, shared resources conflict, or the next action is irreversible.
 - A temporarily absent user, unanswered progress message, or lack of real-time supervision does not revoke existing authority. Continue work within the original scope when no new decision is needed. Stop only for an explicit pause or new authority concerning scope, permission, cost, release, production, or deletion.
-- When all independent work is complete, use the host’s supported bounded wait for the specific pending result. A wait timeout is not task completion: reassess available work and resume waiting without repeated unchanged updates. End the execution chain only for a real blocker or a confirmed automatic wakeup mechanism; writing a recovery entrypoint or sending an asynchronous message does not establish that mechanism. Record the checkpoint, awaited result, recovery action, and any actual blocker in the task owner. Do not invent a background continuation or create a scheduler without user authorization.
+- After independent work, use the host’s supported bounded wait for the pending result. Timeout is not completion: reassess available work and resume waiting without unchanged updates. End the execution chain only for a real blocker or a confirmed automatic wakeup mechanism; writing a recovery entrypoint or sending an asynchronous message does not establish that mechanism. Record the checkpoint, awaited result, recovery action, and any actual blocker in the task owner. Do not invent a background continuation or create a scheduler without user authorization.
 
 ### 4.3 Outcome-Driven Course Correction
 
-At meaningful results, failures, interruptions or handoffs, compare the approved outcome and next observable result with actual progress. Disproving a hypothesis, reducing relevant uncertainty and enabling a necessary dependency count; duration alone is not drift. Do not add a checkpoint to every tool call.
+At meaningful results, failures, interruptions or handoffs, compare the approved outcome and next observable result with progress. Refuting a hypothesis, reducing relevant uncertainty or enabling a necessary dependency counts; duration alone is not drift. No checkpoint per tool call.
 
-If effort no longer helps, revisit goals, causal assumptions, evidence and real dependencies before repeating the method. Test preparation, product defects and stale bookkeeping differ. These examples are not exhaustive: investigate unfamiliar causes by the same comparison.
+When effort stops helping, reassess goals, causes, evidence and dependencies before repeating it. Distinguish test preparation, product defects, stale bookkeeping and unfamiliar causes. At the existing owner choose the smallest useful inquiry, capability repair/reuse, observation change, eligible integration, dependency resolution or uncovered decision. Load matching guidance only when needed; no fixed hierarchy, quotas, scheduler or new ledger.
 
-Choose the smallest useful response at the existing owner: continue productive inquiry, reuse/repair a capability, change the observation boundary, integrate eligible work, resolve a dependency or request an uncovered decision. Load matching guidance when local methods are ineffective, not every Skill. No fixed hierarchy, retry/time/test quota, scheduler or new ledger is required.
+Preserve acceptance, safety, permissions, unresolved failures, pending commitments and interrupted next actions; never revive cancelled work. Delegation must be executable under host permissions. Continue independent authorized work. Check the predicted improvement at the next meaningful result: a revised plan or acknowledgement is not changed execution. Keep evidence and limits, update only changed recovery facts; healthy work needs no extra ceremony.
 
-Retain acceptance, safety, permissions, unresolved failures and all pending commitments; never revive cancelled work. Preserve interrupted scope and next actions. Delegation must be executable under host permissions, not merely sent; blocked steps leave independent authorized work available.
+### 4.4 Incident Execution Boundary
 
-Check the next meaningful result for the predicted correction. A revised plan or acknowledgement is not proof of changed execution. Keep useful results and limitations; update only changed recovery facts. Healthy work needs no extra ceremony.
+For sustained production changes or recovery with parallel collaboration, keep one active writer per shared production scope. Separate coordination/communication from operations where feasible; independent diagnosis stays read-only. No fixed staffing or hierarchy is required.
+
+A dedicated operator must not receive unrelated development dispatch or ordinary reports: change the sender/assignment route, not merely ask the operator to filter messages. Preserve urgent user directions, alerts and safety stops. A single maintainer can checkpoint and defer nonurgent work.
+
+Future reassignment does not transfer an active operation. Reach a safe checkpoint unless an explicit stop, safety event or necessary emergency handoff intervenes. Transfer actual state, authority, processes/locks, completed/uncertain effects, next command and evidence; exclude the former writer before successor mutation. Lost contact does not prove it stopped. Reconcile unknowns through the existing recovery owner.
+
+Verify actual assignment/report routes, not just role text. Reorganization must not delay restoration or necessary business verification. Personnel remain project facts. Adapt [SRE incident-response roles](https://sre.google/workbook/incident-response/) without fixed times or staffing.
 
 ## 5. Session Plans and Authoritative Facts
 
-A Codex session plan schedules the current session only. The numbered task plan is local to the project and survives context loss; do not mechanically duplicate them. With an existing task plan, keep the session plan to the current phase and write actual results back after phase transitions.
+A Codex session plan schedules only the current phase. The project task plan survives context loss; do not duplicate it. Write actual results back at phase transitions.
 
 Authoritative owners include:
 
@@ -117,12 +121,11 @@ Keep ordinary discussion, research, decision, and verification summaries in the 
 
 ## 6. Status and Update Points
 
-For a progress request over enumerated scope, lead with the actual total and mutually exclusive counts: not started, implementing, implemented-awaiting-verification, verified, and blocked. Report excluded/cancelled scope separately and explain denominator changes. Derive counts from the existing item owner; a parent and its children are not separate completions. Verification, product acceptance and release remain distinct. Name the few real blockers and the next authorized action; do not dump a work log or invent percentages. A waiting dependent step does not make all work blocked.
-
+For enumerated progress, lead with the actual total and mutually exclusive counts: not started, implementing, implemented-awaiting-verification, verified and blocked. Derive counts from the existing owner, never double-count parents/children, and explain denominator changes and excluded/cancelled scope. Keep verification, acceptance and release distinct. State real blockers and the next authorized action, not a work-log dump or invented percentage; a waiting step does not block everything.
 
 Use these statuses: `planned`, `active`, `blocked`, `verifying`, `completed`, `cancelled`, `archived`.
 
-Use `blocked` only when no meaningful work remains within current scope and execution must await a user decision, new authority, or changed external fact. If one phase or runtime step is waiting, the task may stay `active`, but the plan must identify parallel work and the wakeup condition. Idle sessions are not progress. A progress question or incoming executor receipt updates the active task; answer the user’s question and then continue authorized work. An executor’s status message does not replace the user’s request.
+Use `blocked` only when no meaningful scoped work remains without a user decision, new authority or changed external fact. One waiting step may leave the task `active`; name parallel work and its wake condition. Idle sessions are not progress. Progress questions and receipts update the active task: answer the user, then continue authorized work. Executor status does not replace the request.
 
 Update plan/register at creation, scope/authority/completion changes, meaningful phase/review/POC conclusions, delegation, pause, transfer or status transitions. Not every file edit needs a register update.
 
@@ -150,7 +153,7 @@ Before `completed`, reconcile the original commitment, approved changes, current
 4. The plan retains only necessary current state, key decision summaries, and trace links; duplicated bodies and temporary content are removed.
 5. Unverified items, residual risk, release responsibility, and rollback responsibility are explicit.
 
-`completed` means this task's result and closeout conditions are satisfied; it does not replace specialist states such as `implemented`, `accepted`, or `released`. Keep numbered plans at stable paths by default and use `archived` for historical-only status. Before offline archival, update the Task Register and all references.
+`completed` requires the task's result and closeout, not implied specialist `implemented`, `accepted` or `released` status. Keep stable plan paths; use `archived` for history. Update the Task Register and references before offline archival.
 
 ## 8. Hooks and Mature Projects
 

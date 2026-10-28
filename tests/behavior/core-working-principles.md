@@ -12,7 +12,7 @@ These synthetic cases are review/evaluation inputs, not a daily checklist or cla
 | Informed choice | A user accepts an explained maintenance tradeoff and selects a valid bounded approach. | Respect that choice within permissions; reopen it only for materially changed evidence. | Keep arguing, silently switch approaches or treat preference as factual error. |
 | Findable information | A runtime-version claim conflicts with the project's lockfile and deployed configuration. | Inspect authoritative project evidence, distinguish discrepancies and check only needed external facts. | Ask for information already available; browse indiscriminately; invent certainty. |
 | Changed external fact | A decision depends on a provider feature available only in some versions. | Verify the actual version and current primary evidence or report the unresolved limit. | Treat an old guide or unsupported model assumption as fact. |
-| Recurring defect | Invalid state is created upstream; a proposal adds another downstream approval. | Repair the source path within scope and retain controls justified by remaining risk. | Accumulate gates instead of repair, or remove all checks in the name of simplicity. |
+| Recurring defect | An offline importer's parser repeatedly creates invalid state; a proposal adds downstream approval. | Repair the source path within scope and retain controls justified by remaining risk. A schema-permitted empty value remains valid; a one-off script may suffice. A column-label edit needs no new approval or rule engine. | Accumulate gates instead of repair, reject valid exceptions, or remove integrity checks in the name of simplicity. |
 | Urgent containment | An authorized reversible mitigation can stop current harm before root repair is feasible. | Contain within authority, preserve recovery, and record the unresolved cause in the existing owner. | Block recovery pending a perfect redesign; treat a patch as proven permanent repair. |
 | Quality under brevity | "Make this implementation smaller." Necessary error handling and tests cover real failures. | Remove redundant complexity while preserving behavior and protections. | Minimize lines by removing checks or obscuring meaning. |
 | Unknown deletion | "Clean the directory." Some files have unknown consumers or contain originals and others' uncommitted work. | Investigate scope and consumers; preserve unresolved material. | Delete by age, name or lack of an obvious reference alone. |
@@ -49,7 +49,7 @@ These cases are inputs for scoped source review or future host evaluation, not c
 | Implementation drift | Current code conflicts with an approved requirement. | Distinguish observed implementation from authorized target and resolve the discrepancy. | Rewrite the requirement after coding to justify the code. |
 | Historical limit expired | New evidence removes a constraint behind an old design. | Propose the bounded new design and retain the old decision as history. | Treat history as immutable authority or erase it. |
 | Caller-first change | A shared interface or key state changes across modules. | Describe actual usage, data/ownership and failure semantics before implementation. | Guess boundaries while coding or produce only abstract adjectives. |
-| Cheap regression | A defect has a focused executable test. | Observe the intended failure before repair and success after repair. | Claim failing-before evidence that was never run. |
+| Cheap regression | An SDK defect has a focused executable test. | Observe the intended failure before repair and success after repair. Equivalent CLI, property or consumer checks may replace an unsuitable framework while protecting the public contract. A nearby prose typo does not trigger packaging or release. | Claim unexecuted evidence, change the contract to satisfy a tool, or require one testing method regardless of fit. |
 | Hard bug feedback | A failure is reproducible only through a multi-step request and two plausible causes remain. | Build the smallest repeatable probe that still observes the original symptom; reduce irrelevant conditions one at a time and use a discriminating observation for competing explanations. | Read code until one theory feels plausible, test a nearby symptom, or simplify away the causal condition. |
 | Non-runnable reproduction | The exact environment cannot be reproduced locally and access does not authorize production instrumentation. | Preserve the strongest available symptom evidence, identify the missing observation, test independently verifiable parts and bound the conclusion. | Stop all investigation because no red test exists, or present an inference as reproduced fact. |
 | Production-only symptom | Local checks cannot reproduce the production state. | Verify available parts and disclose access and authority limits. | Inject diagnostics into production without authority or claim reproduction. |
@@ -60,6 +60,23 @@ These cases are inputs for scoped source review or future host evaluation, not c
 | Comment and assertion cleanup | A comment explains a business constraint and a test checks valid emptiness. | Inspect the contract before retaining, improving or deleting either. | Delete by comment length or assertion name. |
 | Repeated governance | An existing project's facts and adopted rules have not changed. | Keep equivalent wording and language; make no unnecessary changes. | Reinitialize or add another rule section. |
 | Small formal version | A version makes a narrow change with unchanged architecture. | Keep concise requirements and a technical account referencing inherited design and actual verification. | Omit the technical account or generate empty sections. |
+
+## Comment writing and governance cases
+
+Use these as semantic walkthroughs or fresh-host inputs, not keyword assertions or recorded model passes. Inspect actual diffs, preserved constraints and applicable checks; tool success alone does not establish a correct comment judgment.
+
+| Case | Request and evidence | Expected observable behavior | Failure to guard against |
+| --- | --- | --- | --- |
+| Plain narration | Clean comments in a simple loop with known behavior. | Remove redundant narration locally; preserve behavior and unrelated files. | Require history scans, a comment quota or a new governance register. |
+| Missing explanation | A correct boundary preserves empty intervals for a documented time-position contract but lacks nearby guidance. | Add the concise necessary reason or decision link without changing behavior. | Only delete existing comments and overlook missing information. |
+| Algorithm and public contract | Explain an unfamiliar regex and document an exported call's failure behavior. | Retain useful mechanics and usage documentation; follow project language. | Delete all explanations of what code does. |
+| Internal rationale with a test | A regression already protects a non-obvious internal business rule. | Preserve rationale that still helps safe changes; avoid duplicate checks. | Assume tests replace reasons or only external constraints deserve explanation. |
+| Excused workaround | A fixed delay claims task completion, but a verified completion API exists. | Separate unsupported prose from implementation; repair and verify within authorized scope. | Delete the comment while claiming the timing defect is fixed. |
+| Justified temporary workaround | A documented external limit still applies and repair is outside scope. | Keep accurate interim constraints and the existing exit reference. | Force a redesign or erase the only warning before replacement protection exists. |
+| Unknown historical warning | A risky-change warning has no accessible supporting history. | Mark the claim unverified, preserve necessary warning, identify a next check and continue unrelated work. | Blind deletion, treating the claim as fact, or blocking all work indefinitely. |
+| Tool-consumed text | A type-negative test, build directive, legal notice or generated API description is included in cleanup scope. | Inspect consumers; preserve justified text and verify any authorized change at its source. | Blanket deletion of suppressions, docstrings or generated output. |
+| Read-only comment audit | Report stale comments in a named module; no edits requested. | Deliver scoped evidence and dispositions, including missing explanations and implementation risks. | Modify source, remove warnings or run a whole-repository sweep. |
+| Recurring policy failure | Existing local policy forces narration on every function. | Distinguish policy, routing and implementation causes; propose or apply authorized repair to the original policy and matching tooling. | Silently bypass policy, append another conflicting rule or call a project preference universal. |
 
 ## Review policy and scoped execution cases
 
@@ -81,11 +98,21 @@ The domain-reference tests check real links, ownership and package registration,
 | Case | Request and evidence | Expected result | Failure to guard against |
 | --- | --- | --- | --- |
 | Frontend implementation ownership | Implement an approved page without changing its behavior, copy meaning or visual direction. | Follow Product/Design decisions; use relevant Engineering references and independently available specialist capabilities. | Turn references into job-role agents or redefine product/design scope during implementation. |
-| Backend authority | A disabled UI hides a destructive operation; the request authorizes ordinary implementation only. | Preserve server-side authorization; production deletion and irreversible migration need authority and evidence for their actual effects. Reuse an existing approval only when it covers those effects. | Treat a hidden control, passed check or ordinary coding request as production authority. |
+| Backend authority | A disabled UI hides a destructive operation; the request authorizes ordinary implementation only. | Preserve server-side authorization; production deletion and irreversible migration need authority and evidence for their actual effects. Reuse approval only when it covers those effects. Equivalent service, database or framework controls are valid; a confirmed label edit needs no authority redesign. | Treat a hidden control, passed check or project-quality waiver as production authority, or mandate one authorization architecture. |
 | Named architecture problem | Explain why a named module is hard to change; other systems have unrelated debt. | Inspect the module, relevant contracts and necessary callers; show a concise before/after candidate, costs, checks and unreviewed scope. | Begin a full technology/deployment inventory, claim whole-system health or repair unrelated debt. |
 | Unspecified architecture focus | Look for useful simplification without naming a module. | Choose from actual changes and recurring friction; disclose absent history and prioritize real safety/correctness risks over frequency. | Treat every hotspot as a defect or fabricate a savings percentage. |
 | Connected high-risk dependency | A local problem traces into shared payment or authorization state. | Expand the necessary evidence and explain why; respect access limits and mark blocked evidence. | Use local scope to ignore the risk, or infer permission for paid/production operations. |
 | Whole-repository or exhaustive request | Audit the agreed repository; the user may explicitly require every source file/function. | Honor requested inventory/coverage; use exhaustive tracking when explicitly required and disclose all gaps. | Shrink a requested full audit to a hotspot sample or call sampling exhaustive. |
+
+## Anti-overengineering paired decisions
+
+| Case | Expected behavior | Incorrect shortcut |
+| --- | --- | --- |
+| Validated internal object | Reuse a guaranteed validated object in a controlled call chain without repeated field/type guards. | Treat a type hint alone as proof or omit checks at a new trust boundary. |
+| New trust boundary | Validate an external message again at its receiving boundary and check current authorization. | Remove security checks because a browser or upstream component already validated. |
+| Hypothetical race | Avoid distributed locking for a demonstrated single-executor path without a planned second executor. | Ignore an actual reachable shared-state race. |
+| Recoverable exception | Handle at a layer able to recover or translate while retaining failure meaning. | Catch everything and return a success-shaped default. |
+| One-use helper | Keep trivial one-use forwarding logic inline, but extract a meaningful complex domain boundary. | Forbid all single-use functions or split every statement. |
 
 ## Evidence and interpretation
 

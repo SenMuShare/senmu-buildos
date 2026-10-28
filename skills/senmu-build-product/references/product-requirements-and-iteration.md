@@ -25,7 +25,7 @@ Current product specification
 | `product/PRODUCT_SPECIFICATION.md` | durable whole-product view is needed | complete current product facts | `PRODUCT_SPECIFICATION.template.md` |
 | `engineering/SYSTEM_TECHNICAL_SPECIFICATION.md` | long-lived code needs a durable system view | complete current technical facts | `SYSTEM_TECHNICAL_SPECIFICATION.template.md` |
 
-Map existing documents or external systems to these roles; never create a second truth set. Every formal development version has identifiable requirements and a technical account. Existing combined version documents may carry both as distinct sections. Small versions state the approved change, inherited design, affected implementation and verification briefly; they do not omit the technical account or expand empty headings. An ordinary task updates its existing version, not a new document set. Unversioned exploration does not acquire a formal version merely to satisfy this rule.
+Map existing documents/systems to these roles without a second truth set. Each formal development version retains identifiable requirements and a technical account, possibly as separate sections of one document. Small versions briefly state approved change, inherited design, affected implementation and verification without omitting substance or expanding empty headings. Tasks update their existing version; unversioned exploration needs no formal version for this rule.
 
 Get Started guides, tutorials, manuals, and CLI/SDK/API references remain with the project's documentation owner. When installation, configuration, public calls, or operating paths change, Product records the affected contract, acceptance entrypoint, and current official documentation location in the PRD without copying its text or creating a documentation site for a project with no durable user entrypoint.
 
@@ -56,7 +56,9 @@ Keep observable acceptance in sections 3/4 and shared acceptance authority at ve
 
 ## 2.2 Clarification and Output Review
 
-For each feature, check scenario, goal, scope, normal flow, rules, permissions, state/data, frontend feedback, exceptions and recovery together; compare settled decisions and affected features for omissions or conflicts. Retrieve existing facts first. Discuss consequential unknowns in multiple rounds as needed, stating gap, impact, recommendation and choice. Reuse settled answers; distinguish decisions from assumptions/advice. Mark unresolved draft content in its relevant section and block only implementation whose outcome would otherwise be guessed.
+Review each feature's scenario, goal, scope, normal flow, rules, permissions, state/data, feedback, exceptions and recovery against settled decisions and affected features. Retrieve facts; discuss consequential unknowns as needed with gap, impact, recommendation and choice. Reuse settled answers; separate decisions from assumptions/advice. Mark unresolved content where it belongs; block only implementation that would otherwise guess the outcome.
+
+Preserve a rule's subject, trigger and intended result. Feasibility, charging conditions or exceptional recovery alone do not justify new features or broader normal flows. Engineering and Design choose means within approved outcomes; return consequential changes to meaning, scope, cost, permissions or acceptance to the authorized owner, not every local choice.
 
 Review per-feature version, four ordered substantive sections, semantic consistency, exceptions and visual associations. For the default Chinese format, use the read-only [structure checker](../scripts/check_requirement_structure.py) at the actual installed Skill path:
 
@@ -82,7 +84,7 @@ Without relevant assets, omit the attachment subsection: do not generate images,
 
 ## 3. From Requirement to Version PRD
 
-A backlog is optional. The owner may record ideas first or proceed directly to a version PRD. Match discussion depth to uncertainty and impact:
+A backlog is optional; owners may record ideas or proceed to a PRD. Match discussion to uncertainty and impact:
 
 - **Exploratory:** when direction, user problem, or value is uncertain, compare goals, evidence, counterexamples, alternatives, and stopping conditions; output candidates and unknowns, not a frozen scope.
 - **Boundary-focused:** for a clear, local, limited-risk change, clarify only what affects scope, behavior, acceptance, data, permission, cost, or risk; produce the minimum sufficient decision.
@@ -90,15 +92,13 @@ A backlog is optional. The owner may record ideas first or proceed directly to a
 
 Do not repeat questions or await separate approval when owners and context suffice. Unknowns block only when they would silently change outcome. Keep discussion in the task owner; the PRD stores current conclusions.
 
-When overloaded terms or inconsistent names would change behavior, permissions, billing, state or acceptance, resolve the concept against existing decisions and a concrete boundary scenario. For example, distinguish retrying the same intent from starting a new potentially billable intent when that distinction matters; do not invent the project's answer. Retrieve discoverable facts yourself and ask only for a material unresolved choice, with a recommendation and consequence. Group independently answerable questions rather than exhausting future branches. Record adopted meaning in the existing product/terminology owner within write authority, then reuse it in technical mappings. Do not create a new CONTEXT file, ADR or glossary service for each term, re-ask settled choices, or turn observed code into permission to change approved intent.
-
-When a term needs clarification, keep its canonical name, short meaning, easily confused alternative and one boundary example together at that existing owner. For example, distinguish submission from verified completion and same-intent retry from a new request; the project's approved contract determines the actual semantics. A settled glossary entry is reused, not re-interviewed. At intake, distinguish already implemented, rejected, deferred and awaiting evidence; retain the reason and revisit condition rather than treating every closed item as forbidden work.
+When overloaded terms or inconsistent names would change behavior, permissions, billing, state or acceptance, resolve them against existing decisions and a concrete boundary scenario, such as submission versus verified completion or same-intent retry versus a new potentially billable request. Do not invent the project's answer. Retrieve discoverable facts and ask only for material unresolved choices, grouped when independently answerable, with recommendations and consequences. Keep the adopted canonical name, short meaning, confusing alternative and boundary example at the existing product/terminology owner within write authority, then reuse them in technical mappings. Do not create a CONTEXT file, ADR or glossary service per term, re-ask settled choices, or treat observed code as permission to change approved intent. At intake, distinguish already implemented, rejected, deferred and awaiting evidence; retain the reason and revisit condition rather than treating every closed item as forbidden work.
 
 Assign implementation-ready work from product facts to the current open version, successor version, or uncommitted backlog. Add it to an open version when goal, acceptance, and delivery timing align. Ask only when placement would change scope/timing and cannot be inferred. Future unimplemented work records version intent without creating a code branch.
 
 Follow project version policy and approved change, not version numbers alone. Fixes, compatible features, and incompatible changes may suggest patch/minor/major candidates; retain product roles such as current patch batch, later feature version, or successor until scope stabilizes.
 
-When a backlog exists, put status and target version beside each item; do not add a relationship table or complex state machine. Add a stable ID only for durable independent tracking. Use opportunity assessment for high investment, weak evidence, uncertain direction, or difficult rollback, not low-cost reversible experiments.
+When a backlog exists, record the decided status and applicable target or processing version beside an item once its placement or disposition is decided; undecided ideas do not need a guessed version. Do not add a relationship table or complex state machine. Add a stable ID only for durable independent tracking. Use opportunity assessment for high investment, weak evidence, uncertain direction, or difficult rollback, not low-cost reversible experiments.
 
 Each version in development has one PRD that removes material ambiguity for Product, Engineering, testing, and AI:
 
@@ -108,7 +108,7 @@ Each version in development has one PRD that removes material ambiguity for Prod
 
 Maintain one version requirement/defect list in the PRD or equivalent owner, not one per item, agent, or branch. Each entry needs type, target/acceptance, result state, and implementation/verification evidence or disposition. Use project states, or concise states distinguishing pending, analyzed, implementing, implemented-unverified, verified, and excluded. Execution steps remain in the task owner.
 
-A field, copy, or local behavior change may need only a brief sentence in each required feature section, preserving version, change and acceptance. Expand details for actual workflow, state, permission, billing, data, compliance, or release-unit risk. A fix that restores the current specification does not rewrite approved product behavior. Track it in the existing version requirement/defect record and keep its implementation and verification account in the version technical design.
+A field, copy or local behavior change may use a sentence per required feature section, preserving version, change and acceptance. Expand for workflow, state, permission, billing, data, compliance or release-unit risk. Restoring the specification does not change approved behavior; track the fix in the existing version requirement/defect owner and its implementation/verification in technical design.
 
 Resolve the object and intent of cancellation from the request and existing product decisions. Cancelling unimplemented work removes that work from the plan; stopping a run follows its cancellation contract; explicitly retiring an existing capability removes its executable entrypoints under the approved retirement scope. Do not infer permanent capability removal from the word cancel alone. Record replacement behavior and required historical-data, compliance, compatibility or rollback boundaries. Retirement of code never by itself authorizes destroying business data, audit records or recovery evidence.
 

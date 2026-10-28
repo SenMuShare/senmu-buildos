@@ -17,7 +17,7 @@ Choose the entrypoint from the current situation; do not create four separate Sk
 | Existing project continuing development | Inherit existing facts, current development version, and registered task/branch; complete incremental work directly when rules suffice | Rebuilding directories, Git, documents, or governance merely because the project is old |
 | Existing project receiving whole-project governance | First inventory authority, structure, quality, and delivery facts read-only; evolve original owners only within approved scope; use mature-project takeover governance for multi-stage work | Overwriting reality with defaults or mixing governance and ordinary feature work into an unbounded rewrite |
 
-After initialization, write project facts and project-specific contracts into existing README, AI entrypoint, code/architecture, requirement, process, and delivery owners. Do not copy methods identical to BuildOS. Daily work follows project entrypoints. Return to BuildOS calibration only when rules are missing, conflicting, stale, or the user explicitly requests whole-project governance.
+After initialization, write project facts and project-specific contracts into existing README, AI entrypoint, code/architecture, requirement, process, and delivery owners. Do not copy methods identical to BuildOS. Daily work follows project entrypoints and their conditional specialist routes; an existing document alone does not establish adoption.
 
 ## 2. Project Form and Module Selection
 
@@ -77,11 +77,11 @@ A small project may combine files, but must answer:
 
 ## 4. Invocation After Adoption
 
-When project owners provide the facts, rules, and commands needed for the current task, execute directly and stop governance routing. “Read the project first” does not mean rereading all BuildOS text.
+For a new release, deployment change or interrupted operations task, follow the project's declared route to Delivery and the current project procedure/entrypoint. The route may explicitly require selecting the Skill at task entry; do not suppress it because a document or script exists. Reuse unchanged guidance already read within the same scope, not a blanket exception from release responsibilities.
 
-Load one matching Skill and only necessary references when the work establishes or changes a durable governance decision and project rules are missing, conflicting, clearly stale, or governance/review is explicitly requested. Continue obeying clear, effective project controls for high-risk work. When controls are missing or conflict, fill only the specialist gap; do not compose every Skill automatically.
+Direct execution is appropriate when the relevant procedure is actually adopted: its command, inputs, applicable verification, resource lifecycle and recovery have matching evidence and remain valid for this task. Preserve the project route and actual authorization. Missing or conflicting parts return to their single specialist owner; do not preload every Skill or repeat whole-project governance.
 
-Ordinary implementation, bug fixes, code explanation, a single copy edit, local styling under clear design rules, and execution of an established process do not invoke BuildOS by default. If implementation exposes a real Product, Design, Engineering, Workflow, Delivery, or Project contract gap, route to the single primary Skill below.
+Ordinary implementation, bug fixes, code explanation, a single copy edit and local styling under clear rules need no extra Skill call. Established process steps reuse their verified entrypoint rather than reconstruct commands from memory. A changed contract or unverified execution path uses the matching route below.
 
 ## 5. Specialist Routing When BuildOS Is Needed
 
@@ -92,7 +92,7 @@ Ordinary implementation, bug fixes, code explanation, a single copy edit, local 
 | Visual direction, design system, layout, responsive behavior, interaction, motion, accessibility, or UI/UX review | `senmu-build-design` | Ordinary implementation under clear design rules does not trigger; component APIs remain with project/specialist Skills |
 | Workflow contract, project agent, material flow, receipt, or recoverable run state | `senmu-build-workflow` | Executing an established process does not trigger |
 | Engineering contract, architecture, testing strategy, technical debt, or refactoring rule | `senmu-build-engineering` | Trigger only when project rules are missing, conflicting, changing, or governance is explicit |
-| POC, independent audit, reproduction, or disputed-cause verdict | `senmu-build-assurance` | Trigger for an evidence-based independent conclusion; it does not implement the fix |
+| Decision POC, explicit audit, reproduction, or disputed-cause review | `senmu-build-assurance` | Select reviewer identity separately; preserve any required independent verdict and return remediation to its domain owner |
 | Open development batch, non-routine Git boundary, version, artifact, deployment, rollback, or production state | `senmu-build-delivery` | Ordinary implementation inside a governed batch does not trigger; keep unreleased unless release is explicit |
 | BuildOS feedback adjudication, formal retrospective, lesson promotion, or distillation of external guidance | `senmu-build-learning` | Ordinary user corrections and project business requirements do not enter the feedback inbox |
 

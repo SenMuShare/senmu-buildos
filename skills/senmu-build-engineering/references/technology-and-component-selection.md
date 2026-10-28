@@ -30,15 +30,9 @@ Read requirements, governance charter, current architecture, and existing capabi
 
 Use the principles/questions in `architecture-constraints-and-technical-debt.md`; do not duplicate them here. Reject candidates that create dual primary frameworks, dependency cycles, layer bypasses, shared mutable state, ownership conflict, or duplicate capability unless benefit, isolation, verification, and exit are recorded.
 
-## 3. Selection Order
+## 3. Candidate Selection
 
-1. Reuse supported project capability.
-2. Use language/platform standards.
-3. Adopt a mature compatible framework, component, SDK, or service.
-4. Write narrow custom code for business differences mature options cannot cover.
-5. Replace the main framework or restructure architecture only when the baseline cannot meet core requirements.
-
-Mature-first does not prohibit custom work. Reuse general infrastructure; custom-build competitive differentiation, special rules, or genuinely unadaptable parts with clear boundaries, tests, and ownership.
+Use the [solution-selection heuristic](implementation-economy-and-overengineering.md#1-solution-selection): inspect existing capability, platform/standard facilities, maintained dependencies and bounded custom code as applicable. Compare semantic fit, risk and lifecycle cost; sufficient evidence can eliminate candidates without a fixed search sequence. Replace a stable baseline only for an evidenced requirement or quality gap, with migration and recovery. Business differentiation can justify custom work; ordinary infrastructure can too when it best fits the actual constraints.
 
 ## 4. Candidate Matrix
 
@@ -76,15 +70,9 @@ Once the main framework, component system, storage, or runtime platform is appro
 
 ## 6. Reuse and Component Audit
 
-Before building common UI, identity, upload, editing, media, charts, queues, caches, logs, monitoring, deployment, or test infrastructure:
+For a common capability, search existing responsibility and evaluate viable platform/ecosystem alternatives under section 3. Read only relevant documentation and verify the applicable version, license, security, accessibility, performance and maintenance. Keep a short rationale for material adoption or custom boundaries at the existing decision owner; routine local choices need no separate report.
 
-1. Search current implementation and approved shared capability.
-2. Check official standards/SDKs, selected ecosystems, and mature community options.
-3. Load only matching docs/examples/components, not whole vendor libraries into a general Skill.
-4. Verify version, license, security, accessibility, performance, and maintenance.
-5. Record adoption, adaptation, or rejection rationale.
-
-For repetitive production, also establish component source, parameter contract, I/O, determinism, visual/behavior regression, upgrade policy, and legacy boundary. If not reused, state no match or adaptation cost above custom work.
+Repeated production also needs a stable source, parameter/I/O contract, relevant determinism and regression checks, upgrade policy and legacy boundary.
 
 ## 7. POC and Owner Confirmation
 
