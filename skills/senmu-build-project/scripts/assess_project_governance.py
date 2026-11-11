@@ -36,6 +36,12 @@ ENGINEERING_NAMES = {
     "TECHNICAL_DESIGN.md", "SYSTEM_TECHNICAL_SPECIFICATION.md", "TEST_CASES.md",
     "ARCHITECTURE.md", "TECH_DEBT.md", "TESTING_STRATEGY.md",
 }
+DESIGN_NAMES = {
+    "design.md", "design-system.md", "design_system.md", "ui-spec.md", "ui_spec.md", "ui_specification.md",
+    "ui-guidelines.md", "ui_guidelines.md", "brand-guidelines.md", "style-guide.md",
+}
+DESIGN_DIRS = {"design", "design-system", "design_system", "brand", "ui", "ux", "设计", "界面规范", "视觉规范"}
+UI_SOURCE_SUFFIXES = {".js", ".jsx", ".ts", ".tsx", ".vue", ".svelte", ".swift", ".kt", ".dart", ".qml"}
 WORKLOG_NAMES = {"WORKLOG.md", "CHANGELOG.md"}
 PRODUCTION_NAMES = {"RELEASE_RECORD.md", "ARTIFACT_MANIFEST.json", "DEPLOYMENT.md", "VERSION"}
 
@@ -166,6 +172,19 @@ def candidate_roles(name: str, relative: str) -> list[tuple[str, str]]:
         roles.append(("product_governance", "product path or filename marker"))
     if name in ENGINEERING_NAMES or "/engineering/" in f"/{relative_lower}/":
         roles.append(("engineering_governance", "engineering path or filename marker"))
+    parts = set(relative_lower.split("/")[:-1])
+    suffix = Path(name).suffix.lower()
+    if (suffix in {".md", ".mdx"} and name not in ENGINEERING_NAMES
+            and (lowered in DESIGN_NAMES or parts & DESIGN_DIRS)):
+        roles.append(("design_basis_candidate", "design document path only; confirm approved/current basis versus proposal or historical convention"))
+    if (suffix in UI_SOURCE_SUFFIXES | {".css", ".scss", ".sass", ".less", ".json", ".yaml", ".yml"}
+            and (parts & {"theme", "themes", "tokens", "design-tokens"}
+                 or re.search(r"(?:^|[._-])(?:theme|tokens)(?:[._-]|$)", lowered)
+                 or lowered.startswith(("tailwind.config.", "style-dictionary.config.")))):
+        roles.append(("theme_token_candidate", "theme/token source or configuration marker; resolve actual imports and generated direction"))
+    if (suffix in UI_SOURCE_SUFFIXES
+            and (parts & {"components", "widgets", "ui", "views"} or suffix in {".jsx", ".tsx", ".vue", ".svelte", ".qml"})):
+        roles.append(("ui_component_candidate", "view/component path only; confirm actual runtime usage, reuse boundary and owner"))
     if name in WORKLOG_NAMES:
         roles.append(("work_log", "work or version log filename marker"))
     if name in PRODUCTION_NAMES or "/receipts/" in f"/{relative_lower}/" or "/releases/" in f"/{relative_lower}/":
@@ -434,6 +453,62 @@ def instruction_metadata(path: Path, root: Path) -> dict[str, Any] | None:
     return result
 
 
+def ui_adoption_review(root: Path, policy_files: list[str], candidates: dict[str, list[dict[str, str]]]) -> dict[str, Any]:
+    """Connect declared capability to bounded candidates without choosing authority."""
+    declarations = []
+    for relative in sorted(policy_files):
+        target, link_status, read_status = instruction_file_target(root / relative, root)
+        record: dict[str, Any] = {"source": relative, "status": "not_read", "link_status": link_status}
+        if target is None:
+            record["status"] = read_status
+        else:
+            try:
+                with target.open("rb") as handle:
+                    data = handle.read(131073)
+                if len(data) > 131072:
+                    record["status"] = "size_limit_not_parsed"
+                else:
+                    registration = json.loads(data).get("ui_management")
+                    if registration is None:
+                        record.update(status="unassessed", scope="unassessed", basis_path=None)
+                        declarations.append(record)
+                        continue
+                    if not isinstance(registration, dict) or registration.get("scope") not in ("none", "one_off", "persistent"):
+                        record["status"] = "invalid_declaration"
+                    else:
+                        record.update(status="declared_pending_confirmation", scope=registration["scope"],
+                                      basis_path=registration.get("basis_path"))
+                        if registration["scope"] == "persistent":
+                            record["standardization"] = (
+                                "canonical_path_pending_confirmation"
+                                if registration.get("basis_path") == "design/UI_SPECIFICATION.md"
+                                else "migration_required"
+                            )
+            except (OSError, ValueError, AttributeError):
+                record["status"] = "unreadable_or_invalid_json"
+        declarations.append(record)
+    counts = {role: len(candidates.get(role, [])) for role in
+              ("design_basis_candidate", "theme_token_candidate", "ui_component_candidate")}
+    return {
+        "status": "semantic_confirmation_required" if declarations or any(counts.values()) else "no_ui_signal_found",
+        "declared_capabilities": declarations,
+        "candidate_counts": counts,
+        "authority_confirmed": False,
+        "standard_basis_path": "design/UI_SPECIFICATION.md",
+        "conflict_status": "not_assessed",
+        "coverage": "bounded path inventory and optional ui_management declaration; imports, approved decisions, rendered pages and actual host use not verified; absence is not proof of no UI",
+        "review_dimensions": [
+            "confirm_none_one_off_or_persistent_from_actual_project_capability",
+            "approved_basis_existing_conventions_and_unresolved_conflicts",
+            "actual_theme_token_component_sources_and_consumers",
+            "representative_pages_states_viewports_and_user_journey",
+            "canonical_ui_specification_migration_and_task_routes_to_rendered_verification",
+        ],
+        "required_actions": [],
+        "decision_rule": "Confirm actual capability and approved decisions before adopting candidates. Persistent UI converges to design/UI_SPECIFICATION.md through authorized migration: preserve valid decisions, switch navigation, retire old authority and retain history. Discovery does not authorize writes, resolve conflicts or confirm design authority.",
+    }
+
+
 def assess(root: Path, max_depth: int, verbose: bool) -> dict[str, Any]:
     excluded: dict[str, list[str]] = defaultdict(list)
     scanned_files: list[Path] = []
@@ -617,6 +692,7 @@ def assess(root: Path, max_depth: int, verbose: bool) -> dict[str, Any]:
         },
         "candidate_mappings": {role: compact(items) for role, items in sorted(candidates.items())},
         "capability_assessment": assess_capability_signals(scanned_files, root),
+        "ui_adoption_review": ui_adoption_review(root, policy_files, candidates),
         "boundary_contract_review": {
             "status": "semantic_confirmation_required",
             "candidate_count": len(candidates.get("boundary_contract_candidate", [])),

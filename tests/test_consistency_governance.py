@@ -74,7 +74,7 @@ class ConsistencyMapTests(unittest.TestCase):
     def initialize(self):
         result = subprocess.run([sys.executable,str(PROJECT/'init_project_governance.py'),
             '--mode','initialize-new','--root',str(self.root),'--project-name','Consistency fixture',
-            '--project-type','software','--profile','standard'], capture_output=True,text=True,timeout=30)
+            '--project-type','software','--profile','standard','--ui-scope','none'], capture_output=True,text=True,timeout=30)
         self.assertEqual(result.returncode,0,result.stderr)
         return json.loads((self.root/'.senmu-buildos/config.json').read_text())
 

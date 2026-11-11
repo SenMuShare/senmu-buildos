@@ -42,7 +42,7 @@ Plugin updates do not rewrite projects. Authorized adoption compares effective r
 - Unused languages/equivalent rules need no edit; preserve language, exceptions and working imports.
 - Technical/security changes stay at professional owners. AGENTS keeps short decisions, actual commands and conditional routes, not copied profiles.
 - Record `adopted`, `no_change_needed` or `gap_open`, owner/evidence in existing task/governance records.
-- Initializer `adoption_checks` remain pending; `adoption_record_owner` locates results. `active` scaffolds/structural passes prove neither adoption nor safety.
+- Initializer `adoption_checks` follow declared capabilities and remain pending; `adoption_record_owner` locates results. `active` scaffolds/structural passes prove neither adoption nor safety.
 - Verify the changed route and matching check; observe affected host loading in a fresh session when available. Disclose gaps; continue independent authorized source work.
 
 Unchanged governance is a semantic no-op. No layout-driven reinitialization or business-agent lifecycle changes; calibrate drafts first.

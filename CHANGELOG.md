@@ -4,6 +4,38 @@ Earlier entries are retained verbatim in [the history through 2.20.5](docs/relea
 
 ## Unreleased
 
+## [2.32.0] - 2026-11-11
+
+### Improved
+
+- Route ordinary product requests, unclear interface problems and reference reconstruction to the applicable product, design and engineering methods, while keeping requirements-only work and settled local edits scoped.
+- Give maintained UI, including a single page, one standard entrypoint at `design/UI_SPECIFICATION.md`. Keep its template with Design and connect project navigation, actual implementation sources and proportionate review.
+- Migrate valid existing UI decisions through project takeover: resolve conflicts, switch routes, retire superseded authority and preserve pinned historical references.
+- Present each capability through its user problem, working principles, concrete methods and expected outcomes in all three READMEs.
+
+### Fixed
+
+- Keep an unassessed UI scope distinct from explicit `none`: planning remains read-only, and new-project creation requires the agent to complete classification first.
+- Reject UI document role collisions and out-of-root paths; report legacy custom locations as migration work without overwriting their files or explicit scope decisions.
+- Align Design ownership, business behavior and technical implementation routes, and remove the stale cross-page-only condition from the behavior matrix.
+
+## [2.31.0] - 2026-11-11
+
+### Improved
+
+- Connect persistent UI adoption to the existing design basis, project instruction routes, implementation sources and task closeout without requiring a new design file or extra Skill.
+- Distill public Oil UI methods into the existing Design owner: conflict adjudication, intentional variants, page families and real samples, reference analysis, prototype adoption and scoped visual/UX review.
+- Let frontend work consume settled design decisions directly; review representative shared consumers and distinguish browser evidence from native Windows acceptance.
+- Preserve existing project files and locale; canonicalize UI owner paths and encode project-map links so aliases and reserved URL characters retain the correct local identity.
+
+## [2.30.0] - 2026-10-30
+
+### Improved
+
+- Derive adoption work from declared release and artifact capabilities, including real entrypoints, target identity, producer-to-exit wiring and applicable successor/interruption checks, while preserving source-only and local non-triggers.
+- Exercise the existing offline release workspace across a successor policy, independent partial failure and a fresh-process handoff; reject stale deployment reuse and preserve protected artifacts and evidence.
+- Keep adoption outcomes in existing task owners and require generated verification paths to be exercised within authorization, without adding approvals, a new runner or automatic project migration.
+
 ## [2.29.0] - 2026-10-26
 
 - Clarify project AGENTS software defaults against speculative defensive code, redundant internal validation, premature abstractions and masked failures while preserving trust-boundary protections.

@@ -1,12 +1,16 @@
 # Senmu BuildOS — Agent Skills for Codex & Claude Code
 
-**Understand the project. Reuse what works. Verify the result.**
+**Turn an idea into a product you can keep improving.**
+
+*Understand the goal. Make the right decisions. Carry the work through.*
 
 [简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md)
 
-Senmu BuildOS is a set of agent skills for real software projects. Help your coding agent understand the existing implementation, clarify requirements and constraints, reuse code and mature components, and verify the result with appropriate tests and delivery evidence. Use it for requirements, UI/UX, architecture, debugging, code review and release work—without turning every edit into a full process.
+You know what you want to build. You may not yet know which product, design, engineering or delivery decisions it needs. Senmu BuildOS gives your AI coding assistant a project coach's methods: start from your goal and the codebase, identify the professional work the task requires, and connect decisions to implementation and checkable results.
 
-**One plugin. Eight on-demand capabilities. Keep existing projects intact and small changes lightweight.**
+It covers product, UI/UX, engineering, project governance, workflows, delivery, assurance and learning. New projects get a practical starting point; existing projects retain useful capabilities; small changes stay direct. Different models and sessions can continue from the same project facts.
+
+**Describe your goal. BuildOS helps the agent work out the next step, why it matters and what completion means.**
 
 [![License](https://img.shields.io/github/license/SenMuShare/senmu-buildos)](LICENSE) [![Public release](https://img.shields.io/github/v/release/SenMuShare/senmu-buildos?label=public%20release)](https://github.com/SenMuShare/senmu-buildos/releases/latest)
 
@@ -85,20 +89,23 @@ Open a project and choose a starting point. You do not need to memorize the skil
 
 When drafting or updating requirements, each feature retains its target version and four parts: requirement context, capability, business logic, and frontend interaction including exceptions. Link relevant prototypes/UI to the specific requirement and record adoption scope. Missing artwork does not require generating it; an explicitly requested replacement format takes priority. See [requirement writing and design linkage](skills/senmu-build-product/references/product-requirements-and-iteration.md#21-per-feature-requirement-contract).
 
+You can also say “Build a browser-based inventory system,” “This page feels messy,” or “Implement this screenshot.” BuildOS identifies the product, design and engineering work the goal needs; a requirements-only request stays within that stage. Maintained UI uses `design/UI_SPECIFICATION.md`. Governance migration preserves valid existing decisions, while AGENTS.md and the project map connect the standard, actual components and review entrypoints.
+
 For a review, ask “Review requirement fidelity and engineering quality separately.” For work only you can do in a third-party console, ask “Turn the steps only I can perform into a resumable operator guide.” Open the [skill table](#skills) when you need an explicit entrypoint.
 
 <a id="why"></a>
 <a id="why-buildos"></a>
-## Problems it helps you address
+## A different way to move a project forward
 
-| What goes wrong | How BuildOS approaches it | What to look for |
-| --- | --- | --- |
-| The agent starts coding before understanding the request | Clarify scope, non-goals and completion criteria | Implementation that matches the request, not extra features |
-| Existing components and state are rebuilt from scratch | Inspect the project, framework and component capabilities first | A necessary, focused change and a reason for reuse |
-| Every fix makes the code harder to maintain | Follow causes, responsibilities and callers; verify real behavior | An evidenced repair, clear boundaries and regression results |
-| A new session starts guessing; passing tests become “deployed” | Keep decisions, progress and evidence with existing project owners | Resumable work and accurate implementation, acceptance and release status |
+**Bring professional judgment into everyday requests.** “Build an inventory system” carries questions about user actions, data meaning, interface states and delivery. BuildOS guides the agent to recognize the work needed at the current stage. You can speak in product terms without naming a Skill or an engineering technique.
 
-BuildOS is for independent developers, product builders and small teams maintaining real projects. It is not a code generator or hosted execution platform, and more documents or approvals are not substitutes for engineering judgment.
+**Fit the method to the project.** A disposable prototype, a maintained product, a backend service and an established repository need different work. Start with actual capabilities and gaps, then choose guidance. Small changes covered by existing rules remain straightforward.
+
+**Reduce rework at its source.** Find the existing component, contract and state owner before creating another. Trace bugs to their cause, resolve conflicting standards into adopted decisions, and choose checks that can expose the actual failure. Clear responsibilities and necessary code matter more than an ever-growing list of prohibitions.
+
+**Leave the next agent a usable starting point.** Requirement versions, design decisions, task progress and verification results stay with the project. Resume through known entrypoints when the session or model changes. Implementation, user acceptance, deployment and release remain distinct facts.
+
+BuildOS is for independent developers, product builders and small teams maintaining real products. You decide the goals and tradeoffs; the agent gets shared methods for organizing the professional work.
 
 <a id="example"></a>
 ## An example you can inspect
@@ -119,20 +126,58 @@ Optional [executable contract examples](skills/senmu-build-engineering/assets/co
 
 <a id="skills"></a>
 <a id="one-plugin-eight-capabilities"></a>
-## One plugin, eight skills
+<a id="one-plugin-eight-skills"></a>
+## Eight skills, each with a job to do
 
-| Skill | When to use it |
-| --- | --- |
-| [Project](skills/senmu-build-project/SKILL.md) | Take over a project; reconcile AGENTS.md, existing rules and durable task state |
-| [Product](skills/senmu-build-product/SKILL.md) | Clarify requirements, scope, priorities, interface content and acceptance |
-| [Design](skills/senmu-build-design/SKILL.md) | Design or review UI/UX, layout, interaction, responsiveness and accessibility |
-| [Workflow](skills/senmu-build-workflow/SKILL.md) | Define business agents, prompts, materials, recovery and delivery contracts |
-| [Engineering](skills/senmu-build-engineering/SKILL.md) | Understand systems, diagnose bugs, design architecture, apply language guidance, test and review code |
-| [Delivery](skills/senmu-build-delivery/SKILL.md) | Handle complex Git collaboration, versions, artifacts and authorized releases or rollback |
-| [Assurance](skills/senmu-build-assurance/SKILL.md) | Reproduce, experiment, audit and assess evidence; independent review needs an actually independent reviewer |
-| [Learning](skills/senmu-build-learning/SKILL.md) | Turn verified lessons and useful external methods into the appropriate existing rules |
+### Product · Turn a rough idea into something you can accept
 
-These are peer capabilities, not eight agents that must run together. Engineering loads applicable language/runtime guidance for Python, TypeScript, Go, Java, Rust and other stacks—not the whole catalog. Each entry uses its directory name. Runtime guidance is written in English; you can work in Chinese, English, Japanese or another requested language.
+A feature request often leaves failure, cancellation, switching and recovery unspecified. Product connects goals, scope, business behavior, interface feedback and acceptance, then places features in the appropriate version. Linked prototypes retain an explicit adoption scope.
+
+You get implementable requirements and a clear decision about what belongs in this version. Try: “Complete the bulk-export requirements, especially retries and permissions.” [Explore Product](skills/senmu-build-product/SKILL.md)
+
+### Design · Make the screens belong together and the task work
+
+“More polished” becomes concrete choices about hierarchy, layout, type, color, density and state. Design starts with user tasks and references, distinguishes new interfaces from existing-project corrections and faithful reconstruction, and uses page families, representative samples and real components to maintain consistency with intentional variants.
+
+Maintained UI uses `design/UI_SPECIFICATION.md`, linked to the actual theme, tokens and components. Review checks the rendered interface and relevant user path. Try: “These pages feel messy. Find the causes and bring them together.” [Explore Design](skills/senmu-build-design/SKILL.md)
+
+### Engineering · Reuse what works and repair the cause
+
+Understand entrypoints, consumers, data and state before choosing an implementation. Engineering covers stack selection, architecture, frontend/backend contracts, language guidance, debugging and code review. It starts with capabilities already available in the project and mature components.
+
+A repair returns to the original failure and affected consumers. You see the rationale, actual changes and checks that ran. Try: “This bug keeps coming back. Find its cause and fix it within the existing architecture.” [Explore Engineering](skills/senmu-build-engineering/SKILL.md)
+
+### Project · Give new projects a start and existing ones clear rules
+
+Project identifies roots, existing constraints, responsibilities and actual capabilities. New projects get the governance they need; existing projects reconcile standards through discovery and migration while preserving valid decisions. AGENTS.md provides working principles and routes; professional detail stays with its domain.
+
+You get conventions that can be found, used and resumed: whether there is UI, who maintains its standard and where work continues. Try: “Take over this project, identify the missing conventions and put the necessary ones in place.” [Explore Project](skills/senmu-build-project/SKILL.md)
+
+### Workflow · Make a process recoverable after interruption
+
+Multiple agents, file-processing stages and external consoles often fail at handoffs. Workflow defines inputs, outputs, run identity, stage state, human steps and recovery. Source material, intermediates, deliverables and archives have distinct roles so a retry can resume from the right point.
+
+It also helps design business agents and prompts. You get executable process contracts and specific handoffs. Try: “A failed batch always starts over. Make recovery and delivery explicit.” [Explore Workflow](skills/senmu-build-workflow/SKILL.md)
+
+### Delivery · Know exactly how far the work has shipped
+
+A commit, a successful build, a deployment and production verification establish different things. Delivery connects isolated branches and worktrees, parallel integration, versioned artifacts, release authority, rollback and environment checks through the project's adopted delivery routes.
+
+You get an identified candidate, verification results, actual release state and recovery facts. Try: “Integrate this batch into a version and release through our existing process once the checks pass.” [Explore Delivery](skills/senmu-build-delivery/SKILL.md)
+
+### Assurance · Turn a concern into an evidence-based conclusion
+
+“Is this design wrong?” needs a defined subject, version, scope and standard. Assurance examines hypotheses through source, reproductions, comparisons or POCs. It separates facts, inferences and unknowns, then explains impact, remediation and re-review conditions.
+
+You get traceable findings and priorities. Independence depends on actual reviewer separation; explicit audits and routine self-checks have different scopes. Try: “Assess this deployment plan objectively and show where the problems are.” [Explore Assurance](skills/senmu-build-assurance/SKILL.md)
+
+### Learning · Turn a solved problem into reusable experience
+
+Adding a new rule after every mistake eventually creates conflicting instructions. Learning checks the problem and improvement evidence before deciding whether it needs a local correction, a project lesson or a reusable BuildOS method. External guidance also passes applicability and duplication review.
+
+You get selected lessons with a clear authoritative home. Try: “Review this rework: what is specific to this project, and what should improve our general methods?” [Explore Learning](skills/senmu-build-learning/SKILL.md)
+
+These are peer capabilities selected for the task; one may be enough. Engineering loads Python, TypeScript, Go, Java, Rust and other guidance as needed. Runtime guidance is written in English; collaborate in Chinese, English, Japanese or another language.
 
 <a id="how-it-works"></a>
 ## Working with your existing project
@@ -149,7 +194,7 @@ Project entrypoint
   → Release, runtime and production evidence
 ```
 
-This is not a requirement to create five files. Small projects can combine records; established projects retain their README, AGENTS.md, issues, design documents and quality commands. Within authorized work, address real gaps while preserving effective principles, exceptions and other contributors' changes.
+Keep these facts continuous at a scale appropriate to the task. Progress can remain in issues or existing task records; maintained UI has its current standard in `design/UI_SPECIFICATION.md`. Governance migration preserves valid decisions, while project entrypoints and quality commands stay connected to the actual implementation.
 
 **Fix the source of the problem before adding another gate.** Improve the requirement, responsibility, interface or default process that creates errors. Use tests and gates for material residual risk; make a small repair when the cause is clear. Reuse must still preserve business meaning, security, permissions and compatibility.
 
@@ -174,11 +219,11 @@ The project entrypoint can route release/recovery to Delivery and its existing p
 <a id="installation-updates-and-removal"></a>
 ## Version, updates and removal
 
-The current source version is Senmu BuildOS `v2.29.0`. Source, private release, public marketplace availability and local installation are separate states. The badge above links to the public channel, not your installed version.
+The current source version is Senmu BuildOS `v2.32.0`. Source, private release, public marketplace availability and local installation are separate states. The badge above links to the public channel, not your installed version.
 
-<!-- product-surface-review: 2.29.0 -->
+<!-- product-surface-review: 2.32.0 -->
 
-This version clarifies software implementation principles in project AGENTS: avoid defenses, retries and compatibility machinery for unsupported hypothetical cases, reuse internal validation guarantees that still hold, and retain checks for new trust boundaries, changed state, authorization and data protection. Simple one-use logic need not become extra helpers, and failures must not look like success. New projects use the updated starter; authorized governance merges equivalent rules in existing projects. Upgrading does not rewrite projects automatically or establish model-performance or token-savings claims. See [release notes](RELEASE_NOTES.md).
+This version strengthens the handoff from everyday requests to product, design and engineering, standardizes the maintained UI entrypoint and migration of existing guidance, and distinguishes an unassessed UI scope from no UI. The product introduction now explains each skill through its principles, methods and outcomes. Small changes remain lightweight. See [release notes](RELEASE_NOTES.md).
 
 <details>
 <summary>Update an existing installation</summary>

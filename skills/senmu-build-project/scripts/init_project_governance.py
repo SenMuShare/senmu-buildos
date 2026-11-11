@@ -9,7 +9,8 @@ import os
 import shutil
 import subprocess
 from datetime import date
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
+from urllib.parse import quote
 
 
 SKILL_ROOT = Path(__file__).resolve().parent.parent
@@ -109,6 +110,8 @@ TYPE_MODULES = {
     "mixed": ("product", "workflow", "code", "architecture", "git", "delivery"),
 }
 MODULE_CHOICES = ("product", "workflow", "code", "architecture", "git", "poc", "delivery", "agents")
+UI_SCOPES = ("none", "one_off", "persistent")
+UI_BASIS_PATH = "design/UI_SPECIFICATION.md"
 
 CLASSIFICATION_DEFAULTS = {
     "software": {"lifecycle_intent": "production", "delivery_model": "continuous_product", "composition": "single_domain"},
@@ -182,15 +185,18 @@ def render(
     publication_model: str,
     release_channels: list[str],
     artifact_kinds: list[str],
+    ui_management: dict[str, str | None],
 ) -> str:
     text = template.read_text(encoding="utf-8")
     # The English structural draft is localized by the adopting agent, not by
     # language guessing or a duplicate collection of translated templates.
-    opening, closing = "<!-- engineering-only:start -->", "<!-- engineering-only:end -->"
-    if opening in text:
-        before, remainder = text.split(opening, 1)
-        software, after = remainder.split(closing, 1)
-        text = before + (software if "code" in selected_modules else "") + after
+    for label, enabled in (("engineering", "code" in selected_modules),
+                           ("persistent-ui", ui_management["scope"] == "persistent")):
+        opening, closing = f"<!-- {label}-only:start -->", f"<!-- {label}-only:end -->"
+        while opening in text:
+            before, remainder = text.split(opening, 1)
+            conditional, after = remainder.split(closing, 1)
+            text = before + (conditional if enabled else "") + after
     values = {
         "{{PROJECT_NAME}}": project_name,
         "{{PROJECT_ROOT}}": "Git toplevel (resolved at runtime)" if (root / ".git").exists() else "Project root containing .senmu-buildos/config.json (resolved at runtime)",
@@ -210,6 +216,9 @@ def render(
         "{{PUBLICATION_MODEL}}": publication_model,
         "{{RELEASE_CHANNELS}}": ", ".join(release_channels) if release_channels else "none",
         "{{ARTIFACT_KINDS}}": ", ".join(artifact_kinds) if artifact_kinds else "none",
+        "{{UI_BASIS_PATH}}": ui_management["basis_path"] or "",
+        "{{UI_MAP_BASIS_PATH}}": (quote(Path(os.path.relpath(root / ui_management["basis_path"], root / "governance")).as_posix(), safe="/")
+                                  if ui_management["basis_path"] else ""),
         "{{DATE}}": date.today().isoformat(),
         "{{MODULE_PRODUCT}}": "active" if "product" in selected_modules else "inactive",
         "{{MODULE_WORKFLOW}}": "active" if "workflow" in selected_modules else "inactive",
@@ -238,6 +247,7 @@ def resolve_template(source_rel: str) -> Path:
         "../architecture-governance/": SKILLS_ROOT / "senmu-build-engineering" / "assets" / "architecture-governance",
         "../engineering-governance/": SKILLS_ROOT / "senmu-build-engineering" / "assets" / "engineering-governance",
         "../product-governance/": SKILLS_ROOT / "senmu-build-product" / "assets" / "product-governance",
+        "../design-governance/": SKILLS_ROOT / "senmu-build-design" / "assets" / "design-governance",
         "../workflow-governance/": SKILLS_ROOT / "senmu-build-workflow" / "assets" / "workflow-governance",
         "../agent-governance/": SKILLS_ROOT / "senmu-build-workflow" / "assets" / "agent-governance",
         "../delivery-governance/": SKILLS_ROOT / "senmu-build-delivery" / "assets" / "delivery-governance",
@@ -273,6 +283,40 @@ def is_resumable_draft(root: Path) -> bool:
     except (OSError, json.JSONDecodeError):
         return False
     return policy.get("initialization_status") == "draft" and policy.get("schema_version") == "3.0.0"
+
+
+def ui_adoption(root: Path, scope: str | None, owner: str | None) -> dict[str, str | None]:
+    """Preserve explicit declarations; an omitted classification remains unassessed."""
+    policy_path = root / ".senmu-buildos/config.json"
+    saved = None
+    if policy_path.is_file():
+        saved = json.loads(policy_path.read_text(encoding="utf-8")).get("ui_management")
+        if saved is not None and (not isinstance(saved, dict) or saved.get("scope") not in UI_SCOPES):
+            raise SystemExit("[ERROR] 已有 ui_management 声明无效；先校准原配置，初始化器不会覆盖。")
+        if saved is not None:
+            saved = {"scope": saved["scope"], "basis_path": saved.get("basis_path")}
+        elif scope is not None or owner is not None:
+            raise SystemExit("[ERROR] 既有草案尚未登记 UI 范围；按既有项目采用流程补齐配置和导航，初始化器不会覆盖原文件。")
+    scope = scope or (saved["scope"] if saved is not None else "unassessed")
+    if owner and scope != "persistent":
+        raise SystemExit("[ERROR] --ui-owner 仅适用于 --ui-scope persistent；一次性界面沿当前任务保存依据。")
+    basis = owner or (saved.get("basis_path") if saved is not None else None) or UI_BASIS_PATH
+    if scope == "persistent":
+        if (not isinstance(basis, str) or PureWindowsPath(basis).drive
+                or any(character in basis for character in "\\\x00\r\n|`#<>") or Path(basis).suffix.lower() != ".md"):
+            raise SystemExit("[ERROR] --ui-owner 必须是项目内 Markdown 文件路径，不含片段或表格分隔符。")
+        basis = validate_relative_role_path(root, "ui-owner", basis)
+        basis = (root / basis).resolve().relative_to(root).as_posix()
+        if saved is None and basis != UI_BASIS_PATH:
+            raise SystemExit("[ERROR] 新项目的持续 UI 规范固定为 design/UI_SPECIFICATION.md；AGENTS、项目地图和任务文件只保存入口。")
+    else:
+        basis = None
+    declaration = {"scope": scope, "basis_path": basis}
+    if saved is not None and declaration != saved:
+        raise SystemExit("[ERROR] 恢复草案不会替换已有 UI 采用声明；请按既有项目采用流程校准原 owner、配置和导航。")
+    if saved is not None and scope == "persistent" and not (root / basis).is_file():
+        raise SystemExit("[ERROR] 既有 UI 依据不可达；按既有项目采用流程修复或迁移，初始化器不会创建替代正文。")
+    return declaration
 
 
 def create_baseline_commit(root: Path, managed_paths: list[str]) -> dict[str, str | None]:
@@ -364,6 +408,9 @@ def main() -> None:
     parser.add_argument("--lifecycle-intent", choices=("exploration", "pilot", "production", "migration", "one_off"))
     parser.add_argument("--delivery-model", choices=("continuous_product", "source_distribution", "versioned_artifact", "managed_service", "project_delivery", "internal_process"))
     parser.add_argument("--composition", choices=("single_domain", "composite"))
+    parser.add_argument("--ui-scope", choices=UI_SCOPES,
+                        help="依据实际需求判断 none、one_off 或 persistent；计划未声明时为 unassessed，实际初始化必须完成分类")
+    parser.add_argument("--ui-owner", help="新 persistent UI 固定为 design/UI_SPECIFICATION.md；既有草案只接受原声明，不迁移或覆盖")
     parser.add_argument("--publication-model", choices=PUBLICATION_MODELS, default="private_only")
     parser.add_argument("--release-channel", action="append", choices=RELEASE_CHANNELS, default=[])
     parser.add_argument("--artifact-kind", action="append", choices=ARTIFACT_KINDS, default=[])
@@ -415,9 +462,6 @@ def main() -> None:
                 "[ERROR] initialize-new 只用于空白项目；已有项目请先只读审视："
                 f"python3 {assessor} --root {workspace_root}"
             )
-    if not workspace_root.exists():
-        if not args.dry_run:
-            workspace_root.mkdir(parents=True)
     if workspace_root.exists() and not workspace_root.is_dir():
         raise SystemExit(f"[ERROR] 目标不是目录：{workspace_root}")
 
@@ -446,6 +490,17 @@ def main() -> None:
         else workspace_root / (authority_path if layout == "publication-workspace" else project_system_path)
     )
 
+    selected_modules = list(dict.fromkeys(TYPE_MODULES[args.project_type] if args.modules is None else args.modules))
+    if args.with_agents and "agents" not in selected_modules:
+        selected_modules.append("agents")
+    selected_module_set = set(selected_modules)
+    has_standard_owners = args.profile in {"standard", "release"}
+    ui_management = ui_adoption(root, args.ui_scope, args.ui_owner)
+    if ui_management["scope"] == "unassessed" and not args.dry_run:
+        raise SystemExit("[ERROR] UI 范围尚未评估，未写入项目。根据需求和实际能力补充 --ui-scope none、one_off 或 persistent 后再初始化；不要把未知当成没有 UI。")
+    if not args.dry_run:
+        workspace_root.mkdir(parents=True, exist_ok=True)
+
     if layout == "project-system":
         if not args.dry_run:
             root.mkdir(parents=True, exist_ok=True)
@@ -467,15 +522,21 @@ def main() -> None:
     if not args.dry_run and not (root / ".git").exists():
         subprocess.run(["git", "init", str(root)], check=True, capture_output=True, text=True)
 
-    selected_modules = list(dict.fromkeys(TYPE_MODULES[args.project_type] if args.modules is None else args.modules))
-    if args.with_agents and "agents" not in selected_modules:
-        selected_modules.append("agents")
-    selected_module_set = set(selected_modules)
-    has_standard_owners = args.profile in {"standard", "release"}
     classification = dict(CLASSIFICATION_DEFAULTS[args.project_type])
     release_channels = list(dict.fromkeys(args.release_channel))
     artifact_kinds = list(dict.fromkeys(args.artifact_kind))
     adoption_checks = (["verify_representative_capability_route", "confirm_stack_and_shared_capability_owner", "confirm_boundary_contract_source_and_checks_or_non_applicability"] if "code" in selected_module_set else []) + (["establish_actual_exposure_and_security_evidence"] if set(release_channels) & {"managed_service", "container_image"} else [])
+    if ui_management["scope"] == "persistent":
+        adoption_checks.append("confirm_ui_basis_and_implementation_routes_with_rendered_evidence")
+    elif ui_management["scope"] == "unassessed":
+        adoption_checks.append("classify_ui_scope_from_project_capability")
+    if release_channels or artifact_kinds:
+        adoption_checks.append("verify_existing_release_entrypoint_and_target_identity")
+    if artifact_kinds or set(release_channels) - {"public_source_repository"}:
+        adoption_checks.extend([
+            "verify_producer_to_exit_wiring_and_protected_consumers",
+            "exercise_applicable_successor_and_interrupted_closeout",
+        ])
     adoption_record_owner = "governance/tasks/TASK_REGISTER.md" if has_standard_owners else "README.md"
     if args.lifecycle_intent:
         classification["lifecycle_intent"] = args.lifecycle_intent
@@ -512,6 +573,8 @@ def main() -> None:
         templates.update(DEPLOYMENT)
     if artifact_kinds:
         templates.update(ARTIFACT_LIFECYCLE)
+    if ui_management["basis_path"] == UI_BASIS_PATH:
+        templates["../design-governance/UI_SPECIFICATION.template.md"] = UI_BASIS_PATH
 
     required_paths = list(templates.values())
     generated: list[str] = []
@@ -527,23 +590,22 @@ def main() -> None:
             planned.append(target_rel)
             continue
         target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_text(
-            render(
-                source,
-                args.project_name,
-                root,
-                workspace_root,
-                layout,
-                args.profile,
-                args.project_type,
-                classification,
-                selected_module_set,
-                args.publication_model,
-                release_channels,
-                artifact_kinds,
-            ),
-            encoding="utf-8",
+        contents = render(
+            source,
+            args.project_name,
+            root,
+            workspace_root,
+            layout,
+            args.profile,
+            args.project_type,
+            classification,
+            selected_module_set,
+            args.publication_model,
+            release_channels,
+            artifact_kinds,
+            ui_management,
         )
+        target.write_text(contents, encoding="utf-8")
         if target_rel.startswith("operations/scripts/") and target.suffix == ".sh":
             target.chmod(0o755)
         generated.append(target_rel)
@@ -665,6 +727,7 @@ def main() -> None:
             "quality_commands": {},
             "adoption_checks": adoption_checks,
             "adoption_record_owner": adoption_record_owner,
+            "ui_management": ui_management,
             "product_management": {
                 "user_requirements_path": "product/USER_REQUIREMENTS.md",
                 "product_specification_path": "product/PRODUCT_SPECIFICATION.md",
@@ -716,7 +779,7 @@ def main() -> None:
     if args.commit_baseline and not args.dry_run:
         baseline_commit = create_baseline_commit(root, managed_paths)
 
-    print(json.dumps({"mode": args.mode, "workspace_root": str(workspace_root), "root": str(root), "layout": layout, "project_type": args.project_type, "classification": classification, "publication_model": args.publication_model, "release_channels": release_channels, "artifact_kinds": artifact_kinds, "profile": args.profile, "selected_modules": selected_modules, "planned": planned, "generated": generated, "skipped": skipped, "baseline_commit": baseline_commit, "adoption_status": "unverified", "adoption_checks": adoption_checks, "adoption_record_owner": adoption_record_owner}, ensure_ascii=False, indent=2))
+    print(json.dumps({"mode": args.mode, "workspace_root": str(workspace_root), "root": str(root), "layout": layout, "project_type": args.project_type, "classification": classification, "publication_model": args.publication_model, "release_channels": release_channels, "artifact_kinds": artifact_kinds, "profile": args.profile, "selected_modules": selected_modules, "planned": planned, "generated": generated, "skipped": skipped, "baseline_commit": baseline_commit, "adoption_status": "unverified", "adoption_checks": adoption_checks, "adoption_record_owner": adoption_record_owner, "ui_management": ui_management}, ensure_ascii=False, indent=2))
     if not args.dry_run:
         print("[NEXT] 校准占位字段并运行 --strict；active 只表示结构已校准。按配置中的 adoption_checks 验证实际路线，将已采用、无需变更和未完成项记录到 adoption_record_owner；结构通过不代表治理、安全或宿主加载已验证。")
 

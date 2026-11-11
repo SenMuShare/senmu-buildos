@@ -1,11 +1,11 @@
 ---
 name: senmu-build-project
-description: "Initialize or reconcile project governance and AGENTS.md: working principles, owners, language and task-state rules. Not for ordinary execution or business-agent prompts."
+description: "Start a project from an idea or reconcile missing/conflicting governance: structure, standards, AGENTS.md and task state. Infer needed capabilities from the requested work. Not routine implementation or business-agent prompts."
 ---
 
 # Project Governance
 
-Own governance, authority and cross-domain boundaries—not other Skills. Ordinary work uses project entrypoints; continue for gaps, conflicts, evolution or explicit requests.
+Own governance, authority and cross-domain boundaries. Ordinary work follows project entrypoints; load methods for gaps, conflicts or requested evolution.
 
 ## Route by Outcome
 
@@ -29,9 +29,10 @@ New projects use [Initializer](scripts/init_project_governance.py); existing pro
 - Establish roots, Git/subproject/release boundaries, entrypoints, owners, authority and non-goals. User intent outranks defaults within host permissions.
 - Placement advice names the preferred owner/path and reason; advice alone does not authorize writes.
 - Run `init_project_governance.py --mode plan-new` before authorized `initialize-new`; calibrate the draft and its language before adoption.
-- Inventory existing projects read-only; confirm semantic ownership. Evolve original owners within authority, without default overwrites or parallel truth.
-- Shape structure around actual capabilities and lifecycle, not speculative modules.
-- Map task signals to the matching Skill and real project owner/command under [Index Contract](references/project-standard-discovery-and-on-demand-loading.md#4-index-contract). AGENTS keeps useful principles, constraints and routes—not manuals. Shared principles need not be project-unique.
+- Inventory existing projects read-only; confirm semantic ownership and migrate approved facts within authority, preserving recovery and one current standard.
+- Infer needed capabilities from the user's goal, including implicit UI; complete classification before initialization. Scope structure to actual work and lifecycle.
+- Persistent UI uses `design/UI_SPECIFICATION.md`, linked implementation and rendered checks under [UI Adoption](references/project-governance-instances-and-evolution.md#ui-adoption); no UI or one-off work stays light.
+- Map task signals to Skills and real project owners/commands under [Index Contract](references/project-standard-discovery-and-on-demand-loading.md#4-index-contract). AGENTS keeps usable principles, constraints and routes, not manuals.
 - Use one Durable Task State Owner across stages; resuming a task does not reactivate Project.
 - Plan/audit first; authorized repair or initialization continues in scope, audit-only remains read-only. Preserve exceptions; merge equivalents without repeated growth. Source edits do not prove installation or model behavior.
 

@@ -114,6 +114,17 @@ The domain-reference tests check real links, ownership and package registration,
 | Recoverable exception | Handle at a layer able to recover or translate while retaining failure meaning. | Catch everything and return a success-shaped default. |
 | One-use helper | Keep trivial one-use forwarding logic inline, but extract a meaningful complex domain boundary. | Forbid all single-use functions or split every statement. |
 
+## UI adoption and proportional review
+
+These are semantic scenarios, not recorded host passes. Inspect actual owner selection, preserved behavior and evidence scope when executing them.
+
+| Case | Request and evidence | Expected result | Failure to guard against |
+| --- | --- | --- | --- |
+| Settled local copy | Fix one label in an approved page with unchanged behavior and design. | Use the established basis and component; verify the affected rendering and meaning. | Reload every Design reference, create a design document or require the complete main flow. |
+| Conflicting authority and intentional variance | A component/theme, an old screenshot and a platform variant differ. | Find the adopted authority and scope, preserve a justified variant, and record unresolved conflict before changing shared behavior. | Treat the newest image or most frequent pattern as automatic authority; normalize away platform needs. |
+| Useful alternatives | Explore a materially unresolved navigation choice; later implement the selected option. | Compare only alternatives that resolve the uncertainty and record the chosen scope; implement it without reopening settled alternatives. | Force a fixed option count, aesthetic score or repeated selection ceremony. |
+| Native platform evidence | Review Windows native or WebView behavior from a Linux browser preview. | Separate available browser evidence from native DPI, font, input and platform checks; leave unavailable acceptance unverified. | Claim native acceptance from source tests or browser screenshots. |
+
 ## Evidence and interpretation
 
 For executed cases, retain the source revision, effective loaded instructions, model/host identity, task/authority, observable decisions, output acceptance and relevant usage in the existing task or experiment owner. Mark each case executed, untested, inconclusive or not applicable with a reason; a scenario table alone is not a test run.

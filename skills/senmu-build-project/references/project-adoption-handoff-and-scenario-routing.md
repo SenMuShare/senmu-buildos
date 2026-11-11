@@ -17,7 +17,7 @@ Choose the entrypoint from the current situation; do not create four separate Sk
 | Existing project continuing development | Inherit existing facts, current development version, and registered task/branch; complete incremental work directly when rules suffice | Rebuilding directories, Git, documents, or governance merely because the project is old |
 | Existing project receiving whole-project governance | First inventory authority, structure, quality, and delivery facts read-only; evolve original owners only within approved scope; use mature-project takeover governance for multi-stage work | Overwriting reality with defaults or mixing governance and ordinary feature work into an unbounded rewrite |
 
-After initialization, write project facts and project-specific contracts into existing README, AI entrypoint, code/architecture, requirement, process, and delivery owners. Do not copy methods identical to BuildOS. Daily work follows project entrypoints and their conditional specialist routes; an existing document alone does not establish adoption.
+After initialization, record adopted facts at their domain owners; persistent UI uses `design/UI_SPECIFICATION.md`. Daily work follows project routes, not copied BuildOS manuals. A file alone establishes no adoption.
 
 ## 2. Project Form and Module Selection
 
@@ -45,6 +45,7 @@ Suggested owner paths:
 ```text
 AGENTS.md or equivalent AI entrypoint
 README.md
+design/UI_SPECIFICATION.md               # persistent UI, including a maintained single page
 engineering/CODE_QUALITY.md
 engineering/SYSTEM_TECHNICAL_SPECIFICATION.md or established current-system owner
 versions/<version>/PRD.md and TECHNICAL_DESIGN.md  # each formal development version
@@ -62,10 +63,11 @@ operations/DEPLOYMENT.md
 engineering/TESTING_STRATEGY.md
 ```
 
-A small project may combine files, but must answer:
+A small project may combine roles outside required standards, but must answer:
 
 - What is the project and its current scope?
 - Where are requirements and technical design?
+- For persistent UI, does the standard entry reach approved rules, actual theme/token/components and representative checks under [Design](../../senmu-build-design/references/visual-systems-and-design-language.md)? Backend-only or one-off work needs no permanent UI owner.
 - Where are quality rules, current language standards, and the unified check command?
 - Where are module responsibilities, dependency direction, data ownership, architecture checks, and debt?
 - How do local startup, tests, and deployment work?
@@ -96,6 +98,8 @@ Ordinary implementation, bug fixes, code explanation, a single copy edit and loc
 | Open development batch, non-routine Git boundary, version, artifact, deployment, rollback, or production state | `senmu-build-delivery` | Ordinary implementation inside a governed batch does not trigger; keep unreleased unless release is explicit |
 | BuildOS feedback adjudication, formal retrospective, lesson promotion, or distillation of external guidance | `senmu-build-learning` | Ordinary user corrections and project business requirements do not enter the feedback inbox |
 
+Infer the needed decision from ordinary requests, not Skill names. “Build a browser system” includes persistent UI classification and initialization; a requirements-only request first records user operations, feedback and design needs. A supplied screenshot invokes reference analysis when design decisions are needed. “Messy” or “ugly” asks for Design diagnosis; competing component systems also need Engineering selection. Already-specified local edits use adopted rules. Continue only the professional work needed for the authorized stage; this is no fixed multi-Skill sequence.
+
 When any scenario spans dependent steps, phases, agents, or sessions, follow [Task Execution, Planning, and State Management](task-execution-and-state-management.md) using the project's declared Durable Task State Owner. Specialist documents own domain facts; task state owns current boundaries, progress, evidence links, and recovery. Neither replaces the other.
 
 ## 6. Minimum Deliverables
@@ -124,6 +128,8 @@ Use executable contracts for repeatable, deterministic boundaries that benefit f
 Reuse the project's existing command, configuration and evidence owner. Add only missing elements required by the actual chain: an entrypoint, authoritative inputs, side-effect boundaries, observable result, and recovery when needed. A code-quality or design decision may be better served by a working shared implementation, a representative example, and one focused behavior check. Do not require ordinary component reuse or local refactoring to acquire a machine-readable policy.
 
 For formal release, Delivery owns the frozen candidate and resumable release driver; for business production, Workflow owns task/run contracts. Project checks that those owners are discoverable and non-conflicting. A POC uses the existing declared experiment/recovery boundary, not a new universal document kit. Legacy entrypoints receive a concrete retirement or compatibility disposition at their owner.
+
+When establishing an executable adoption or verification path, derive it from the project's actual command, inputs and observable result. Exercise its own instructions through one meaningful result within authorized disposable or existing test boundaries; confirm retained evidence survives teardown. Files generated and helper tests passed are component evidence, not a working project path. Verify applicable successor, failure or interruption behavior at the same entrypoint, preserving current, recovery and shared consumers. Reuse unaffected evidence; do not deploy, spend or delete user resources merely to prove adoption. Leave untested parts with their next action in the existing task. A later executor must be able to resume from that task and configuration without the authoring chat.
 
 ## 9. Anti-Bloat Maintenance
 

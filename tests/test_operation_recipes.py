@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import re
 import unittest
 from pathlib import Path
 
@@ -80,12 +81,28 @@ class OperationRecipeContractTest(unittest.TestCase):
         ):
             self.assertIn(phrase, readme)
 
-    def test_ui_prototype_already_requires_real_alternatives(self):
-        prototype = read(
-            "skills/senmu-build-design/references/prototype-exploration-and-interface-review.md"
+    def test_ui_consumers_reach_unique_design_contracts(self):
+        target = ROOT / "skills/senmu-build-design/references/prototype-exploration-and-interface-review.md"
+        target_text = target.read_text(encoding="utf-8")
+        consumers = (
+            ("skills/senmu-build-product/references/product-requirements-and-iteration.md", "implementation-adoption"),
+            ("skills/senmu-build-engineering/references/software-testing-and-quality-verification.md", "visual-review-and-task-walkthrough"),
         )
-        self.assertIn("Offer two or three alternatives", prototype)
-        self.assertIn("not only color, radius, and shadow", prototype)
+        for source, anchor in consumers:
+            with self.subTest(source=source, anchor=anchor):
+                links = re.findall(r"\]\(([^)]+)\)", read(source))
+                routes = [link for link in links if link.endswith("#" + anchor)]
+                self.assertTrue(routes, f"Missing consumer route: {source} -> {anchor}")
+                for route in routes:
+                    path, _ = route.rsplit("#", 1)
+                    self.assertEqual((ROOT / source).parent.joinpath(path).resolve(), target.resolve())
+                heading = anchor.replace("-", " ")
+                headings = [
+                    re.sub(r"^#+\s+", "", line).lower()
+                    for line in target_text.splitlines() if line.startswith("#")
+                ]
+                explicit = re.findall(r'<a\s+id=["\']([^"\']+)["\']', target_text)
+                self.assertEqual(explicit.count(anchor) + headings.count(heading), 1)
 
 
 if __name__ == "__main__":

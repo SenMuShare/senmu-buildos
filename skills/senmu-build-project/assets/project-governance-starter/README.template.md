@@ -28,6 +28,7 @@
 - 工作日志（standard/release）：`governance/logs/WORKLOG.md`
 - 经验与防回退（standard/release）：`governance/lessons/LESSONS_LEARNED.md`
 - 用户需求与当前产品规格（standard/release 且启用 product）：`product/`
+<!-- persistent-ui-only:start -->- 持续维护的 UI 规范：`{{UI_BASIS_PATH}}`；按规范找到实际主题、token、组件和验证入口。<!-- persistent-ui-only:end -->
 - 各正式开发版本的 PRD 与技术设计，以及按需测试用例：`versions/<version>/`
 - 技术、质量与架构（standard/release 且启用）：`engineering/`
 - 工作流（standard/release 且启用）：`workflows/WORKFLOW.md`

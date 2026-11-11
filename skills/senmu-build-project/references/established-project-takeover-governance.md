@@ -1,8 +1,8 @@
 # Established Project Takeover
 
-Use this standard to take over an established project with confused historical code, documents, directories, tasks, branches, or release facts. The goal is not a one-time cleanup; it is an understandable, changeable, verifiable, transferable governance instance that preserves business facts, operating ability, and recovery.
+Use for established projects with confused code, documents, directories, tasks, branches or release facts. Preserve business facts, operation and recovery while making governance understandable, changeable, verifiable and transferable.
 
-Project coordinates root, scope, task state, owner mapping, and authorization checkpoints. Product, Workflow, Engineering, and Delivery repair their own facts; Assurance freezes reviews, findings, and re-review. Do not create a governance architecture that copies domain standards.
+Project coordinates root, scope, task state, owner mapping, and authorization checkpoints. Product, Design, Workflow, Engineering, and Delivery repair their own facts; Assurance freezes reviews, findings, and re-review. Do not create a governance architecture that copies domain standards.
 
 ## 1. Activation and Authorization Scope
 
@@ -19,7 +19,7 @@ If initial authority includes safe audit and remediation, continue through both 
 
 Use the single Durable Task State Owner selected under [Task Execution and State Management](task-execution-and-state-management.md). This standard adds objective, authorization, findings, evidence, and review entrypoints; it does not add another task system.
 
-For substantial intermediates, reuse the project's existing temporary/work location and record its purpose, owner, sensitivity, retention and recovery needs in the current task. Create a new location only when needed and covered by current write authority. Disposition may be authorized retention, archive, cleanup or justified non-applicability. Pending disposition preserves materials; it does not automatically demand a new approval. Existing policy may justify retention without invented approver metadata. Physical movement or deletion still requires authority, and a retained resource is not a cleaned resource.
+Reuse existing temporary/work locations for substantial intermediates; record purpose, owner, sensitivity, retention and recovery in the current task. Create locations only when needed and authorized. Disposition may be authorized retention, archive, cleanup or justified non-applicability. Pending decisions preserve materials without automatic reapproval; policy may justify retention without invented approver metadata. Movement/deletion still needs authority; retained is not cleaned.
 
 The optional BuildOS implementation uses [Takeover Task](../assets/mature-project-governance/TAKEOVER_TASK.template.md) and [Governance Control](../assets/mature-project-governance/GOVERNANCE_CONTROL.template.json). These are not mandatory directory commands.
 
@@ -29,17 +29,33 @@ The optional BuildOS implementation uses [Takeover Task](../assets/mature-projec
 
 - Confirm project root, Git/worktrees/subrepositories, release units, current version, runtime objects, and verified recovery points.
 - Record audit time, commit/data revision/environment identity, and evidence freshness. Preserve dirty work and parallel tasks.
-- Run zero-write `assess_project_governance.py`, then semantically confirm requirement, technical, task, run, quality, delivery, and recovery owners.
+- Run zero-write `assess_project_governance.py`, then semantically confirm requirement, applicable design, technical, task, run, quality, delivery, and recovery owners.
 
 ### B. Coverage and Findings
 
 For instruction updates, apply [delta adoption](project-instruction-authoring.md#adopting-a-buildos-update) at existing owners, not a whole-template rewrite.
+
+For UI scope, confirm sources under [Design](../../senmu-build-design/references/visual-systems-and-design-language.md) and select/reuse evidence under [Testing](../../senmu-build-engineering/references/software-testing-and-quality-verification.md). Candidates grant no redesign permission. Apply the standard migration below during authorized UI governance; ordinary local edits preserve current rules.
 
 - Map the authorized coverage: real release units, primary journeys, owning modules, data/permission boundaries and executable entrypoints. For each capability governed in this task, establish a usable route to implementation, applicable rules and verification under the [Index Contract](project-standard-discovery-and-on-demand-loading.md#4-index-contract). Reuse existing navigation, inspect the destinations and mark uncovered domains or missing checks explicitly. A generated template or an existing path alone is not a verified route.
 - Each domain records current fact, target, retain/merge/move/add candidate, impact, recovery, and acceptance evidence for its owner.
 - Give findings stable IDs with evidence, P0-P3, status, impact, responsible owner, minimum remediation, and re-review conditions. Audit creates candidates, not write authority.
 
 If product documentation is missing, do not invent historical backlogs or PRDs. Product reconstructs the current product specification from interfaces, features, code, APIs, tests, runtime, and user confirmation; Engineering reconstructs the current system specification. Separate confirmed facts, reasonable inferences, conflicts, and unknowns. For each future formal development version, keep its PRD and technical account; persist version test cases only when the risk needs them. Do not invent historical version documents.
+
+<a id="ui-standard-migration"></a>
+### UI Standard Migration
+
+For persistent UI, converge on `design/UI_SPECIFICATION.md` within each registered governance root:
+
+1. Confirm current sources, approved scope/revision, real pages, theme/token/components and recovery baseline.
+2. In the existing task, map each old location/section to retain, extract/merge, move/archive or temporary redirect; name affected consumers and recovery. Design resolves rule conflicts by approved scope, version and valid variants, not newest timestamp.
+3. Put current UI rules at the standard entry. Retain business facts with Product, implementation values in code and progress in the task. External design sources keep exact object/revision and update ownership; preserve frozen prototype/PRD historical links.
+4. Switch AGENTS, README, Project Map, `ui_management.basis_path`, `required_paths` and `placeholder_scan_paths` where present. Routers link the standard and actual checks; they hold no full UI specification.
+5. Retire the old current authority: archive superseded design material or leave a short redirect for live consumers with an exit condition. Preserve mixed documents' unrelated contents and recovery history.
+6. Verify one current entry per scope, links, source mappings and recoverability. Reuse valid evidence for document-only moves; first adoption runs a representative task, shared design changes check representative consumers. Record unavailable runtime checks.
+
+Consolidate approved rules rather than copying whole documents; retain one editable current standard per scope.
 
 ### C. Decisions and Remediation Waves
 
@@ -65,4 +81,4 @@ python3 <buildos>/skills/senmu-build-project/scripts/validate_mature_project_gov
 
 The validator checks relationships and closeout invariants only; it does not judge technical quality or perform fixes, branches, releases, or deletion. Other state systems may implement the same invariants natively without exporting duplicate JSON.
 
-Before `completed`, prove: the baseline and coverage are stated; every confirmed finding has a valid disposition; authorized corrections have changes and matching evidence; no required P0-P1 review is bypassed; final review names its actual target and limits; temporary disposition is resolved or genuinely inapplicable; and release/production facts remain separate. For a navigation-governance task, follow the governed routes to actual code, applicable rules and relevant checks, recording missing or unverified parts. Structural or semantic inspection does not prove model behavior or Token savings; unavailable runtime observations remain explicit, without turning an unrequested model experiment into a source-correction prerequisite.
+Before `completed`, verify baseline/coverage, finding dispositions, authorized corrections with changes/evidence, required P0-P1 review, final-review target/limits, resolved or inapplicable temporary disposition, and separate release/production facts. For navigation work, follow actual code/rule/check routes and record gaps. Structural/semantic checks do not prove model behavior or Token savings; disclose missing observations without requiring an unrequested model experiment.

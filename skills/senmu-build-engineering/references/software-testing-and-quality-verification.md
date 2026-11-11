@@ -1,32 +1,32 @@
 # Software Testing and Quality Verification
 
-**Key sections (read as needed):** [Choosing checks](#0-minimum-sufficient-verification) · [Layers and Responsibilities](#2-layers-and-responsibilities) · [Non-Functional Verification](#6-non-functional-verification) · [Impact and Regression Selection](#7-impact-and-regression-selection) · [Flaky, Skipped, and Failed Tests](#8-flaky-skipped-and-failed-tests)
+**Read as needed:** [Checks](#0-minimum-sufficient-verification) · [Layers](#2-layers-and-responsibilities) · [UI evidence](#ui-evidence-and-runtime) · [Non-functional](#6-non-functional-verification) · [Impact](#7-impact-and-regression-selection) · [Failures](#8-flaky-skipped-and-failed-tests)
 
-Select sufficient testing evidence from behavior, risk, boundaries and failure cost, not a universal pyramid or coverage target. Product owns acceptance; Delivery owns release. Tests support but replace neither decision.
+Choose evidence by behavior, risk, boundaries and failure cost, not a universal pyramid or coverage target. Tests support but do not replace Product's acceptance or Delivery's release decision.
 
 ## 0. Minimum Sufficient Verification
 
-Separate authoring, execution and reruns. Optimize total cost at unchanged acceptance, not test counts. No per-test form or approval ritual is required.
+Separate authoring, execution and reruns. Minimize total cost without changing acceptance or adding per-test forms/approval rituals.
 
-- **Author:** reuse existing coverage; add or extend tests for a real behavior/risk gap, not merely a changed file. Avoid implementation-mirroring assertions; exact output, schema and security checks remain valid contracts.
-- **Execute:** use the least costly sufficient check at the boundary that observes the result. Code-hosted prompts and executable examples are not harmless prose. Refactors reuse behavior tests; visual changes need rendered evidence. High-risk boundaries are checked early. A fast suite may cost less than elaborate filtering.
-- **Expand or stop:** broaden for affected behavior, unresolved risk, failure or required gates. Reuse evidence under section 7. Stop when the agreed outcome and required evidence are supported and blockers resolved; disclose gaps, do not add speculative cases or rerun to obtain green.
+- **Author:** reuse coverage and fill behavior/risk gaps; a changed file alone needs no new test. Avoid implementation mirrors; exact output/schema/security contracts remain valid.
+- **Execute:** use the least costly sufficient observable check. Code-hosted prompts and executable examples are not harmless prose. Reuse behavior tests for refactors; render visual changes; check high risk early. A fast suite may beat filtering.
+- **Expand or stop:** broaden for affected behavior, unresolved risk, failure or required gates; reuse evidence under section 7. Stop when outcome/evidence are supported and blockers resolved. Disclose gaps; do not add speculative cases or rerun merely for green.
 
-Messages, commits, formatting, handoffs and stage changes alone do not justify full cycles. Follow effects, not line counts or suffixes.
+Messages, commits, formatting, handoffs and stages alone do not justify full cycles; effects do.
 
 ## 1. Strategy Inputs
 
-Use approved acceptance/invariants, affected docs and module/interface/data owners, dependencies and effects. Consider runtime, release/recovery, failure impact/likelihood/detectability, tests/CI/environments and defects, including money, authorization, storage, network and messaging risks.
+Start with approved acceptance/invariants, affected docs/owners, dependencies/effects, runtime/recovery and existing tests/CI/environments/defects. Assess impact, likelihood and detectability, including money, authorization, storage, network and messaging.
 
-Match evidence to its claim; derive expected results from requirements, an independent oracle or justified properties. Specification conformance does not prove fitness for intended use; one check may support both. Return conflicts to Product, not silently change acceptance. Verify promised dependency quality and usable downstream results; do not invent thresholds.
+Match evidence to its claim; derive expectations from requirements, independent oracles or justified properties. Conformance does not prove fitness for intended use; one check may support both. Return conflicts to Product. Verify promised dependency quality and usable downstream results; do not invent thresholds or change acceptance.
 
-For low-impact changes, avoid implementation-mirroring or instruction-wording tests. Expand for changed inputs, failure or unresolved risk. Instruction audits use Project's routing check; brevity or valid links do not prove model performance.
+Low-impact work needs no instruction-wording tests. Instruction audits use Project's routing check; brevity/links do not prove model performance.
 
-Choose layers by risk. Unit/property tests may suffice for pure functions; transactions and authorization need evidence at trust/persistence boundaries. Atomicity, forward migration and release rollback are distinct. A migration verifies transformation, order, constraints, rerun safety and final state, not an automatic rollback drill. Follow the approved recovery strategy. Probe concrete unresolved invariants or defects, not every possible write point.
+Unit/property tests may suffice for pure functions; transactions and authorization need trust/persistence-boundary evidence. Distinguish atomicity, forward migration and release rollback. Verify migration transformation, order, constraints, rerun safety and final state under approved recovery, without an automatic rollback drill. Probe unresolved invariants or defects, not every write point.
 
-Version `TEST_CASES.md` follows its PRD's pages/features/capabilities, behavior, interaction, errors, boundaries and acceptance. Shared version/sections provide linkage without a traceability matrix. Retain existing test management. Templates are adaptable: low-risk changes keep matching cases.
+Keep version `TEST_CASES.md` aligned to PRD pages/features/capabilities, behavior, interaction, errors, boundaries and acceptance. Use shared version/sections, existing test management and adaptable minimal cases, without a new traceability matrix.
 
-For installation, configuration, operation, API/CLI/SDK or recovery changes, use affected current user docs as black-box acceptance. Execute real commands/examples from representative PRD starting states to observable outcomes. Automate relevant code blocks in the existing quality entrypoint or record environment, steps, results and gaps. Links, doc builds and highlighting prove surface only. Unchanged-use refactors and one-off exploration without durable entrypoints need no documentation tests.
+For installation, configuration, operation, API/CLI/SDK or recovery changes, exercise current user-doc commands/examples as black-box acceptance from representative PRD starts to observable outcomes. Use the existing quality entrypoint or record environment, steps, results and gaps. Links, doc builds and highlighting prove surface only. Unchanged-use refactors and one-off exploration without durable entrypoints need no documentation tests.
 
 ## 2. Layers and Responsibilities
 
@@ -40,39 +40,55 @@ For installation, configuration, operation, API/CLI/SDK or recovery changes, use
 | Product acceptance | Requirement/acceptance is met | Production deployment |
 | Release verification | Artifact, deployment, version, traffic, rollback facts | Repeating all development tests |
 
-Layers may combine, responsibilities may not disappear. Verify a business invariant at the nearest boundary where untrusted input becomes trusted state; downstream layers reuse that result and test only added risk, not duplicate probes, error-code tables, or human reconciliation states. Retain defense across trust domains, independent consumer contracts, or safety boundaries and state what each layer proves. Small scripts may combine module/E2E with examples; large services must not put all confidence in slow brittle E2E.
+Combine layers without losing responsibilities. Check invariants where untrusted input becomes trusted state; downstream layers reuse results and test added risk, not duplicate probes, error-code tables or human reconciliation. Retain independent defenses at trust, consumer and safety boundaries. Scripts may combine module/E2E examples; large services need more than brittle E2E.
 
-For a multi-step user capability, derive the starting state and observable final result from approved acceptance. Check the transitions connecting implemented modules, not just their isolated success: payment or preparation passing does not close a journey with no usable next action. Follow the same operation to the required result and verify applicable interruption recovery. A direction to run each real main flow once prevents duplicate expensive executions; it does not remove completion criteria, safety checks or impact-based regression after a fix.
+Follow multi-step capabilities from approved start through module transitions to the required observable outcome and applicable interruption recovery. Isolated module/payment/preparation success cannot close a journey without a usable next action. An instruction to run a main flow once avoids duplicate expense; completion, safety and impacted regression still apply.
+
+### UI Evidence and Runtime
+
+Apply to changed appearance, interaction or supported rendering environments, or requested visual/UX review. Use approved design revision and product acceptance. Select affected pages/states/viewports/themes from the change, shared dependencies and page map/examples. Local fixes may need only their target; shared token/component/shell changes need representative consumers and relevant exceptions. Expand for risk, not a whole-product matrix.
+
+Distinguish claims, not mandatory suites; one check may support several:
+
+- **Visual:** rendered design conformance: hierarchy, typography, spacing, alignment and shared-component consistency.
+- **User journey:** navigation, feedback, errors and recovery carry the intended user to the required outcome; isolated screens/states cannot prove it.
+- **Engineering:** state/data contracts, behavior, accessibility, integration and runtime constraints through existing suitable checks.
+
+Requests or unresolved risk may warrant independent [Design visual review/task walkthrough](../../senmu-build-design/references/prototype-exploration-and-interface-review.md#visual-review-and-task-walkthrough). Discovery may infer a goal/path from safe entry, role and business context; acceptance needs the required goal. Return findings to their owner; do not silently change requirements.
+
+Verify affected supported runtimes and disclose platform/state gaps. Browser/WebView evidence covers the web surface, not WinUI/native controls; a Linux pass does not prove Windows-specific behavior. Use the runtime that observes the changed behavior, without imposing native frameworks on web apps.
+
+Screenshot comparison (e.g. Playwright) matches OS/browser versions, fonts, viewport/DPR, theme, fixtures and readiness. Control relevant time/randomness/animation; mask only irrelevant noise, never changed content/interaction. Review rendered before/after differences through existing project review/acceptance; human review applies only where policy requires it. Unreviewed replacements remain candidate baselines. Investigate unexplained differences before updates, never regenerate for green. Pixel thresholds do not prove usability or accepted design quality.
 
 ## 3. Test Design
 
 Cover only relevant dimensions: normal/core outcomes; null/min/max/format/locale/time; invalid state, duplicate, reorder, timeout, cancellation, partial success; permissions, tenancy, ownership, sensitive data; commit/rollback, idempotency, race, retry effects; dependency failure, degradation, recovery, compensation, cleanup; schema/API/config/file/version compatibility; and legacy, migration equivalence, rollback.
 
-A defect needs failing-before/passing-after evidence or an explained repeatable alternative. Avoid duplicate cases for count. Evaluate contract observability and defect sensitivity, not assertion names. Definedness, emptiness, absence and negative checks can be valid; do not delete them mechanically or claim results without inspecting semantics.
+Defects need failing-before/passing-after evidence or an explained repeatable alternative. Judge contract observability and defect sensitivity, not case counts or assertion names. Definedness, emptiness, absence and negative checks can be valid; inspect semantics before deleting them or claiming results.
 
-Prefer test-first when behavior is clear, feedback is fast and checks need no private internals: show failure, implement, then refactor. For exploratory algorithms, one-off POCs, visual choices or costly unstable environments, stabilize the problem or prototype first. Writing order is not a gate; the final check must observe real behavior and detect regression.
+Prefer test-first for clear behavior, fast feedback and checks without private internals: fail, implement, refactor. Exploration, one-off POCs, visual choices or costly unstable environments may stabilize the problem/prototype first. Writing order is not a gate; final checks must observe behavior and detect regression.
 
-A complete replacement proves the new entrypoint works and is unique and the old one is unreachable. Approved compatibility proves bounded, non-default behavior and exit conditions. Historical tests asserting an old control/entrypoint exists are not requirement authority; delete or rewrite against the current contract.
+Replacement proves the new entrypoint works and is unique, and the old one unreachable. Approved compatibility proves bounded, non-default behavior and exit conditions. Historical tests retaining old controls/entrypoints are not requirement authority; delete or rewrite against the current contract.
 
-Permanent retirement tests prove not only UI removal but that direct APIs/routes, jobs/events, flags/configuration, permissions, and restart defaults cannot revive the capability, while remaining/replacement behavior survives. Test approved historical-data read, migration, compatibility, or rollback separately with scope and exit. Deleting tests or making requests always fail does not prove executable legacy was removed.
+Permanent retirement proves direct APIs/routes, jobs/events, flags/configuration, permissions and restart defaults cannot revive the capability, while remaining/replacement behavior survives. Test approved historical-data read, migration, compatibility or rollback separately with scope and exit. UI removal, deleted tests or always-failing requests do not prove executable legacy removed.
 
 ## 4. Doubles and Real Dependencies
 
-- Use fakes, stubs, and mocks at boundaries you own; do not simulate until behavior no longer resembles the third-party/framework contract.
+- Use fakes, stubs and mocks at owned boundaries without losing the third-party/framework contract.
 - A mock proves caller behavior, not compatibility. Critical integration needs contract tests, sandbox, or controlled real-service evidence.
-- For identity, payment, storage, queues, protocols, or SDK defects, preserve a minimum production-shaped fixture including behavior-changing fields, secret type, order, state, and error. Simplification must not remove the risky difference.
-- Inject/fix time, randomness, network, filesystem, and environment through explicit boundaries rather than machine accident.
-- Do not copy production algorithms into expected results. Use business rules, fixed examples, independent oracles, or properties.
-- Repair the contract owner when doubles drift from schemas/interfaces; do not add mocks to conceal it.
-- Names and failures should identify the production behavior at risk. Assert public result, state, persistence, or side effect. Mock calls, private order, or internal field existence alone do not prove business outcome. Adapter tests may assert call contracts, but an upper layer still proves the correct result.
+- Identity, payment, storage, queue, protocol and SDK defects need production-shaped fixtures retaining behavior-changing fields, secret type, order, state and error. Simplification must preserve the risky difference.
+- Inject/fix time, randomness, network, filesystem and environment explicitly, not by machine accident.
+- Expectations use business rules, fixed examples, independent oracles or properties, not copied production algorithms.
+- Repair schema/interface owners when doubles drift; do not conceal drift with more mocks.
+- Name the production behavior at risk and assert public result, state, persistence or side effect. Mock calls, private order and internal fields alone do not prove business outcome. Adapter call-contract tests still need an upper layer to prove the result.
 
-State each real-service receipt's scope and achieved stage: provider/model/route, relevant environment and observation time, request accepted, terminal success, or result retrieved and checked. Acceptance of an asynchronous request does not prove completion or application integration. A sample for one model/language cannot attest another model or every supported language. Reuse valid contract and entitlement evidence without demanding exhaustive paid probes; disclose the remaining gaps. Use existing operation/receipt owners rather than a parallel evidence framework, and reconcile uncertain external outcomes before another write.
+Real-service receipts state provider/model/route, environment/time and achieved stage: request accepted, terminal success, or result retrieved and checked. Async acceptance proves neither completion nor integration; one model/language sample cannot attest others. Reuse valid contract/entitlement evidence without exhaustive paid probes; disclose gaps. Use existing operation/receipt owners, and reconcile uncertain external outcomes before another write.
 
 ## 5. Data and Environment
 
 - State test-data provenance, construction, privacy boundary, isolation, and cleanup.
 - Do not copy personal data, secrets, production databases, or restricted assets by default.
-- Tests are independent, repeatable, and parallelizable. If order is essential, model it as one scenario rather than relying on case order.
+- Keep tests independent/repeatable/parallelizable; essential order belongs in one scenario, not case order.
 - Database tests define transactions, migrations, time zones, encodings, constraints, and cleanup.
 - Tests requiring real credentials, paid calls, or external writes are opt-in and obey authority/stop conditions.
 
@@ -90,44 +106,39 @@ A quick local run cannot prove production capacity. Record environment/limits; d
 
 ## 7. Impact and Regression Selection
 
-Derive impact from diff, call chains, public contracts, data and configuration. Check behavior, consumers, shared state/effects, compatibility/migration/rollback and analogous history. For each key safety fact, trace failure and use the nearest affordable real-code/artifact check. Label source support, experimental proof or uncertainty; search and plausibility do not prove no impact. Report confirmed, cleared and unknown risks without invented probabilities.
+Trace diff, call chains, contracts, data/configuration and analogous history to behavior, consumers, shared state/effects and compatibility/migration/rollback. Check key safety facts at the nearest affordable real-code/artifact boundary. Label source support, experimental proof or uncertainty; search/plausibility cannot prove no impact. Report confirmed, cleared and unknown risks without invented probabilities.
 
-For small changes, run targeted tests/checks. Cross-module, public interface, schema, dependency, or release-unit changes require impact-based checks and relevant real paths, plus any full gate required by the project. Once matching and required checks pass, expand or repeat only for new changes, failures, or unresolved concerns. One new test does not prove old behavior unaffected.
+Small changes use targeted checks; cross-module/interface/schema/dependency/release-unit changes need affected real paths and project gates. First prove the original failure fixed on its original path or production-shaped fixture (section 3), then run impacted regressions. Generic green cannot replace the key dependency shape/current path, nor vice versa. One added test cannot attest old behavior.
 
-First answer whether the original issue is fixed: close root cause with an original-path or production-shaped test that fails before and passes after. Then run impacted regressions, and run complete project gates only on a frozen candidate. Many generic regressions cannot replace the key dependency shape/current main path; a passing key path cannot replace its impacted regressions.
+During implementation check original failures/affected behavior; at review/closeout cover scope and consumers; run required full gates and unmet acceptance on the frozen integrated candidate. Branch passes are not integration. Reuse valid evidence, not stale approval; expand/rerun under section 0. Repair redundant project commands within authority, never bypass them.
 
-During implementation check original failures/affected behavior; at review/closeout cover scope and consumers; on the frozen integrated candidate run required full gates and unmet acceptance. Branch passes are not integration. Reuse valid evidence, not stale approval; stages, sessions or commits alone do not justify reruns. Repair redundant project commands within authority, never bypass them.
-
-Safety, data, authorization, billing, production, and irreversible boundaries receive checks with the first affected slice, not first at batch end. Presentation-equivalent edits may form one interaction batch; once semantics, hierarchy, operation, state, accessibility, or acceptance changes, reassess impact and batch.
+Check safety, data, authorization, billing, production and irreversible boundaries with the first affected slice. Presentation-equivalent edits may share one interaction batch; changed semantics, hierarchy, operation, state, accessibility or acceptance require reassessing impact and batch.
 
 ### Evidence Reuse and Handoff
 
-Engineering owns evidence scope and expiry. Reuse passing results only with equivalent behavior and inputs: source/tests, resolved dependencies/toolchain, configuration, commands/options, fixtures/data and environment. Results must remain available, without unresolved failure or external-state drift. A matching commit alone does not prove equivalence; a different one does not invalidate unrelated evidence.
+Engineering owns evidence scope/expiry. Reuse passing results with equivalent behavior and inputs: source/tests, resolved dependencies/toolchain, configuration, commands/options, fixtures/data and environment. Results remain available without unresolved failure or external-state drift. Same commit is insufficient; a different commit does not invalidate unrelated evidence.
 
-Rerun changed inputs/dependent behavior and retain unaffected results. Resolve unknown impact without automatic whole-suite repetition. Refresh time-sensitive evidence such as service health. Reuse builds only with matching relevant inputs and retained output integrity; identical commands do not equate local/container builds. Rebuild affected artifacts when outputs are missing, altered or untraceable.
+Rerun changed inputs/dependent behavior, retain unaffected results and resolve unknown impact without default whole-suite repetition. Refresh time-sensitive evidence. Build reuse also needs output integrity; identical commands do not equate local/container builds. Rebuild affected missing, altered or untraceable artifacts.
 
-Existing task/CI receipts retain scope, input identity, environment, result, gaps and reuse rationale; no new ledger, universal fingerprints or cache. Delivery maps valid evidence to the candidate and checks unmet release obligations. Renew changed-candidate conclusions without relabelling old runs. Separate reused/new checks; totals prove neither requirements nor visual acceptance.
+Task/CI receipts retain scope, input identity, environment, result, gaps and reuse rationale; no new ledger, universal fingerprints or cache. Delivery maps evidence to the candidate and release gaps, renewing changed-candidate conclusions without relabelling old runs. Distinguish reused/new checks; totals prove neither requirements nor visual acceptance.
 
 ### Efficient Execution and Waiting
 
-Keep one check instance. Use supported completion notifications or suitable waits; poll at intervals suited to duration, not repeated model turns with no new output. Read exit status, discovery/skips and failures first; retain full logs without repeatedly loading them. Empty discovery or a running process is not a pass. Test time and model-token cost differ.
+Keep one check instance; use completion notifications or suitable waits, not repeated empty turns. Read exit status, discovery/skips and failures first; retain logs without repeatedly loading them. Empty discovery or running processes are not passes. Test time and model-token cost differ.
 
-Use existing job dependencies or trusted candidate-bound receipts for pipeline reuse, never an arbitrary latest green run. Keep independent artifact/environment checks and repair redundant commands at their authorized owner; no new universal cache is required.
+Pipeline reuse uses job dependencies or trusted candidate-bound receipts, not latest green. Retain independent artifact/environment checks; repair redundant commands at their owner, without a universal cache.
 
 ## 8. Flaky, Skipped, and Failed Tests
 
-- A flaky test is a quality defect; do not rerun indefinitely for green.
-- One later pass does not erase an unexplained earlier failure for the same candidate. Overall status remains unstable until root cause is fixed or the test is quarantined with owner, risk, and exit condition.
-- Quarantine/skip records owner, reason, risk, trigger, and restoration deadline.
-- Green CI with key tests skipped, undiscovered, or disconnected from real dependencies must report actual coverage, not “full pass.”
-- Preserve first-failure output and distinguish product, test, and environment defects when repairing infrastructure.
-- Do not weaken assertions, delete tests, or downgrade failures to warnings merely to pass unless the contract truly changed and authority is synchronized.
+- Flakiness is a defect, not a reason to rerun for green. A later pass cannot erase an unexplained failure on the same candidate; status stays unstable until root cause is fixed or valid quarantine applies.
+- Quarantine/skip records owner, reason, risk, trigger, exit condition and restoration deadline.
+- Report actual coverage when key tests are skipped, undiscovered or disconnected from real dependencies, even in green CI.
+- Preserve first-failure output; distinguish product, test and environment defects when repairing infrastructure.
+- Never weaken assertions, delete tests or downgrade failures merely for green; changed contracts require synchronized authority.
 
 ## 9. Quality Entrypoints and Evidence
 
-Local `engineering/TESTING_STRATEGY.md` records test layers/directories, risk mapping, data/double boundaries, unified commands, CI jobs, real flows, skips, and release blockers.
-
-Unified commands should share configuration:
+Local `engineering/TESTING_STRATEGY.md` records layers/directories, risk mapping, data/doubles, commands/CI, real flows, skips and release blockers. Commands share configuration:
 
 - Fast: affected formatting, lint, types, targeted tests.
 - Full quality: all lint, types, unit/integration tests, build.
@@ -137,29 +148,24 @@ Unified commands should share configuration:
 
 ### Make the Real Verification Path Usable
 
-Without a usable real check, add the smallest recipe to the existing testing owner/commands/map, not a parallel catalog. Specify setup, readiness/version/auth, real actions, results/effects, evidence and cleanup, with cost, credentials, isolation and mutation boundaries.
+Use existing testing owners/commands/maps for the smallest usable recipe: setup, readiness/version/auth, actions/results/effects, evidence, cleanup and cost/credential/isolation/mutation limits. UI adds a reachable page/story/native entry, required state/runtime and relevant design basis/sample; no parallel catalog.
 
-Exercise a new/repaired recipe on one affected path before calling it verified. Observe results and retain evidence after cleanup; stop only its own processes/scratch state. Missing access leaves a draft. One path proves neither all features nor all environments.
+Exercise new/repaired recipes on one affected path before claiming verification; retain observed results after cleaning only owned processes/scratch. Missing access leaves a draft; one path cannot prove all features/environments.
 
-Maintain affected recipes as behavior changes. Distinguish document drift, harness defects and product regressions; never rewrite expected behavior to conceal a regression. Diagnostic injection and external effects still need authority.
+Maintain recipes as behavior changes. Distinguish document drift, harness defects and product regressions; never rewrite expectations to conceal regression. Diagnostic injection and external effects still need authority.
 
-Report commands, results, failures/skips, environment and risk. Tool success is not acceptance, deployment or release.
+At closeout, existing task/test reports expose the real entry, setup, results/failures/skips, environment, gaps and risk; reuse section 7 evidence. Design files/screenshots/build passes/URLs alone cannot prove reachable UI states or working journeys. Tool success is not acceptance, deployment or release.
 
 ### Diagnose the Verification Method
 
-Repeated preparation failures or green tests with an unusable capability require method review, not more cases by default. Inspect native runner/framework APIs, actual schema, fixtures and observation boundary; exercise one representative setup-to-result path before expanding. Informative long checks are not inherently waste.
+Repeated setup failures or green tests with unusable capabilities require method review, not default extra cases. Inspect native runner/framework APIs, schema, fixtures and observation boundary; exercise a representative setup-to-result path before expanding. Informative long checks are not inherently waste.
 
-Prefer supported tools to custom parsers/comparators. A justified helper must distinguish equivalent inputs from meaningful differences; normalization must not erase names, values, order or state. Green counts cannot rescue an unsound oracle. External fakes may be valid, but tests must not replace missing application dispatch, persistence or recovery by manually advancing internal steps.
+Prefer supported tools to custom parsers/comparators. Helpers must distinguish equivalent inputs from meaningful differences; normalization must preserve names, values, order and state. Green counts cannot rescue an unsound oracle. External fakes may be valid; manually advancing internal steps cannot replace missing application dispatch, persistence or recovery.
 
-Expose setup/collection/execution/result, discovered/executed/skipped scope and failure location through existing receipts; classify product/test/environment/unknown from evidence. Rerun affected work before closeout gates. Choose safe resume or disposable-fixture reconstruction from actual state; reconcile uncertain effects first. Bind evidence to its claim, not every unchanged file after each edit.
+Existing receipts expose setup/collection/execution/result, discovered/executed/skipped scope and failure location; classify product/test/environment/unknown from evidence. Rerun affected work before closeout gates. Resume safely or reconstruct disposable fixtures from actual state, reconciling uncertain effects first. Bind evidence to its claim, not unchanged files after every edit.
 
 ## 10. Incremental Adoption in Legacy Projects
 
-1. Baseline current behavior and high-risk invariants.
-2. Add matching verification for new/changed code; do not expand untested areas.
-3. Add regressions by defect frequency, change frequency, and failure impact.
-4. Consolidate duplicate entrypoints, excessive mocks, and long-lived skips.
-5. Put strategy, commands, and real capabilities in project authority—not CI or chat alone.
+Baseline current behavior and high-risk invariants. Cover new/changed code; expand regressions by defect/change frequency and failure impact, not untouched areas by default. Consolidate duplicate entrypoints, excessive mocks and long-lived skips. Keep strategy, commands and real verification in project authority, not CI/chat alone.
 
-
-A later scheduled regression supplements focused checks; work awaiting required evidence remains unverified, and release obligations still apply.
+Scheduled regressions supplement focused checks; required evidence pending remains unverified, and release obligations still apply.

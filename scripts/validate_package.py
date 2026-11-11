@@ -744,6 +744,15 @@ def validate_local_markdown_links() -> None:
     for path in sorted(candidates):
         text = path.read_text(encoding="utf-8")
         for raw_target in extract_markdown_link_targets(text):
+            ui_map = ROOT / "skills/senmu-build-project/assets/project-governance-starter/PROJECT_MAP.template.md"
+            if path == ui_map and raw_target == "{{UI_MAP_BASIS_PATH}}":
+                opening, closing = "<!-- persistent-ui-only:start -->", "<!-- persistent-ui-only:end -->"
+                blocks = re.findall(re.escape(opening) + r"(.*?)" + re.escape(closing), text, re.S)
+                if (not blocks or text.count(opening) != len(blocks)
+                        or text.count(closing) != len(blocks)
+                        or text.count(raw_target) != sum(block.count(raw_target) for block in blocks)):
+                    fail("UI map renderer links must stay inside paired persistent-UI blocks")
+                continue
             error = local_markdown_target_error(path, raw_target, ROOT)
             if error is not None:
                 fail(f"{error} in {path.relative_to(ROOT)}")
@@ -760,7 +769,7 @@ def validate_project_instruction_layer() -> None:
         )
     # Enforce the renderer's real contract, not particular human wording.
     variables = {"PROJECT_NAME", "PROJECT_TYPE", "PROJECT_ROOT", "NAVIGATION_ENTRY", "POC_ENTRY"}
-    unknown = set(re.findall(r"\{\{([^{}\r\n]+)\}\}", text)) - variables
+    unknown = set(re.findall(r"\{\{([^{}\r\n]+)\}\}", text)) - variables - {"UI_BASIS_PATH"}
     if unknown:
         fail(f"project AGENTS starter has unknown renderer placeholders: {sorted(unknown)}")
     for variable in sorted(variables):
@@ -773,7 +782,21 @@ def validate_project_instruction_layer() -> None:
     start, end = text.index(opening), text.index(closing)
     if start >= end or not text[start + len(opening):end].strip():
         fail("project AGENTS software-scope block is reversed or empty")
-    copied_skill_names = sorted(skill for skill in EXPECTED_SKILLS - {"senmu-build-project"} if skill in text)
+    ui_opening, ui_closing = "<!-- persistent-ui-only:start -->", "<!-- persistent-ui-only:end -->"
+    peer_text = text
+    if ui_opening in text or ui_closing in text or "{{UI_BASIS_PATH}}" in text:
+        if text.count(ui_opening) != 1 or text.count(ui_closing) != 1:
+            fail("project AGENTS starter needs one paired persistent-UI block")
+        ui_start, ui_end = text.index(ui_opening), text.index(ui_closing)
+        ui_body = text[ui_start + len(ui_opening):ui_end]
+        if (ui_start >= ui_end or ui_body.count("{{UI_BASIS_PATH}}") != 1
+                or text.count("{{UI_BASIS_PATH}}") != 1):
+            fail("project AGENTS UI basis must occur once inside its persistent-UI block")
+        # A conditional route to the design owner is not a copied Skill catalog.
+        # Other peer names, or Design outside this block, remain disallowed.
+        peer_text = (text[:ui_start] + ui_body.replace("senmu-build-design", "")
+                     + text[ui_end + len(ui_closing):])
+    copied_skill_names = sorted(skill for skill in EXPECTED_SKILLS - {"senmu-build-project"} if skill in peer_text)
     if copied_skill_names:
         fail(f"project AGENTS starter copies the peer Skill catalog: {copied_skill_names}")
     legacy_template = ROOT / "skills/senmu-build-engineering/assets/code-quality/AGENTS.template.md"

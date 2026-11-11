@@ -18,11 +18,13 @@ Choosing no motion is valid when no purpose survives these checks.
 ## 2. Physical and Temporal Behavior
 
 - Give perceptible feedback immediately. Drag and swipe follow input continuously, not only after release.
+- Keep business state and action availability truthful while motion runs; animation completion must not be the only way a result becomes available. Coordinate related changes from the operated object rather than animating unrelated controls independently.
 - Repeated or reversed actions continue from the visible state rather than waiting for stale animation. Gesture systems should preserve position and velocity where useful.
 - Establish spatial origin and corresponding enter/exit paths. Derive modal, panel, or overlay movement from the actual relationship rather than one universal rule.
 - Prefer existing component behavior or CSS for simple predetermined changes, browser animation APIs for programmatic control, and existing Motion/GSAP-like dependencies only for springs, dragging, scroll choreography, or complex timelines. Do not install a library for a fade.
 - Prefer transforms and opacity; enumerate animated properties. Avoid unbounded `transition: all`, continuous layout work, or parent-level inherited-variable updates that fan out across children.
 - Reuse project tokens for duration, easing, springs, and stagger, then tune for size, distance, frequency, and product character. Interface feedback is normally shorter than narrative motion; exits should rarely feel slower than entrances. Do not promote fixed numbers without runtime evidence.
+- Pause decorative work when hidden or inactive. Removing motion must preserve the result, reading order and next action; no fixed number of animations or entrance effects is required.
 
 Verify interruptibility, browser load, and input latency in the running interface. Library or property presence does not prove smoothness.
 
@@ -52,4 +54,6 @@ Validate against current target-platform and project standards rather than a fro
 
 Reproduce the real interface and key states, then record location, current behavior, user impact, and minimum improvement. Prioritize task failure, mistakes, inaccessibility, comprehension cost, frequency, and affected users—not taste or a default defect hunt.
 
-Verify target viewports, keyboard, touch/pointer, reduced motion, loading/failure, longest content, rapid retriggering, and reversal. Inspect motion at normal speed and slow/frame progression for endpoints, curves, origins, and coordinated properties. Test gestures on real devices. Mark feel as pending runtime verification when code cannot establish it.
+Select affected target viewports and relevant input/state risks: keyboard, touch/pointer, reduced motion, loading/failure, long content, rapid retriggering or reversal. Start with the primary path and the state most likely to break reading or operation; expand only for remaining risk or declared support requirements. Check nested scrolling, virtual-keyboard obstruction and return position when this change can affect them.
+
+Observe normal-speed operation for feel; use slow/frame progression for endpoints, curves, origins and coordinated states. A frame strip does not prove normal-speed feel, and a desktop drag does not prove touch behavior. Use real-device evidence for device-dependent gestures or mark that scope unverified. Wait for observable UI state instead of fixed sleeps, and stop when the affected claim is established.

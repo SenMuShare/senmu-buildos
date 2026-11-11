@@ -6,7 +6,7 @@ This standard owns durable cross-page buttons, labels, states, errors, guidance,
 
 Apply: approved product behavior and business facts > project terminology, brand voice, and design system > target-platform convention > these defaults. Platform capitalization, button order, and familiar labels may vary, but never weaken truthfulness, action outcome, risk, or recovery.
 
-When no content owner exists, store durable terminology, object names, and voice in the existing product specification or design system. Do not create a BuildOS copy ledger that must stay synchronized. Keep campaign copy, marketing titles, and project-specific business terms in the project.
+When no content owner exists, store durable terminology, object names and voice in the product specification. The UI specification references this meaning and records its presentation rules. Do not create a second copy ledger; campaign copy, marketing titles and business terms stay in the project.
 
 ## 2. Shared Principles
 
