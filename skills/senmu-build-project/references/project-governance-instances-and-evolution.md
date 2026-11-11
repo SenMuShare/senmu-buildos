@@ -1,61 +1,69 @@
 # Project Governance Instances and Evolution
 
-BuildOS supplies methods, not project facts. A **Project Governance Instance** adopts them through actual entrypoints, owners, state sources, quality commands and delivery evidence.
+A **Project Governance Instance** adopts BuildOS methods through actual entrypoints, owners, state, checks and delivery evidence. BuildOS supplies no project facts.
 
 ## 1. Two Kinds of Authority
 
-- **Fact authority:** local code, documents, databases, task systems, runtime state, and release receipts describe what the project is now. BuildOS defaults cannot overrule those facts.
-- **Governance standard:** BuildOS evaluates whether the fact chain is complete, clear, recoverable, verifiable, and evolvable. Existing rules are not correct merely because they exist; repair the original owner when rules are missing, conflicting, duplicated, stale, or immovable.
+- **Fact authority:** current code, documents, databases, task/runtime state and release receipts establish project facts; BuildOS defaults cannot override them.
+- **Governance standard:** evaluate completeness, clarity, recovery, verification and evolution. Existing rules may be wrong; repair their original owner when missing, conflicting, duplicated, stale or immovable.
 
-Respecting facts does not freeze the current state. When a gap exists, propose the target instance and migration impact, then update, merge, or replace the original owner after authorization. Do not create a permanent parallel truth source.
+For gaps, propose a target and migration impact; update/merge/replace original owners within authority without parallel truth.
 
-## 2. Unify Meaning, Not Shape
+## 2. Standard Owners and Project Shape
 
-An instance must make actual responsibility discoverable for objective/scope, requirements/acceptance, technical direction, task state, run state, quality entrypoints, delivery/release facts, and recovery. File and directory names may differ.
+Make domain facts and state discoverable. Use the persistent UI standard below; other layouts may adapt to actual capabilities and external systems.
 
-- New projects may use BuildOS defaults such as `governance/`, `product/`, and `engineering/`, combine roles, or use a better project-specific layout after responsibilities are known.
+- New projects use applicable `governance/`, `product/`, `design/`, `engineering/` roles; omit unused modules.
 - Established workflows may keep task packages, databases, manifests, Makefiles, and receipts as owners.
 - External requirement/task systems may be owners when the project entrypoint records system, object ID, access method, and offline recovery boundary.
-- Small scripts may combine roles in README, tests, and version records if each fact remains unique and discoverable.
+- Small scripts may combine non-UI roles in README, tests and version records while preserving unique facts.
 
-Keep stable cross-project knowledge such as Python, frontend frameworks, and code quality in BuildOS for conditional use. Projects retain selected stack, actual constraints, entrypoints, exceptions, and validation commands—not copied manuals.
-
-Design context also belongs to the project instance. Create a minimum design owner for a new UI project only when brand, tokens, components, or cross-page rules have stable reuse. Established projects reuse their design system, theme, tokens, component standards, or brand guide. If absent, Design may reconstruct a baseline from real interfaces while separating observation, inference, conflict, and unknown. Installing BuildOS, reading its design library, or analyzing a reference never creates a parallel `BuildOS Design Context` automatically.
+Keep cross-project language/framework/quality methods in BuildOS for conditional use. Projects retain selected stack, actual constraints, entries, exceptions and commands, not copied manuals.
 
 ### Placement Advice Is Not a Directory Command
 
-For “where should this live?”, identify the semantic owner, then give preferred path, reason, acceptable alternative, relationship to existing files, and whether a directory is needed. Defaults are comparisons, not mandates. Advice alone never creates or migrates files.
+For placement advice, name the owner, standard or preferred path, reason and affected files. Alternatives must preserve any applicable standard; advice alone authorizes no migration.
 
-When a specific artifact is requested, create it in a confirmed owner. If it introduces durable truth, changes the project root, or requires bulk migration, show target map and impact first. Distinguish a reorganization plan—current state, target, mapping, sequence, compatibility, recovery—from authorized execution.
+Create requested artifacts at a confirmed owner. For new durable truth, root changes or bulk migration, show target map and impact first. Separate plans (current/target state, mapping, sequence, compatibility, recovery) from authorized execution.
 
 ## 3. Three Capabilities
 
 ### Initialize a New Project
 
-For a blank or confirmed new project, determine lifecycle intent, composition, public model, release channels, confirmed artifacts, governance level, and modules separately from requirements, expected architecture, runtime, and user acquisition. Inspect a zero-write candidate with `--mode plan-new`; after implementation authority, run `--mode initialize-new` with the same explicit parameters.
+For new projects, classify lifecycle, composition, public model, release channels, real artifacts, governance level and modules separately from requirements, architecture, runtime and user acquisition. Inspect `--mode plan-new` with zero writes; authorized `--mode initialize-new` uses the same explicit parameters.
 
-Project type suggests candidates only. `release` means formal release governance, not proof of a deployment target, container, installer, or retention need. If the approved path differs from script defaults, follow the target map: create minimum owners and record path roles/relationships in policy. Defaults are optional implementations. Finish instruction adoption through [dual-track authoring](project-standard-discovery-and-on-demand-loading.md#dual-track-instruction-authoring): calibrate real project facts and adopt applicable shared working principles in the chosen project language. An English generated scaffold is not completed localization or semantic acceptance.
+Project type suggests candidates. `release` proves no deployment target, container, installer or retention need. Follow approved target maps over optional defaults; create minimum owners and register path roles/relationships. Finish [dual-track authoring](project-standard-discovery-and-on-demand-loading.md#dual-track-instruction-authoring): calibrate project facts and adopt applicable principles in the chosen language. An English scaffold proves neither localization nor semantic acceptance.
 
 ### Assess an Existing Project
 
 Remain strictly read-only through two stages:
 
-1. **Authority-first inventory:** from assessment root, navigation, release-unit/worktree registration, current baseline, and Git-root candidates, inventory project map, policy, and candidate owners. Exclude caches, backups, archives, retired copies, and linked worktrees explicitly. A Git root is only a repository candidate; a worktree is not a new repository/release unit. Show registered but unscanned worktrees as `authority_reference_not_scanned` until the current baseline is semantically confirmed. Supported `repositories.json` declarations may confirm release units, ledgers, and retirement evidence. One-off tasks, POCs, experiments, and third-party caches cannot masquerade as project-level task, quality, or production owners. Confirm delivery boundaries from registration and runtime facts. `assess_project_governance.py` performs this deterministic stage with bounded output; `--verbose` expands the full inventory.
-2. **Semantic assessment:** read entrypoints and real evidence per release unit; confirm requirement, technical, Durable Task State, Run State, quality, production, and recovery owners; then report confirmed mapping, conflict, gap, duplication, and migration risk.
+1. **Authority-first inventory:** use assessment root, navigation, release/worktree registration and current baseline to inventory maps, policy, Git-root and owner candidates. Exclude caches, backups, archives, retired copies and linked worktrees. Git roots remain repository candidates; worktrees are not release units. Mark registered but unscanned worktrees `authority_reference_not_scanned` until baseline confirmation. Supported `repositories.json` declarations may identify release units, ledgers and retired evidence. One-off/POC/experiment/cache records cannot become project task, quality or production owners. Confirm delivery boundaries from registration/runtime. `assess_project_governance.py` provides this bounded deterministic inventory; `--verbose` expands it.
+2. **Semantic assessment:** read entrypoints/evidence per release unit; confirm requirement, applicable design, technical, Durable Task State, Run State, quality, production and recovery owners. Report mappings, conflicts, gaps, duplication and migration risk.
 
-Do not reduce assessment to a file list or pass/fail. For complex cases, separate observed facts, governance judgment, preferred evolution, acceptable alternatives, retained exceptions, risk, and authorization. For many branches/worktrees, Project confirms roots, entrypoints, and identity drift; Delivery evaluates reachability, unique facts, and safe cleanup. Never classify them as waste for directory neatness.
+Assessment exceeds file lists/pass-fail: separate facts, governance judgment, preferred evolution, alternatives, retained exceptions, risk and authority. For branches/worktrees, Project checks roots, entries and identity drift; Delivery checks reachability, unique facts and safe cleanup. Directory neatness proves no waste.
 
-Filename matches are candidates, not semantic owners. Multiple maps, databases, or task files are not conflicts by count alone. Both stages are zero-write.
+Filenames are candidates, not semantic owners; candidate counts prove no conflict. Both stages remain zero-write.
 
 ### Evolve an Existing Project
 
-After assessment and authorization, evolve the original project. When requirements, architecture, installation, deployment, public strategy, release channels, or artifact types change, reassess affected capabilities/path roles and propose an incremental target map. A Dockerfile, Xcode project, or packaging script is only a signal; enable artifact lifecycle after a real consumer, release contract, or rollback dependency exists.
+After assessment and implementation authorization, evolve original owners. Changed requirements, architecture, installation, deployment, public strategy, release channels or artifacts require affected capability/path reassessment and an incremental target. Dockerfiles, Xcode projects and packaging scripts are signals; artifact lifecycle needs a real consumer, release contract or rollback dependency.
 
-Repair causes in requirements, responsibility, directories, interfaces, data ownership, defaults, and workflows; fill missing roles, merge duplicate owners, migrate immovable paths, and retain recovery points. Project entrypoints, policy, schema, tools, and evidence then own routine execution.
+Repair requirements, responsibilities, directories, interfaces, data ownership, defaults and workflows. Fill missing roles, merge duplicate owners, migrate immovable paths and retain recovery. Project entries, policy, schema, tools and evidence own routine work.
 
-For multi-domain audit, several remediation waves, cross-session recovery, and final review, use [Established Project Takeover](established-project-takeover-governance.md). It maps the existing Durable Task State Owner and preserves fact-first assessment, existing authorization boundaries, and original-owner evolution. A compound audit-and-repair request covers its scoped phases without another generic approval.
+For multi-domain audit, remediation waves, cross-session recovery and final review, use [Established Project Takeover](established-project-takeover-governance.md): existing task state, fact-first assessment, authority and original-owner evolution. Scoped audit-and-repair authority persists.
 
 For in-scope business-agent content, use [Workflow governance](../../senmu-build-workflow/references/business-agent-content-governance.md); root AGENTS-only work does not authorize it.
+
+### UI Adoption
+
+Infer UI capability from user goals and current facts, not project type or filenames. A new browser tool needs this judgment even when the user never says UI. `plan-new` without a declaration reports `unassessed`; before `initialize-new`, choose `--ui-scope none|one_off|persistent`. Unassessed initialization refuses without writing. No UI and `one_off` add no permanent UI file; exploration stays task-local.
+
+Persistent UI, including one maintained page, uses `design/UI_SPECIFICATION.md`. Project renders Design's [UI Specification template](../../senmu-build-design/assets/design-governance/UI_SPECIFICATION.template.md) and links it from AGENTS/map; full rules never belong in those routers. `--ui-owner` accepts only an equivalent canonical path for new declarations. `ui_management` stores scope and `basis_path`, not acceptance. Keep the approved scope/revision, real theme/token/components, representative pages/states/viewports, exceptions and verification under [Design](../../senmu-build-design/references/visual-systems-and-design-language.md). Unimplemented entries stay task gaps.
+
+Recovery preserves explicit saved scopes and existing bytes, including legacy bases; missing legacy declarations remain unassessed, not proven `none`. Nonstandard legacy bases require [UI migration](established-project-takeover-governance.md#ui-standard-migration): normal validation warns, strict validation cannot certify standardization; role collisions or escaping paths are errors. Do not use the initializer to overwrite a mature project. Keep selected prototypes linked through [Product](../../senmu-build-product/references/product-requirements-and-iteration.md#23-requirement-linked-visual-assets).
+
+First adoption rehearses an authorized representative task from basis to implementation, rendered comparison and user flow. Later, select/reuse impact/risk-based evidence under [Testing](../../senmu-build-engineering/references/software-testing-and-quality-verification.md); shared changes check representative consumers. Record runtime/access gaps in the task. No UI impact adds no checks. Scaffolds prove no host loading, model adherence, UI quality or acceptance.
 
 ### Experiment Adoption
 
@@ -65,9 +73,9 @@ For an established project, evolve its original owner in place; use an `existing
 
 ## 4. State Owners
 
-Follow [Task Execution and State Management](task-execution-and-state-management.md) for cross-stage/session state ownership and recovery. The instance only registers the chosen Durable Task State Owner.
+Register the existing Durable Task State Owner; use [Task Execution](task-execution-and-state-management.md) for cross-stage/session state and recovery.
 
-Task State stores cross-stage goal, boundary, progress, and recovery entrypoint. Run State stores one run's step, attempt, checkpoint, and output. Product, engineering, delivery, and review artifacts store their domain facts. Link by stable IDs; never copy bodies.
+Task State owns cross-stage goal, scope, progress and recovery; Run State owns one run's step, attempt, checkpoint and output. Product, Design, Engineering, Delivery and review owners retain domain facts. Link stable IDs, never bodies.
 
 ## 5. Relocatable Identity
 

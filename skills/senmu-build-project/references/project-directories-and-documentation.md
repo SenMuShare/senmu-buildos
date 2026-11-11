@@ -1,6 +1,6 @@
 # Project Directories and Document Ownership
 
-Use this standard to select project roots, path roles, document owners, and project maps without imposing one shape. Map established structures first; candidate names never justify parallel directories.
+Select roots, path roles, document owners and maps from project facts. Apply the standard UI entry below; map other established structures without parallel directories.
 
 ## 1. Boundaries and Roles First
 
@@ -15,7 +15,7 @@ Software/composite projects may begin with roles such as:
 ```text
 project-root/
   README.md / AGENTS.md / .senmu-buildos/
-  product/ engineering/ workflows/ governance/
+  product/ design/ engineering/ workflows/ governance/
   delivery/ operations/ projects/ scripts/ tests/
 ```
 
@@ -49,41 +49,45 @@ Resolve project facts, precedence, freshness, and unresolved decisions through [
 | Fact | Default owner |
 | --- | --- |
 | users, requirements, business rules, roadmap, acceptance | Product |
-| architecture, design, quality, language, testing, debt | Engineering |
+| visual rules, interface interaction, responsiveness, accessibility | Design |
+| architecture, technical interfaces, state, quality, language, testing, debt | Engineering |
 | Workflow Contract, Run Manifest, material, recovery | Workflow |
 | Git, version, tag, artifact, deployment, production, rollback | Delivery/Operations |
 | cross-stage plan and recovery entrypoint | existing Durable Task State Owner |
 | review findings, POC evidence, re-review | Assurance |
 | feedback candidates, lesson lifecycle, rule-promotion index | Learning |
 
-Project selects owners, paths, and index relationships; it does not copy domain writing rules. Update equivalent owners in place and do not create empty ledgers.
+Project selects owners, paths and index relationships; specialists own full methods. Preserve valid decisions when standardizing their location; create no empty ledgers.
 
 Artifact custody, semantic decision authority and run-state maintenance need not belong to one actor. For example, storage retains a deliverable, Product decides its accepted meaning, and the workflow state owner records its processing result. A task linking these artifacts coordinates progress; it does not take over their decisions or writable state.
 
-### Default Product/Technical Roles
+### Product, UI and Technical Roles
 
 For new product projects, create version paths only after the actual version is known:
 
 ```text
 product/USER_REQUIREMENTS.md
 product/PRODUCT_SPECIFICATION.md
+design/UI_SPECIFICATION.md                 # persistent UI, including one maintained page
 versions/<version>/PRD.md
 versions/<version>/TECHNICAL_DESIGN.md       # each formal development version; may be brief
 versions/<version>/TEST_CASES.md             # PRD-derived, risk-proportional
 engineering/SYSTEM_TECHNICAL_SPECIFICATION.md
 ```
 
-Paths provide navigation; document sections are adaptable outlines. Initialization must not create empty PRDs, technical designs, test cases, roadmaps, iterations, or review ledgers for unknown work. Map established owners first, then add current specifications and future-version structure incrementally.
+Persistent UI has one current entry at `design/UI_SPECIFICATION.md`; its depth follows actual scope. A shared monorepo uses that root entry with scoped variants; independently governed applications use the same path under their registered roots, linked from the parent. Figma or generated design sources retain their real maintenance boundary through exact object/revision links, not a second editable specification. Theme/token/component values stay in code. Old UI documents migrate under [Takeover](established-project-takeover-governance.md#ui-standard-migration); ordinary local edits do not launch that migration.
+
+Other sections adapt to real responsibilities. Initialization creates no empty version PRDs, technical designs, tests, roadmaps or reviews for unknown work.
 
 ## 5. Minimum Document Responsibility
 
-A durable project must make discoverable: identity and real commands; current requirements/goals and acceptance; architecture/implementation boundaries and quality entrypoints; workflow input/state/output/recovery; release units and production rollback; and cross-stage task scope, progress, evidence, and next entrypoint. These need not be separate files or identical sections.
+A durable project exposes identity/commands, requirements/acceptance, applicable UI standard, technical/quality boundaries, workflow state/recovery, delivery/rollback and task progress. Apart from required standards, roles may share files.
 
 Plans, candidates, frozen references, history, and current documents cannot impersonate one another. State, applicable release unit/version/delivery ID, and calibration evidence must match use. A local fix reviews only affected owners; it does not mass-update unrelated documents for a version advance.
 
 Keep high-churn facts—version, commit, candidate/production state, policy ID, calibration time—in one machine-readable owner. Other documents reference it, retain only unique explanation, or form reproducible projections through declared generation/validation. Never hand-edit unrelated bodies for duplicate headers or let projections become authority.
 
-Synchronize on contract change: behavior/acceptance -> Product; modules/interfaces/data/dependencies/infrastructure/permissions/security -> Engineering; run steps/recovery -> Workflow; version/deployment/production/rollback -> Delivery. For contract-preserving implementation changes, update tests, necessary comments, and the project's minimum record only.
+Synchronize contract changes: business behavior/acceptance -> Product; visual/interaction rules -> Design; modules/technical interfaces/data/dependencies/infrastructure/security -> Engineering; run steps/recovery -> Workflow; deployment/production/rollback -> Delivery. Contract-preserving implementation updates only affected tests, comments and records.
 
 ## 6. Security and Public Boundary
 

@@ -29,4 +29,8 @@ Known locations skip navigation, not applicable constraints. Use `{{NAVIGATION_E
 
 For governed tasks, record the task signal, matching available Skill and real project procedure/command. A release or interrupted operations task follows that route; reuse unchanged guidance within scope. Ordinary local edits need no unrelated Skill call.
 
+<!-- persistent-ui-only:start -->
+For page, component, interaction or shared style changes, read `{{UI_BASIS_PATH}}` (project-root relative) and use its approved decisions and actual theme/token/component entries. Route missing, conflicting or changing design decisions to `senmu-build-design`; implement under the current Engineering policy. Missing entries remain adoption work. Before closeout, record affected scope and rendered/UX evidence selected or reused by impact and risk; state verification gaps precisely. Initial UI adoption exercises a representative task; shared changes check representative consumers. Build success alone does not establish visual or UX acceptance.
+<!-- persistent-ui-only:end -->
+
 {{POC_ENTRY}}

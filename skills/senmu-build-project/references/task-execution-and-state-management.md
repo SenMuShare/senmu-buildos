@@ -39,16 +39,16 @@ At minimum, record:
 2. Objective, completion definition, scope, non-goals, and affected release/delivery units.
 3. Current constraints and sources, authority, permitted actions, and prohibited boundaries.
 4. Natural phases, current progress, results/evidence, and next step.
-5. Links to authoritative requirement, workflow, engineering, delivery, assurance, and experiment owners.
+5. Links to authoritative requirement, applicable design, workflow, engineering, delivery, assurance, and experiment owners.
 6. Decisions that affect later execution: accepted/rejected options, evidence and rationale, constraints to preserve, unresolved questions, and reconsideration conditions.
 7. Research and verification summaries, unverified items, and residual risks.
 8. Recovery entrypoint, closeout, and release/delivery/rollback state.
 
 Give executors the result, scope, observable completion and unknowns; link existing context. Avoid invented estimates, repeated background and obvious steps without omitting real constraints.
 
-The plan coordinates without duplicating requirements, designs, code, runtime, experiments, reviews or release facts. Product tradeoffs stay in REQ/PRD, durable technical decisions in TD/ADR, and formal evidence at specialist owners.
+Keep task decisions here, Product tradeoffs in REQ/PRD, durable technical decisions in TD/ADR, and formal evidence at specialist owners. Do not duplicate domain facts.
 
-Preserve `Decision Rationale`, `Rejected Alternatives`, `Preserved Constraints`, and `Revisit Trigger`: why an option won, why alternatives lost, constraints against restoring them, and evidence that reopens the decision. This distinguishes defects from intended limits. Keep task decisions here and durable product/architecture decisions at their owners. Supersede changed decisions without rewriting history or making them permanent.
+Keep `Decision Rationale` (why), `Rejected Alternatives` (why not), `Preserved Constraints` (limits to retain) and `Revisit Trigger` (reopening evidence). Distinguish defects from intended limits; supersede decisions without rewriting history or making them permanent.
 
 ## 4. Split Plans Only as Much as Needed
 
@@ -62,20 +62,22 @@ Preserve `Decision Rationale`, `Rejected Alternatives`, `Preserved Constraints`,
 
 Delegate bounded independent work only when the host permits it and benefit exceeds coordination cost; otherwise continue locally. Do not invent agents/review rounds. Messages remain human-readable. For actual parallel work, define outcomes, shared state, overlapping writes and integration ownership. Apply Delivery isolation within authority; delegation or tool availability does not expand scope.
 
+Parallel UI slices share the approved basis and one theme/token/component integration owner.
+
 ### 4.1 Minimum Package for Actual Delegation
 
-Create a task package only when work is actually handed to another person or agent. It references existing owners and enables execution without the full chat:
+Actual handoffs send facts and stable owner routes, not full conversations, rulebooks or unrelated history; enable execution without the chat:
 
 - `Current Task`: the one required outcome, completion test, and explicit exclusions.
 - `Global Constraints`: still-valid user authority, prohibitions, risk gates and stop conditions applicable to this assignment, with source and scope. The label cannot extend unrelated restrictions or narrow global policy.
-- `Interfaces`: read/write scope, inputs/outputs, shared state, dependencies and preserved contracts. Identify the accepted baseline, capability/API owners, relevant implementation/contract/check paths, assignment invariants and inspected worktree/revision. Do not mistake stale code or an unconnected consumer for a missing contract. Pointers aid retrieval, not authority or proof. Supply constraints the assignee cannot retrieve, not the full map, rulebook or transcript.
+- `Interfaces`: read/write scope, inputs/outputs, shared state, dependencies, preserved contracts, accepted baseline, capability/API owners, implementation/contract/check paths, assignment invariants and inspected worktree/revision. Supply unavailable constraints, not full maps or transcripts. Paths grant no authority or proof; stale code or unconnected consumers do not prove a missing contract.
 - `Output Contract`: slice completion, artifacts, actual changes, development/closeout checks and integrator-owned checks, evidence, deviations, remaining work, repair owner, temporary-resource disposition, and next action.
 
 For controlled inputs, distinguish registered worktrees from shared roots and check existence, format and provenance before handoff. Discovered paths are hints unless explicitly binding. Within delegated read scope, an assignee may find alternatives but returns binding-input mismatches with evidence rather than substituting silently. The delegator may correct its mistaken locator within existing authority without a new product decision. User-pinned inputs, licenses, access and cost limits remain binding; unresolved authority goes to the user.
 
-At handoff/interruption, retain useful navigation, unknowns and next action in the task owner. Successors check relevant worktree changes before reuse and reread only what is needed; changing executors warrants neither project-wide rediscovery nor a second recovery ledger.
+At handoff/interruption, save navigation, unknowns and next action in the task owner. Successors check relevant worktree changes before reuse and read only needed context; executor changes warrant no project rediscovery or second recovery ledger.
 
-Send task-relevant facts and stable project/specialist routes, not full conversations, rulebooks or unrelated history. Describe overlap, shared resources and integration only for real parallel work. Packages never expand authority; resolve apparent conflicts from current decisions before escalating uncovered ones. Update ownership and stale executor routes on reassignment. Titles do not prove review independence: an implementer, including a reviewer taking over, still needs separate evidence when required.
+Packages grant no authority. Resolve apparent conflicts from current decisions before escalating uncovered ones; update ownership/routes on reassignment. Titles prove no independence; implementers, including reviewers taking over, need separate evidence when required.
 
 ### 4.2 Work-Preserving Dependency Scheduling
 
@@ -109,6 +111,7 @@ A Codex session plan schedules only the current phase. The project task plan sur
 Authoritative owners include:
 
 - Product facts: `product/USER_REQUIREMENTS.md`, `versions/<version>/PRD.md`, `product/PRODUCT_SPECIFICATION.md`, or the registered equivalent.
+- Persistent UI: `design/UI_SPECIFICATION.md` under [Design](../../senmu-build-design/references/visual-systems-and-design-language.md).
 - Formal technical design: `engineering/designs/TD-<NNNN>-<slug>.md` or an established engineering owner.
 - Durable architecture decisions: `engineering/decisions/ADR-<NNNN>-<slug>.md`.
 - Formal workflow: `workflows/` or a registered Workflow Contract.
@@ -134,6 +137,7 @@ Route newly discovered facts as follows:
 | Change | Required owner |
 | --- | --- |
 | User behavior, product scope, business rule, or acceptance | REQ/PRD or established Product owner |
+| Visual/interaction rules or accepted exceptions | Design owner; implementation in Engineering |
 | Module, public interface, data, dependency, infrastructure, or durable technical direction | TD/ADR or established Engineering owner |
 | Workflow input/output, step, state, recovery, or receipt contract | Workflow Contract or established Workflow owner |
 | Execution order, current phase, delegation, pause, or recovery point | Numbered task plan or established task system |
@@ -145,13 +149,15 @@ An explicit applicable decision replaces the current constraint; retain history 
 
 ## 7. Closeout and Archive
 
-Before `completed`, reconcile the original commitment, approved changes, current authoritative owners, actual result, and verification evidence:
+Before `completed`, reconcile commitments, approved changes, authoritative owners, results and evidence:
 
 1. Formal requirements, technical designs, ADRs, workflows, experiment decisions, reviews, and delivery facts are in their proper owners.
 2. Actual results cover committed scope; incomplete, partial, added-out-of-scope, and cancelled items are explicit.
 3. Matching verification ran and links evidence; omitted or uncovered portions state their impact.
-4. The plan retains only necessary current state, key decision summaries, and trace links; duplicated bodies and temporary content are removed.
-5. Unverified items, residual risk, release responsibility, and rollback responsibility are explicit.
+4. Retain current state, key decision summaries and trace links; remove duplicated bodies and temporary content.
+5. State unverified items, residual risk, and release/rollback responsibilities.
+
+For UI impact, select/reuse rendered/UX evidence by impact and risk under [Testing](../../senmu-build-engineering/references/software-testing-and-quality-verification.md); record scope and gaps. Rehearse a representative task on first adoption; shared changes check representative consumers. No UI impact adds no checks.
 
 `completed` requires the task's result and closeout, not implied specialist `implemented`, `accepted` or `released` status. Keep stable plan paths; use `archived` for history. Update the Task Register and references before offline archival.
 

@@ -1,6 +1,6 @@
 # Lightweight HTML and daisyUI Frontend Profile
 
-Use this profile for lightweight H5 pages, campaigns, documentation pages, small internal tools, and static deliverables that need only native HTML, limited JavaScript, and one UI system. It owns technical route and implementation only. Route creation/review of visual direction, design system, responsive experience, or interaction quality to `senmu-build-design`. This is not the default for all frontend work; preserve an established React, Vue, Ant Design, or other stable stack.
+Use this profile for lightweight H5 pages, campaigns, documentation pages, small internal tools, and static deliverables that need only native HTML, limited JavaScript, and one UI system. It owns technical route, implementation and verification of settled design decisions. Use `senmu-build-design` when visual direction, design-system, responsive or interaction decisions are missing, conflicting or require material revision; ordinary implementation consumes the approved project owner directly. This is not the default for all frontend work; preserve an established React, Vue, Ant Design, or other stable stack.
 
 ## 1. Applicability
 

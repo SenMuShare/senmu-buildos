@@ -25,7 +25,7 @@ Current product specification
 | `product/PRODUCT_SPECIFICATION.md` | durable whole-product view is needed | complete current product facts | `PRODUCT_SPECIFICATION.template.md` |
 | `engineering/SYSTEM_TECHNICAL_SPECIFICATION.md` | long-lived code needs a durable system view | complete current technical facts | `SYSTEM_TECHNICAL_SPECIFICATION.template.md` |
 
-Map existing documents/systems to these roles without a second truth set. Each formal development version retains identifiable requirements and a technical account, possibly as separate sections of one document. Small versions briefly state approved change, inherited design, affected implementation and verification without omitting substance or expanding empty headings. Tasks update their existing version; unversioned exploration needs no formal version for this rule.
+Map documents to these roles without duplicating truth. Every formal development version has identifiable requirements and a technical account, possibly sections of one document. Small versions briefly cover approved change, inherited design, affected implementation and verification. Tasks update their existing version; unversioned exploration needs no formal version.
 
 Get Started guides, tutorials, manuals, and CLI/SDK/API references remain with the project's documentation owner. When installation, configuration, public calls, or operating paths change, Product records the affected contract, acceptance entrypoint, and current official documentation location in the PRD without copying its text or creating a documentation site for a project with no durable user entrypoint.
 
@@ -33,7 +33,7 @@ Public README, website, store listing, and repository description are current pr
 
 ## 2. Template Use
 
-Follow the user's requested format. Preserve it in the existing product owner and reuse it across sessions and updates unless the user explicitly replaces or localizes it. A complete requested template retains its sections, explaining genuine non-applicability; unknown facts are not invented. Otherwise retain required scope/result content and only relevant optional modules. Remove writing comments, empty tables and unused optional fields, not unresolved decisions in drafts. Optional modules may be renamed, merged or repeated without losing facts; required feature sections may not. Keep small changes brief without inventing pages, interfaces or performance targets.
+Reuse the user's requested format across sessions and updates until explicitly replaced or localized. Retain its sections, explain non-applicability and leave unknowns explicit. Otherwise keep required scope/results and relevant optional modules. Remove writing comments, empty tables and unused optional fields, preserving unresolved draft decisions. Optional modules may be renamed, merged or repeated without losing facts; required feature sections may not. Keep small changes brief without invented pages, interfaces or performance targets.
 
 Templates outside an adopted format are outlines, not universal schemas, validators or approval flows. The following feature contract governs formal requirements by default; it does not force an artifact for every task.
 
@@ -57,6 +57,8 @@ Keep observable acceptance in sections 3/4 and shared acceptance authority at ve
 ## 2.2 Clarification and Output Review
 
 Review each feature's scenario, goal, scope, normal flow, rules, permissions, state/data, feedback, exceptions and recovery against settled decisions and affected features. Retrieve facts; discuss consequential unknowns as needed with gap, impact, recommendation and choice. Reuse settled answers; separate decisions from assumptions/advice. Mark unresolved content where it belongs; block only implementation that would otherwise guess the outcome.
+
+Infer UI from user tasks, not vocabulary. Requirements-only work describes operations, feedback, exceptions and design questions. At authorized initialization/implementation, pass persistent UI needs and approved outcomes to Project/Design for `design/UI_SPECIFICATION.md`. No UI means no UI artifact.
 
 Preserve a rule's subject, trigger and intended result. Feasibility, charging conditions or exceptional recovery alone do not justify new features or broader normal flows. Engineering and Design choose means within approved outcomes; return consequential changes to meaning, scope, cost, permissions or acceptance to the authorized owner, not every local choice.
 
@@ -82,6 +84,8 @@ On replacement, update current forward/back links, disposition and scope while p
 
 Without relevant assets, omit the attachment subsection: do not generate images, empty ledgers or blockers. Unrelated uploads and every intermediate AI variation need not become requirement evidence. Product owns requirement association/adoption meaning, Design owns design decisions, and the existing material owner retains custody.
 
+For implementation, pass the adopted revision and scope to [Design's adoption contract](../../senmu-build-design/references/prototype-exploration-and-interface-review.md#implementation-adoption); retain business acceptance here.
+
 ## 3. From Requirement to Version PRD
 
 A backlog is optional; owners may record ideas or proceed to a PRD. Match discussion to uncertainty and impact:
@@ -92,7 +96,7 @@ A backlog is optional; owners may record ideas or proceed to a PRD. Match discus
 
 Do not repeat questions or await separate approval when owners and context suffice. Unknowns block only when they would silently change outcome. Keep discussion in the task owner; the PRD stores current conclusions.
 
-When overloaded terms or inconsistent names would change behavior, permissions, billing, state or acceptance, resolve them against existing decisions and a concrete boundary scenario, such as submission versus verified completion or same-intent retry versus a new potentially billable request. Do not invent the project's answer. Retrieve discoverable facts and ask only for material unresolved choices, grouped when independently answerable, with recommendations and consequences. Keep the adopted canonical name, short meaning, confusing alternative and boundary example at the existing product/terminology owner within write authority, then reuse them in technical mappings. Do not create a CONTEXT file, ADR or glossary service per term, re-ask settled choices, or treat observed code as permission to change approved intent. At intake, distinguish already implemented, rejected, deferred and awaiting evidence; retain the reason and revisit condition rather than treating every closed item as forbidden work.
+Resolve ambiguous names that affect behavior, permissions, billing, state or acceptance against existing decisions and a concrete boundary: submission versus verified completion, or a retry versus a new billable request. Retrieve facts; ask only for material unresolved choices, grouped when independent, with recommendations and consequences. Within authority, keep the adopted name, meaning, confusing alternative and boundary example with the product/terminology owner; reuse them in technical mappings. Do not add a CONTEXT file, ADR or glossary service per term, re-ask settled choices or treat code as permission to change intent. Distinguish implemented, rejected, deferred and awaiting-evidence items; retain reasons and revisit conditions rather than prohibiting all closed work.
 
 Assign implementation-ready work from product facts to the current open version, successor version, or uncommitted backlog. Add it to an open version when goal, acceptance, and delivery timing align. Ask only when placement would change scope/timing and cannot be inferred. Future unimplemented work records version intent without creating a code branch.
 
@@ -141,17 +145,18 @@ Large products may split current specifications into indexes and page/module doc
 
 ## 6. New and Established Projects
 
-For new projects, these paths are default responsibility mappings, not mandatory empty scaffolding:
+Persistent UI uses the fixed specification path below; create other artifacts only when their responsibilities are needed:
 
 ```text
 product/USER_REQUIREMENTS.md              # optional
 product/PRODUCT_SPECIFICATION.md          # current product facts
+design/UI_SPECIFICATION.md               # persistent UI rules; Design owns the template
 versions/<version>/PRD.md                 # requirement draft and current development version
 versions/<version>/TECHNICAL_DESIGN.md    # each formal development version; concise when unchanged
 versions/<version>/TEST_CASES.md          # optional, derived from PRD
 engineering/SYSTEM_TECHNICAL_SPECIFICATION.md # current technical facts
 ```
 
-For established projects, inventory existing product documents, UI, code, interfaces, tests, and runtime facts, then map real owners. If a current overview is absent, reconstruct product and system specifications from evidence while labeling confirmed facts, inferences, conflicts, and unknowns; do not invent historical backlogs or PRDs. Apply the transition to future versions without reorganizing everything for directory aesthetics.
+For established projects, inventory product documents, UI, code, interfaces, tests and runtime facts, then map responsibilities. Reconstruct missing product/system views from evidence, labeling confirmed facts, inferences, conflicts and unknowns; do not invent historical backlogs or PRDs. UI standardization uses Project's migration procedure to consolidate current design rules while preserving exact historical requirement/asset associations. Routine product changes do not initiate a whole-project migration.
 
 Directories, transitions, and templates must not create empty documents, duplicate text, approval waits, or useless context.

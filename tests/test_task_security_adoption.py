@@ -18,7 +18,7 @@ class TaskSecurityAdoptionTests(unittest.TestCase):
     def init(self, mode="initialize-new", kind="software", extra=()):
         return subprocess.run([sys.executable, str(INIT), "--mode", mode, "--root", str(self.root),
             "--project-name", "Synthetic task fixture", "--project-type", kind,
-            "--profile", "standard", *extra], capture_output=True, text=True, timeout=30)
+            "--profile", "standard", "--ui-scope", "none", *extra], capture_output=True, text=True, timeout=30)
     def output(self, result):
         self.assertEqual(result.returncode, 0, result.stderr)
         return json.JSONDecoder().raw_decode(result.stdout[result.stdout.index("{"):])[0]

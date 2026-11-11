@@ -131,7 +131,7 @@ class ContractAdoptionTests(unittest.TestCase):
     def initialize(self, root, kind='software', mode='initialize-new'):
         result = subprocess.run([sys.executable, str(PROJECT/'scripts/init_project_governance.py'),
             '--mode', mode, '--root', str(root), '--project-name', 'Contract test', '--project-type', kind,
-            '--profile', 'core'], capture_output=True, text=True, timeout=20)
+            '--profile', 'core', '--ui-scope', 'none'], capture_output=True, text=True, timeout=20)
         self.assertEqual(result.returncode, 0, result.stderr)
         return json.JSONDecoder().raw_decode(result.stdout[result.stdout.index('{'):])[0]
     def test_adoption_check_is_pending_not_invented_http(self):

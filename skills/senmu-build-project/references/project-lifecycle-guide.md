@@ -19,7 +19,7 @@ Establish facts in this order; do not infer them from chat memory:
 
 1. Confirm objective, permitted modification scope, explicit exclusions, and completion definition.
 2. Use README/AI entrypoints to identify project form, current objective, real paths, state source, and deliverables. Do not assume a software product.
-3. Select only the governance modules needed for this task, then read matching requirement, technical, workflow, Git, POC, delivery, or runtime owners.
+3. Select only the governance modules needed for this task, then read matching requirement, design, technical, workflow, Git, POC, delivery, or runtime owners.
 4. For work spanning dependent steps, phases, agents, or sessions, use the project's Durable Task State Owner for boundaries, progress, evidence, and recovery. New standard/release projects default to `governance/tasks/`; core projects may retain README, issues, or an external task system.
 5. Check the authoritative project root, Git root, branch/workspace, release or delivery unit, and current runtime entrypoint.
 6. Search for existing implementation, shared capability, public contracts, data/material owners, and legacy entrypoints.
@@ -56,6 +56,8 @@ Initialization is not merely directory creation. Select modules by project form:
 The `standard` and `release` profiles create `governance/PROJECT_MAP.md` as a draft navigation owner. A core or established project may keep a sufficient README or existing equivalent. Calibrate real capabilities, responsibilities, implementation entrypoints, applicable contracts and verification under the [Index Contract](project-standard-discovery-and-on-demand-loading.md#4-index-contract). Ordinary files inherit module ownership; an existing known route does not require a map read before every edit. Update only navigation facts changed by the task. Template generation is not semantic completion, and unknown implementation or testing paths must remain explicit gaps.
 
 Record work object, lifecycle intent, delivery model, and composition separately. Software, workflow, media, or research is the work object. Exploration/POC, pilot, production, migration, or one-off delivery is lifecycle intent. Continuous product, source distribution, versioned artifact, managed service, project deliverable, or internal process is delivery model. Composite means several work objects or delivery units; it does not make POC or mixed an exclusive project type.
+
+Infer UI capability from the goal: `none`, task-local `one_off`, or maintained `persistent`. A missing decision stays `unassessed` in the plan; complete it before initialization. Persistent UI uses `design/UI_SPECIFICATION.md` under [Design](../../senmu-build-design/references/visual-systems-and-design-language.md) and real implementation/evidence routes under [Testing](../../senmu-build-engineering/references/software-testing-and-quality-verification.md). Project type alone decides none of these.
 
 ## 5. Initialization Architecture Gate
 
@@ -101,15 +103,16 @@ python3 <senmu-build-project>/scripts/init_project_governance.py \
   [--publication-model <private_only|public_native|private_authority_public_projection>] \
   [--release-channel <channel> ...] [--artifact-kind <kind> ...] \
   [--composition <single_domain|composite>] \
+  [--ui-scope <none|one_off|persistent>] \
   [--modules <product|workflow|code|architecture|git|poc|delivery|agents> ...] \
   --profile <core|standard|release>
 ```
 
-When the candidate structure is selected within existing initialization authority, reuse the full command and the same explicit parameter set, changing `--mode plan-new` to `--mode initialize-new`. Add `--with-agents` or `--commit-baseline` only when the corresponding need exists.
+Complete UI classification and review the zero-write plan; then reuse its explicit parameters with `--mode initialize-new`. New initialization without `--ui-scope` refuses without writes. `--ui-owner` is unnecessary for the fixed persistent UI path. Add `--with-agents` or `--commit-baseline` only for a real need.
 
 Project type and profile are required. Without `--modules`, recommended modules for that type apply; an explicit list wins, while `--modules` alone creates a base instance without specialist modules. `initialize-new` refuses to generate default directories inside a mature project with existing content. For an existing project, run the zero-write `assess_project_governance.py --root <project-root>` first, then evolve original owners under authorization using the project-governance instance standard.
 
-After generation, run structural validation, calibrate placeholders, change policy status to `active`, then run the copied `python3 .senmu-buildos/validate.py --root . --strict`. Use `core` for small exploration: it creates only README, AGENTS, governance charter, machine policy, and one validation entrypoint, not tasks, logs, lessons, or specialist documents. Combine those responsibilities in current entrypoints until durable collaboration justifies `standard`. Use `release` for formal publication, deployment, or stable delivery, while tailoring documents and directories to reality; a template is not completed design.
+After generation, validate structure, calibrate placeholders, set policy status to `active`, then run `python3 .senmu-buildos/validate.py --root . --strict`. `core` creates README, AGENTS, charter, policy and validator, plus the UI standard only for `persistent`; it creates no task/log/lesson suite. Combine other roles until collaboration needs `standard`. Use `release` for actual publication, deployment or stable delivery. Active structure and templates do not prove adopted design.
 
 `--commit-baseline` is only for an empty new project or recovery of the initializer's own draft. It runs non-strict structural validation, stages only known initializer-managed files, and creates a governance-skeleton baseline commit. It never runs `git add .`, creates a tag, handles an established project, or commits through a Hook. If Git identity is missing or the index already contains staged content, it skips the commit and reports why.
 
@@ -120,6 +123,7 @@ After initialization/calibration, the project must make these facts directly dis
 - Project form, current objective, authoritative entrypoint, applicable constraints and the requested delivery outcome.
 - For actual multi-step or cross-session work: the existing task state and unresolved next steps; immediate small work need not create a task system.
 - For enabled Product work: requirements, terminology and acceptance ownership.
+- For persistent UI, even one page: `design/UI_SPECIFICATION.md`, approved scope, actual theme/token/component entries and representative state/viewport checks. Unimplemented or unverified entries remain adoption gaps.
 - For real code modules: capability-to-implementation, contract and verification routes; use a combined README for a small core project when sufficient.
 - For architecture decisions that need durable explanation: the existing technical owner, selected baseline and relevant rationale. No empty ADR or debt register is required.
 - For code/tooling: actual quality commands and applicable language/framework guidance, loaded only for the current need.
@@ -139,6 +143,7 @@ Before delivery, confirm:
 - The result is in the authoritative project and correct release unit, not only a temporary directory or chat.
 - No unexplained conflict exists among input, rules, implementation/runtime, state, verification, and deliverables in enabled modules.
 - Risk-proportional verification ran, with actual results, omissions, and residual risk recorded.
+- For UI impact, rendered/UX evidence was selected or reused by impact and risk. Initial adoption exercises a representative task; shared changes check representative consumers. Unchanged flows need no full-journey rerun for a small change.
 - When formal delivery/release is within the authorized outcome, it has its required identity, evidence and recovery basis. A navigation-only or source-only task does not acquire deployment obligations or permission by entering closeout.
 - Project-specific learning updates project standards only. A concrete BuildOS component and reviewable harm suffice for feedback intake through `senmu-build-learning`; promotion to a general rule requires cross-project evidence or a stable mechanism affecting multiple project types, without disproportionate burden.
 

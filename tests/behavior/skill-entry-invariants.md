@@ -25,17 +25,17 @@
 | ID | 压缩后必须仍能决策的事项 | 主 owner |
 | --- | --- | --- |
 | P-01 | Project 只在治理实例、跨阶段状态或多领域边界是交付物时主责；不是八 Skill 父级 | `skills/senmu-build-project/SKILL.md` |
-| P-02 | 空白新项目可显式初始化；成熟项目先零写入盘点和语义确认 | `project-governance-instances-and-evolution.md` |
+| P-02 | 从普通目标识别初始化所需能力，无需用户指定专业文档；成熟项目先零写入盘点和语义确认 | `project-governance-instances-and-evolution.md` |
 | P-03 | `--with-agents` 和 `--commit-baseline` 有独立触发与停止边界，baseline 不创建 Tag | `project-lifecycle-guide.md` |
 | P-04 | 分类保留工作对象、生命周期意图、交付模式、组合方式和 G0-G4 | `skills/senmu-build-project/SKILL.md` |
 | P-05 | Project Map 只导航 owner、入口、状态源和边界，不复制专业正文或可变状态 | `project-directories-and-documentation.md` |
 | P-06 | 跨阶段工作使用项目声明的唯一 Durable Task State Owner；`governance/tasks/` 只是新项目默认 | `task-execution-and-state-management.md` |
 | P-07 | 交接传递最小任务包和仍有效授权，不复制专业规范 | `project-adoption-handoff-and-scenario-routing.md` |
 | P-08 | 安全、隐私、支付、权限、生产数据、破坏性操作和发布完整性仍 fail closed | `governance-levels-and-gates.md` |
-| P-09 | 单项放置咨询给出 owner、首选路径、理由和替代，但不自动创建文件 | `project-governance-instances-and-evolution.md` |
+| P-09 | 放置咨询给出 owner、标准或首选路径及理由，替代须符合适用标准；建议本身不授权创建或迁移 | `project-governance-instances-and-evolution.md` |
 | P-10 | 空白项目规划零写入且参数显式；模块可以覆盖类型推荐，实施只按已审阅方案 | `skills/senmu-build-project/SKILL.md` |
 | P-11 | 成熟项目整理先交付现状／目标地图、迁移影响和恢复点，授权后才实施 | `project-governance-instances-and-evolution.md` |
-| P-12 | 目标路径不同于脚本预设时按确认地图实施，不为使用初始化器而扭曲目录 | `project-governance-instances-and-evolution.md` |
+| P-12 | 以实际能力和适用规范形成目标地图；持久 UI 使用标准路径，其他布局可适配；既有项目按迁移流程治理，不用新项目初始化器覆盖 | `project-governance-instances-and-evolution.md` |
 | P-13 | 治理建议先区分现场事实、判定、方案、替代和授权；普通问题不生成重型模板或平行状态系统 | `skills/senmu-build-project/SKILL.md`、`project-governance-instances-and-evolution.md` |
 | P-14 | 成熟项目长期接管由 Project 统筹唯一持久任务入口，专业事实和整改仍回到原 owner，不增加第九个编排 Skill 或第二份项目台账 | `established-project-takeover-governance.md` |
 | P-15 | 接管专项先只读冻结基线和 Finding，整改沿用已明确覆盖的授权；只读请求不得整改，未决结果变化才裁决；实施者完成不等于 Finding 已复核 | `established-project-takeover-governance.md`、`independent-review-and-evidence-grading.md` |
@@ -50,7 +50,10 @@
 | P-24 | 大型任务优先拆成穿过必要技术层的纵向价值切片；依赖前序发现的远期区域保持 `Not yet specified`，只记录约束、未知和展开触发，不为表面完整编造任务、依赖或验收 | `task-execution-and-state-management.md` |
 | P-25 | 用户展示名称为 Project Governance，强调治理实例而非通用项目管理；运行 slug 保持 `senmu-build-project`，不建立迁移或新 Skill | `skills/senmu-build-project/SKILL.md`、`skills/senmu-build-project/agents/openai.yaml`、`docs/architecture/skill-boundaries.md` |
 | P-26 | 项目规则按一句话实际约束的对象进入唯一专业 owner；持久 Agent 指令要求非显而易见且反复需要或一次违反有重大伤害，当前稳定、面向实现且可验证的工程约束不要求先有失败历史。混合文件按职责拆分权威关系，不由关键词脚本自动搬迁 | `project-standard-discovery-and-on-demand-loading.md` |
-| P-27 | Project Map 允许多个不同触发入口指向同一 owner；完全重复行只警告。validator 只对声明的 active 项目内路径、链接和确定性结构破坏返回错误，警告不阻断，JSON 使用稳定 code／path／message／severity／stats；结构合规不证明语义正确或新 Agent 已接线 | `project-standard-discovery-and-on-demand-loading.md`、`validate_project_governance.py` |
+| P-27 | Project Map 允许多个不同触发入口指向同一 owner；完全重复行只警告。validator 对声明的 active 项目内路径、链接和确定性结构破坏返回错误，普通模式警告不阻断，严格标准化检查按适用契约处理；JSON 保留 code／path／message／severity／stats。结构合规不证明语义正确或新 Agent 已接线 | `project-standard-discovery-and-on-demand-loading.md`、`validate_project_governance.py` |
+| P-28 | 未判断 UI 的新计划为 unassessed，不等于 none；新初始化先明确 none/one_off/persistent，否则零写拒绝。旧明确选择和原字节保留，缺失旧声明不能推定无 UI | `project-governance-instances-and-evolution.md`、`init_project_governance.py` |
+| P-29 | 持久 UI 当前入口统一 design/UI_SPECIFICATION.md；AGENTS/Map 仅路由；旧非标准 basis 需治理迁移，普通校验告警而严格校验不确认标准化，职责碰撞与越界仍为错误 | `project-governance-instances-and-evolution.md`、`validate_project_governance.py` |
+| P-30 | UI 标准化迁移保留有效决定，更新入口/配置/校验路径并退役旧权威；业务、代码值、任务进度各归其域，历史原型/PRD保留准确revision，日常局部改动不扩大成全项目迁移 | `established-project-takeover-governance.md` |
 
 ## Product
 
@@ -85,9 +88,9 @@
 | ID | 压缩后必须仍能决策的事项 | 主 owner |
 | --- | --- | --- |
 | UX-01 | Design 拥有视觉方向、设计系统、布局、字体、色彩、数据可视化、素材、响应式、交互、动效、可访问性、原型和 UI/UX 评审；Product 拥有功能／内容／验收，Engineering 拥有技术实现，Assurance 拥有独立结论 | `skills/senmu-build-design/SKILL.md`、`docs/architecture/skill-boundaries.md` |
-| UX-02 | 先读取真实页面、产品行为、项目设计系统、组件库、品牌资产和目标设备；现有设计 owner 完整时扩展它，不建立平行设计标准 | `skills/senmu-build-design/SKILL.md`、`visual-systems-and-design-language.md` |
+| UX-02 | 先读取真实页面、产品行为、项目设计系统、组件库、品牌资产和目标设备；保留有效决定，持久 UI 的标准化迁移只保留一个当前入口 | `skills/senmu-build-design/SKILL.md`、`visual-systems-and-design-language.md` |
 | UX-03 | 用户不懂设计术语时给少量可理解且实质不同的方向、推荐、适用场景、素材与风险；“高级／现代／科技感”必须落成可观察规格 | `visual-systems-and-design-language.md` |
-| UX-04 | 只有跨页面稳定缺口才治理设计系统；Token 表达角色，页面特有变化留在现有实现 owner，不默认创建 MASTER、页面覆盖目录或样式数据库 | `visual-systems-and-design-language.md` |
+| UX-04 | 持久 UI 包括长期单页，统一 design/UI_SPECIFICATION.md；深度按真实复用，不强制完整设计系统。Token 表达角色并引用代码源，不默认创建 MASTER、页面覆盖目录或数值副本 | `visual-systems-and-design-language.md` |
 | UX-05 | 动效先经过频率、目的、功能影响和替代路径判断；高频操作优先直接，简单变化优先现有组件／CSS，复杂手势或时间线才评估专项依赖 | `interaction-motion-and-accessibility.md` |
 | UX-06 | 交互从当前可见状态响应并允许中断；重要任务不得只依赖悬停、手势、颜色、图标、声音或运动，减弱动效与不同输入仍能完成 | `interaction-motion-and-accessibility.md` |
 | UX-07 | 可访问性、响应式和加载／空／错／禁用状态从设计开始；项目和目标平台当前标准优先，不用固定数字清单替代真实界面验证 | `interaction-motion-and-accessibility.md` |
@@ -95,7 +98,7 @@
 | UX-09 | 原型只在方向或交互风险需要时创建；候选保持内容与任务可比、隔离于生产入口，选定后写回现有 owner，未选方案不长期并存 | `prototype-exploration-and-interface-review.md` |
 | UX-10 | 设计评审按具体位置、证据、用户影响、建议结果和验证排序，不以个人偏好或默认挑错制造 Finding；设计自查不冒充用户研究、独立审查或生产事实 | `prototype-exploration-and-interface-review.md` |
 | UX-11 | 截图、URL、设计稿或现有页面的分析区分界面还原、设计转译和模式提取，输出已观察、推断、冲突与未知；设计资源库按需提供候选，不成为项目 owner 或前端组件代码包 | `reference-interface-analysis-and-reconstruction.md`、`design-library/INDEX.md` |
-| UX-12 | 已有项目无正式设计文档时先从真实页面、样式、Token、组件与品牌资产重建隐含基线；安装 BuildOS 不自动生成平行 Design Context，只有跨页面稳定需要才建立最小项目 owner | `visual-systems-and-design-language.md`、`project-governance-instances-and-evolution.md` |
+| UX-12 | 既有项目先从真实页面、样式、Token、组件和品牌资产确认隐含基线；授权治理后迁移到标准 UI 文件，保留有效决定和历史。安装本身不产生平行 Context，一次性探索不创建持久规范 | `visual-systems-and-design-language.md`、`project-governance-instances-and-evolution.md` |
 | UX-13 | 当前结果是视觉、交互、动效方向或界面原型时由 Design 主责，即使用户同时询问是否需要测试先行；Engineering 只承接方向确定后的技术实现或测试策略 | `skills/senmu-build-design/SKILL.md`、`skills/senmu-build-engineering/SKILL.md` |
 
 ## Workflow

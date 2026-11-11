@@ -54,5 +54,13 @@ class ReleaseAdoptionFixtureTests(unittest.TestCase):
         with self.assertRaises(ValueError): FIXTURE.create(root, 'release-adoption')
         self.assertEqual((root / 'scripts/release.sh').read_bytes(), before)
 
+    def test_fixture_rejects_reusing_any_old_deployment_for_a_successor(self):
+        root = self.workspace()
+        stale = REPAIR.replace('if [ "${1:-}" != --resume ]; then', 'if [ ! -f deployed.identity ]; then')
+        (root / 'scripts/release.sh').write_text(stale)
+        result = self.run_checks(root)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn('test_successor_release_and_fresh_executor_closeout', result.stderr)
+
 
 if __name__ == '__main__': unittest.main()

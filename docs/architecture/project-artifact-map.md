@@ -1,12 +1,12 @@
 # 项目产物与目录责任地图
 
-本地图规定八个 Senmu BuildOS Skill 为新项目提供的默认 owner，以及已有项目映射和演进 owner 的规则。目录服务于事实类型，不按 Agent 名称建立。已有项目先把真实入口作为事实权威；若 owner 完整且合理则登记并沿用，若存在缺失、冲突、重复、过时或不可搬迁问题，则在授权后治理原 owner，不建立平行副本。
+本地图规定八个 Senmu BuildOS Skill 的项目产物职责与标准落点。目录按事实类型组织。既有项目先确认真实来源和有效决定；持久 UI 在初始化或授权治理时收敛到下述标准入口，旧规范按迁移 SOP 退役。其他完整合理的 owner 可登记沿用；缺失、冲突、重复或过时内容在授权范围内治理，保留恢复能力。
 
 初始化模板的物理 owner 与项目内产物 owner 保持一致：Project 负责项目入口、地图、任务和治理模板；Product、Design、Workflow、Engineering、Delivery、Assurance、Learning 分别持有本域的规则或初始化模板。Project 的初始化器只做组合和渲染，不拥有其他领域的第二份模板。
 
 ## 三种物理布局
 
-- **Software Repository**：项目根就是 Git 仓库；`product/`、`engineering/`、`governance/`、`delivery/`、`operations/` 与代码位于同一仓库。
+- **Software Repository**：项目根就是 Git 仓库；适用的 `product/`、`design/`、`engineering/`、`governance/`、`delivery/`、`operations/` 与代码位于同一仓库。
 - **Project System**：面向媒体、内容、工作流、运营和 POC；只有 `00-project-system/` 是 Git 仓库，专业规则、流程、代码、配置和索引位于其中，大型源输入、工作区、交付物和归档位于其外。
 - **Publication Workspace**：私有权威库、可重建的公开 Git 投影和临时发布 staging 是同一工作区下的并列路径角色。具体名称由项目实例选择，Skill 只保存工作区内相对路径。
 
@@ -34,7 +34,7 @@
 | 用户需求 | User Requirements | `product/USER_REQUIREMENTS.md`；可选需求池，状态和处理版本写在条目旁 |
 | 版本产品需求文档 | Product Requirements Document | `versions/<version>/PRD.md` |
 | 产品规格书 | Product Specification | `product/PRODUCT_SPECIFICATION.md`；当前完整产品事实 |
-| 界面设计系统／规范 | Interface Design System / Specification | 项目已有设计系统、组件主题或 `design/`；只在存在跨页面稳定设计事实时建立 |
+| 界面规范 | UI Specification | 持久 UI 统一为 `design/UI_SPECIFICATION.md`，长期单页亦然；Design 持有正式模板，Project 初始化组合；旧资料经治理迁移，规范引用真实主题／组件源 |
 | 工作流契约 | Workflow Contract | `workflows/<workflow-id>/WORKFLOW.md` 或项目既有定义入口 |
 | 运行清单 | Run Manifest | `state/runs/<run-id>.json`、运行数据库或编排系统 |
 | 运行回执 | Run Receipt | `evidence/runs/<run-id>/` 或项目既有证据系统 |
@@ -64,7 +64,7 @@
 | --- | --- | --- | --- |
 | `senmu-build-project` | 项目治理章程、项目地图、任务登记与编号计划、治理 policy 和工作日志 | 新项目默认 `governance/`；成熟项目映射并演进已有 owner | 产品正文、技术实现、运行状态、经验规则或发布结果的复制件 |
 | `senmu-build-product` | 可选用户需求、每版本 PRD、当前产品规格、跨页面界面内容标准和产品验收事实 | `product/`、项目既有设计系统与 `versions/<version>/PRD.md`；不为文案另建平行台账 | 技术实现决定、部署事实、任务执行状态副本 |
-| `senmu-build-design` | 视觉方向、设计 Token、组件表现、布局、响应式、交互、动效、可访问性和界面评审决定 | 项目已有设计系统、组件主题、原型入口或按需 `design/`；一次性调整留在现有实现 owner | 产品功能／文案、组件库 API、技术架构、独立审查结论或平行设计系统 |
+| `senmu-build-design` | 视觉方向、Token 语义、组件表现、布局、响应式、交互、动效、可访问性和界面评审决定 | `design/UI_SPECIFICATION.md`；真实值和实现仍在主题／组件代码。Project 连接入口，Engineering 消费版本、范围和映射；一次性探索留在任务 | 业务功能／共享文案含义、组件库 API、技术架构、独立审查结论或平行设计系统 |
 | `senmu-build-workflow` | 流程契约、项目 Agent 定义、schema/config、输入、工作区、运行状态、交付物、证据和归档 | 项目系统内 `workflows/`；启用时使用 `agents/`；物料型项目外部角色目录由 Project Map 映射 | 软件架构正文、版本发布计划、第二份任务登记表或根 `AGENTS.md` 的复制件 |
 | `senmu-build-engineering` | 当前系统技术规格、各正式开发版本的技术设计、测试用例、选型、代码质量、技术债、ADR、语言／框架规则和测试策略 | `engineering/`、`versions/<version>/`；测试代码与 fixtures 位于项目既有 `tests/` 或语言生态目录 | 产品优先级、发布批准、独立审查结论 |
 | `senmu-build-delivery` | 分支与合并、发布单元、版本、changelog、制品、部署、回滚、线上验证 | `delivery/`、`operations/`、各发布单元及适用的发布证据 owner | 需求正文、工程设计副本、未发生的发布状态 |
@@ -88,6 +88,7 @@
 | `governance/GOVERNANCE.md` | 项目核心原则、权威顺序、治理版本、修订与例外 | 需求、设计、任务、运行或发布事实正文 |
 | `.senmu-buildos/config.json` | validator 使用的静态结构化治理配置，包括主线语义、直接主线写入禁止、worktree 根、Change Unit 状态、正式 Tag 语义和授权模式 | 当前目标、进度、待接收列表、下一步或聊天状态 |
 | `governance/PROJECT_MAP.md` | 模块、目录、状态源、公开入口、交付单元、legacy 和任务相关规范入口的导航 | 活跃任务、专业正文或规范全文副本 |
+| `design/UI_SPECIFICATION.md` | 当前 UI 规则、适用范围、批准状态、合法变体、实现与验证映射 | 任务整改进度、业务规格副本、手抄代码 token 数值或运行验收声明 |
 | standard/release 默认 `governance/tasks/TASK_REGISTER.md` 或项目映射 owner | 当前与历史受管理任务索引 | 单个任务正文 |
 | standard/release 默认 `governance/tasks/TASK-<NNNN>-<slug>.md` 或项目映射对象 | 单个任务计划、当前边界、进度、关键决定摘要、证据和恢复入口 | 专业事实正文、完整聊天或时间流水 |
 | `governance/logs/WORKLOG.md` | 已发生工作的追加时间线 | 当前状态、计划或长期规则 |
@@ -109,7 +110,7 @@
 Durable Task State Owner             当前边界、阶段、进度、证据链接、恢复入口
 ├── versions/<version>/PRD.md        本版本产品范围、行为与验收事实
 ├── product/PRODUCT_SPECIFICATION.md 当前完整产品事实
-├── design/...                       跨页面视觉、交互与设计系统事实（如项目需要）
+├── design/UI_SPECIFICATION.md       持久 UI 视觉、交互规则与实现映射（单页亦适用）
 ├── workflows/...                    流程、运行和物料事实
 ├── agents/<agent-key>/AGENT.md       项目 Agent／Prompt 的稳定契约（如启用）
 ├── versions/<version>/TECHNICAL_DESIGN.md  各正式开发版本的技术设计
@@ -132,8 +133,10 @@ Durable Task State Owner             当前边界、阶段、进度、证据链�
 
 1. 项目是否已有同一职责的权威文件或外部 issue／项目管理系统。
 2. 该信息是任务状态、专业事实、运行状态、证据还是历史日志。
-3. 能否更新现有 owner，而不是创建近义文件。
+3. 是否应更新现有 owner 或完成适用的标准迁移，确保只有一份现行规范。
 4. 新文件是否会被项目入口、项目地图、任务记录或专业文档发现。
 5. 任务结束后该文件应继续现行、转为历史、归档还是删除。
 
 编号计划文件、数据库或外部 issue 系统可以成为任务状态 owner；此时 `governance/tasks/` 只保存必要索引或完全不创建，但项目入口必须记录系统、对象 ID、状态语义和恢复方式。聊天内容不能作为唯一任务状态源。
+
+持久 UI 的范围、独立应用根、外部设计来源和迁移方法由 Project 的 [目录规范](../../skills/senmu-build-project/references/project-directories-and-documentation.md)与[既有项目迁移 SOP](../../skills/senmu-build-project/references/established-project-takeover-governance.md#ui-standard-migration)维护。普通局部改动不因旧路径启动全项目迁移；被授权治理后应同步入口、配置和校验，归档旧权威。原型与历史 PRD 保留准确版本关系。

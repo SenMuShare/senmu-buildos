@@ -20,7 +20,7 @@ class ProjectGovernanceScaffoldTests(unittest.TestCase):
         return self.run_command(
             "python3", str(INIT), "--mode", "initialize-new", "--root", str(target),
             "--project-name", "BuildOS Test", "--project-type", project_type,
-            "--profile", profile, *extra,
+            "--profile", profile, "--ui-scope", "none", *extra,
         )
 
     def test_generated_quality_policy_preserves_phase_and_explicit_review_scope(self):
@@ -463,6 +463,38 @@ class ProjectGovernanceScaffoldTests(unittest.TestCase):
             for forbidden in ("docker system prune", "docker image prune", "docker builder prune", "--volumes", "rm -rf"):
                 self.assertNotIn(forbidden, cleanup_text)
 
+    def test_declared_delivery_capabilities_reach_adoption_work(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_root:
+            for name, kind, extra, lifecycle in (
+                ("container", "software", ["--release-channel", "container_image", "--artifact-kind", "container_image"], True),
+                ("artifact-only", "media", ["--artifact-kind", "package"], True),
+                ("image-channel", "software", ["--release-channel", "container_image"], True),
+                ("package", "media", ["--release-channel", "package_registry", "--artifact-kind", "package"], True),
+                *((channel, "software", ["--release-channel", channel], True) for channel in ("source_archive", "package_registry", "marketplace_install", "desktop_bundle", "mobile_bundle", "project_delivery")),
+                ("service", "software", ["--release-channel", "managed_service"], True),
+                ("source", "software", ["--release-channel", "public_source_repository"], False),
+                ("local", "software", [], False),
+            ):
+                with self.subTest(name=name):
+                    target = Path(temporary_root) / name
+                    result = self.initialize(target, kind, "release", "--layout", "software-repository", *extra)
+                    self.assertEqual(result.returncode, 0, result.stderr or result.stdout)
+                    report = json.JSONDecoder().raw_decode(result.stdout)[0]
+                    policy = json.loads((target / ".senmu-buildos/config.json").read_text())
+                    checks = policy["adoption_checks"]
+                    self.assertEqual(checks, report["adoption_checks"])
+                    self.assertEqual(report["adoption_status"], "unverified")
+                    self.assertEqual("verify_existing_release_entrypoint_and_target_identity" in checks, bool(extra))
+                    self.assertEqual("verify_producer_to_exit_wiring_and_protected_consumers" in checks, lifecycle)
+                    self.assertEqual("exercise_applicable_successor_and_interrupted_closeout" in checks, lifecycle)
+                    self.assertEqual(len(checks), len(set(checks)))
+                    self.assertTrue((target / policy["adoption_record_owner"]).is_file())
+                    self.assertEqual(policy["release_retention"] is not None, "--artifact-kind" in extra)
+                    owner = target / "README.md"
+                    owner.write_text("Existing approved project owner\n")
+                    self.initialize(target, kind, "release", "--layout", "software-repository", *extra)
+                    self.assertEqual(owner.read_text(), "Existing approved project owner\n")
+
     def test_release_without_artifact_has_no_artifact_lifecycle(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_root:
             target = Path(temporary_root) / "source-release"
@@ -893,6 +925,74 @@ class ProjectGovernanceScaffoldTests(unittest.TestCase):
             self.assertEqual(runtime_validation["status"], "required_before_routing_claim")
             self.assertEqual(runtime_validation["maximum_unverified_claim"], "structural_routing_prepared")
             self.assertEqual(len(runtime_validation["scenarios"]), 3)
+
+    def test_assessor_exposes_ui_candidates_without_selecting_authority_or_resolving_conflicts(self):
+        with tempfile.TemporaryDirectory() as temporary_root:
+            root = Path(temporary_root)
+            fixtures = {
+                'README.md': '# Current project\nSee design/CURRENT_UI.md.\n',
+                'design/CURRENT_UI.md': '# Approved basis\nUse src/theme.css and src/components/Button.tsx.\n',
+                'design/PROPOSAL.md': '# Unapproved proposal\nReplace all buttons.\n',
+                'DESIGN.md': '# Superseded design\n',
+                'src/theme.css': ':root { --action: blue; }\n',
+                'src/components/Button.tsx': 'export const Button = () => <button>Save</button>;\n',
+                'archive/design/OLD.md': '# Historical design\n',
+                'experiments/demo/design/EXPLORATION.md': '# Task-local exploration\n',
+                'node_modules/package/components/Button.tsx': 'third party\n',
+                '.senmu-buildos/config.json': json.dumps({'ui_management': {
+                    'scope': 'persistent', 'basis_path': 'design/CURRENT_UI.md'}}),
+            }
+            for name, body in fixtures.items():
+                path = root / name
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text(body, encoding='utf-8')
+            before = {p.relative_to(root).as_posix(): p.read_bytes() for p in root.rglob('*') if p.is_file()}
+            result = self.run_command('python3', str(ASSESS), '--root', str(root), '--verbose')
+            self.assertEqual(result.returncode, 0, result.stderr or result.stdout)
+            report = json.loads(result.stdout)
+            review = report['ui_adoption_review']
+            self.assertEqual(review['status'], 'semantic_confirmation_required')
+            self.assertEqual(review['candidate_counts'], {
+                'design_basis_candidate': 3, 'theme_token_candidate': 1, 'ui_component_candidate': 1})
+            self.assertFalse(review['authority_confirmed'])
+            self.assertEqual(review['conflict_status'], 'not_assessed')
+            self.assertEqual(review['required_actions'], [])
+            self.assertEqual(review['declared_capabilities'][0]['basis_path'], 'design/CURRENT_UI.md')
+            self.assertEqual(report['conflicts'], [])
+            self.assertEqual(report['write_operations'], [])
+            for role in review['candidate_counts']:
+                self.assertTrue(all(item['status'] == 'candidate'
+                    for item in report['full_candidate_inventory'][role]))
+            self.assertEqual(report['candidate_mappings']['experiment_evidence']['count'], 1)
+            self.assertEqual(before, {p.relative_to(root).as_posix(): p.read_bytes()
+                for p in root.rglob('*') if p.is_file()})
+            refused = self.initialize(root, 'software', 'standard', '--ui-scope', 'persistent')
+            self.assertNotEqual(refused.returncode, 0)
+            self.assertEqual(before, {p.relative_to(root).as_posix(): p.read_bytes()
+                for p in root.rglob('*') if p.is_file()})
+
+    def test_assessor_does_not_infer_ui_from_software_package_or_external_policy(self):
+        with tempfile.TemporaryDirectory() as temporary_root:
+            parent = Path(temporary_root)
+            root = parent / 'backend'
+            root.mkdir()
+            (root / 'package.json').write_text('{"name":"api-server"}', encoding='utf-8')
+            (root / 'server.js').write_text('serveRequests();\n', encoding='utf-8')
+            result = self.run_command('python3', str(ASSESS), '--root', str(root))
+            self.assertEqual(result.returncode, 0, result.stderr or result.stdout)
+            review = json.loads(result.stdout)['ui_adoption_review']
+            self.assertEqual(review['status'], 'no_ui_signal_found')
+            self.assertFalse(any(review['candidate_counts'].values()))
+            private_policy = parent / 'external.json'
+            private_policy.write_text(json.dumps({'ui_management': {
+                'scope': 'persistent', 'basis_path': 'PRIVATE_EXTERNAL_DESIGN.md'}}), encoding='utf-8')
+            (root / '.senmu-buildos').mkdir()
+            (root / '.senmu-buildos/config.json').symlink_to(private_policy)
+            guarded = self.run_command('python3', str(ASSESS), '--root', str(root))
+            self.assertEqual(guarded.returncode, 0, guarded.stderr or guarded.stdout)
+            self.assertNotIn('PRIVATE_EXTERNAL_DESIGN', guarded.stdout)
+            declaration = json.loads(guarded.stdout)['ui_adoption_review']['declared_capabilities'][0]
+            self.assertEqual(declaration['link_status'], 'outside_root_not_read')
 
     def test_assessor_finds_nested_overrides_and_reports_coverage_without_writes(self):
         with tempfile.TemporaryDirectory() as temporary_root:

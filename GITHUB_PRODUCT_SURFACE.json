@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "repository": "SenMuShare/senmu-buildos",
-  "reviewed_for_version": "2.29.0",
-  "description": "AI-native BuildOS for Codex, Claude Code, Doubao, WorkBuddy and ZCode: product discovery, UI/UX design, software engineering, context-aware workflows, testing, Git and verifiable releases.",
+  "reviewed_for_version": "2.32.0",
+  "description": "Senmu BuildOS is a project coach for AI coding agents: turn ideas into requirements, consistent UI, maintainable code and verifiable releases. Eight skills for Codex, Claude Code and more.",
   "topics": [
     "agent-skills",
     "agentic-coding",
@@ -27,14 +27,15 @@
   ],
   "readme_review": {
     "updated_sections": [
-      "bounded-software-implementation-principles",
-      "project-instruction-adoption-and-safeguards",
+      "positioning-and-project-coach-principles",
+      "eight-capabilities-methods-and-outcomes",
+      "natural-language-ui-and-canonical-standard",
       "release-summary-and-source-version"
     ],
     "summary": {
-      "zh": "本版细化项目 AGENTS 的软件实现原则：不为无依据的假想情况增加防御、重试或兼容机制，复用内部仍成立的校验保证，同时保留新信任边界、状态变化、授权和数据保护。简单单次逻辑不机械拆函数，异常不伪装成功。新项目使用更新模板，已有项目经授权原地合并等价条款；升级不会自动改写项目，也不承诺模型效果或 Token 节省比例。详见[用户更新日志](RELEASE_NOTES.md)。",
-      "en": "This version clarifies software implementation principles in project AGENTS: avoid defenses, retries and compatibility machinery for unsupported hypothetical cases, reuse internal validation guarantees that still hold, and retain checks for new trust boundaries, changed state, authorization and data protection. Simple one-use logic need not become extra helpers, and failures must not look like success. New projects use the updated starter; authorized governance merges equivalent rules in existing projects. Upgrading does not rewrite projects automatically or establish model-performance or token-savings claims. See [release notes](RELEASE_NOTES.md).",
-      "ja": "本版はプロジェクト AGENTS の実装原則を具体化します。根拠のない仮定だけで防御、再試行、互換機構を増やさず、内部で有効な検証済みの保証を再利用します。新たな信頼境界、状態変化、権限、データ保護に必要な検査は維持します。単純な一度限りの処理を機械的に関数へ分割せず、失敗を成功として扱いません。新規プロジェクトは更新した雛形を使い、既存プロジェクトでは許可された整備で同等の規則を統合します。更新だけでプロジェクトを自動変更せず、モデル性能や Token 削減率を保証しません。詳細は[更新履歴](RELEASE_NOTES.md)をご覧ください。"
+      "zh": "本版加强普通需求到产品、设计与工程的承接，统一持久 UI 规范入口和旧资料迁移方法，区分“未评估”与“没有 UI”。同时重写产品介绍，让八项能力的理念、做法与结果更容易理解；局部修改继续保持轻量。详见[用户更新日志](RELEASE_NOTES.md)。",
+      "en": "This version strengthens the handoff from everyday requests to product, design and engineering, standardizes the maintained UI entrypoint and migration of existing guidance, and distinguishes an unassessed UI scope from no UI. The product introduction now explains each skill through its principles, methods and outcomes. Small changes remain lightweight. See [release notes](RELEASE_NOTES.md).",
+      "ja": "本版は普段の依頼から Product、Design、Engineering への引継ぎを強化し、継続的な UI の規約入口と既存資料の移行方法を統一します。UI の未評価と UI なしを区別し、8 つの能力の考え方、方法、結果が伝わる製品紹介へ更新しました。小さな変更は引き続き簡潔に進めます。[更新履歴](RELEASE_NOTES.md)をご覧ください。"
     }
   },
   "readmes": {

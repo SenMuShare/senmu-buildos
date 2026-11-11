@@ -25,12 +25,13 @@ import validate_package as package_validator
 
 class InstructionAuthoringTests(unittest.TestCase):
     def render(self, template: Path, root: Path, modules: set[str],
-               name: str = "Example", profile: str = "core") -> str:
+               name: str = "Example", profile: str = "core", ui_scope: str = "none") -> str:
         return initializer.render(
             template, name, root, root, "repository", profile, "software",
             {"lifecycle_intent": "production", "delivery_model": "continuous_product",
              "composition": "single_domain"},
             modules, "private_only", [], [],
+            {"scope": ui_scope, "basis_path": "design/UI_SPECIFICATION.md" if ui_scope == "persistent" else None},
         )
 
     def draft(self, modules: set[str], **kwargs) -> str:
@@ -80,6 +81,19 @@ class InstructionAuthoringTests(unittest.TestCase):
                     self.assertNotIn("{{", text)
                     self.assertNotIn(str(root), text)
                     self.assertIn("# Example", text)
+
+    def test_ui_conditional_preserves_body_language_and_whitespace(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            template = root / "input.md"
+            body = "\n\n  界面约定：既有依据。\n\nUI agreement.\n\n"
+            template.write_text("共通の合意。\n<!-- persistent-ui-only:start -->" + body
+                                + "<!-- persistent-ui-only:end -->\n尾部。\n", encoding="utf-8")
+            for scope in ("none", "one_off", "persistent"):
+                with self.subTest(scope=scope):
+                    result = self.render(template, root, set(), ui_scope=scope)
+                    expected_body = body if scope == "persistent" else ""
+                    self.assertEqual(result, "共通の合意。\n" + expected_body + "\n尾部。\n")
 
     def test_repeat_rendering_is_read_only_and_does_not_append(self) -> None:
         before = STARTER.read_bytes()
@@ -141,6 +155,44 @@ class InstructionAuthoringTests(unittest.TestCase):
                 self.validate_layer(text)
         with self.assertRaises(SystemExit):
             self.validate_layer(valid, second_owner=True)
+
+    def test_ui_owner_route_is_confined_to_its_renderer_block(self) -> None:
+        opening, closing = "<!-- persistent-ui-only:start -->", "<!-- persistent-ui-only:end -->"
+        body = "\n{{UI_BASIS_PATH}} senmu-build-design\n"
+        valid = self.fixture() + opening + body + closing
+        self.validate_layer(valid)
+        mutations = (
+            valid + "\nsenmu-build-design",
+            valid.replace("senmu-build-design", "senmu-build-product"),
+            valid.replace("{{UI_BASIS_PATH}}", "") + "\n{{UI_BASIS_PATH}}",
+            valid.replace(closing, ""),
+            valid.replace("{{UI_BASIS_PATH}}", "{{UNKNOWN_UI_OWNER}}"),
+        )
+        for index, text in enumerate(mutations):
+            with self.subTest(index=index), self.assertRaises(SystemExit):
+                self.validate_layer(text)
+
+    def test_ui_map_placeholder_is_limited_to_its_known_template_scope(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            target = root / "skills/senmu-build-project/assets/project-governance-starter/PROJECT_MAP.template.md"
+            target.parent.mkdir(parents=True)
+            opening, closing = "<!-- persistent-ui-only:start -->", "<!-- persistent-ui-only:end -->"
+            link = "[UI basis](<{{UI_MAP_BASIS_PATH}}>)"
+            valid = opening + link + closing
+            with patch.object(package_validator, "ROOT", root):
+                target.write_text(valid, encoding="utf-8")
+                package_validator.validate_local_markdown_links()
+                for text in (link, valid.replace(closing, ""), valid + link,
+                             valid.replace("UI_MAP_BASIS_PATH", "UNKNOWN_UI_OWNER"),
+                             valid + "\n[broken](missing.md)"):
+                    target.write_text(text, encoding="utf-8")
+                    with self.subTest(text=text), self.assertRaises(SystemExit):
+                        package_validator.validate_local_markdown_links()
+                target.write_text("", encoding="utf-8")
+                (target.parent / "OTHER.template.md").write_text(valid, encoding="utf-8")
+                with self.assertRaises(SystemExit):
+                    package_validator.validate_local_markdown_links()
 
 
 if __name__ == "__main__":

@@ -70,4 +70,4 @@ Align all findings to the installed version. Tool names and commands may change;
 
 ## 8. Completion
 
-Check only result-changing boundaries: project version/wrappers preserved, mature capability reused, business rules left with authority, customization/dependencies justified, and AI results returned to actionable UI. This profile and project Engineering own component implementation. Route creation/review of visual direction, design system, accessibility, responsive behavior, and interaction quality to `senmu-build-design`; do not duplicate its manual here.
+Check only result-changing boundaries: project version/wrappers preserved, mature capability reused, business rules left with authority, customization/dependencies justified, and AI results returned to actionable UI. This profile and project Engineering own implementation and verification of settled design decisions. Use `senmu-build-design` when visual direction, design-system, accessibility, responsive or interaction decisions are missing, conflicting or require material revision; ordinary implementation consumes the approved project owner directly.

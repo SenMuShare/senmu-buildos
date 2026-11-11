@@ -355,6 +355,61 @@ def canonical_git_root(root: Path) -> Path:
     return common_dir.parent if common_dir.name == ".git" else checkout
 
 
+def validate_ui_registration(
+    root: Path, policy: dict[str, Any], strict: bool,
+    errors: list[str], warnings: list[dict[str, str]],
+) -> None:
+    """Check role/path identity; legacy UI owners require an explicit migration."""
+    registration = policy.get("ui_management")
+    if registration is None:  # Absence in older configs does not establish no UI.
+        return
+    if not isinstance(registration, dict) or registration.get("scope") not in ("none", "one_off", "persistent"):
+        errors.append("ui_management 必须声明 none、one_off 或 persistent scope")
+        return
+    raw = registration.get("basis_path")
+    if registration["scope"] != "persistent":
+        if raw is not None:
+            errors.append("非 persistent UI 不登记持续设计依据；一次性依据沿当前任务保存")
+        return
+    if (not isinstance(raw, str) or not raw.strip() or Path(raw).is_absolute()
+            or PureWindowsPath(raw).drive or any(character in raw for character in "\\\x00\r\n|`#<>")
+            or Path(raw).suffix.lower() != ".md"):
+        errors.append("ui_management.basis_path 必须是项目内 Markdown 文件路径")
+        return
+    try:
+        target = (root / raw).resolve(strict=True)
+        target.relative_to(root)
+        if not target.is_file():
+            raise ValueError("not a file")
+    except (OSError, ValueError, RuntimeError):
+        errors.append("ui_management.basis_path 不存在或越出项目根")
+        return
+    relative = target.relative_to(root)
+    role_paths = {
+        "AGENTS.md", "AGENTS.override.md", "CLAUDE.md", "governance/GOVERNANCE.md",
+        "governance/PROJECT_MAP.md", "governance/tasks/TASK_REGISTER.md",
+    }
+    for value in (policy.get("project_map_path"), policy.get("task_management", {})):
+        if isinstance(value, str):
+            role_paths.add(value)
+        elif isinstance(value, dict):
+            role_paths.update(path for path in (value.get("register_path"), value.get("template_path"))
+                              if isinstance(path, str))
+    reserved = {(root / path).resolve() for path in role_paths}
+    if (target in reserved or relative.name in {"AGENTS.md", "AGENTS.override.md", "CLAUDE.md"}
+            or any(part.lower() in {"archive", "archives", ".senmu-buildos"} for part in relative.parts)
+            or relative.as_posix().startswith("governance/tasks/")
+            or TASK_FILE.fullmatch(relative.name)):
+        errors.append("ui_management.basis_path 与指令、导航、任务、模板或归档角色冲突；迁移到 design/UI_SPECIFICATION.md")
+        return
+    if raw != "design/UI_SPECIFICATION.md" or relative.as_posix() != "design/UI_SPECIFICATION.md":
+        message = "现有 UI 依据尚未规范化到 design/UI_SPECIFICATION.md；按既有项目迁移 SOP 保留有效决定、切换导航并归档旧规范，校验器不改写文件"
+        if strict:
+            errors.append(message)
+        else:
+            warnings.append(issue("ui.migration_required", message, POLICY_REL.as_posix(), "warning"))
+
+
 def validate_poc_registration(
     root: Path, policy: dict[str, Any], strict: bool,
     errors: list[str], warnings: list[dict[str, str]],
@@ -613,6 +668,7 @@ def validate(
     unknown_modules = sorted(set(selected_modules) - VALID_MODULES)
     if unknown_modules:
         errors.append(f"selected_modules 包含未知模块：{', '.join(unknown_modules)}")
+    validate_ui_registration(root, policy, strict, errors, warnings)
 
     git_management = policy.get("git_management")
     if "git" in selected_modules:

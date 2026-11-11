@@ -220,7 +220,7 @@ class InitializationTests(unittest.TestCase):
     def initialize(self, target, profile='standard', mode='initialize-new', extra=()):
         return subprocess.run([sys.executable, str(PROJECT/'scripts/init_project_governance.py'),
                                '--mode', mode, '--root', str(target), '--project-name', 'POC fixture',
-                               '--project-type', 'poc', '--profile', profile, *extra],
+                               '--project-type', 'poc', '--profile', profile, '--ui-scope', 'none', *extra],
                               capture_output=True, text=True, check=False, timeout=30)
 
     def test_core_has_short_route_without_five_mandatory_documents(self):
